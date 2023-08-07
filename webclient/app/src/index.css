@@ -1,3 +1,5 @@
+@import url("https://rsms.me/inter/inter.css");
+
 body {
     margin: 0;
     padding: 0;
@@ -15,4 +17,9 @@ body, html, #root {
 code {
     font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
     monospace;
+}
+
+/* Ugly Workaround to fix the nav in the image annotator somehow */
+.div-root-4 {
+    height: 4rem !important;
 }
