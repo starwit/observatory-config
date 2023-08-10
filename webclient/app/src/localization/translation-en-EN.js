@@ -57,6 +57,7 @@ const translationEnEN = {
     "parkingArea.testConfigVersion": "testConfigVersion",
     "parkingArea.testConfigVersion.hint": "",
     "parkingArea.parkingConfig": "parkingConfig",
+    "parkingArea.config": "Konfig-UI",
     "app.baseName": "SmartParkingConfig",
     "home.title": "Welcome",
     "home.welcome": "Welcome to SmartParkingConfig",
