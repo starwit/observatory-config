@@ -8,24 +8,12 @@ import ImageRest from "../../services/ImageRest";
 function ImageAnnotate() {
     const [classifications, setClassifications] = useState(null);
     const [images, setImages] = useState(null);
-    const [parsedImages, setParsedImages] = useState([]);
+    const [parsedImages, setParsedImages] = useState([{
+        src: window.location.pathname + "api/imageFile/name/image_south.jpg",
+        name: "Kamera 1"
+    }]);
     const classificationRest = useMemo(() => new ClassificationRest(), []);
     const imageRest = useMemo(() => new ImageRest(), []);
-    const [dimensions, setDimensions] = React.useState({
-        height: window.innerHeight,
-        width: window.innerWidth
-    });
-
-    React.useEffect(() => {
-        function handleResize() {
-            setDimensions({
-                height: window.innerHeight,
-                width: window.innerWidth
-            });
-        }
-
-        window.addEventListener("resize", handleResize);
-    });
 
     useEffect(() => {
         classificationRest.findAll().then(response => {
@@ -41,7 +29,10 @@ function ImageAnnotate() {
 
     useEffect(() => {
         if (!images) {
-            return;
+            return [{
+                src: window.location.pathname + "api/imageFile/name/image_south.jpg",
+                name: "Kamera 1"
+            }];
         }
         setParsedImages(images.map(image => {
             return {
@@ -66,7 +57,7 @@ function ImageAnnotate() {
             hideFullScreen={true}
             hideNext={true}
             hidePrev={true}
-            // images={parsedImages}
+            //            images={parsedImages}
             images={[
                 {
                     src:

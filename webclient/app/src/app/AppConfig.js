@@ -1,11 +1,11 @@
 const appItems = [
-    {title: "parkingArea.config", link: "/config/"}
+    {title: "parkingArea.config", link: "/config/"},
     {title: "point.title", link: "/point/"},
     {title: "polygon.title", link: "/polygon/"},
     {title: "image.title", link: "/image/"},
     {title: "classification.title", link: "/classification/"},
     {title: "parkingConfig.title", link: "/parkingconfig/"},
-    {title: "parkingArea.title", link: "/parkingarea/"},
+    {title: "parkingArea.title", link: "/parkingarea/"}
 ];
 
 export {appItems};

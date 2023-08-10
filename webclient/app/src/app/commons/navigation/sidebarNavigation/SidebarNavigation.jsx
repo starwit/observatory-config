@@ -46,7 +46,7 @@ function SidebarNavigation(props) {
                     ["& .MuiDrawer-paper"]: {width: drawerWidth, boxSizing: "border-box"}
                 }}
             >
-                <Toolbar />
+                {/* <Toolbar />*/}
                 <Box sx={{overflow: "auto"}}>
                     <List>
                         {props.menuItems.map((menuItem, index) => (
