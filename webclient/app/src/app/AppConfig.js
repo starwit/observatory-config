@@ -4,7 +4,8 @@ const appItems = [
     {title: "image.title", link: "/image/"},
     {title: "classification.title", link: "/classification/"},
     {title: "parkingConfig.title", link: "/parkingconfig/"},
-    {title: "parkingArea.title", link: "/parkingarea/"}
+    {title: "parkingArea.title", link: "/parkingarea/"},
+    {title: "parkingArea.config", link: "/config/"}
 ];
 
 export {appItems};

@@ -30,15 +30,22 @@
     "react-image-polygon-annotation": "0.10.24",
     "react-lineto": "^3.3.0",
     "react-router-dom": "^5.3.0",
-    "react-scripts": "^4.0.3",
+    "react-scripts": "^5.0.1",
+    "react-app-rewired": "^2.2.1",
+    "node-polyfill-webpack-plugin": "^2.0.1",
+    "console-browserify": "^1.2.0",
     "react-syntax-highlighter": "^15.4.4",
-    "use-immer": "^0.7.0"
+    "react-use-dimensions": "^1.2.1",
+    "use-event-callback": "^0.1.0",
+    "use-immer": "^0.7.0",
+    "path": "^0.12.7",
+    "vfile": "^6.0.1"
   },
   "scripts": {
-    "start": "react-scripts start",
-    "build": "react-scripts build --loglevel=error",
-    "test": "react-scripts test",
-    "eject": "react-scripts eject",
+    "start": "react-app-rewired start",
+    "build": "react-app-rewired build --loglevel=error",
+    "test": "react-app-rewired test",
+    "eject": "react-app-rewired eject",
     "stop": "taskkill -F -IM node.exe"
   },
   "eslintConfig": {
