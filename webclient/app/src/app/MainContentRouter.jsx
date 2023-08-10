@@ -15,7 +15,7 @@ function MainContentRouter() {
     return (
         <>
             <Switch>
-                <Route exact path={"/config"} component={ImageAnnotateMain} />
+                <Route path={"/config"} component={ImageAnnotateMain} />
                 <Route path={"/point"} component={PointMain} />
                 <Route path={"/polygon"} component={PolygonMain} />
                 <Route path={"/image"} component={ImageMain} />

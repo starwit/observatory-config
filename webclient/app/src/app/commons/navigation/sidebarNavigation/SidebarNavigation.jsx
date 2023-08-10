@@ -60,7 +60,7 @@ function SidebarNavigation(props) {
                 </Box>
             </Drawer>
             <Box component="main" sx={{flexGrow: 1, p: 3}}>
-                <Toolbar className={headerStyles.toolbar} />
+                {/* <Toolbar className={headerStyles.toolbar} />*/}
                 {props.children}
             </Box>
         </Box>
