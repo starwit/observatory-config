@@ -51,11 +51,7 @@
     "stop": "taskkill -F -IM node.exe"
   },
   "eslintConfig": {
-    "extends": "react-app",
-    "env": {
-      "browser": true,
-      "node": true
-    }
+    "extends": "react-app"
   },
   "browserslist": [
     ">0.2%",
