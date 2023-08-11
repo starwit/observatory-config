@@ -1,5 +1,4 @@
 import React from "react";
-import {useTranslation} from "react-i18next";
 import {Route, Switch} from "react-router-dom";
 import ClassificationMain from "./features/classification/ClassificationMain";
 import ImageMain from "./features/image/ImageMain";
@@ -10,8 +9,6 @@ import PolygonMain from "./features/polygon/PolygonMain";
 import ImageAnnotateMain from "./features/imageAnnotate/ImageAnnotateMain";
 
 function MainContentRouter() {
-    const {t} = useTranslation();
-
     return (
         <>
             <Switch>
@@ -22,7 +19,6 @@ function MainContentRouter() {
                 <Route path={"/classification"} component={ClassificationMain} />
                 <Route path={"/parkingconfig"} component={ParkingConfigMain} />
                 <Route path={"/parkingarea"} component={ParkingAreaMain} />
-
             </Switch>
         </>
     );

@@ -63,7 +63,7 @@ public class SecurityConfig {
                     CorsConfiguration configuration = new CorsConfiguration();
                     configuration.setAllowedOrigins(List.of("http://localhost:8081"));
                     configuration.setAllowedHeaders(List.of("*"));
-                    configuration.setAllowedMethods(List.of("*"));
+                    configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"));
                     return configuration;
                 }))
                 .csrf(httpSecurityCsrfConfigurer -> httpSecurityCsrfConfigurer

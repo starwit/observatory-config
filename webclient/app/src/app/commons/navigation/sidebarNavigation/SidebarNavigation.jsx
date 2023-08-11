@@ -14,12 +14,10 @@ import {
     Typography
 } from "@mui/material";
 import {Logout} from "@mui/icons-material";
-import HeaderStyles from "../../../assets/styles/HeaderStyles";
 import {useTranslation} from "react-i18next";
 import {useHistory} from "react-router-dom";
 
 function SidebarNavigation(props) {
-    const headerStyles = HeaderStyles();
     const drawerWidth = 240;
     const {t} = useTranslation();
     const history = useHistory();
@@ -59,7 +57,7 @@ function SidebarNavigation(props) {
                     </List>
                 </Box>
             </Drawer>
-            <Box component="main" sx={{flexGrow: 1, p: 3}}>
+            <Box component="main" sx={{width: "100%", height: "100%"}}>
                 {/* <Toolbar className={headerStyles.toolbar} />*/}
                 {props.children}
             </Box>

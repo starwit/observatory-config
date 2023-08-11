@@ -9,7 +9,7 @@ function ImageAnnotate() {
     const [classifications, setClassifications] = useState(null);
     const [images, setImages] = useState(null);
     const [parsedImages, setParsedImages] = useState([{
-        src: window.location.pathname + "api/imageFile/name/image_south.jpg",
+        src: window.location.pathname + "api/imageFile/name/parking_south.jpg",
         name: "Kamera 1"
     }]);
     const classificationRest = useMemo(() => new ClassificationRest(), []);
@@ -30,7 +30,7 @@ function ImageAnnotate() {
     useEffect(() => {
         if (!images) {
             return [{
-                src: window.location.pathname + "api/imageFile/name/image_south.jpg",
+                src: window.location.pathname + "api/imageFile/name/parking_south.jpg",
                 name: "Kamera 1"
             }];
         }
@@ -55,9 +55,10 @@ function ImageAnnotate() {
             hideSettings={true}
             hideClone={true}
             hideFullScreen={true}
+            hideHeaderText={true}
             hideNext={true}
             hidePrev={true}
-            //            images={parsedImages}
+            // images={parsedImages}
             images={[
                 {
                     src:
