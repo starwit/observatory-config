@@ -3,7 +3,7 @@ import React, {useState, useMemo, useEffect} from "react";
 import {useTranslation} from "react-i18next";
 import {OverviewTable} from "@starwit/react-starwit";
 import ClassificationRest from "../../services/ClassificationRest";
-import {useHistory} from "react-router";
+import {useHistory} from "react-router-dom";
 import {classificationOverviewFields} from "../../modifiers/ClassificationModifier";
 
 function ClassificationOverview() {

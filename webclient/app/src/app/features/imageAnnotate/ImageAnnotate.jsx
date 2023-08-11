@@ -41,7 +41,9 @@ function ImageAnnotate(props){
         return <Typography>Loading</Typography>
     }
 
-    console.log(images, parsedImages)
+    if (parsedImages.length === 0){
+        return <Typography>No images created. Please add some first</Typography>
+    }
 
     return(
         <ReactImageAnnotate
