@@ -2,7 +2,9 @@ package de.starwit.service.impl;
 import java.util.List;
 import de.starwit.persistence.entity.ImageEntity;
 import de.starwit.persistence.repository.ImageRepository;
+import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.InvalidDataAccessApiUsageException;
 import org.springframework.stereotype.Service;
 
 import java.util.Set;
@@ -56,7 +58,14 @@ public class ImageService implements ServiceInterface<ImageEntity, ImageReposito
 
         if (polygonToSave != null && !polygonToSave.isEmpty()) {
             for (PolygonEntity item : polygonToSave) {
-                PolygonEntity newItem = polygonRepository.getById(item.getId());
+                PolygonEntity newItem;
+                try {
+                    newItem = polygonRepository.getById(item.getId());
+                } catch (InvalidDataAccessApiUsageException e){
+                    newItem = new PolygonEntity();
+                    newItem.setPoint(item.getPoint());
+                }
+
                 newItem.setImage(entity);
                 polygonRepository.save(newItem);
             }

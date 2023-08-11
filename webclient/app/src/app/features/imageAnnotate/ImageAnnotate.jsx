@@ -30,12 +30,64 @@ function ImageAnnotate(props){
         }
         setParsedImages(images.map(image => {
             return {
+                id: image.id,
                 src: window.location.pathname + "api/imageFile/name/" + image.src,
                 name: image.name,
                 regions: []
             }
         }))
     }, [images])
+
+
+    /*
+    {
+        src:
+        namne:
+        polygon: [
+            {
+                open: bool
+                classification: [
+                    {
+                        name:
+                    }
+                ]
+                point: [
+                    {
+                        xvalue:
+                        yvalue
+                    }
+                ]
+            }
+        ]
+        parkingConfig:{}
+    }
+     */
+    function saveImageAnnotations(evnt){
+        const images = evnt.images;
+        const savePreparedImages = images.map(image => {
+            return {
+                id: image.id,
+                name: image.name,
+                src: image.src,
+                polygon: image.regions.map(region => {
+                    return {
+                        classification: [ classifications.find(classification => classification.name === region.cls) ],
+                        point: region.points.map(point => {
+                            return {
+                                xvalue: point[0],
+                                yvalue: point[1]
+                            }
+                        })
+                    }
+                    }
+                )
+            }
+        })
+        console.log(savePreparedImages)
+        savePreparedImages.map(image => imageRest.create(image))
+        console.log(evnt.images.map(image => image.regions))
+        console.log(evnt)
+    }
 
     if (!classifications || !parsedImages){
         return <Typography>Loading</Typography>
@@ -49,10 +101,7 @@ function ImageAnnotate(props){
         <ReactImageAnnotate
             labelImages
             regionClsList={classifications.map(classification => classification.name)}
-            onExit={evnt => {
-                console.log(evnt.images.map(image => image.regions))
-                console.log(evnt)
-            }}
+            onExit={saveImageAnnotations}
             enabledTools={["select", "create-point", "create-polygon", "create-box"]}
             images={parsedImages}
 
