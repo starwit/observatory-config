@@ -28,10 +28,11 @@ function ImageAnnotate(props){
         if (!images){
             return
         }
-        setParsedImages(images.map(image => {
+        const newImages = [...images];
+        setParsedImages(newImages.map(image => {
             return {
                 id: image.id,
-                src: window.location.pathname + "api/imageFile/name/" + image.src,
+                src: image.src,
                 name: image.name,
                 regions: []
             }
@@ -63,16 +64,14 @@ function ImageAnnotate(props){
     }
      */
     function saveImageAnnotations(evnt){
-        const images = evnt.images;
+        const localImages = evnt.images;
         const savePreparedImages = images.map(image => {
             return {
-                id: image.id,
-                name: image.name,
-                src: image.src,
-                polygon: image.regions.map(region => {
+                ...image,
+                polygon: localImages.find(imageFind => imageFind.id === image.id).regions.map(region => {
                     return {
                         classification: [ classifications.find(classification => classification.name === region.cls) ],
-                        point: region.points.map(point => {
+                        points: region.points.map(point => {
                             return {
                                 xvalue: point[0],
                                 yvalue: point[1]
@@ -83,7 +82,7 @@ function ImageAnnotate(props){
                 )
             }
         })
-        console.log(savePreparedImages)
+        console.log("SavedPrepped images", savePreparedImages)
         savePreparedImages.map(image => imageRest.create(image))
         console.log(evnt.images.map(image => image.regions))
         console.log(evnt)

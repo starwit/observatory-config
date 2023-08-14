@@ -2,7 +2,6 @@ package de.starwit.service.impl;
 import java.util.List;
 import de.starwit.persistence.entity.ImageEntity;
 import de.starwit.persistence.repository.ImageRepository;
-import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.InvalidDataAccessApiUsageException;
 import org.springframework.stereotype.Service;
@@ -25,6 +24,9 @@ public class ImageService implements ServiceInterface<ImageEntity, ImageReposito
     @Autowired
     private PolygonRepository polygonRepository;
 
+    @Autowired
+    private PolygonService polygonService;
+
     @Override
     public ImageRepository getRepository() {
         return imageRepository;
@@ -39,12 +41,12 @@ public class ImageService implements ServiceInterface<ImageEntity, ImageReposito
     }
 
     @Override
-    public ImageEntity saveOrUpdate(ImageEntity entity) {
+    public ImageEntity saveOrUpdate(ImageEntity image) {
 
-        Set<PolygonEntity> polygonToSave = entity.getPolygon();
+        Set<PolygonEntity> polygonToSave = image.getPolygon();
 
-        if (entity.getId() != null) {
-            ImageEntity entityPrev = this.findById(entity.getId());
+        if (image.getId() != null) {
+            ImageEntity entityPrev = this.findById(image.getId());
             for (PolygonEntity item : entityPrev.getPolygon()) {
                 PolygonEntity existingItem = polygonRepository.getById(item.getId());
                 existingItem.setImage(null);
@@ -52,24 +54,17 @@ public class ImageService implements ServiceInterface<ImageEntity, ImageReposito
             }
         }
 
-        entity.setPolygon(null);
-        entity = this.getRepository().save(entity);
+        image.setPolygon(null);
+        image = this.getRepository().save(image);
         this.getRepository().flush();
 
         if (polygonToSave != null && !polygonToSave.isEmpty()) {
-            for (PolygonEntity item : polygonToSave) {
-                PolygonEntity newItem;
-                try {
-                    newItem = polygonRepository.getById(item.getId());
-                } catch (InvalidDataAccessApiUsageException e){
-                    newItem = new PolygonEntity();
-                    newItem.setPoint(item.getPoint());
-                }
+            for (PolygonEntity polygon : polygonToSave) {
+                PolygonEntity newPolygon = polygonService.saveOrUpdate(polygon);
 
-                newItem.setImage(entity);
-                polygonRepository.save(newItem);
+                polygonService.assignPolygonToImage(newPolygon, image);
             }
         }
-        return this.getRepository().getById(entity.getId());
+        return this.getRepository().getById(image.getId());
     }
 }

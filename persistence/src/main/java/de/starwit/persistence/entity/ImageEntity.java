@@ -33,7 +33,6 @@ public class ImageEntity extends AbstractEntity<Long> {
 
 
     // entity relations
-    @JsonFilter("filterId")
     @OneToMany(mappedBy = "image")
     private Set<PolygonEntity> polygon;
 

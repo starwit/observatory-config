@@ -9,13 +9,10 @@ import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
+
+import java.util.HashSet;
 import java.util.Set;
 
-import java.time.ZonedDateTime;
-import de.starwit.persistence.serializer.ZonedDateTimeSerializer;
-import de.starwit.persistence.serializer.ZonedDateTimeDeserializer;
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import jakarta.persistence.CascadeType;
 
 /**
@@ -27,7 +24,7 @@ public class PolygonEntity extends AbstractEntity<Long> {
 
     // entity fields
     @Column(name = "open")
-    private Boolean open;
+    private Boolean open = false;
 
 
     // entity relations
@@ -42,11 +39,11 @@ public class PolygonEntity extends AbstractEntity<Long> {
         name = "polygon_classification",
         joinColumns = @JoinColumn(name = "polygon_id"),
         inverseJoinColumns = @JoinColumn(name = "classification_id"))
-    private Set<ClassificationEntity> classification;
+    private Set<ClassificationEntity> classification = new HashSet<>();
 
     @JsonFilter("filterId")
     @OneToMany(mappedBy = "polygon")
-    private Set<PointEntity> point;
+    private Set<PointEntity> point = new HashSet<>();
 
     // entity fields getters and setters
     public Boolean getOpen() {
@@ -66,7 +63,7 @@ public class PolygonEntity extends AbstractEntity<Long> {
         this.image = image;
     }
 
-    public Set<ClassificationEntity> getClassification() {
+    public Set<ClassificationEntity> getClassifications() {
         return classification;
     }
 
@@ -74,11 +71,11 @@ public class PolygonEntity extends AbstractEntity<Long> {
         this.classification = classification;
     }
 
-    public Set<PointEntity> getPoint() {
+    public Set<PointEntity> getPoints() {
         return point;
     }
 
-    public void setPoint(Set<PointEntity> point) {
+    public void setPoints(Set<PointEntity> point) {
         this.point = point;
     }
 

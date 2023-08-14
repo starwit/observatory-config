@@ -16,7 +16,7 @@ services:
     volumes:
       - smartparkingconfig-db:/var/lib/postgresql/data
     ports:
-      - "5433:5432"
+      - "5432:5432"
     networks:
       - backend
     restart: unless-stopped
