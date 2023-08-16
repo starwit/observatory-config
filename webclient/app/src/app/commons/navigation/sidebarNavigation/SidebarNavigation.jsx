@@ -26,14 +26,14 @@ function SidebarNavigation(props) {
 
     function generateBoxStyles() {
         let styles = {flexGrow: 1}
-        if (!props.removeContentSpacer) {
+        if (!props.focusMode) {
             styles.p = 3
         }
         return styles
     }
 
     function renderAppBar(){
-        if (props.removeContentSpacer){
+        if (props.focusMode){
             return;
         }
         return (
@@ -51,7 +51,7 @@ function SidebarNavigation(props) {
         )
     }
     function renderAppBarSpacer(){
-        if (props.removeContentSpacer){
+        if (props.focusMode){
             return;
         }
         return (
