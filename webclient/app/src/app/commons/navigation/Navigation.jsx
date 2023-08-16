@@ -27,7 +27,7 @@ function Navigation(props) {
         )
     }
 
-    return(
+    return (
         <div className={removeContentSpacer ? null : navigationStyles.contentSpacer}>
             {renderCorrectNavigation()}
         </div>

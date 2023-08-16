@@ -32,26 +32,27 @@ function SidebarNavigation(props) {
         return styles
     }
 
-    function renderAppBar(){
-        if (props.focusMode){
+    function renderAppBar() {
+        if (props.focusMode) {
             return;
         }
         return (
-        <AppBar position="fixed" sx={{zIndex: (theme) => theme.zIndex.drawer + 1}}>
-            <Toolbar className={headerStyles.toolbar}>
-                <img className={headerStyles.menuLogoImg} src={props.logo} alt="Logo of lirejarp"/>
-                <Typography variant="h6" noWrap>
-                    {props.title}
-                </Typography>
-                <div className={headerStyles.spacer}/>
-                <IconButton color="secondary" disableRipple className={headerStyles.linkButton}
-                            onClick={() => history.push("/logout")}><Logout/></IconButton>
-            </Toolbar>
-        </AppBar>
+            <AppBar position="fixed" sx={{zIndex: (theme) => theme.zIndex.drawer + 1}}>
+                <Toolbar className={headerStyles.toolbar}>
+                    <img className={headerStyles.menuLogoImg} src={props.logo} alt="Logo of lirejarp"/>
+                    <Typography variant="h6" noWrap>
+                        {props.title}
+                    </Typography>
+                    <div className={headerStyles.spacer}/>
+                    <IconButton color="secondary" disableRipple className={headerStyles.linkButton}
+                                onClick={() => history.push("/logout")}><Logout/></IconButton>
+                </Toolbar>
+            </AppBar>
         )
     }
-    function renderAppBarSpacer(){
-        if (props.focusMode){
+
+    function renderAppBarSpacer() {
+        if (props.focusMode) {
             return;
         }
         return (
