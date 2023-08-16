@@ -34,7 +34,11 @@ function ImageAnnotate(props){
                 id: image.id,
                 src: image.src,
                 name: image.name,
-                regions: []
+                regions: image.polygon.map(poly => {
+                    return {
+
+                    }
+                })
             }
         }))
     }, [images])
@@ -83,7 +87,7 @@ function ImageAnnotate(props){
             }
         })
         console.log("SavedPrepped images", savePreparedImages)
-        savePreparedImages.map(image => imageRest.create(image))
+        //savePreparedImages.map(image => imageRest.create(image))
         console.log(evnt.images.map(image => image.regions))
         console.log(evnt)
     }
