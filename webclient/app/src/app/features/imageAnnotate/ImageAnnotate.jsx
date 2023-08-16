@@ -53,6 +53,8 @@ function ImageAnnotate(props){
                 console.log(evnt.images.map(image => image.regions))
                 console.log(evnt)
             }}
+            hideNext
+            hidePrev
             enabledTools={["select", "create-point", "create-polygon", "create-box"]}
             images={parsedImages}
 

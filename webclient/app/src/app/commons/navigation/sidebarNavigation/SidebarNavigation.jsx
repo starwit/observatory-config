@@ -9,7 +9,6 @@ import {
     ListItem,
     ListItemButton,
     ListItemText,
-    Stack,
     Toolbar,
     Typography
 } from "@mui/material";
@@ -25,16 +24,23 @@ function SidebarNavigation(props) {
     const {t} = useTranslation();
     const history = useHistory();
 
+    function generateBoxStyles() {
+        let styles = {flexGrow: 1}
+        if (!props.removeContentSpacer) {
+            styles.p = 3
+        }
+        return styles
+    }
 
     return (
         <Box sx={{display: 'flex'}}>
             <CssBaseline/>
             <AppBar position="fixed" sx={{zIndex: (theme) => theme.zIndex.drawer + 1}}>
                 <Toolbar className={headerStyles.toolbar}>
-                        <img className={headerStyles.menuLogoImg} src={props.logo} alt="Logo of lirejarp"/>
-                        <Typography variant="h6" noWrap>
-                            {props.title}
-                        </Typography>
+                    <img className={headerStyles.menuLogoImg} src={props.logo} alt="Logo of lirejarp"/>
+                    <Typography variant="h6" noWrap>
+                        {props.title}
+                    </Typography>
                     <div className={headerStyles.spacer}/>
                     <IconButton color="secondary" disableRipple className={headerStyles.linkButton}
                                 onClick={() => history.push("/logout")}><Logout/></IconButton>
@@ -61,7 +67,7 @@ function SidebarNavigation(props) {
                     </List>
                 </Box>
             </Drawer>
-            <Box component="main" sx={{flexGrow: 1, p: 3}}>
+            <Box component="main" sx={generateBoxStyles()}>
                 <Toolbar className={headerStyles.toolbar}/>
                 {props.children}
             </Box>

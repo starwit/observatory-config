@@ -11,15 +11,17 @@ import Navigation from "./commons/navigation/Navigation";
 import logo from "./assets/images/logo-white.png";
 import {useTranslation} from "react-i18next";
 import ImageAnnotate from "./features/imageAnnotate/ImageAnnotate";
+import {useLocation} from "react-router-dom";
 
 function MainContentRouter() {
     const {t} = useTranslation();
+    const location = useLocation();
 
     return (
         <>
             <Switch>
-                <Route exact path={"/"} component={ImageAnnotate}/>
-                <Navigation menuItems={appItems} title={t("app.baseName")} logo={logo}>
+                <Navigation menuItems={appItems} title={t("app.baseName")} logo={logo} removeContentSpacer={location.pathname === "/"}>
+                    <Route exact path={"/"} component={ImageAnnotate}/>
                     <Route path={"/point"} component={PointMain}/>
                     <Route path={"/polygon"} component={PolygonMain}/>
                     <Route path={"/image"} component={ImageMain}/>

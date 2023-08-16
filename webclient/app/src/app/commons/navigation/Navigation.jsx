@@ -4,7 +4,7 @@ import SidebarNavigation from "./sidebarNavigation/SidebarNavigation";
 import NavigationStyles from "./NavigationStyles";
 
 function Navigation(props) {
-    const {menuItems, switchLength, title, logo} = props;
+    const {menuItems, switchLength, title, logo, removeContentSpacer} = props;
     const navigationStyles = NavigationStyles();
 
 
@@ -12,7 +12,7 @@ function Navigation(props) {
         if (menuItems.length > switchLength) {
             return (
                 <>
-                    <SidebarNavigation menuItems={menuItems} title={title} logo={logo}>
+                    <SidebarNavigation menuItems={menuItems} title={title} logo={logo} removeContentSpacer={removeContentSpacer}>
                         {props.children}
                     </SidebarNavigation>
                 </>
@@ -28,7 +28,7 @@ function Navigation(props) {
     }
 
     return(
-        <div className={navigationStyles.contentSpacer}>
+        <div className={removeContentSpacer ? null : navigationStyles.contentSpacer}>
             {renderCorrectNavigation()}
         </div>
     )
