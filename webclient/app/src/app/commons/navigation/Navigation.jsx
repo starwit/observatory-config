@@ -12,7 +12,7 @@ function Navigation(props) {
         if (menuItems.length > switchLength) {
             return (
                 <>
-                    <SidebarNavigation menuItems={menuItems} title={title} logo={logo} removeContentSpacer={removeContentSpacer}>
+                    <SidebarNavigation menuItems={menuItems} title={title} logo={logo} focusMode={removeContentSpacer}>
                         {props.children}
                     </SidebarNavigation>
                 </>
