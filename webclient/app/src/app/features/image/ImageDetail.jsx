@@ -1,5 +1,5 @@
 import React, {useMemo, useEffect} from "react";
-import {useParams} from "react-router";
+import {useParams} from "react-router-dom";
 import {useImmer} from "use-immer";
 import ImageRest from "../../services/ImageRest";
 import PolygonRest from "../../services/PolygonRest";

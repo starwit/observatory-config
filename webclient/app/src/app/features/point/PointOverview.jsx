@@ -3,7 +3,7 @@ import React, {useState, useMemo, useEffect} from "react";
 import {useTranslation} from "react-i18next";
 import {OverviewTable} from "@starwit/react-starwit";
 import PointRest from "../../services/PointRest";
-import {useHistory} from "react-router";
+import {useHistory} from "react-router-dom";
 import {pointOverviewFields} from "../../modifiers/PointModifier";
 
 function PointOverview() {
