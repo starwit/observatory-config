@@ -27,7 +27,7 @@ jobs:
     - name: generate tag and release body
       run: |
         RELEASE_TYPE=$(sh ${{ github.workspace }}/.github/workflows/getReleaseType.sh ${{ env.release-type }})
-        git config user.name github-smartparkingconfig
+        git config user.name github-cameramanagement
         git config user.email code@starwit.de
         npx standard-version -i CHANGELOG.md --release-as $RELEASE_TYPE
 
@@ -59,6 +59,12 @@ jobs:
       with:
         distribution: 'zulu'
         java-version: 17
+    - name: setup node
+      uses: actions/setup-node@v3
+      with:
+        node-version: 17
+    - run: npm --version
+    - run: node --version
     - name: npm install
       run: |
         if [ -d "webclient/app" ]; then
@@ -66,7 +72,7 @@ jobs:
           npm install --legacy-peer-deps
         fi
     - name: Build with Maven
-      run: mvn -B package -P frontend --file pom.xml
+      run: mvn clean -B package -P frontend --file pom.xml
       env:
          CI: false
     - name: Upload Maven build artifact
@@ -94,7 +100,7 @@ jobs:
       with:
         username: ${{ secrets.DOCKERHUB_USERNAME  }}
         password: ${{ secrets.DOCKERHUB_PASSWORD }}
-        repository: starwitorg/smartparkingconfig
+        repository: starwitorg/cameramanagement
         tags: ${{ steps.publish_tag.outputs.tag_name }}
         path: .
         dockerfile: ./Dockerfile
