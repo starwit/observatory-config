@@ -9,7 +9,6 @@ import {
     ListItem,
     ListItemButton,
     ListItemText,
-    Stack,
     Toolbar,
     Typography
 } from "@mui/material";
@@ -25,21 +24,46 @@ function SidebarNavigation(props) {
     const {t} = useTranslation();
     const history = useHistory();
 
+    function generateBoxStyles() {
+        let styles = {flexGrow: 1}
+        if (!props.focusMode) {
+            styles.p = 3
+        }
+        return styles
+    }
 
-    return (
-        <Box sx={{display: 'flex'}}>
-            <CssBaseline/>
+    function renderAppBar() {
+        if (props.focusMode) {
+            return;
+        }
+        return (
             <AppBar position="fixed" sx={{zIndex: (theme) => theme.zIndex.drawer + 1}}>
                 <Toolbar className={headerStyles.toolbar}>
-                        <img className={headerStyles.menuLogoImg} src={props.logo} alt="Logo of lirejarp"/>
-                        <Typography variant="h6" noWrap>
-                            {props.title}
-                        </Typography>
+                    <img className={headerStyles.menuLogoImg} src={props.logo} alt="Logo of lirejarp"/>
+                    <Typography variant="h6" noWrap>
+                        {props.title}
+                    </Typography>
                     <div className={headerStyles.spacer}/>
                     <IconButton color="secondary" disableRipple className={headerStyles.linkButton}
                                 onClick={() => history.push("/logout")}><Logout/></IconButton>
                 </Toolbar>
             </AppBar>
+        )
+    }
+
+    function renderAppBarSpacer() {
+        if (props.focusMode) {
+            return;
+        }
+        return (
+            <Toolbar className={headerStyles.toolbar}/>
+        )
+    }
+
+    return (
+        <Box sx={{display: 'flex'}}>
+            <CssBaseline/>
+            {renderAppBar()}
             <Drawer
                 variant="permanent"
                 sx={{
@@ -48,7 +72,7 @@ function SidebarNavigation(props) {
                     [`& .MuiDrawer-paper`]: {width: drawerWidth, boxSizing: 'border-box'},
                 }}
             >
-                <Toolbar/>
+                {renderAppBarSpacer()}
                 <Box sx={{overflow: 'auto'}}>
                     <List>
                         {props.menuItems.map((menuItem, index) => (
@@ -61,8 +85,8 @@ function SidebarNavigation(props) {
                     </List>
                 </Box>
             </Drawer>
-            <Box component="main" sx={{flexGrow: 1, p: 3}}>
-                <Toolbar className={headerStyles.toolbar}/>
+            <Box component="main" sx={generateBoxStyles()}>
+                {renderAppBarSpacer()}
                 {props.children}
             </Box>
         </Box>
