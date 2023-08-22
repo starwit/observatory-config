@@ -64,7 +64,7 @@
   "devDependencies": {
     "buffer": "npm:buffer@^6.0.3",
     "crypto": "npm:crypto-browserify@^3.12.0",
-    "eslint": "^7.11.0",
+    "eslint": "^8.47.0",
     "eslint-config-google": "^0.14.0",
     "eslint-plugin-import": "^2.25.4",
     "eslint-plugin-node": "^11.1.0",
