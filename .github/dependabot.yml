@@ -5,7 +5,11 @@
 
 version: 2
 updates:
-  - package-ecosystem: "npm, bundler, composer, maven, docker, github-actions" # See documentation for possible values
+  - package-ecosystem: "maven" # See documentation for possible values
     directory: "/" # Location of package manifests
+    schedule:
+      interval: "weekly"
+  - package-ecosystem: "npm" # See documentation for possible values
+    directory: "/webclient/app" # Location of package manifests
     schedule:
       interval: "weekly"
