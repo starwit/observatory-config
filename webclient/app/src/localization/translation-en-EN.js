@@ -42,8 +42,6 @@ const translationEnEN = {
     "parkingConfig.id": "id",
     "parkingConfig.name": "name*",
     "parkingConfig.name.hint": "Value is required. ",
-    "parkingConfig.version": "version*",
-    "parkingConfig.version.hint": "Value is required. ",
     "parkingConfig.image": "image",
     "parkingArea": "ParkingArea",
     "parkingArea.title": "ParkingArea",
@@ -52,11 +50,9 @@ const translationEnEN = {
     "parkingArea.id": "id",
     "parkingArea.name": "name*",
     "parkingArea.name.hint": "Value is required. ",
-    "parkingArea.activeConfigVersion": "activeConfigVersion",
-    "parkingArea.activeConfigVersion.hint": "",
-    "parkingArea.testConfigVersion": "testConfigVersion",
-    "parkingArea.testConfigVersion.hint": "",
     "parkingArea.parkingConfig": "parkingConfig",
+    "parkingArea.selectedTestConfig": "selectedTestConfig",
+    "parkingArea.selectedProdConfig": "selectedProdConfig",
     "app.baseName": "SmartParkingConfig",
     "home.title": "Welcome",
     "home.welcome": "Welcome to SmartParkingConfig",
@@ -85,7 +81,6 @@ const translationEnEN = {
     "error.unknown": "An unknown error occurred.",
     "error.apptemplate.notfound": "The Template could not be found.",
     "error.app.notfound": "This App could not be found.",
-    "error.entity.notfound": "This element could not be found.",
-    "annotator.title": "Parking Configuration"
+    "error.entity.notfound": "This element could not be found."
 };
 export default translationEnEN;
