@@ -27,7 +27,7 @@ jobs:
     - name: generate tag and release body
       run: |
         RELEASE_TYPE=$(sh ${{ github.workspace }}/.github/workflows/getReleaseType.sh ${{ env.release-type }})
-        git config user.name github-cameramanagement
+        git config user.name github-smartparkingconfig
         git config user.email code@starwit.de
         npx standard-version -i CHANGELOG.md --release-as $RELEASE_TYPE
 
@@ -62,7 +62,7 @@ jobs:
     - name: setup node
       uses: actions/setup-node@v3
       with:
-        node-version: 17
+        node-version: 18
     - run: npm --version
     - run: node --version
     - name: npm install
@@ -100,7 +100,7 @@ jobs:
       with:
         username: ${{ secrets.DOCKER_USERNAME  }}
         password: ${{ secrets.DOCKER_PASSWORD }}
-        repository: starwitorg/cameramanagement
+        repository: ghcr.io/smartparkingconfig
         tags: ${{ steps.publish_tag.outputs.tag_name }}
         path: .
         dockerfile: ./Dockerfile

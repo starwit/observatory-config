@@ -20,7 +20,7 @@ const entityFields = [
             "name"
         ],
         selectedIds: []
-    },
+    }
 ];
 
 const parkingConfigOverviewFields = [
