@@ -1,5 +1,6 @@
 /* eslint-disable max-len */
 const translationEnEN = {
+    "annotator.title": "Konfig-UI",
     "point": "Point",
     "point.title": "Point",
     "point.create.title": "Create Point",
