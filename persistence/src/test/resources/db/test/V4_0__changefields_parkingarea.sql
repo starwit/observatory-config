@@ -3,8 +3,8 @@ ALTER TABLE "parkingconfig" DROP COLUMN "version";
 ALTER TABLE "parkingarea" DROP COLUMN "activeconfigversion";
 ALTER TABLE "parkingarea" DROP COLUMN "testconfigversion";
 
-ALTER TABLE "parkingconfig" ADD COLUMN "testconfig_id" BIGINT UNIQUE;
-ALTER TABLE "parkingconfig" ADD COLUMN "prodconfig_id" BIGINT UNIQUE;
+ALTER TABLE "parkingarea" ADD COLUMN "testconfig_id" BIGINT UNIQUE;
+ALTER TABLE "parkingarea" ADD COLUMN "prodconfig_id" BIGINT UNIQUE;
 
 ALTER TABLE "parkingarea"
     ADD CONSTRAINT "fk_parkingarea_testconfig"

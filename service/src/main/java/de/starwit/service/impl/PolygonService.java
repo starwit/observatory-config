@@ -1,4 +1,5 @@
 package de.starwit.service.impl;
+
 import java.util.List;
 import de.starwit.persistence.entity.PolygonEntity;
 import de.starwit.persistence.repository.PolygonRepository;
@@ -44,7 +45,7 @@ public class PolygonService implements ServiceInterface<PolygonEntity, PolygonRe
         if (entity.getId() != null) {
             PolygonEntity entityPrev = this.findById(entity.getId());
             for (PointEntity item : entityPrev.getPoint()) {
-                PointEntity existingItem = pointRepository.getById(item.getId());
+                PointEntity existingItem = pointRepository.getReferenceById(item.getId());
                 existingItem.setPolygon(null);
                 this.pointRepository.save(existingItem);
             }
@@ -56,11 +57,11 @@ public class PolygonService implements ServiceInterface<PolygonEntity, PolygonRe
 
         if (pointToSave != null && !pointToSave.isEmpty()) {
             for (PointEntity item : pointToSave) {
-                PointEntity newItem = pointRepository.getById(item.getId());
+                PointEntity newItem = pointRepository.getReferenceById(item.getId());
                 newItem.setPolygon(entity);
                 pointRepository.save(newItem);
             }
         }
-        return this.getRepository().getById(entity.getId());
+        return this.getRepository().getReferenceById(entity.getId());
     }
 }
