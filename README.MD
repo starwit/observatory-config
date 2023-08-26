@@ -37,11 +37,24 @@
     ```
    You can also run the main-class via Visual Studio Code.
 
+5) add Database to pgAdmin
 
+    * open http://localhost:5050/ 
+    * click on "Add new Server"
+    * enter any name
+    * click on Connection
+    * type in the following:
+    Host name: smartparkingconfig-db;
+    Maintaince DB: smartparkingconfig;
+    username: smartparkingconfig;
+    passwort: smartparkingconfig:
+    * now save the settings and you shoud be able to access the Database
+
+* **The Application can be reached under http://localhost:8081/smartparkinkconfig/**
 * **Project Builder can be reached under http://localhost:8081/starwit/**
 * **If you are using keycloak:**
     * **default user/password is admin/admin**
-    * **keycloak can be reached under http://localost:8081/auth**
+    * **keycloak can be reached under http://localhost:8080/auth**
 
 ### Debugging
 
