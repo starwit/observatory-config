@@ -26,16 +26,16 @@ public class ParkingAreaEntity extends AbstractEntity<Long> {
     private String name;
 
     // entity relations
-    @JsonFilter("filterId")
+    @JsonFilter("filterIdName")
     @OneToMany(mappedBy = "parkingArea")
     private Set<ParkingConfigEntity> parkingConfig;
 
-    @JsonFilter("filterId")
+    @JsonFilter("filterIdName")
     @OneToOne(cascade = CascadeType.REFRESH)
     @JoinColumn(name = "testconfig_id", referencedColumnName = "id", unique = true)
     private ParkingConfigEntity selectedTestConfig;
 
-    @JsonFilter("filterId")
+    @JsonFilter("filterIdName")
     @OneToOne(cascade = CascadeType.REFRESH)
     @JoinColumn(name = "prodconfig_id", referencedColumnName = "id", unique = true)
     private ParkingConfigEntity selectedProdConfig;
