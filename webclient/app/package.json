@@ -33,7 +33,7 @@
     "react-image-annotation": "0.9.10",
     "react-image-polygon-annotation": "0.10.24",
     "react-lineto": "^3.3.0",
-    "react-router": "^5.3.0",
+    "react-router": "^6.15.0",
     "react-router-dom": "^5.3.0",
     "react-scripts": "^5.0.1",
     "react-syntax-highlighter": "^15.4.4",
