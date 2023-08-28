@@ -28,7 +28,7 @@
     "npm": "^9.8.1",
     "path": "npm:path-browserify@1.0.1",
     "react-draggable": "^4.4.4",
-    "react-i18next": "^11.12.0",
+    "react-i18next": "^13.2.0",
     "react-image-annotate": "^1.8.0",
     "react-image-annotation": "0.9.10",
     "react-image-polygon-annotation": "0.10.24",
