@@ -25,7 +25,7 @@ function SidebarNavigation(props) {
     const history = useHistory();
 
     function generateBoxStyles() {
-        let styles = {flexGrow: 1}
+        let styles = {flexGrow: 1, height: "100%"}
         if (!props.focusMode) {
             styles.p = 3
         }
@@ -61,7 +61,7 @@ function SidebarNavigation(props) {
     }
 
     return (
-        <Box sx={{display: 'flex'}}>
+        <Box sx={{display: 'flex', height: "100%"}}>
             <CssBaseline/>
             {renderAppBar()}
             <Drawer
