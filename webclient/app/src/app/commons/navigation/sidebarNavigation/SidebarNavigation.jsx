@@ -11,44 +11,15 @@ import {
     Toolbar,
     Typography
 } from "@mui/material";
-import MuiAppBar from "@mui/material/AppBar";
-import {styled, useTheme} from "@mui/material/styles";
+import {useTheme} from "@mui/material/styles";
 import {Logout} from "@mui/icons-material";
-import HeaderStyles from "../../../assets/styles/HeaderStyles";
+import {HeaderStyles, AppBar, DrawerHeader} from "../../../assets/styles/HeaderStyles";
 import {useTranslation} from "react-i18next";
 import {useHistory} from "react-router-dom";
 import Divider from "@mui/material/Divider";
 import MenuIcon from "@mui/icons-material/Menu";
 import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
 import ChevronRightIcon from "@mui/icons-material/ChevronRight";
-
-const drawerWidth = 240;
-
-const AppBar = styled(MuiAppBar, {
-    shouldForwardProp: prop => prop !== "open"
-})(({theme, open}) => ({
-    transition: theme.transitions.create(["margin", "width"], {
-        easing: theme.transitions.easing.sharp,
-        duration: theme.transitions.duration.leavingScreen
-    }),
-    ...(open && {
-        width: `calc(100% - ${drawerWidth}px)`,
-        marginLeft: `${drawerWidth}px`,
-        transition: theme.transitions.create(["margin", "width"], {
-            easing: theme.transitions.easing.easeOut,
-            duration: theme.transitions.duration.enteringScreen
-        })
-    })
-}));
-
-const DrawerHeader = styled("div")(({theme}) => ({
-    display: "flex",
-    alignItems: "center",
-    padding: theme.spacing(0, 1),
-    // necessary for content to be below app bar
-    ...theme.mixins.toolbar,
-    justifyContent: "flex-end"
-}));
 
 function SidebarNavigation(props) {
     const headerStyles = HeaderStyles();
