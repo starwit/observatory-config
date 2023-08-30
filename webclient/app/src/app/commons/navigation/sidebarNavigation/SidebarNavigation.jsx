@@ -8,73 +8,52 @@ import {
     ListItem,
     ListItemButton,
     ListItemText,
-    Stack,
     Toolbar,
     Typography
 } from "@mui/material";
-import MuiAppBar, { AppBarProps as MuiAppBarProps } from '@mui/material/AppBar';
-import { styled, useTheme } from '@mui/material/styles';
-import { Logout } from "@mui/icons-material";
+import MuiAppBar from "@mui/material/AppBar";
+import {styled, useTheme} from "@mui/material/styles";
+import {Logout} from "@mui/icons-material";
 import HeaderStyles from "../../../assets/styles/HeaderStyles";
-import { useTranslation } from "react-i18next";
-import { useHistory } from "react-router-dom";
-import Divider from '@mui/material/Divider';
-import MenuIcon from '@mui/icons-material/Menu';
-import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
-import ChevronRightIcon from '@mui/icons-material/ChevronRight';
+import {useTranslation} from "react-i18next";
+import {useHistory} from "react-router-dom";
+import Divider from "@mui/material/Divider";
+import MenuIcon from "@mui/icons-material/Menu";
+import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
+import ChevronRightIcon from "@mui/icons-material/ChevronRight";
 
 const drawerWidth = 240;
 
-const Main = styled('main', { shouldForwardProp: (prop) => prop !== 'open' })(
-    ({ theme, open }) => ({
-      flexGrow: 1,
-      padding: theme.spacing(3),
-      transition: theme.transitions.create('margin', {
+const AppBar = styled(MuiAppBar, {
+    shouldForwardProp: prop => prop !== "open"
+})(({theme, open}) => ({
+    transition: theme.transitions.create(["margin", "width"], {
         easing: theme.transitions.easing.sharp,
-        duration: theme.transitions.duration.leavingScreen,
-      }),
-      marginLeft: `-${drawerWidth}px`,
-      ...(open && {
-        transition: theme.transitions.create('margin', {
-          easing: theme.transitions.easing.easeOut,
-          duration: theme.transitions.duration.enteringScreen,
-        }),
-        marginLeft: 0,
-      }),
-    }), 
-  );
-  
-  const AppBar = styled(MuiAppBar, {
-    shouldForwardProp: (prop) => prop !== 'open',
-  })(({ theme, open }) => ({
-    transition: theme.transitions.create(['margin', 'width'], {
-      easing: theme.transitions.easing.sharp,
-      duration: theme.transitions.duration.leavingScreen,
+        duration: theme.transitions.duration.leavingScreen
     }),
     ...(open && {
-      width: `calc(100% - ${drawerWidth}px)`,
-      marginLeft: `${drawerWidth}px`,
-      transition: theme.transitions.create(['margin', 'width'], {
-        easing: theme.transitions.easing.easeOut,
-        duration: theme.transitions.duration.enteringScreen,
-      }),
-    }),
-  }));
-  
-  const DrawerHeader = styled('div')(({ theme }) => ({
-    display: 'flex',
-    alignItems: 'center',
+        width: `calc(100% - ${drawerWidth}px)`,
+        marginLeft: `${drawerWidth}px`,
+        transition: theme.transitions.create(["margin", "width"], {
+            easing: theme.transitions.easing.easeOut,
+            duration: theme.transitions.duration.enteringScreen
+        })
+    })
+}));
+
+const DrawerHeader = styled("div")(({theme}) => ({
+    display: "flex",
+    alignItems: "center",
     padding: theme.spacing(0, 1),
     // necessary for content to be below app bar
     ...theme.mixins.toolbar,
-    justifyContent: 'flex-end',
-  }));
+    justifyContent: "flex-end"
+}));
 
 function SidebarNavigation(props) {
-
     const headerStyles = HeaderStyles();
     const drawerWidth = 240;
-    const { t } = useTranslation();
+    const {t} = useTranslation();
     const history = useHistory();
 
     const theme = useTheme();
@@ -88,19 +67,17 @@ function SidebarNavigation(props) {
         setOpen(false);
     };
 
-
-
     return (
-        <Box sx={{ display: 'flex' }}>
+        <Box sx={{display: "flex"}}>
             <CssBaseline />
-            <AppBar position="fixed" sx={{ zIndex: (theme) => theme.zIndex.drawer + 1 }}>
+            <AppBar position="fixed" sx={{zIndex: theme => theme.zIndex.drawer + 1}}>
                 <Toolbar className={headerStyles.toolbar}>
                     <IconButton
                         color="inherit"
                         aria-label="open drawer"
                         onClick={handleDrawerOpen}
                         edge="start"
-                        sx={{ mr: 2, ...(open && { display: 'none' }) }}
+                        sx={{mr: 2, ...(open && {display: "none"})}}
                     >
                         <MenuIcon />
                     </IconButton>
@@ -115,12 +92,10 @@ function SidebarNavigation(props) {
             </AppBar>
             <Drawer
                 sx={{
-                    width: drawerWidth,
-                    flexShrink: 0,
-                    '& .MuiDrawer-paper': {
+                    "& .MuiDrawer-paper": {
                         width: drawerWidth,
-                        boxSizing: 'border-box',
-                    },
+                        boxSizing: "border-box"
+                    }
                 }}
                 variant="persistent"
                 anchor="left"
@@ -129,11 +104,11 @@ function SidebarNavigation(props) {
                 <Toolbar />
                 <DrawerHeader>
                     <IconButton onClick={handleDrawerClose}>
-                        {theme.direction === 'ltr' ? <ChevronLeftIcon /> : <ChevronRightIcon />}
+                        {theme.direction === "ltr" ? <ChevronLeftIcon /> : <ChevronRightIcon />}
                     </IconButton>
                 </DrawerHeader>
                 <Divider />
-                <Box sx={{ overflow: 'auto' }}>
+                <Box sx={{overflow: "auto"}}>
                     <List>
                         {props.menuItems.map((menuItem, index) => (
                             <ListItem key={menuItem.title} disablePadding>
@@ -145,12 +120,12 @@ function SidebarNavigation(props) {
                     </List>
                 </Box>
             </Drawer>
-            <Box component="main" sx={{ flexGrow: 1, p: 3 }}>
+            <Box component="main" sx={{flexGrow: 1, p: 3}}>
                 <Toolbar className={headerStyles.toolbar} />
                 {props.children}
             </Box>
         </Box>
-    )
+    );
 }
 
 export default SidebarNavigation;
