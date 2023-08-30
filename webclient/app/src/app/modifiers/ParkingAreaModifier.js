@@ -1,7 +1,5 @@
 const entityDefault = {
     name: "",
-    activeConfigVersion: "",
-    testConfigVersion: "",
     id: undefined
 };
 
@@ -13,34 +11,39 @@ const entityFields = [
         notNull: true
     },
     {
-        name: "activeConfigVersion",
-        type: "integer",
-        regex: null,
-        notNull: false
-    },
-    {
-        name: "testConfigVersion",
-        type: "integer",
-        regex: null,
-        notNull: false
-    },
-    {
         name: "parkingConfig",
         type: "OneToMany",
         regex: null,
         selectList: [],
         display: [
-            "name",
-            "version"
+            "name"
+        ],
+        selectedIds: []
+    },
+    {
+        name: "selectedTestConfig",
+        type: "OneToOne",
+        regex: null,
+        selectList: [],
+        display: [
+            "name"
+        ],
+        selectedIds: []
+    },
+    {
+        name: "selectedProdConfig",
+        type: "OneToOne",
+        regex: null,
+        selectList: [],
+        display: [
+            "name"
         ],
         selectedIds: []
     }
 ];
 
 const parkingAreaOverviewFields = [
-    {name: "name", type: "string", regex: null},
-    {name: "activeConfigVersion", type: "integer", regex: null},
-    {name: "testConfigVersion", type: "integer", regex: null}
+    {name: "name", type: "string", regex: null}
 ];
 
 export {

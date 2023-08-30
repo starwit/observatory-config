@@ -30,6 +30,8 @@ function ParkingAreaDetail() {
             if (id) {
                 entityRest.findById(id).then(response => {
                     setEntity(response.data);
+                    selectLists.push({name: "selectedTestConfig", data: response.data.parkingConfig});
+                    selectLists.push({name: "selectedProdConfig", data: response.data.parkingConfig});
                     addSelectLists(response.data, fields, setFields, selectLists);
                 });
             } else {

@@ -9,7 +9,14 @@ updates:
     directory: "/" # Location of package manifests
     schedule:
       interval: "weekly"
+    target-branch: versionupgrade
   - package-ecosystem: "npm" # See documentation for possible values
     directory: "/webclient/app" # Location of package manifests
     schedule:
       interval: "weekly"
+    target-branch: versionupgrade
+  - package-ecosystem: "docker" # See documentation for possible values
+    directory: "/" # Location of package manifests
+    schedule:
+      interval: "weekly"
+    target-branch: versionupgrade

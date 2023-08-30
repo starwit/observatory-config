@@ -7,7 +7,6 @@ function Navigation(props) {
     const {menuItems, switchLength, title, logo, removeContentSpacer} = props;
     const navigationStyles = NavigationStyles();
 
-
     function renderCorrectNavigation() {
         if (menuItems.length > switchLength) {
             return (
@@ -16,23 +15,22 @@ function Navigation(props) {
                         {props.children}
                     </SidebarNavigation>
                 </>
-            )
+            );
         }
 
         return (
             <>
-                <AppHeader menuItems={menuItems} title={title} logo={logo}/>
+                <AppHeader menuItems={menuItems} title={title} logo={logo} />
                 {props.children}
             </>
-        )
+        );
     }
 
     return (
         <div style={{height: "100%"}} className={removeContentSpacer ? null : navigationStyles.contentSpacer}>
             {renderCorrectNavigation()}
         </div>
-    )
-
+    );
 }
 
 Navigation.defaultProps = {
@@ -40,6 +38,6 @@ Navigation.defaultProps = {
     title: "New App",
     menuItems: []
 
-}
+};
 
 export default Navigation;
