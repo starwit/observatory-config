@@ -1,4 +1,4 @@
-import ReactImageAnnotate from "react-image-annotate";
+import ReactImageAnnotate from "@starwit/react-image-annotate";
 import {useEffect, useMemo, useState} from "react";
 import ClassificationRest from "../../services/ClassificationRest";
 import {Typography} from "@mui/material";
@@ -107,7 +107,7 @@ function ImageAnnotate(props){
             onExit={saveImageAnnotations}
             hideNext
             hidePrev
-            enabledTools={["select", "create-point", "create-polygon", "create-box"]}
+            enabledTools={["select", "create-point", "create-polygon", "create-box", "create-line"]}
             images={parsedImages}
             hideHeaderText
         />
