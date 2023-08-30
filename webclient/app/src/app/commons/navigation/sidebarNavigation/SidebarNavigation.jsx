@@ -1,6 +1,5 @@
 import React from "react";
 import {
-    AppBar,
     Box,
     CssBaseline,
     Drawer,
@@ -12,85 +11,92 @@ import {
     Toolbar,
     Typography
 } from "@mui/material";
+import {useTheme} from "@mui/material/styles";
 import {Logout} from "@mui/icons-material";
-import HeaderStyles from "../../../assets/styles/HeaderStyles";
+import {HeaderStyles, AppBar, DrawerHeader} from "../../../assets/styles/HeaderStyles";
 import {useTranslation} from "react-i18next";
 import {useHistory} from "react-router-dom";
+import Divider from "@mui/material/Divider";
+import MenuIcon from "@mui/icons-material/Menu";
+import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
+import ChevronRightIcon from "@mui/icons-material/ChevronRight";
 
 function SidebarNavigation(props) {
-
     const headerStyles = HeaderStyles();
     const drawerWidth = 240;
     const {t} = useTranslation();
     const history = useHistory();
 
-    function generateBoxStyles() {
-        let styles = {flexGrow: 1, height: "100%"}
-        if (!props.focusMode) {
-            styles.p = 3
-        }
-        return styles
-    }
+    const theme = useTheme();
+    const [open, setOpen] = React.useState(false);
 
-    function renderAppBar() {
-        if (props.focusMode) {
-            return;
-        }
-        return (
-            <AppBar position="fixed" sx={{zIndex: (theme) => theme.zIndex.drawer + 1}}>
+    const handleDrawerOpen = () => {
+        setOpen(true);
+    };
+
+    const handleDrawerClose = () => {
+        setOpen(false);
+    };
+
+    return (
+        <Box sx={{display: "flex"}}>
+            <CssBaseline />
+            <AppBar position="fixed" sx={{zIndex: theme => theme.zIndex.drawer + 1}}>
                 <Toolbar className={headerStyles.toolbar}>
-                    <img className={headerStyles.menuLogoImg} src={props.logo} alt="Logo of lirejarp"/>
+                    <IconButton
+                        color="inherit"
+                        aria-label="open drawer"
+                        onClick={handleDrawerOpen}
+                        edge="start"
+                        sx={{mr: 2, ...(open && {display: "none"})}}
+                    >
+                        <MenuIcon />
+                    </IconButton>
+                    <img className={headerStyles.menuLogoImg} src={props.logo} alt="Logo of lirejarp" />
                     <Typography variant="h6" noWrap>
                         {props.title}
                     </Typography>
-                    <div className={headerStyles.spacer}/>
+                    <div className={headerStyles.spacer} />
                     <IconButton color="secondary" disableRipple className={headerStyles.linkButton}
-                                onClick={() => history.push("/logout")}><Logout/></IconButton>
+                        onClick={() => history.push("/logout")}><Logout /></IconButton>
                 </Toolbar>
             </AppBar>
-        )
-    }
-
-    function renderAppBarSpacer() {
-        if (props.focusMode) {
-            return;
-        }
-        return (
-            <Toolbar className={headerStyles.toolbar}/>
-        )
-    }
-
-    return (
-        <Box sx={{display: 'flex', height: "100%"}}>
-            <CssBaseline/>
-            {renderAppBar()}
             <Drawer
-                variant="permanent"
                 sx={{
-                    width: drawerWidth,
-                    flexShrink: 0,
-                    [`& .MuiDrawer-paper`]: {width: drawerWidth, boxSizing: 'border-box'},
+                    "& .MuiDrawer-paper": {
+                        width: drawerWidth,
+                        boxSizing: "border-box"
+                    }
                 }}
+                variant="persistent"
+                anchor="left"
+                open={open}
             >
-                {renderAppBarSpacer()}
-                <Box sx={{overflow: 'auto'}}>
+                <Toolbar />
+                <DrawerHeader>
+                    <IconButton onClick={handleDrawerClose}>
+                        {theme.direction === "ltr" ? <ChevronLeftIcon /> : <ChevronRightIcon />}
+                    </IconButton>
+                </DrawerHeader>
+                <Divider />
+                <Box sx={{overflow: "auto"}}>
                     <List>
                         {props.menuItems.map((menuItem, index) => (
                             <ListItem key={menuItem.title} disablePadding>
                                 <ListItemButton onClick={() => history.push(menuItem.link)}>
-                                    <ListItemText primary={t(menuItem.title)}/>
+                                    <ListItemText primary={t(menuItem.title)} />
                                 </ListItemButton>
                             </ListItem>
                         ))}
                     </List>
                 </Box>
             </Drawer>
-            <Box component="main" sx={generateBoxStyles()}>
-                {renderAppBarSpacer()}
+            <Box component="main" sx={{flexGrow: 1, p: 3}}>
+                <Toolbar className={headerStyles.toolbar} />
                 {props.children}
             </Box>
         </Box>
-    )
+    );
 }
 
 export default SidebarNavigation;
