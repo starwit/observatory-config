@@ -105,3 +105,6 @@ Start the database without keycloak:
 cd deployment
 docker-compose -f postgreslocal-docker-compose.yml up
 ```
+### Changelog
+
+During development, you can add commits to change log by using this syntax: https://www.conventionalcommits.org/en/v1.0.0/#examples

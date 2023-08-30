@@ -1,4 +1,5 @@
 package de.starwit.service.impl;
+
 import java.util.List;
 import de.starwit.persistence.entity.ParkingConfigEntity;
 import de.starwit.persistence.repository.ParkingConfigRepository;
@@ -44,7 +45,7 @@ public class ParkingConfigService implements ServiceInterface<ParkingConfigEntit
         if (entity.getId() != null) {
             ParkingConfigEntity entityPrev = this.findById(entity.getId());
             for (ImageEntity item : entityPrev.getImage()) {
-                ImageEntity existingItem = imageRepository.getById(item.getId());
+                ImageEntity existingItem = imageRepository.getReferenceById(item.getId());
                 existingItem.setParkingConfig(null);
                 this.imageRepository.save(existingItem);
             }
@@ -56,11 +57,11 @@ public class ParkingConfigService implements ServiceInterface<ParkingConfigEntit
 
         if (imageToSave != null && !imageToSave.isEmpty()) {
             for (ImageEntity item : imageToSave) {
-                ImageEntity newItem = imageRepository.getById(item.getId());
+                ImageEntity newItem = imageRepository.getReferenceById(item.getId());
                 newItem.setParkingConfig(entity);
                 imageRepository.save(newItem);
             }
         }
-        return this.getRepository().getById(entity.getId());
+        return this.getRepository().getReferenceById(entity.getId());
     }
 }
