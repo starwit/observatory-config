@@ -7,16 +7,28 @@ version: 2
 updates:
   - package-ecosystem: "maven" # See documentation for possible values
     directory: "/" # Location of package manifests
+    target-branch: versionupgrade
     schedule:
       interval: "weekly"
-    target-branch: versionupgrade
+    groups:
+      maven-deps:
+        patterns:
+          - "*"
   - package-ecosystem: "npm" # See documentation for possible values
     directory: "/webclient/app" # Location of package manifests
+    target-branch: versionupgrade
     schedule:
       interval: "weekly"
+    groups:
+      npm-deps:
+        patterns:
+          - "*"
+  - package-ecosystem: "docker"
+    directory: "/"
     target-branch: versionupgrade
-  - package-ecosystem: "docker" # See documentation for possible values
-    directory: "/" # Location of package manifests
     schedule:
       interval: "weekly"
-    target-branch: versionupgrade
+    groups:
+      docker-deps:
+        patterns:
+          - "*"
