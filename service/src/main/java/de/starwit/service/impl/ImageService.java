@@ -1,4 +1,5 @@
 package de.starwit.service.impl;
+
 import java.util.List;
 import de.starwit.persistence.entity.ImageEntity;
 import de.starwit.persistence.repository.ImageRepository;
@@ -11,7 +12,7 @@ import de.starwit.persistence.entity.PolygonEntity;
 import de.starwit.persistence.repository.PolygonRepository;
 
 /**
- * 
+ *
  * Image Service class
  *
  */
@@ -48,7 +49,7 @@ public class ImageService implements ServiceInterface<ImageEntity, ImageReposito
         if (image.getId() != null) {
             ImageEntity entityPrev = this.findById(image.getId());
             for (PolygonEntity item : entityPrev.getPolygon()) {
-                PolygonEntity existingItem = polygonRepository.getById(item.getId());
+                PolygonEntity existingItem = polygonRepository.getReferenceById(item.getId());
                 existingItem.setImage(null);
                 this.polygonRepository.save(existingItem);
             }
@@ -65,6 +66,6 @@ public class ImageService implements ServiceInterface<ImageEntity, ImageReposito
                 polygonService.assignPolygonToImage(newPolygon, image);
             }
         }
-        return this.getRepository().getById(image.getId());
+        return this.getRepository().getReferenceById(image.getId());
     }
 }

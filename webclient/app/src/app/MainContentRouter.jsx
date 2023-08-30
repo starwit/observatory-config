@@ -1,5 +1,5 @@
 import React from "react";
-import {Route, Switch} from "react-router-dom";
+import {Route, Switch, useLocation} from "react-router-dom";
 import PointMain from "./features/point/PointMain";
 import PolygonMain from "./features/polygon/PolygonMain";
 import ImageMain from "./features/image/ImageMain";
@@ -14,12 +14,18 @@ import ImageAnnotate from "./features/imageAnnotate/ImageAnnotate";
 
 function MainContentRouter() {
     const {t} = useTranslation();
+    const location = useLocation();
 
     return (
         <>
             <Switch>
-                <Route exact path={"/"} component={ImageAnnotate}/>
-                <Navigation menuItems={appItems} title={t("app.baseName")} logo={logo}>
+                <Navigation
+                    menuItems={appItems}
+                    title={t("app.baseName")}
+                    logo={logo}
+                    removeContentSpacer={location.pathname === "/"}
+                >
+                    <Route exact path={"/"} component={ImageAnnotate}/>
                     <Route path={"/point"} component={PointMain}/>
                     <Route path={"/polygon"} component={PolygonMain}/>
                     <Route path={"/image"} component={ImageMain}/>

@@ -1,74 +1,65 @@
 {
-    "id": 1,
+    "id": 16,
     "baseName": "SmartParkingConfig",
     "packageName": "starwit",
+    "targetPath": null,
     "template": {
-        "id": 1,
+        "id": 6,
         "name": "reacthookspring",
         "credentialsRequired": false
     },
     "entities": [
         {
-            "id": 2,
+            "id": 32,
             "name": "Point",
             "fields": [
                 {
-                    "id": 2,
+                    "id": 95,
                     "fieldName": "xvalue",
                     "fieldType": "BigDecimal",
                     "enumDef": null,
                     "fieldValidateRules": [
-                        "min",
+                        "required",
                         "max"
                     ],
-                    "fieldValidateRulesMin": 0,
+                    "fieldValidateRulesMin": null,
                     "fieldValidateRulesMax": 1,
                     "fieldValidateRulesMinlength": null,
                     "fieldValidateRulesMaxlength": null,
                     "fieldValidateRulesPattern": null,
                     "fieldValidateRulesPatternJava": null,
-                    "required": false
+                    "required": true
                 },
                 {
-                    "id": 3,
+                    "id": 96,
                     "fieldName": "yvalue",
                     "fieldType": "BigDecimal",
                     "enumDef": null,
                     "fieldValidateRules": [
-                        "min",
+                        "required",
                         "max"
                     ],
-                    "fieldValidateRulesMin": 0,
+                    "fieldValidateRulesMin": null,
                     "fieldValidateRulesMax": 1,
                     "fieldValidateRulesMinlength": null,
                     "fieldValidateRulesMaxlength": null,
                     "fieldValidateRulesPattern": null,
                     "fieldValidateRulesPatternJava": null,
-                    "required": false
-                }
-            ],
-            "relationships": [
-                {
-                    "id": 7,
-                    "otherEntityName": "Polygon",
-                    "otherEntityRelationshipName": "point",
-                    "relationshipName": "polygon",
-                    "ownerSide": false,
-                    "relationshipType": "many-to-one"
+                    "required": true
                 }
             ],
             "position": {
-                "id": 8,
-                "positionX": 1253,
-                "positionY": 347
+                "id": 531,
+                "positionX": 91,
+                "positionY": 268
             }
         },
         {
-            "id": 3,
+            "id": 33,
             "name": "Polygon",
             "fields": [
                 {
-                    "id": 4,
+                    "id": 97,
                     "fieldName": "open",
                     "fieldType": "Boolean",
                     "enumDef": null,
@@ -84,42 +75,34 @@
             ],
             "relationships": [
                 {
-                    "id": 1,
-                    "otherEntityName": "Point",
-                    "otherEntityRelationshipName": "polygon",
-                    "relationshipName": "point",
-                    "ownerSide": true,
-                    "relationshipType": "one-to-many"
-                },
-                {
-                    "id": 4,
-                    "otherEntityName": "Image",
-                    "otherEntityRelationshipName": "polygon",
-                    "relationshipName": "image",
-                    "ownerSide": false,
-                    "relationshipType": "many-to-one"
-                },
-                {
-                    "id": 5,
+                    "id": 117,
                     "otherEntityName": "Classification",
                     "otherEntityRelationshipName": "polygon",
                     "relationshipName": "classification",
                     "ownerSide": true,
                     "relationshipType": "many-to-many"
+                },
+                {
+                    "id": 125,
+                    "otherEntityName": "Point",
+                    "otherEntityRelationshipName": "polygon",
+                    "relationshipName": "point",
+                    "ownerSide": true,
+                    "relationshipType": "one-to-many"
                 }
             ],
             "position": {
-                "id": 22,
-                "positionX": 1703,
-                "positionY": 146
+                "id": 532,
+                "positionX": 519,
+                "positionY": 65
             }
         },
         {
-            "id": 4,
+            "id": 34,
             "name": "Image",
             "fields": [
                 {
-                    "id": 5,
+                    "id": 98,
                     "fieldName": "src",
                     "fieldType": "String",
                     "enumDef": null,
@@ -133,7 +116,7 @@
                     "required": false
                 },
                 {
-                    "id": 6,
+                    "id": 99,
                     "fieldName": "name",
                     "fieldType": "String",
                     "enumDef": null,
@@ -149,140 +132,123 @@
             ],
             "relationships": [
                 {
-                    "id": 8,
+                    "id": 119,
                     "otherEntityName": "Polygon",
                     "otherEntityRelationshipName": "image",
                     "relationshipName": "polygon",
                     "ownerSide": true,
                     "relationshipType": "one-to-many"
-                },
-                {
-                    "id": 17,
-                    "otherEntityName": "ParkingConfig",
-                    "otherEntityRelationshipName": "image",
-                    "relationshipName": "parkingConfig",
-                    "ownerSide": false,
-                    "relationshipType": "many-to-one"
                 }
             ],
             "position": {
-                "id": 15,
-                "positionX": 1677,
-                "positionY": 439
+                "id": 533,
+                "positionX": 506,
+                "positionY": 268
             }
         },
         {
-            "id": 5,
+            "id": 35,
             "name": "Classification",
             "fields": [
                 {
-                    "id": 7,
+                    "id": 100,
                     "fieldName": "name",
                     "fieldType": "String",
                     "enumDef": null,
-                    "fieldValidateRules": null,
+                    "fieldValidateRules": [
+                        "required"
+                    ],
                     "fieldValidateRulesMin": null,
                     "fieldValidateRulesMax": null,
                     "fieldValidateRulesMinlength": null,
                     "fieldValidateRulesMaxlength": null,
                     "fieldValidateRulesPattern": null,
                     "fieldValidateRulesPatternJava": null,
-                    "required": false
+                    "required": true
                 }
             ],
-            "relationships": [
-                {
-                    "id": 6,
-                    "otherEntityName": "Polygon",
-                    "otherEntityRelationshipName": "classification",
-                    "relationshipName": "polygon",
-                    "ownerSide": false,
-                    "relationshipType": "many-to-many"
-                }
-            ],
+            "relationships": null,
             "position": {
-                "id": 19,
-                "positionX": 1251,
-                "positionY": 138
+                "id": 534,
+                "positionX": 99,
+                "positionY": 64
             }
         },
         {
-            "id": 6,
+            "id": 36,
             "name": "ParkingConfig",
             "fields": [
                 {
-                    "id": 9,
+                    "id": 101,
                     "fieldName": "name",
                     "fieldType": "String",
                     "enumDef": null,
-                    "fieldValidateRules": null,
+                    "fieldValidateRules": [
+                        "required"
+                    ],
                     "fieldValidateRulesMin": null,
                     "fieldValidateRulesMax": null,
                     "fieldValidateRulesMinlength": null,
                     "fieldValidateRulesMaxlength": null,
                     "fieldValidateRulesPattern": null,
                     "fieldValidateRulesPatternJava": null,
-                    "required": false
+                    "required": true
                 },
                 {
-                    "id": 10,
+                    "id": 102,
                     "fieldName": "version",
                     "fieldType": "Integer",
                     "enumDef": null,
-                    "fieldValidateRules": null,
+                    "fieldValidateRules": [
+                        "required"
+                    ],
                     "fieldValidateRulesMin": null,
                     "fieldValidateRulesMax": null,
                     "fieldValidateRulesMinlength": null,
                     "fieldValidateRulesMaxlength": null,
                     "fieldValidateRulesPattern": null,
                     "fieldValidateRulesPatternJava": null,
-                    "required": false
+                    "required": true
                 }
             ],
             "relationships": [
                 {
-                    "id": 11,
+                    "id": 121,
                     "otherEntityName": "Image",
                     "otherEntityRelationshipName": "parkingConfig",
                     "relationshipName": "image",
                     "ownerSide": true,
                     "relationshipType": "one-to-many"
-                },
-                {
-                    "id": 19,
-                    "otherEntityName": "ParkingArea",
-                    "otherEntityRelationshipName": "parkingConfig",
-                    "relationshipName": "parkingArea",
-                    "ownerSide": false,
-                    "relationshipType": "many-to-one"
                 }
             ],
             "position": {
-                "id": 37,
-                "positionX": 1253,
-                "positionY": 566
+                "id": 535,
+                "positionX": 96,
+                "positionY": 545
             }
         },
         {
-            "id": 7,
+            "id": 37,
             "name": "ParkingArea",
             "fields": [
                 {
-                    "id": 8,
+                    "id": 103,
                     "fieldName": "name",
                     "fieldType": "String",
                     "enumDef": null,
-                    "fieldValidateRules": null,
+                    "fieldValidateRules": [
+                        "required"
+                    ],
                     "fieldValidateRulesMin": null,
                     "fieldValidateRulesMax": null,
                     "fieldValidateRulesMinlength": null,
                     "fieldValidateRulesMaxlength": null,
                     "fieldValidateRulesPattern": null,
                     "fieldValidateRulesPatternJava": null,
-                    "required": false
+                    "required": true
                 },
                 {
-                    "id": 12,
+                    "id": 104,
                     "fieldName": "activeConfigVersion",
                     "fieldType": "Integer",
                     "enumDef": null,
@@ -296,7 +262,7 @@
                     "required": false
                 },
                 {
-                    "id": 13,
+                    "id": 105,
                     "fieldName": "testConfigVersion",
                     "fieldType": "Integer",
                     "enumDef": null,
@@ -312,7 +278,7 @@
             ],
             "relationships": [
                 {
-                    "id": 16,
+                    "id": 126,
                     "otherEntityName": "ParkingConfig",
                     "otherEntityRelationshipName": "parkingArea",
                     "relationshipName": "parkingConfig",
@@ -321,14 +287,14 @@
                 }
             ],
             "position": {
-                "id": 43,
-                "positionX": 1647,
-                "positionY": 688
+                "id": 536,
+                "positionX": 488,
+                "positionY": 524
             }
         }
     ],
     "enums": [],
     "groupsToAssign": [
-        "public"
+        "cityos"
     ]
 }

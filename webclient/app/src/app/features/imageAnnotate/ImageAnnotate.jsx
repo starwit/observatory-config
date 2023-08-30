@@ -105,9 +105,11 @@ function ImageAnnotate(props){
             labelImages
             regionClsList={classifications.map(classification => classification.name)}
             onExit={saveImageAnnotations}
+            hideNext
+            hidePrev
             enabledTools={["select", "create-point", "create-polygon", "create-box"]}
             images={parsedImages}
-
+            hideHeaderText
         />
     )
 }

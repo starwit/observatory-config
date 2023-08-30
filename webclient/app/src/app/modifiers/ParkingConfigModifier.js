@@ -1,6 +1,5 @@
 const entityDefault = {
     name: "",
-    version: "",
     id: undefined
 };
 
@@ -8,12 +7,6 @@ const entityFields = [
     {
         name: "name",
         type: "string",
-        regex: null,
-        notNull: true
-    },
-    {
-        name: "version",
-        type: "integer",
         regex: null,
         notNull: true
     },
@@ -27,12 +20,11 @@ const entityFields = [
             "name"
         ],
         selectedIds: []
-    },
+    }
 ];
 
 const parkingConfigOverviewFields = [
-    {name: "name", type: "string", regex: null},
-    {name: "version", type: "integer", regex: null}
+    {name: "name", type: "string", regex: null}
 ];
 
 export {
