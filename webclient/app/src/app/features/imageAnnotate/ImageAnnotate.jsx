@@ -55,7 +55,7 @@ function ImageAnnotate(props){
             }}
             hideNext
             hidePrev
-            enabledTools={["select", "create-point", "create-polygon", "create-box"]}
+            enabledTools={["select", "create-point", "create-polygon", "create-box", "create-line"]}
             images={parsedImages}
             hideHeaderText
         />
