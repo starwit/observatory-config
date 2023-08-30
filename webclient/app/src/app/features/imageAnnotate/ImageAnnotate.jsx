@@ -29,18 +29,26 @@ function ImageAnnotate(props){
             return
         }
         const newImages = [...images];
-        setParsedImages(newImages.map(image => {
+        const createdParsedImages = newImages.map(image => {
             return {
                 id: image.id,
-                src: image.src,
+                src: window.location.pathname + "api/imageFile/name/"+image.src,
                 name: image.name,
-                regions: image.polygon.map(poly => {
+                regions: image.polygon?.map(poly => {
+                    console.log("poly",poly)
                     return {
-
+                        type: "polygon",
+                        id: poly.id,
+                        color:"#000",
+                        cls: poly.classifications?.map(classification => classification.name),
+                        open: poly.open,
+                        points: poly.points?.map(point => [point.xvalue, point.yvalue])
                     }
                 })
             }
-        }))
+        })
+        console.log(createdParsedImages);
+        setParsedImages(createdParsedImages)
     }, [images])
 
 
@@ -74,7 +82,7 @@ function ImageAnnotate(props){
                 ...image,
                 polygon: localImages.find(imageFind => imageFind.id === image.id).regions.map(region => {
                     return {
-                        classification: [ classifications.find(classification => classification.name === region.cls) ],
+                        classification:  (typeof region.cls == "object" && region.cls.isArray) ? region.cls.map(cl => classifications.find(classification => classification.name === cl)) : classifications.find(classification => classification.name === region.cls) ,
                         points: region.points.map(point => {
                             return {
                                 xvalue: point[0],
@@ -86,8 +94,10 @@ function ImageAnnotate(props){
                 )
             }
         })
+        console.log("beforePrepImages",evnt.images)
+        console.log("beforePrepEvent",evnt.images)
         console.log("SavedPrepped images", savePreparedImages)
-        //savePreparedImages.map(image => imageRest.create(image))
+        savePreparedImages.map(image => imageRest.create(image))
         console.log(evnt.images.map(image => image.regions))
         console.log(evnt)
     }
@@ -101,6 +111,9 @@ function ImageAnnotate(props){
     }
 
     return(
+        <>
+            {console.log("IMAGES", parsedImages)}
+
         <ReactImageAnnotate
             labelImages
             regionClsList={classifications.map(classification => classification.name)}
@@ -111,6 +124,7 @@ function ImageAnnotate(props){
             images={parsedImages}
             hideHeaderText
         />
+        </>
     )
 }
 export default ImageAnnotate
