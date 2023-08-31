@@ -5,12 +5,13 @@ import java.util.stream.Collectors;
 import de.starwit.persistence.entity.PointEntity;
 import de.starwit.persistence.entity.PolygonEntity;
 import de.starwit.persistence.repository.PointRepository;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 
 /**
- * 
+ *
  * Point Service class
  *
  */
@@ -44,6 +45,11 @@ public class PointService implements ServiceInterface<PointEntity, PointReposito
     public PointEntity addPolygonToPoint(PointEntity pointEntity, PolygonEntity polygonEntity){
         pointEntity.setPolygon(polygonEntity);
         return this.save(pointEntity);
+    }
+
+    @Transactional
+    public void deleteAllByPolygon(PolygonEntity polygonEntity){
+        this.pointRepository.deleteAllByPolygon(polygonEntity);
     }
 
 }

@@ -3,6 +3,7 @@ package de.starwit.service.impl;
 import java.util.List;
 import de.starwit.persistence.entity.ImageEntity;
 import de.starwit.persistence.repository.ImageRepository;
+import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.InvalidDataAccessApiUsageException;
 import org.springframework.stereotype.Service;
@@ -46,18 +47,12 @@ public class ImageService implements ServiceInterface<ImageEntity, ImageReposito
 
         Set<PolygonEntity> polygonToSave = image.getPolygon();
 
-        if (image.getId() != null) {
-            ImageEntity entityPrev = this.findById(image.getId());
-            for (PolygonEntity item : entityPrev.getPolygon()) {
-                PolygonEntity existingItem = polygonRepository.getReferenceById(item.getId());
-                existingItem.setImage(null);
-                this.polygonRepository.save(existingItem);
-            }
-        }
+        try{
+            ImageEntity origImg = this.findById(image.getId());
+            this.polygonService.deletePolygonsByImage(origImg);
+        } catch (EntityNotFoundException e){
 
-        image.setPolygon(null);
-        image = this.getRepository().save(image);
-        this.getRepository().flush();
+        }
 
         if (polygonToSave != null && !polygonToSave.isEmpty()) {
             for (PolygonEntity polygon : polygonToSave) {
@@ -65,6 +60,10 @@ public class ImageService implements ServiceInterface<ImageEntity, ImageReposito
                 polygonService.assignPolygonToImage(newPolygon, image);
             }
         }
+
+        image = this.getRepository().save(image);
+        this.getRepository().flush();
+
         return this.getRepository().getReferenceById(image.getId());
     }
 }

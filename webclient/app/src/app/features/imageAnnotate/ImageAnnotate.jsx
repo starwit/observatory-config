@@ -30,6 +30,7 @@ function ImageAnnotate(props){
         }
         const newImages = [...images];
         const createdParsedImages = newImages.map(image => {
+            console.log("parsing", image)
             return {
                 id: image.id,
                 src: window.location.pathname + "api/imageFile/name/"+image.src,
@@ -40,14 +41,14 @@ function ImageAnnotate(props){
                         type: "polygon",
                         id: poly.id,
                         color:"#000",
-                        cls: poly.classifications?.map(classification => classification.name),
+                        cls: poly.classifications[0]?.name,
                         open: poly.open,
                         points: poly.points?.map(point => [point.xvalue, point.yvalue])
                     }
                 })
             }
         })
-        console.log(createdParsedImages);
+        console.log("CreatedParsedImages",createdParsedImages);
         setParsedImages(createdParsedImages)
     }, [images])
 
@@ -82,7 +83,7 @@ function ImageAnnotate(props){
                 ...image,
                 polygon: localImages.find(imageFind => imageFind.id === image.id).regions.map(region => {
                     return {
-                        classification:  (typeof region.cls == "object" && region.cls.isArray) ? region.cls.map(cl => classifications.find(classification => classification.name === cl)) : classifications.find(classification => classification.name === region.cls) ,
+                        classification:  (typeof region.cls == "object" && region.cls.isArray) ? region.cls.map(cl => classifications.find(classification => classification.name === cl)) : [classifications.find(classification => classification.name === region.cls)] ,
                         points: region.points.map(point => {
                             return {
                                 xvalue: point[0],

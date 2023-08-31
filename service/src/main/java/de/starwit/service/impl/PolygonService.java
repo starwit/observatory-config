@@ -1,22 +1,20 @@
 package de.starwit.service.impl;
 
-import java.util.List;
-
 import de.starwit.persistence.entity.ClassificationEntity;
 import de.starwit.persistence.entity.ImageEntity;
+import de.starwit.persistence.entity.PointEntity;
 import de.starwit.persistence.entity.PolygonEntity;
+import de.starwit.persistence.repository.PointRepository;
 import de.starwit.persistence.repository.PolygonRepository;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Set;
-import de.starwit.persistence.entity.PointEntity;
-import de.starwit.persistence.repository.PointRepository;
 
 /**
- *
  * Polygon Service class
- *
  */
 @Service
 public class PolygonService implements ServiceInterface<PolygonEntity, PolygonRepository> {
@@ -63,6 +61,7 @@ public class PolygonService implements ServiceInterface<PolygonEntity, PolygonRe
         polygonEntity = this.getRepository().save(polygonEntity);
         this.getRepository().flush();
 
+        this.pointService.deleteAllByPolygon(polygonEntity);
         if (pointsToSave != null && !pointsToSave.isEmpty()) {
             for (PointEntity item : pointsToSave) {
                 PointEntity newItem = pointService.save(item);
@@ -71,17 +70,24 @@ public class PolygonService implements ServiceInterface<PolygonEntity, PolygonRe
         }
 
         if (classificationEntities != null && !classificationEntities.isEmpty()) {
-            for (ClassificationEntity classification : classificationEntities) {
-                ClassificationEntity newClassification = classificationService.saveOrUpdate(classification);
-                classificationService.assignPolygonToClassification(polygonEntity, newClassification);
-            }
+            ClassificationEntity newClassification = classificationService.saveOrUpdate(classificationEntities.stream().iterator().next());
+            classificationService.assignPolygonToClassification(polygonEntity, newClassification);
         }
-        return this.getRepository().getReferenceById(polygonEntity.getId());
+        return this.getRepository().save(polygonEntity);
+
     }
 
-    PolygonEntity assignPolygonToImage(PolygonEntity polygonEntity, ImageEntity imageEntity){
+    PolygonEntity assignPolygonToImage(PolygonEntity polygonEntity, ImageEntity imageEntity) {
         polygonEntity.setImage(imageEntity);
         return polygonRepository.save(polygonEntity);
+    }
+
+    @Transactional
+    public void deletePolygonsByImage(ImageEntity imageEntity){
+        if (imageEntity.getPolygon() != null){
+            imageEntity.getPolygon().forEach(polygonEntity -> pointService.deleteAllByPolygon(polygonEntity));
+        }
+        this.polygonRepository.deleteAllByImage(imageEntity);
     }
 
 }
