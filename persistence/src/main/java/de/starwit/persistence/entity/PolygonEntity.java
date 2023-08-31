@@ -1,12 +1,11 @@
 package de.starwit.persistence.entity;
 
-import java.util.Set;
+import java.util.*;
 
 import com.fasterxml.jackson.annotation.JsonFilter;
 
 import jakarta.persistence.*;
 
-import java.util.HashSet;
 import java.util.Set;
 
 import jakarta.persistence.CascadeType;
@@ -38,7 +37,7 @@ public class PolygonEntity extends AbstractEntity<Long> {
     @JsonFilter("filterId")
     @OneToMany(mappedBy = "polygon")
     @OrderBy(value = "id ASC")
-    private Set<PointEntity> point = new HashSet<>();
+    private List<PointEntity> point = new ArrayList<>();
 
     // entity fields getters and setters
     public Boolean getOpen() {
@@ -66,11 +65,11 @@ public class PolygonEntity extends AbstractEntity<Long> {
         this.classification = classification;
     }
 
-    public Set<PointEntity> getPoints() {
+    public List<PointEntity> getPoints() {
         return point;
     }
 
-    public void setPoints(Set<PointEntity> point) {
+    public void setPoints(List<PointEntity> point) {
         this.point = point;
     }
 

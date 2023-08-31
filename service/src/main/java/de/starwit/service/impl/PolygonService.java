@@ -45,7 +45,7 @@ public class PolygonService implements ServiceInterface<PolygonEntity, PolygonRe
     @Override
     public PolygonEntity saveOrUpdate(PolygonEntity polygonEntity) {
 
-        Set<PointEntity> pointsToSave = polygonEntity.getPoints();
+        List<PointEntity> pointsToSave = polygonEntity.getPoints();
         Set<ClassificationEntity> classificationEntities = polygonEntity.getClassifications();
 
         if (polygonEntity.getId() != null) {
