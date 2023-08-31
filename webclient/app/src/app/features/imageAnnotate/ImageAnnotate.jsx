@@ -36,11 +36,10 @@ function ImageAnnotate(props){
                 src: window.location.pathname + "api/imageFile/name/"+image.src,
                 name: image.name,
                 regions: image.polygon?.map(poly => {
-                    console.log("poly",poly)
                     return {
                         type: "polygon",
                         id: poly.id,
-                        color:"#000",
+                        color:poly.classifications[0]?.color,
                         cls: poly.classifications[0]?.name,
                         open: poly.open,
                         points: poly.points?.map(point => [point.xvalue, point.yvalue])
