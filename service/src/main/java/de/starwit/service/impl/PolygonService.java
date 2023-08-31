@@ -70,7 +70,7 @@ public class PolygonService implements ServiceInterface<PolygonEntity, PolygonRe
         }
 
         if (classificationEntities != null && !classificationEntities.isEmpty()) {
-            ClassificationEntity newClassification = classificationService.saveOrUpdate(classificationEntities.stream().iterator().next());
+            ClassificationEntity newClassification = classificationService.findById(classificationEntities.stream().iterator().next().getId());
             classificationService.assignPolygonToClassification(polygonEntity, newClassification);
         }
         return this.getRepository().save(polygonEntity);
