@@ -62,7 +62,6 @@ public class ImageService implements ServiceInterface<ImageEntity, ImageReposito
         if (polygonToSave != null && !polygonToSave.isEmpty()) {
             for (PolygonEntity polygon : polygonToSave) {
                 PolygonEntity newPolygon = polygonService.saveOrUpdate(polygon);
-
                 polygonService.assignPolygonToImage(newPolygon, image);
             }
         }

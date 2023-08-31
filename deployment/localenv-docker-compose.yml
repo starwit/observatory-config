@@ -16,11 +16,11 @@ services:
     volumes:
       - smartparkingconfig-db:/var/lib/postgresql/data
     ports:
-      - "5432:5432"
+      - "5433:5432"
     networks:
       - backend
     restart: unless-stopped
-  
+
   pgadmin:
     container_name: pgadmin_container
     image: dpage/pgadmin4
@@ -45,7 +45,7 @@ services:
       POSTGRES_PASSWORD: 'keycloak'
       PGDATA: /var/lib/postgresql/data
     healthcheck:
-      test: ['CMD-SHELL', 'pg_isready -U keycloak'] 
+      test: ['CMD-SHELL', 'pg_isready -U keycloak']
       interval: 5s
       timeout: 60s
       retries: 30
