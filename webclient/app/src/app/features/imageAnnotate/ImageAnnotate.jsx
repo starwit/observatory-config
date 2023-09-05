@@ -9,6 +9,7 @@ function ImageAnnotate(props){
     const [classifications, setClassifications] = useState(null);
     const [images, setImages] = useState(null);
     const [parsedImages, setParsedImages] = useState(null);
+    const [selectedImage, setSelectedImage] = useState(0);
     const classificationRest = useMemo(() => new ClassificationRest(), []);
     const imageRest = useMemo(() => new ImageRest(), []);
 
@@ -37,6 +38,19 @@ function ImageAnnotate(props){
         }))
     }, [images])
 
+    function wrapAround(newNumber) {
+        return ((newNumber % parsedImages?.length) + parsedImages?.length) % parsedImages?.length
+    }
+
+    function onNextImage(){
+        setSelectedImage(wrapAround(selectedImage + 1))
+    }
+
+    function onPrevImage(){
+        setSelectedImage(wrapAround(selectedImage - 1))
+
+    }
+
     if (!classifications || !parsedImages){
         return <Typography>Loading</Typography>
     }
@@ -53,11 +67,15 @@ function ImageAnnotate(props){
                 console.log(evnt.images.map(image => image.regions))
                 console.log(evnt)
             }}
-            hideNext
-            hidePrev
             enabledTools={["select", "create-point", "create-polygon", "create-box", "create-line"]}
             images={parsedImages}
             hideHeaderText
+            selectedImage={selectedImage}
+            onNextImage={onNextImage}
+            onPrevImage={onPrevImage}
+            hideNext={parsedImages.length === 1}
+            hidePrev={parsedImages.length === 1}
+            hideClone
         />
     )
 }
