@@ -50,8 +50,9 @@ public class ImageService implements ServiceInterface<ImageEntity, ImageReposito
         try{
             ImageEntity origImg = this.findById(image.getId());
             this.polygonService.deletePolygonsByImage(origImg);
-        } catch (EntityNotFoundException ignored){
-
+        } catch (InvalidDataAccessApiUsageException ignored){
+        //} catch (EntityNotFoundException ignored){
+            System.out.println("blubb");
         }
 
         if (polygonToSave != null && !polygonToSave.isEmpty()) {
