@@ -609,7 +609,7 @@
       "enabled": true,
       "alwaysDisplayInConsole": false,
       "clientAuthenticatorType": "client-secret",
-      "secret": "smartparkingconfig",
+      "secret": "PBcaT08RLn3TtaFcSO9HtDVuKkyhxBuF",
       "redirectUris": [
         "*"
       ],

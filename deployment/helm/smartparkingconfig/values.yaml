@@ -27,7 +27,7 @@ auth:
   mode: extern # possible values: disabled, included, extern
   keycloak_url: https://hostname/realms/smartparkingconfig
   client_id: smartparkingconfig
-  client_secret: smartparkingconfig
+  client_secret: smartparkingconfig # TODO get from secret
 
 postgresql:
   auth:
@@ -65,9 +65,9 @@ keycloak:
               "description": "smartparkingconfig",
               "enabled": true,
               "clientAuthenticatorType": "client-secret",
-              "secret": "smartparkingconfig",
+              "secret": "PBcaT08RLn3TtaFcSO9HtDVuKkyhxBuF",
               "redirectUris": [
-                "https://auth.wob.starwit-infra.de/*"
+                "https://pm.wob.starwit-infra.de/*"
               ],
               "webOrigins": [
                 "+"
@@ -156,4 +156,4 @@ securityContext: {}
 
 resources:
   limits:
-    memory: "2300Mi"
+    memory: "1000Mi"
