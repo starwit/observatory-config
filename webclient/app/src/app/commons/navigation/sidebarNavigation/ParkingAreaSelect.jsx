@@ -7,7 +7,7 @@ import InputLabel from "@mui/material/InputLabel";
 import FormControl from "@mui/material/FormControl";
 
 function ParkingAreaSelect() {
-    const [selected, setSelected] = React.useState(0);
+    const [selected, setSelected] = React.useState({});
     const parkingareaRest = useMemo(() => new ParkingAreaRest(), []);
     const history = useHistory();
     const [parkingAreaAll, setParkingAreaAll] = useState([]);
@@ -19,15 +19,12 @@ function ParkingAreaSelect() {
     function reload() {
         parkingareaRest.findAll().then(response => {
             setParkingAreaAll(response.data);
-            setSelected(3);
-            console.log(selected);
         });
     }
 
     const handleChange = event => {
         setSelected(event.target.value);
-        console.log(selected);
-        history.push("/parkingarea/update/" + event.target.value);
+        history.push("/parkingarea/update/" + event.target.value.id);
     };
 
     return (
@@ -35,7 +32,7 @@ function ParkingAreaSelect() {
             <InputLabel>ParkingArea</InputLabel>
             <Select value={selected} label="ParkingArea" onChange={handleChange}>
                 {parkingAreaAll.map(entity => (
-                    <MenuItem key={entity.id} value={entity.id} >{entity.name}</MenuItem> ))}
+                    <MenuItem key={entity.id} value={entity} >{entity.name}</MenuItem> ))}
             </Select>
         </FormControl>);
 }
