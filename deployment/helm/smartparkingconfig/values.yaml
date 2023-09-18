@@ -18,8 +18,7 @@ pullSecret:
   password: "password"
 
 app:
-  context_path: "/smartparkingconfig"
-  profile: auth
+  context_path: ""
 
 auth:
   included_keycloak:
@@ -53,78 +52,7 @@ keycloak:
       password: bn_keycloak
   keycloakConfigCli:
     enabled: true
-    configuration:
-      smartparkingconfig.json: |
-        {
-          "enabled": true,
-          "realm": "smartparkingconfig",
-          "clients": [
-            {
-              "clientId": "smartparkingconfig",
-              "name": "smartparkingconfig",
-              "description": "smartparkingconfig",
-              "enabled": true,
-              "clientAuthenticatorType": "client-secret",
-              "secret": "PBcaT08RLn3TtaFcSO9HtDVuKkyhxBuF",
-              "redirectUris": [
-                "https://pm.wob.starwit-infra.de/*"
-              ],
-              "webOrigins": [
-                "+"
-              ]
-            }
-          ],
-          "clientScopes": [
-            {
-              "name": "roles",
-              "protocol": "openid-connect",
-              "protocolMappers": [
-                {
-                  "name": "realm roles",
-                  "protocol": "openid-connect",
-                  "protocolMapper": "oidc-usermodel-realm-role-mapper",
-                  "consentRequired": false,
-                  "config": {
-                    "multivalued": "true",
-                    "userinfo.token.claim": "true",
-                    "user.attribute": "foo",
-                    "id.token.claim": "true",
-                    "access.token.claim": "true",
-                    "claim.name": "realm_access.roles",
-                    "jsonType.label": "String"
-                  }
-                }
-              ]
-            }
-          ],
-          "roles": {
-            "realm": [
-              {
-                "name": "admin",
-                "composite": false,
-                "clientRole": false
-              }
-            ]
-          },
-          "users": [
-            {
-              "username": "test",
-              "email": "test@example.com",
-              "enabled": true,
-              "firstName": "Test",
-              "lastName": "User",
-              "credentials": [
-                {
-                  "type": "password",
-                  "value": "test"
-                }
-              ],
-              "realmRoles": [
-                "admin"
-              ]
-            }
-          ]
-        }
+    existingConfigmap: smartparking
 
 extraEnv: |
   - name: JAVA_TOOL_OPTIONS
@@ -141,7 +69,7 @@ ingress:
   hosts:
     - host: pm.wob.starwit-infra.de
       paths:
-        - path: /smartparkingconfig
+        - path: /
           pathType: ImplementationSpecific
   tls: 
     - secretName: pm.wob.starwit-infra.de

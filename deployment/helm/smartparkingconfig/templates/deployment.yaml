@@ -58,20 +58,20 @@ spec:
             {{- if eq .Values.auth.mode "included" }}
             - name: SPRING_SECURITY_OAUTH2_CLIENT_PROVIDER_KEYCLOAK_ISSUER-URI
               value: https://{{ .Values.keycloak.ingress.hostname }}/realms/smartparkingconfig
-            - name: SPRING_SECURITY_OAUTH2_CLIENT_REGISTRATION.KEYCLOAK.CLIENT-ID
+            - name: SPRING_SECURITY_OAUTH2_CLIENT_REGISTRATION_KEYCLOAK_CLIENT-ID
               value: {{ .Values.auth.client_id }}
-            - name: SPRING_SECURITY_OAUTH2_CLIENT_REGISTRATION.KEYCLOAK.CLIENT-SECRET
+            - name: SPRING_SECURITY_OAUTH2_CLIENT_REGISTRATION_KEYCLOAK_CLIENT-SECRET
               value: {{ .Values.auth.client_secret }}
             {{- else if eq .Values.auth.mode "extern" }}
             - name: SPRING_SECURITY_OAUTH2_CLIENT_PROVIDER_KEYCLOAK_ISSUER-URI
               value: {{ .Values.auth.keycloak_url }}
-            - name: SPRING_SECURITY_OAUTH2_CLIENT_REGISTRATION.KEYCLOAK.CLIENT-ID
+            - name: SPRING_SECURITY_OAUTH2_CLIENT_REGISTRATION_KEYCLOAK_CLIENT-ID
               value: {{ .Values.auth.client_id }}
-            - name: SPRING_SECURITY_OAUTH2_CLIENT_REGISTRATION.KEYCLOAK.CLIENT-SECRET
+            - name: SPRING_SECURITY_OAUTH2_CLIENT_REGISTRATION_KEYCLOAK_CLIENT-SECRET
               value: {{ .Values.auth.client_secret }}
             {{- else if eq .Values.auth.mode "disabled" }}
             - name: SPRING_PROFILES_ACTIVE
-              value: dev
+              value: default
             {{- end }}
             {{- with .Values.extraEnv }}
             {{- tpl . $ | nindent 12 }}
