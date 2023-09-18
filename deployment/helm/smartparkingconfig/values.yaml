@@ -6,7 +6,7 @@ image:
   repository: docker.internal.starwit-infra.de/smartparkingconfig
   pullPolicy: Always
   # Overrides the image tag whose default is the chart appVersion.
-  tag: "0.0.1"
+  tag: ""
 
 imagePullSecrets:
   - name: docker-starwit-internal
@@ -54,11 +54,11 @@ keycloak:
     enabled: true
     existingConfigmap: smartparking
 
-extraEnv: |
-  - name: JAVA_TOOL_OPTIONS
-    value: -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=5000
-  - name: LOGGING_LEVEL_ORG_SPRINGFRAMEWORK_SECURITY
-    value: INFO
+# extraEnv: |
+#   - name: JAVA_TOOL_OPTIONS
+#     value: -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=5000
+#   - name: LOGGING_LEVEL_ORG_SPRINGFRAMEWORK_SECURITY
+#     value: INFO
 #   - name: LOGGING_LEVEL_ROOT
 #     value: DEBUG
 
