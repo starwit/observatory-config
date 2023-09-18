@@ -20,6 +20,7 @@ function ParkingAreaOverview() {
     function reload() {
         parkingareaRest.findAll().then(response => {
             setParkingAreaAll(response.data);
+            console.log(parkingAreaAll);
         });
     }
 

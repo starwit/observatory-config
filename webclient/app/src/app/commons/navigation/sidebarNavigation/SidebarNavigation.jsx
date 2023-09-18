@@ -20,6 +20,7 @@ import Divider from "@mui/material/Divider";
 import MenuIcon from "@mui/icons-material/Menu";
 import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
 import ChevronRightIcon from "@mui/icons-material/ChevronRight";
+import ParkingAreaSelect from "./ParkingAreaSelect";
 
 function SidebarNavigation(props) {
     const headerStyles = HeaderStyles();
@@ -88,6 +89,9 @@ function SidebarNavigation(props) {
                                 </ListItemButton>
                             </ListItem>
                         ))}
+                        <ListItem>
+                            <ParkingAreaSelect/>
+                        </ListItem>
                     </List>
                 </Box>
             </Drawer>
