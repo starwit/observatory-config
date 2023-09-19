@@ -3,7 +3,7 @@ import {useEffect, useMemo, useState} from "react";
 import {useTranslation} from "react-i18next";
 import ClassificationRest from "../../services/ClassificationRest";
 import {Typography} from "@mui/material";
-import ParkingConfigRest from "../../services/ParkingConfigRest";
+import ImageRest from "../../services/ImageRest";
 
 function ImageAnnotate() {
 
@@ -13,7 +13,7 @@ function ImageAnnotate() {
     const [images, setImages] = useState(null);
     const [selectedImage, setSelectedImage] = useState(0);
     const classificationRest = useMemo(() => new ClassificationRest(), []);
-    const parkingConfigRest = useMemo(() => new ParkingConfigRest(), []);
+    const imageRest = useMemo(() => new ImageRest(), []);
     const id = 1;//TODO: useParams();
 
     useEffect(() => {
@@ -31,20 +31,18 @@ function ImageAnnotate() {
     }
 
     function reloadImages() {
-        parkingConfigRest.findById(id).then(response => {
-            if (response.data == null || response.data.image == null) {
+        imageRest.findWithPolygons(id).then(response => {
+            if (response.data == null) {
                 return;
             }
-            setImages(response.data.image.map(image => parseImage(image)));
+            setImages(response.data.map(image => parseImage(image)));
         });
     }
 
     function parseImage(image) {
-        return {
-            src: window.location.pathname + "api/imageFile/name/" + image.src,
-            name: image.name,
-            regions: []
-        };
+        image.src = window.location.pathname + "api/imageFile/name/" + image.src;
+
+        return image;
     }
 
     function wrapAround(newNumber) {
@@ -60,8 +58,10 @@ function ImageAnnotate() {
 
     }
 
-    function savePolygon(event) {
-
+    function savePolygons(event) {
+        imageRest.savePolygons(event).then(response => {
+            reloadImages();
+        });
     }
 
     if (!classifications || !images) {
@@ -73,23 +73,26 @@ function ImageAnnotate() {
     }
 
     return (
-        <ReactImageAnnotate
-            labelImages
-            regionClsList={classifications.map(classification => classification.name)}
-            onExit={event => {
-                console.log("save image");
-                console.log(event);
-            }}
-            enabledTools={["select", "create-point", "create-polygon", "create-box", "create-line"]}
-            images={images}
-            hideHeaderText
-            selectedImage={selectedImage}
-            onNextImage={onNextImage}
-            onPrevImage={onPrevImage}
-            hideNext={images.length === 1}
-            hidePrev={images.length === 1}
-            hideClone
-        />
-    )
+        <>
+            <ReactImageAnnotate
+                labelImages
+                regionClsList={classifications.map(classification => classification.name)}
+                onExit={event => {
+                    console.log("save image");
+                    console.log(event.images);
+                    savePolygons(event.images)
+                }}
+                enabledTools={["select", "create-point", "create-polygon", "create-box", "create-line"]}
+                images={images}
+                hideHeaderText
+                selectedImage={selectedImage}
+                onNextImage={onNextImage}
+                onPrevImage={onPrevImage}
+                hideNext={images.length === 1}
+                hidePrev={images.length === 1}
+                hideClone
+            />
+        </>
+    );
 }
 export default ImageAnnotate

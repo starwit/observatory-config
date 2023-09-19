@@ -13,5 +13,13 @@ class ImageRest extends CrudRest {
             return axios.get(this.baseUrl + "/find-without-other-parkingConfig/" + selected);
         }
     }
+
+    findWithPolygons(selected) {
+        return axios.get(this.baseUrl + "/find-with-polygons/" + selected);
+    }
+
+    savePolygons(entityList) {
+        return axios.post(this.baseUrl + "/save-polygons", entityList);
+    }
 }
 export default ImageRest;

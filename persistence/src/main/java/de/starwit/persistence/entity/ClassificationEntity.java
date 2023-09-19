@@ -49,4 +49,12 @@ public class ClassificationEntity extends AbstractEntity<Long> {
         this.polygon = polygon;
     }
 
+    public String getColor() {
+        return color;
+    }
+
+    public void setColor(String color) {
+        this.color = color;
+    }
+
 }
