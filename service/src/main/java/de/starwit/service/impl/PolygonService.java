@@ -1,14 +1,15 @@
 package de.starwit.service.impl;
 
 import java.util.List;
-import de.starwit.persistence.entity.PolygonEntity;
-import de.starwit.persistence.repository.PolygonRepository;
+import java.util.Set;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.Set;
 import de.starwit.persistence.entity.PointEntity;
+import de.starwit.persistence.entity.PolygonEntity;
 import de.starwit.persistence.repository.PointRepository;
+import de.starwit.persistence.repository.PolygonRepository;
 
 /**
  * 
@@ -37,21 +38,32 @@ public class PolygonService implements ServiceInterface<PolygonEntity, PolygonRe
         return polygonRepository.findAllWithoutOtherImage(id);
     }
 
+    public PolygonEntity saveAndFlush(PolygonEntity polygonEntity) {
+        return polygonRepository.saveAndFlush(polygonEntity);
+    }
+
+    public void deleteAll(Set<PolygonEntity> entities) {
+        for (PolygonEntity polygonEntity : entities) {
+            pointRepository.deleteAll(polygonEntity.getPoint());
+        }
+        polygonRepository.deleteAll(entities);
+    }
+
     @Override
     public PolygonEntity saveOrUpdate(PolygonEntity entity) {
 
-        Set<PointEntity> pointToSave = entity.getPoint();
+        List<PointEntity> pointToSave = entity.getPoint();
 
         if (entity.getId() != null) {
             PolygonEntity entityPrev = this.findById(entity.getId());
-            for (PointEntity item : entityPrev.getPoint()) {
-                PointEntity existingItem = pointRepository.getReferenceById(item.getId());
-                existingItem.setPolygon(null);
-                this.pointRepository.save(existingItem);
+            if (entityPrev.getPoint() != null && !entityPrev.getPoint().isEmpty()) {
+                for (PointEntity item : entityPrev.getPoint()) {
+                    PointEntity existingItem = pointRepository.getReferenceById(item.getId());
+                    existingItem.setPolygon(null);
+                    this.pointRepository.save(existingItem);
+                }
             }
         }
-
-        entity.setPoint(null);
         entity = this.getRepository().save(entity);
         this.getRepository().flush();
 

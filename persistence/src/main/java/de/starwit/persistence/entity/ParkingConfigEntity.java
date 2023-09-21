@@ -25,7 +25,7 @@ public class ParkingConfigEntity extends AbstractEntity<Long> {
     private String name;
 
     // entity relations
-    @JsonFilter("filterId")
+    @JsonFilter("filterImage")
     @OneToMany(mappedBy = "parkingConfig")
     private Set<ImageEntity> image;
 

@@ -22,6 +22,10 @@ public class ClassificationEntity extends AbstractEntity<Long> {
     @Column(name = "name", nullable = false)
     private String name;
 
+    @NotBlank
+    @Column(name = "color", nullable = false)
+    private String color;
+
     // entity relations
     @JsonFilter("filterId")
     @ManyToMany(mappedBy = "classification")
@@ -43,6 +47,14 @@ public class ClassificationEntity extends AbstractEntity<Long> {
 
     public void setPolygon(Set<PolygonEntity> polygon) {
         this.polygon = polygon;
+    }
+
+    public String getColor() {
+        return color;
+    }
+
+    public void setColor(String color) {
+        this.color = color;
     }
 
 }
