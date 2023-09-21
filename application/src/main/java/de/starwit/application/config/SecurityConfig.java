@@ -59,18 +59,12 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
-                .cors(cors -> cors.configurationSource(request -> {
-                    CorsConfiguration configuration = new CorsConfiguration();
-                    configuration.setAllowedOrigins(List.of("http://localhost:8081"));
-                    configuration.setAllowedHeaders(List.of("*"));
-                    configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"));
-                    return configuration;
-                }))
                 .csrf(httpSecurityCsrfConfigurer -> httpSecurityCsrfConfigurer
                         .csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
                         .csrfTokenRequestHandler(new SpaCsrfTokenRequestHandler()))
                 .addFilterAfter(new CsrfCookieFilter(), BasicAuthenticationFilter.class)
                 .authorizeHttpRequests(authorize -> authorize
+                        .requestMatchers("/monitoring/health").permitAll()
                         .requestMatchers("/**").hasAnyRole("admin", "user", "reader")
                         .anyRequest().authenticated())
                 .logout(logout -> logout
@@ -100,22 +94,22 @@ public class SecurityConfig {
                 }
                 if (authority instanceof OidcUserAuthority) {
                     try {
-                        final var oidcUserAuthority = (OidcUserAuthority) authority;
-                        final List<String> roles = oidcUserAuthority.getUserInfo().getClaimAsStringList("roles");
+                        final OidcUserAuthority oidcUserAuthority = (OidcUserAuthority) authority;
+                        final Map<String,Object> realmAccessMap = oidcUserAuthority.getUserInfo().getClaimAsMap("realm_access");
+                        if (realmAccessMap == null) {
+                            LOG.error("claims do not contain 'realm_access' map");
+                            return;
+                        }
+                        @SuppressWarnings("unchecked")
+                        final List<String> roles = (List<String>) realmAccessMap.get("roles");
 
-                        mappedAuthorities.addAll(roles.stream().map(SimpleGrantedAuthority::new).toList());
+                        mappedAuthorities.addAll(roles.stream().map(role -> new SimpleGrantedAuthority("ROLE_" + role)).toList());
                     } catch (NullPointerException e) {
-                        LOG.error(
-                                "Could not read the roles from claims.realm_access.roles -- Is the Mapper set up correctly?");
+                        LOG.error("Could not read the roles from claims.realm_access.roles -- Is the Mapper set up correctly?");
+                    } catch (ClassCastException e) {
+                        LOG.error("claims.realm_access.roles does not contain a list of roles. Please check your configuration.", e);
                     }
-                } else if (authority instanceof OAuth2UserAuthority oauth2UserAuthority) {
-                    final var userAttributes = oauth2UserAuthority.getAttributes();
-                    final Map<String, List<String>> realmAccess = (Map<String, List<String>>) userAttributes
-                            .get("realm_access");
-                    final List<String> roles = realmAccess.get("roles");
-
-                    mappedAuthorities.addAll(roles.stream().map(SimpleGrantedAuthority::new).toList());
-                }
+                } 
             });
 
             return mappedAuthorities;
