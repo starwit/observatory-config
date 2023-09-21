@@ -108,13 +108,13 @@ public class ImageController {
 
     @Operation(summary = "Save polygon to image")
     @PostMapping(value = "/save-polygons")
-    public void savePolygons(@Valid @RequestBody List<ImageDto> dtos) throws NotificationException {
+    public void savePolygons(@Valid @RequestBody List<ImageDto> dtos) {
         for (ImageDto dto : dtos) {
             savePolygonsPerImage(dto);
         }
     }
 
-    private ImageDto savePolygonsPerImage(ImageDto dto) throws EntityNotFoundException, NotificationException {
+    private ImageDto savePolygonsPerImage(ImageDto dto) throws EntityNotFoundException {
         ImageEntity entity = new ImageEntity();
         if (dto.getId() != null) {
             entity = imageService.findById(dto.getId());
@@ -125,7 +125,7 @@ public class ImageController {
 
             List<RegionDto> regions = dto.getRegions();
             for (RegionDto regionDto : regions) {
-                entity.getPolygon().add(createPolygon(regionDto, entity));
+                entity.getPolygon().add(createPolygon(regionDto));
             }
 
             entity = imageService.saveOrUpdate(entity);
@@ -135,7 +135,7 @@ public class ImageController {
         }
     }
 
-    private PolygonEntity createPolygon(RegionDto regionDto, ImageEntity image) {
+    private PolygonEntity createPolygon(RegionDto regionDto) {
         PolygonEntity polygonEntity = new PolygonEntity();
         Set<ClassificationEntity> cls = classificationService.findByName(regionDto.getCls());
         polygonEntity.setClassification(cls);
