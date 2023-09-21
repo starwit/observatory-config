@@ -6,7 +6,7 @@ import MenuItem from "@mui/material/MenuItem";
 import InputLabel from "@mui/material/InputLabel";
 import FormControl from "@mui/material/FormControl";
 import AddCircleIcon from "@mui/icons-material/AddCircle";
-import RemoveCircleIcon from "@mui/icons-material/RemoveCircle";
+import DeleteIcon from '@mui/icons-material/Delete';
 import EditRoundedIcon from "@mui/icons-material/EditRounded";
 import {
     IconButton,
@@ -67,7 +67,7 @@ function ParkingAreaSelect() {
                     <EditRoundedIcon/>
                 </IconButton>
                 <IconButton onClick={handleDelete}>
-                    <RemoveCircleIcon/>
+                    <DeleteIcon/>
                 </IconButton>
             </Typography>
         </FormControl>);
