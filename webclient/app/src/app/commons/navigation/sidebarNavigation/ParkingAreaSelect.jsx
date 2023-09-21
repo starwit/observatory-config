@@ -5,6 +5,13 @@ import Select from "@mui/material/Select";
 import MenuItem from "@mui/material/MenuItem";
 import InputLabel from "@mui/material/InputLabel";
 import FormControl from "@mui/material/FormControl";
+import AddCircleIcon from "@mui/icons-material/AddCircle";
+import RemoveCircleIcon from "@mui/icons-material/RemoveCircle";
+import EditRoundedIcon from "@mui/icons-material/EditRounded";
+import {
+    IconButton,
+    Typography
+} from "@mui/material";
 
 function ParkingAreaSelect() {
     const [selected, setSelected] = React.useState({});
@@ -22,6 +29,24 @@ function ParkingAreaSelect() {
         });
     }
 
+    function goToCreate() {
+        history.push("/parkingarea/create");
+    }
+
+    function goToUpdate() {
+        if (!!selected) {
+            history.push("/parkingarea/update/" + selected.id);
+            setSelected(undefined);
+        }
+    }
+
+    function handleDelete() {
+        if (!!selected) {
+            parkingareaRest.delete(selected.id).then(reload);
+            setSelected(undefined);
+        }
+    }
+
     const handleChange = event => {
         setSelected(event.target.value);
         history.push("/parkingarea/update/" + event.target.value.id);
@@ -34,6 +59,17 @@ function ParkingAreaSelect() {
                 {parkingAreaAll.map(entity => (
                     <MenuItem key={entity.id} value={entity} >{entity.name}</MenuItem> ))}
             </Select>
+            <Typography align="right">
+                <IconButton onClick={goToCreate}>
+                    <AddCircleIcon/>
+                </IconButton>
+                <IconButton onClick={goToUpdate}>
+                    <EditRoundedIcon/>
+                </IconButton>
+                <IconButton onClick={handleDelete}>
+                    <RemoveCircleIcon/>
+                </IconButton>
+            </Typography>
         </FormControl>);
 }
 
