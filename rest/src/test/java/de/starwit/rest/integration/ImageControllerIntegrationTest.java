@@ -7,7 +7,11 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 
 import de.starwit.persistence.entity.ImageEntity;
 import de.starwit.rest.controller.ImageController;
+import de.starwit.service.impl.ClassificationService;
 import de.starwit.service.impl.ImageService;
+import de.starwit.service.impl.PointService;
+import de.starwit.service.impl.PolygonService;
+import de.starwit.service.mapper.ImageMapper;
 
 /**
  * Tests for ImageController
@@ -22,6 +26,18 @@ public class ImageControllerIntegrationTest extends AbstractControllerIntegratio
 
     @MockBean
     private ImageService imageService;
+
+    @MockBean
+    private ClassificationService classificationService;
+
+    @MockBean
+    private PolygonService polygonService;
+
+    @MockBean
+    private PointService pointService;
+
+    @MockBean
+    private ImageMapper mapper;
 
     private JacksonTester<ImageEntity> jsonImageEntity;
     private static final String data = "testdata/image/";

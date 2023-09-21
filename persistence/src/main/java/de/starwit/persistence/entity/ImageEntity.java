@@ -10,6 +10,7 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
+import jakarta.validation.constraints.NotBlank;
 
 /**
  * Image Entity class
@@ -19,10 +20,12 @@ import jakarta.persistence.Table;
 public class ImageEntity extends AbstractEntity<Long> {
 
     // entity fields
-    @Column(name = "src")
+    @NotBlank
+    @Column(name = "src", nullable = false)
     private String src;
 
-    @Column(name = "name")
+    @NotBlank
+    @Column(name = "name", nullable = false)
     private String name;
 
     // entity relations

@@ -15,4 +15,6 @@ public interface ImageRepository extends JpaRepository<ImageEntity, Long> {
 
     @Query("SELECT e FROM ImageEntity e WHERE NOT EXISTS (SELECT r FROM e.parkingConfig r WHERE r.id <> ?1)")
     public List<ImageEntity> findAllWithoutOtherParkingConfig(Long id);
+
+    public List<ImageEntity> findByParkingConfigId(Long id);
 }
