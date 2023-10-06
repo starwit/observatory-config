@@ -6,7 +6,6 @@ import {Typography} from "@mui/material";
 import ImageRest from "../../services/ImageRest";
 
 function ImageAnnotate() {
-
     const {t} = useTranslation();
 
     const [classifications, setClassifications] = useState();
@@ -14,7 +13,7 @@ function ImageAnnotate() {
     const [selectedImage, setSelectedImage] = useState(0);
     const classificationRest = useMemo(() => new ClassificationRest(), []);
     const imageRest = useMemo(() => new ImageRest(), []);
-    const id = 1;//TODO: useParams();
+    const id = 1; // TODO: useParams();
 
     useEffect(() => {
         reloadClassification();
@@ -26,7 +25,7 @@ function ImageAnnotate() {
 
     function reloadClassification() {
         classificationRest.findAll().then(response => {
-            setClassifications(response.data)
+            setClassifications(response.data);
         });
     }
 
@@ -46,16 +45,15 @@ function ImageAnnotate() {
     }
 
     function wrapAround(newNumber) {
-        return ((newNumber % images?.length) + images?.length) % images?.length
+        return ((newNumber % images?.length) + images?.length) % images?.length;
     }
 
     function onNextImage() {
-        setSelectedImage(wrapAround(selectedImage + 1))
+        setSelectedImage(wrapAround(selectedImage + 1));
     }
 
     function onPrevImage() {
-        setSelectedImage(wrapAround(selectedImage - 1))
-
+        setSelectedImage(wrapAround(selectedImage - 1));
     }
 
     function savePolygons(event) {
@@ -65,11 +63,11 @@ function ImageAnnotate() {
     }
 
     if (!classifications || !images) {
-        return <Typography>{t("general.loading")}</Typography>
+        return <Typography>{t("general.loading")}</Typography>;
     }
 
     if (images.length === 0) {
-        return <Typography>{t("parkingConfig.image.empty")}</Typography>
+        return <Typography>{t("parkingConfig.image.empty")}</Typography>;
     }
 
     return (
@@ -80,7 +78,7 @@ function ImageAnnotate() {
                 onExit={event => {
                     console.log("save image");
                     console.log(event.images);
-                    savePolygons(event.images)
+                    savePolygons(event.images);
                 }}
                 enabledTools={["select", "create-point", "create-polygon", "create-box", "create-line"]}
                 images={images}
@@ -95,4 +93,4 @@ function ImageAnnotate() {
         </>
     );
 }
-export default ImageAnnotate
+export default ImageAnnotate;
