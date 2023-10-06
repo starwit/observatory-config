@@ -1,9 +1,16 @@
+import React from "react";
 import ReactImageAnnotate from "@starwit/react-image-annotate";
 import {useEffect, useMemo, useState} from "react";
 import {useTranslation} from "react-i18next";
 import ClassificationRest from "../../services/ClassificationRest";
 import {Typography} from "@mui/material";
 import ImageRest from "../../services/ImageRest";
+import Snackbar from "@mui/material/Snackbar";
+import MuiAlert from "@mui/material/Alert";
+
+const Alert = React.forwardRef(function Alert(props, ref) {
+  return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
+});
 
 function ImageAnnotate() {
 
@@ -11,6 +18,7 @@ function ImageAnnotate() {
 
     const [classifications, setClassifications] = useState();
     const [images, setImages] = useState(null);
+    const [open, setOpen] = useState(false);
     const [selectedImage, setSelectedImage] = useState(0);
     const classificationRest = useMemo(() => new ClassificationRest(), []);
     const imageRest = useMemo(() => new ImageRest(), []);
@@ -62,6 +70,7 @@ function ImageAnnotate() {
         imageRest.savePolygons(event).then(response => {
             reloadImages();
         });
+        setOpen(true);
     }
 
     if (!classifications || !images) {
@@ -71,6 +80,14 @@ function ImageAnnotate() {
     if (images.length === 0) {
         return <Typography>{t("parkingConfig.image.empty")}</Typography>
     }
+
+    const handleClose = (event, reason) => {
+        if (reason === "clickaway") {
+        return;
+        }
+
+        setOpen(false);
+    };
 
     return (
         <>
@@ -92,6 +109,11 @@ function ImageAnnotate() {
                 hidePrev={images.length === 1}
                 hideClone
             />
+            <Snackbar open={open} autoHideDuration={6000} onClose={handleClose}>
+                <Alert onClose={handleClose} severity="success" sx={{ width: "100%" }}>
+                successfully saved
+                </Alert>
+            </Snackbar>
         </>
     );
 }
