@@ -5,6 +5,9 @@ on:
         branches:
           - "feature/AB#912-Run-workflow-on-local-runner"
 
+env:
+    HELM_EXPERIMENTAL_OCI: 1
+
 jobs:
   helm_push:
     runs-on: [self-hosted, linux, X64]
