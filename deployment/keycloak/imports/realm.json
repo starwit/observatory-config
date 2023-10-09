@@ -78,19 +78,19 @@
         "attributes": {}
       },
       {
-        "name": "ROLE_admin",
+        "name": "admin",
         "composite": false,
         "clientRole": false,
         "attributes": {}
       },
       {
-        "name": "ROLE_reader",
+        "name": "reader",
         "composite": false,
         "clientRole": false,
         "attributes": {}
       },
       {
-        "name": "ROLE_user",
+        "name": "user",
         "composite": false,
         "clientRole": false,
         "attributes": {}
@@ -609,7 +609,7 @@
       "enabled": true,
       "alwaysDisplayInConsole": false,
       "clientAuthenticatorType": "client-secret",
-      "secret": "PBcaT08RLn3TtaFcSO9HtDVuKkyhxBuF",
+      "secret": "smartparkingconfig",
       "redirectUris": [
         "*"
       ],
@@ -675,7 +675,7 @@
             "userinfo.token.claim": "true",
             "id.token.claim": "true",
             "access.token.claim": "true",
-            "claim.name": "roles",
+            "claim.name": "realm_access.roles",
             "jsonType.label": "String"
           }
         }
@@ -2113,7 +2113,7 @@
       "requiredActions": [],
       "realmRoles": [
         "default-roles-smartparkingconfig",
-        "ROLE_admin"
+        "admin"
       ],
       "notBefore": 0
     },
@@ -2135,7 +2135,7 @@
       "requiredActions": [],
       "realmRoles": [
         "default-roles-smartparkingconfig",
-        "ROLE_reader"
+        "reader"
       ],
       "notBefore": 0
     },
@@ -2157,7 +2157,7 @@
       "requiredActions": [],
       "realmRoles": [
         "default-roles-smartparkingconfig",
-        "ROLE_user"
+        "user"
       ],
       "notBefore": 0
     }
