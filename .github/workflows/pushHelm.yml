@@ -1,9 +1,9 @@
 name: Build & Push Helm Chart
 
 on:
-    pull_request:
-        branches: [ master, versionupgrade ]
-    workflow_dispatch:
+    push:
+        branches:
+          - "feature/AB#912-Run-workflow-on-local-runner"
 
 jobs:
   helm_push:
