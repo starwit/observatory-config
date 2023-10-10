@@ -19,6 +19,7 @@ function ImageAnnotate() {
     const [classifications, setClassifications] = useState();
     const [images, setImages] = useState(null);
     const [open, setOpen] = useState(false);
+    const [messageInfo, setMessageInfo] = React.useState(undefined);
     const [selectedImage, setSelectedImage] = useState(0);
     const classificationRest = useMemo(() => new ClassificationRest(), []);
     const imageRest = useMemo(() => new ImageRest(), []);
@@ -66,11 +67,23 @@ function ImageAnnotate() {
 
     }
 
+    function handleMessage(severity, message){
+        setMessageInfo({severity:severity, message:message})
+        setOpen(true);
+    }
+    
+
     function savePolygons(event) {
         imageRest.savePolygons(event).then(response => {
             reloadImages();
+            if (response.status==200) {
+                handleMessage("success", "Saved successfuly");
+            }else{
+                handleMessage("error", "Failed to Save! Error " +response.status);
+            }
+            console.log(response);
         });
-        setOpen(true);
+        
     }
 
     if (!classifications || !images) {
@@ -110,10 +123,11 @@ function ImageAnnotate() {
                 hideClone
             />
             <Snackbar open={open} autoHideDuration={6000} onClose={handleClose}>
-                <Alert onClose={handleClose} severity="success" sx={{ width: "100%" }}>
-                successfully saved
+                <Alert onClose={handleClose} severity={messageInfo ? messageInfo.severity : undefined} sx={{ width: "100%" }} >
+                {messageInfo ? messageInfo.message : undefined}
                 </Alert>
             </Snackbar>
+
         </>
     );
 }
