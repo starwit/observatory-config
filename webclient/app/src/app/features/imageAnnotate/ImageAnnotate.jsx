@@ -9,11 +9,10 @@ import Snackbar from "@mui/material/Snackbar";
 import MuiAlert from "@mui/material/Alert";
 
 const Alert = React.forwardRef(function Alert(props, ref) {
-  return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
+    return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
 });
 
 function ImageAnnotate() {
-
     const {t} = useTranslation();
 
     const [classifications, setClassifications] = useState();
@@ -23,7 +22,7 @@ function ImageAnnotate() {
     const [selectedImage, setSelectedImage] = useState(0);
     const classificationRest = useMemo(() => new ClassificationRest(), []);
     const imageRest = useMemo(() => new ImageRest(), []);
-    const id = 1;//TODO: useParams();
+    const id = 1;// TODO: useParams();
 
     useEffect(() => {
         reloadClassification();
@@ -35,7 +34,7 @@ function ImageAnnotate() {
 
     function reloadClassification() {
         classificationRest.findAll().then(response => {
-            setClassifications(response.data)
+            setClassifications(response.data);
         });
     }
 
@@ -55,50 +54,45 @@ function ImageAnnotate() {
     }
 
     function wrapAround(newNumber) {
-        return ((newNumber % images?.length) + images?.length) % images?.length
+        return ((newNumber % images?.length) + images?.length) % images?.length;
     }
 
     function onNextImage() {
-        setSelectedImage(wrapAround(selectedImage + 1))
+        setSelectedImage(wrapAround(selectedImage + 1));
     }
 
     function onPrevImage() {
-        setSelectedImage(wrapAround(selectedImage - 1))
-
+        setSelectedImage(wrapAround(selectedImage - 1));
     }
 
-    function handleMessage(severity, message){
-        setMessageInfo({severity:severity, message:message})
+    function handleMessage(severity, message) {
+        setMessageInfo({severity: severity, message: message});
         setOpen(true);
     }
-    
 
     function savePolygons(event) {
         imageRest.savePolygons(event).then(response => {
             reloadImages();
             if (response.status==200) {
                 handleMessage("success", "Saved successfuly");
-            }else{
+            } else {
                 handleMessage("error", "Failed to Save! Error " +response.status);
             }
-            console.log(response);
         });
-        
     }
 
     if (!classifications || !images) {
-        return <Typography>{t("general.loading")}</Typography>
+        return <Typography>{t("general.loading")}</Typography>;
     }
 
     if (images.length === 0) {
-        return <Typography>{t("parkingConfig.image.empty")}</Typography>
+        return <Typography>{t("parkingConfig.image.empty")}</Typography>;
     }
 
     const handleClose = (event, reason) => {
         if (reason === "clickaway") {
-        return;
+            return;
         }
-
         setOpen(false);
     };
 
@@ -110,7 +104,7 @@ function ImageAnnotate() {
                 onExit={event => {
                     console.log("save image");
                     console.log(event.images);
-                    savePolygons(event.images)
+                    savePolygons(event.images);
                 }}
                 enabledTools={["select", "create-point", "create-polygon", "create-box", "create-line"]}
                 images={images}
@@ -123,12 +117,13 @@ function ImageAnnotate() {
                 hideClone
             />
             <Snackbar open={open} autoHideDuration={6000} onClose={handleClose}>
-                <Alert onClose={handleClose} severity={messageInfo ? messageInfo.severity : undefined} sx={{ width: "100%" }} >
-                {messageInfo ? messageInfo.message : undefined}
+                <Alert onClose={handleClose} severity={messageInfo ? messageInfo.severity : undefined}
+                    sx={{width: "100%"}}>
+                    {messageInfo ? messageInfo.message : undefined}
                 </Alert>
             </Snackbar>
 
         </>
     );
 }
-export default ImageAnnotate
+export default ImageAnnotate;
