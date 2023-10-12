@@ -13,19 +13,19 @@ jobs:
     runs-on: [self-hosted, linux, X64]
     steps:
     - uses: actions/checkout@master
-    # - uses: goodsmileduck/helm-push-action@v3
-    #   env:
-    #     SOURCE_DIR: './deployment/helm'
-    #     CHART_FOLDER: 'smartparkingconfig'
-    #     FORCE: 'True'
-    #     CHARTMUSEUM_URL: ${{ vars.CHARTMUSEUM_URL }}
-    #     CHARTMUSEUM_USER: ${{ secrets.CHARTMUSEUM_USER }}
-    #     CHARTMUSEUM_PASSWORD: ${{ secrets.CHARTMUSEUM_PASSWORD }}
-    - name: Push Helm Chart to ChartMuseum
-      uses: bsord/helm-push@4.2.0
-      with:
-        username: ${{ secrets.CHARTMUSEUM_USER }}
-        password: ${{ secrets.CHARTMUSEUM_PASSWORD }}
-        registry-url: ${{ vars.CHARTMUSEUM_URL }}
-        force: true
-        chart-folder: ./deployment/helm/smartparkingconfig
+    - uses: goodsmileduck/helm-push-action@v3
+      env:
+        SOURCE_DIR: './deployment/helm'
+        CHART_FOLDER: 'smartparkingconfig'
+        FORCE: 'True'
+        CHARTMUSEUM_URL: ${{ vars.CHARTMUSEUM_URL }}
+        CHARTMUSEUM_USER: ${{ secrets.CHARTMUSEUM_USER }}
+        CHARTMUSEUM_PASSWORD: ${{ secrets.CHARTMUSEUM_PASSWORD }}
+    # - name: Push Helm Chart to ChartMuseum
+    #   uses: bsord/helm-push@4.1.0
+    #   with:
+    #     username: ${{ secrets.CHARTMUSEUM_USER }}
+    #     password: ${{ secrets.CHARTMUSEUM_PASSWORD }}
+    #     registry-url: ${{ vars.CHARTMUSEUM_URL }}
+    #     force: true
+    #     chart-folder: ./deployment/helm/smartparkingconfig
