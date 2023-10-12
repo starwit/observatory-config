@@ -26,7 +26,7 @@ const entityFields = [
             "open"
         ],
         selectedIds: []
-    },
+    }
 ];
 
 const imageOverviewFields = [

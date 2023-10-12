@@ -8,10 +8,6 @@ import ImageRest from "../../services/ImageRest";
 import Snackbar from "@mui/material/Snackbar";
 import MuiAlert from "@mui/material/Alert";
 
-const Alert = React.forwardRef(function Alert(props, ref) {
-    return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
-});
-
 function ImageAnnotate() {
     const {t} = useTranslation();
 
@@ -22,7 +18,8 @@ function ImageAnnotate() {
     const [selectedImage, setSelectedImage] = useState(0);
     const classificationRest = useMemo(() => new ClassificationRest(), []);
     const imageRest = useMemo(() => new ImageRest(), []);
-    const id = 1;// TODO: useParams();
+    const id = 1; // TODO: useParams();
+
 
     useEffect(() => {
         reloadClassification();
@@ -63,11 +60,6 @@ function ImageAnnotate() {
 
     function onPrevImage() {
         setSelectedImage(wrapAround(selectedImage - 1));
-    }
-
-    function handleMessage(severity, message) {
-        setMessageInfo({severity: severity, message: message});
-        setOpen(true);
     }
 
     function savePolygons(event) {
