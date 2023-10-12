@@ -7,13 +7,10 @@ import {
     List,
     ListItem,
     ListItemButton,
-    ListItemText,
-    Toolbar,
-    Typography
+    ListItemText
 } from "@mui/material";
 import {useTheme} from "@mui/material/styles";
-import {Logout} from "@mui/icons-material";
-import {HeaderStyles, AppBar, DrawerHeader} from "../../../assets/styles/HeaderStyles";
+import {DrawerHeader} from "../../../assets/styles/HeaderStyles";
 import {useTranslation} from "react-i18next";
 import {useHistory} from "react-router-dom";
 import Divider from "@mui/material/Divider";
@@ -21,9 +18,9 @@ import MenuIcon from "@mui/icons-material/Menu";
 import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
 import ChevronRightIcon from "@mui/icons-material/ChevronRight";
 import ParkingAreaSelect from "./ParkingAreaSelect";
+import Fab from "@mui/material/Fab";
 
 function SidebarNavigation(props) {
-    const headerStyles = HeaderStyles();
     const drawerWidth = 240;
     const {t} = useTranslation();
     const history = useHistory();
@@ -40,28 +37,18 @@ function SidebarNavigation(props) {
     };
 
     return (
-        <Box sx={{display: "flex"}}>
-            <CssBaseline />
-            <AppBar position="fixed" sx={{zIndex: theme => theme.zIndex.drawer + 1}}>
-                <Toolbar className={headerStyles.toolbar}>
-                    <IconButton
-                        color="inherit"
-                        aria-label="open drawer"
-                        onClick={handleDrawerOpen}
-                        edge="start"
-                        sx={{mr: 2, ...(open && {display: "none"})}}
-                    >
-                        <MenuIcon />
-                    </IconButton>
-                    <img className={headerStyles.menuLogoImg} src={props.logo} alt="Logo of lirejarp" />
-                    <Typography variant="h6" noWrap>
-                        {props.title}
-                    </Typography>
-                    <div className={headerStyles.spacer} />
-                    <IconButton color="secondary" disableRipple className={headerStyles.linkButton}
-                        onClick={() => history.push("/logout")}><Logout /></IconButton>
-                </Toolbar>
-            </AppBar>
+        <Box sx={{display: "flex", p: 0.5}}>
+            <CssBaseline/>
+            <Fab color="primary" >
+                <IconButton
+                    color="inherit"
+                    onClick={handleDrawerOpen}
+                    edge="start"
+                    sx={{ml: 0, ...(open && {display: "none"})}}
+                >
+                    <MenuIcon />
+                </IconButton>
+            </Fab>
             <Drawer
                 sx={{
                     "& .MuiDrawer-paper": {
@@ -73,7 +60,6 @@ function SidebarNavigation(props) {
                 anchor="left"
                 open={open}
             >
-                <Toolbar />
                 <DrawerHeader>
                     <IconButton onClick={handleDrawerClose}>
                         {theme.direction === "ltr" ? <ChevronLeftIcon /> : <ChevronRightIcon />}
@@ -96,7 +82,6 @@ function SidebarNavigation(props) {
                 </Box>
             </Drawer>
             <Box component="main" sx={{flexGrow: 1, p: 3}}>
-                <Toolbar className={headerStyles.toolbar} />
                 {props.children}
             </Box>
         </Box>
