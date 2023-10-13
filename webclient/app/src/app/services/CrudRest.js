@@ -5,23 +5,23 @@ class CrudRest {
         this.baseUrl = baseUrl;
     }
 
-    create = entity => {
+    create(entity) {
         return axios.post(this.baseUrl, entity);
-    };
+    }
 
-    update = entity => {
+    update(entity) {
         return axios.put(this.baseUrl, entity);
-    };
+    }
 
-    delete = entityId => {
+    delete(entityId) {
         return axios.delete(this.baseUrl + "/" + entityId);
-    };
+    }
 
-    findAll = () => {
+    findAll() {
         return axios.get(this.baseUrl);
     };
 
-    findById = entityId => {
+    findById(entityId) {
         return axios.get(this.baseUrl + "/" + entityId);
     };
 }

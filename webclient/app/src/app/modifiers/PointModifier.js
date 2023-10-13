@@ -18,7 +18,7 @@ const entityFields = [
         regex: null,
         max: 1,
         notNull: true
-    },
+    }
 ];
 
 const pointOverviewFields = [
