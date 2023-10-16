@@ -73,10 +73,10 @@ function ImageAnnotate() {
     function savePolygons(event) {
         imageRest.savePolygons(event).then(response => {
             reloadImages();
-            if (response.status==200) {
+            if (response.status == 200) {
                 handleMessage("success", "Saved successfuly");
             } else {
-                handleMessage("error", "Failed to Save! Error " +response.status);
+                handleMessage("error", "Failed to Save! Error " + response.status);
             }
         });
     }
@@ -106,7 +106,8 @@ function ImageAnnotate() {
                     console.log(event.images);
                     savePolygons(event.images);
                 }}
-                enabledTools={["select", "create-point", "create-polygon", "create-box", "create-line"]}
+                //enabledTools={["select", "create-point", "create-polygon", "create-box", "create-line"]}
+                enabledTools={["select", "create-polygon"]}
                 images={images}
                 hideHeaderText
                 selectedImage={selectedImage}
