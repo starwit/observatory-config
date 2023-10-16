@@ -106,7 +106,8 @@ function ImageAnnotate() {
                     console.log(event.images);
                     savePolygons(event.images);
                 }}
-                enabledTools={["select", "create-point", "create-polygon", "create-box", "create-line"]}
+                //enabledTools={["select", "create-polygon", "create-box", "create-line"]}
+                enabledTools={["select", "create-polygon"]}
                 images={images}
                 hideHeaderText
                 selectedImage={selectedImage}
