@@ -11,7 +11,7 @@
     "@mui/material": "^5.0.0",
     "@mui/styles": "^5.0.0",
     "@mui/x-date-pickers": "^5.0.1",
-    "@starwit/react-image-annotate": "3.0.2-1",
+    "@starwit/react-image-annotate": "3.0.2-6",
     "@starwit/react-starwit": "1.0.6",
     "axios": "^0.24.0",
     "buffer": "npm:buffer@^6.0.3",
