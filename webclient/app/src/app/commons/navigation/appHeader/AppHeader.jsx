@@ -26,7 +26,11 @@ function AppHeader(props) {
                             onClick={() => history.push(item.link)}>{t(item.title)}</Button>
                     ))}
                     <IconButton color="inherit" disableRipple className={headerStyles.linkButton}
-                        onClick={() => window.location.href = window.location.origin + window.location.pathname + "logout"}><Logout/></IconButton>
+                        onClick={() => window.location.href = window.location.origin +
+                                window.location.pathname +
+                                "logout"}>
+                        <Logout/>
+                    </IconButton>
                 </Toolbar>
             </AppBar>
             <div className={headerStyles.contentSpacer}/>
