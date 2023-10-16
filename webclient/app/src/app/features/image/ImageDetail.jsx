@@ -23,7 +23,7 @@ function ImageDetail() {
     function reloadSelectLists() {
         const selectLists = [];
         const functions = [
-            polygonRest.findAllWithoutImage(id),
+            polygonRest.findAllWithoutImage(id)
         ];
         Promise.all(functions).then(values => {
             selectLists.push({name: "polygon", data: values[0].data});

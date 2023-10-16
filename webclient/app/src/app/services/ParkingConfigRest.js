@@ -14,8 +14,8 @@ class ParkingConfigRest extends CrudRest {
         }
     }
 
-    savePolygons = entity => {
+    savePolygons(entity) {
         return axios.post(this.baseUrl + "/save-polygons", entity);
-    };
+    }
 }
 export default ParkingConfigRest;

@@ -9,7 +9,7 @@ const entityFields = [
         type: "string",
         regex: null,
         notNull: true
-    },
+    }
 ];
 
 const classificationOverviewFields = [
