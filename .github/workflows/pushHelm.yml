@@ -1,9 +1,8 @@
 name: Build & Push Helm Chart
 
 on:
-    push:
-        branches:
-          - "feature/AB#912-Run-workflow-on-local-runner"
+  pull_request:
+    branches: [ master, versionupgrade ]
 
 env:
     HELM_EXPERIMENTAL_OCI: 1

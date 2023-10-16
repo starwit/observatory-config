@@ -1,6 +1,6 @@
 apiVersion: v2
 name: smartparkingconfig
-description: A Helm chart for Kubernetes
+description: Smart Parking Config App
 
 # A chart can be either an 'application' or a 'library' chart.
 #
