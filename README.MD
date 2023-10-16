@@ -1,3 +1,18 @@
+# Introduction
+
+# Build & Installation
+
+## Build with Github
+* Docker image & Helm chart are released to custom registry
+* Custom runner necessary to reach custom registry
+
+### Custom runner installation
+TODO
+https://docs.github.com/en/actions/hosting-your-own-runners/managing-self-hosted-runners/adding-self-hosted-runners
+
+## Deployment with Helm
+
+# Development Setup
 ### Prerequisites
 
 * Java JDK 17 or later
