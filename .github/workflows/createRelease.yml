@@ -17,7 +17,7 @@ env:
 jobs:
   build:
     name: "Creating changelog and release"
-    runs-on: ubuntu-latest
+    runs-on: [self-hosted, linux, X64]
 
     steps:
     - uses: actions/checkout@v2
@@ -81,26 +81,41 @@ jobs:
         name: artifact
         path: application/target/application-0.0.1-SNAPSHOT.jar
 
+    # - name: Log in to the Container registry
+    #   uses: docker/login-action@f054a8b539a109f9f41c372932f1ae047eff08c9
+    #   with:
+    #     registry: ${{ env.REGISTRY }}
+    #     username: ${{ github.actor }}
+    #     password: ${{ secrets.GITHUB_TOKEN }}
+
+    # - name: Build and push Docker image
+    #   uses: docker/build-push-action@ad44023a93711e3deb337508980b4b5e9bcdc5dc
+    #   with:
+    #     context: .
+    #     push: true
+    #     tags: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ steps.publish_tag.outputs.tag_name }}
+
+    # - name: Build docker image with tag version and push to dockerhub
+    #   uses: docker/build-push-action@v1
+    #   with:
+    #     username: ${{ secrets.DOCKER_USERNAME  }}
+    #     password: ${{ secrets.DOCKER_PASSWORD }}
+    #     repository: ghcr.io/smartparkingconfig
+    #     tags: ${{ steps.publish_tag.outputs.tag_name }}
+    #     path: .
+    #     dockerfile: ./Dockerfile
+
     - name: Log in to the Container registry
       uses: docker/login-action@f054a8b539a109f9f41c372932f1ae047eff08c9
       with:
-        registry: ${{ env.REGISTRY }}
-        username: ${{ github.actor }}
-        password: ${{ secrets.GITHUB_TOKEN }}
-
+        registry: ${{ vars.INTERNAL_REGISTRY_URL }}
+        username: docker
+        password: ${{ secrets.INTERNAL_REGISTRY_PASSWORD }}
+  
     - name: Build and push Docker image
       uses: docker/build-push-action@ad44023a93711e3deb337508980b4b5e9bcdc5dc
       with:
         context: .
         push: true
-        tags: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ steps.publish_tag.outputs.tag_name }}
-
-    - name: Build docker image with tag version and push to dockerhub
-      uses: docker/build-push-action@v1
-      with:
-        username: ${{ secrets.DOCKER_USERNAME  }}
-        password: ${{ secrets.DOCKER_PASSWORD }}
-        repository: ghcr.io/smartparkingconfig
-        tags: ${{ steps.publish_tag.outputs.tag_name }}
-        path: .
-        dockerfile: ./Dockerfile
+        tags: ${{ vars.INTERNAL_REGISTRY_URL }}/smartparkingconfig:latest
+        labels: "test"
