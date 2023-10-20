@@ -13,7 +13,7 @@ data:
           "clientAuthenticatorType": "client-secret",
           "secret": "{{ .Values.auth.client_secret }}",
           "redirectUris": [
-            "https://{{ (first .Values.ingress.hosts).host }}/*"
+            "{{ .Values.auth.keycloak_url }}/*"
           ],
           "webOrigins": [
             "+"
