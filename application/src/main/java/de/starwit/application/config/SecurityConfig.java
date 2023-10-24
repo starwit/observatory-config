@@ -64,7 +64,7 @@ public class SecurityConfig {
                         .csrfTokenRequestHandler(new SpaCsrfTokenRequestHandler()))
                 .addFilterAfter(new CsrfCookieFilter(), BasicAuthenticationFilter.class)
                 .authorizeHttpRequests(authorize -> authorize
-                        .requestMatchers("/monitoring/health").permitAll()
+                        .requestMatchers("/monitoring/health", "/manifest.json").permitAll()
                         .requestMatchers("/**").hasAnyRole("admin", "user", "reader")
                         .anyRequest().authenticated())
                 .logout(logout -> logout
