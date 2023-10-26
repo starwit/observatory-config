@@ -1,13 +1,21 @@
-import { defineConfig } from 'vite'
-import react from '@vitejs/plugin-react'
+import {defineConfig} from "vite";
+import react from "@vitejs/plugin-react";
 
-// https://vitejs.dev/config/
-export default defineConfig({
-  plugins: [react()],
-  base: './',
-  server: {
-    proxy: {
-      '/api': 'http://localhost:8081/smartparkingconfig'
-    }
+export default defineConfig(({command}) => {
+  if (command === "serve") {
+    return {
+      plugins: [react()],
+      base: "/smartparkingconfig/",
+      server: {
+        proxy: {
+          "/smartparkingconfig/api": "http://localhost:8081"
+        }
+      }
+    };
+  } else {
+    return {
+      plugins: [react()],
+      base: "./"
+    };
   }
-})
+});

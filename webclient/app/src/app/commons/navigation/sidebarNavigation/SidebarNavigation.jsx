@@ -7,7 +7,7 @@ import {
     List,
     ListItem,
     ListItemButton,
-    ListItemText,
+    ListItemText
 } from "@mui/material";
 import {useTheme} from "@mui/material/styles";
 import {DrawerHeader} from "../../../assets/styles/HeaderStyles";
@@ -38,16 +38,9 @@ function SidebarNavigation(props) {
 
     return (
         <Box sx={{display: "flex", p: 0.5}}>
-            <CssBaseline/>
-            <Fab color="primary" >
-                <IconButton
-                    color="inherit"
-                    onClick={handleDrawerOpen}
-                    edge="start"
-                    sx={{ml: 0, ...(open && {display: "none"})}}
-                >
-                    <MenuIcon />
-                </IconButton>
+            <CssBaseline />
+            <Fab color="primary" onClick={handleDrawerOpen} >
+                <MenuIcon />
             </Fab>
             <Drawer
                 sx={{
@@ -76,7 +69,7 @@ function SidebarNavigation(props) {
                             </ListItem>
                         ))}
                         <ListItem>
-                            <ParkingAreaSelect/>
+                            <ParkingAreaSelect />
                         </ListItem>
                     </List>
                 </Box>

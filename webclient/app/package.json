@@ -43,6 +43,7 @@
     "zlib": "npm:browserify-zlib@^0.2.0"
   },
   "scripts": {
+    "start": "vite",
     "dev": "vite",
     "build": "vite build"
   },
