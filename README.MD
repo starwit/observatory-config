@@ -64,11 +64,12 @@ For debugging, you can start the frontend separately.
 
 ```shell
 cd webclient/app
-npm start
+npm run dev
 ```
-NPM server starts under localhost:3000/starwit/ by default
+Vite dev server starts under `http://localhost:5173/` by default.
+Requests to `http://localhost:5173/api` are automatically proxied to `http://localhost:8081/smartparkingconfig/api` which is where the app will run by default, so you just need to start the app locally (preferable without auth) for the dev server version to be fully functional.
 
-! If you are using the installation with keycloak, make sure you are logged in before first usage - just go to localhost:8081/starwit in your browser.
+> **If you are using the installation with keycloak, make sure you are logged in before first usage - just go to localhost:8081/starwit in your browser.**
 
 #### Backend Debugging
 
