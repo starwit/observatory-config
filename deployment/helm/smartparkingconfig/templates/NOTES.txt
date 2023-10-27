@@ -1,3 +1,12 @@
+
+Installed SmartParkingConfig to your cluster.
+
+ ____                       _     ____            _    _                ____             __ _       
+/ ___| _ __ ___   __ _ _ __| |_  |  _ \ __ _ _ __| | _(_)_ __   __ _   / ___|___  _ __  / _(_) __ _ 
+\___ \| '_ ` _ \ / _` | '__| __| | |_) / _` | '__| |/ / | '_ \ / _` | | |   / _ \| '_ \| |_| |/ _` |
+ ___) | | | | | | (_| | |  | |_  |  __/ (_| | |  |   <| | | | | (_| | | |__| (_) | | | |  _| | (_| |
+|____/|_| |_| |_|\__,_|_|   \__| |_|   \__,_|_|  |_|\_\_|_| |_|\__, |  \____\___/|_| |_|_| |_|\__, |
+                                                                |___/                          |___/ 
 1. Get the application URL by running these commands:
 {{- if .Values.ingress.enabled }}
 {{- range $host := .Values.ingress.hosts }}
@@ -7,7 +16,13 @@
 {{- end }}
 {{- end }}
 
-2. Get application directly from pod with following commands
+2. Get database password
+Password for app's database can be retrieved like so:
+
+POSTGRES_PW=$(kubectl -n {{ .Release.Namespace }} get secrets {{ .Release.Name }}-postgresql -o jsonpath="{.data.postgres-password}" | base64 -d)
+echo $POSTGRES_PW
+
+3. Get application directly from pod with following commands
 export POD_NAME=$(kubectl get pods --namespace {{ .Release.Namespace }} -l "app.kubernetes.io/name={{ include "smartparkingconfig.name" . }},app.kubernetes.io/instance={{ .Release.Name }}" -o jsonpath="{.items[0].metadata.name}")
 export CONTAINER_PORT=$(kubectl get pod --namespace {{ .Release.Namespace }} $POD_NAME -o jsonpath="{.spec.containers[0].ports[0].containerPort}")
 kubectl --namespace {{ .Release.Namespace }} port-forward $POD_NAME 8081:$CONTAINER_PORT

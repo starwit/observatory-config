@@ -13,7 +13,7 @@ auth:
   included_keycloak:
     enabled: false
   mode: extern # possible values: disabled, included, extern
-  keycloak_url: https://hostname/realms/smartparkingconfig
+  keycloak_url: https://hostname/realms/smartparkingconfig # will be used for readyness probe
   client_id: smartparkingconfig
   client_secret: smartparkingconfig # TODO get from secret
 
@@ -38,6 +38,7 @@ postgresql:
     password: smartparkingconfig
 
 keycloak:
+  httpRelativePath: / # set context path for keycloak console
   auth:
     adminUser: admin
     adminPassword: adminadmin

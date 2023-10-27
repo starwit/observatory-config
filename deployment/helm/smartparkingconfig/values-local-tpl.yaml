@@ -13,7 +13,7 @@ auth:
   included_keycloak:
     enabled: true
   mode: included # possible values: disabled, included, extern
-  keycloak_url: http://<<hostname>>/auth/realms/smartparkingconfig
+  keycloak_url: http://<<hostname>>/auth/realms/smartparkingconfig # will be used for readyness probe
   client_id: smartparkingconfig
   client_secret: smartparkingconfig # TODO get from secret
 
