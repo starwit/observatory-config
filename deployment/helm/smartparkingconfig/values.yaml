@@ -35,6 +35,7 @@ postgresql:
     password: smartparkingconfig
 
 keycloak:
+  httpRelativePath: / # set context path for keycloak console
   auth:
     adminUser: admin
     adminPassword: adminadmin
