@@ -1,3 +1,19 @@
+# Introduction
+
+# Build & Installation
+
+## Build with Github
+* Docker image & Helm chart are released to custom registry
+* Custom runner necessary to reach custom registry
+
+### Custom runner installation
+Please refer official documentation on how to install Github runners at:
+https://docs.github.com/en/actions/hosting-your-own-runners/managing-self-hosted-runners/adding-self-hosted-runners
+
+
+## Deployment with Helm
+
+# Development Setup
 ### Prerequisites
 
 * Java JDK 17 or later
@@ -8,7 +24,7 @@
 
 ### Installation Steps
 
-:exclamation: Each step is executed from the project home directory.
+Each step is executed from the project home directory.
 
 1) go to the deployment folder and start the environment (database and keycloak) via docker-compose:
 
