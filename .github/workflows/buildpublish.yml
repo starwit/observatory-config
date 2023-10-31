@@ -21,12 +21,17 @@ jobs:
       with:
         distribution: 'zulu'
         java-version: 17
+    - name: Set up Maven
+      uses: stCarolas/setup-maven@v4.5
+      with:
+        maven-version: 3.9.2
     - name: setup node
       uses: actions/setup-node@v3
       with:
         node-version: 18
     - run: npm --version
     - run: node --version
+    - run: mvn --version
     - name: npm install
       run: |
         if [ -d "webclient/app" ]; then
