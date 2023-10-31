@@ -12,7 +12,7 @@ env:
 jobs:
   build:
     name: "Building project with Java 17"
-    runs-on: ubuntu-latest
+    runs-on: [self-hosted, linux, X64]
 
     steps:
     - uses: actions/checkout@v2
