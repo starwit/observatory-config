@@ -24,7 +24,20 @@ const ComponentTheme = createTheme(ColorTheme,
                 defaultProps: {
                     color: "inherit"
                 }
+            },
+
+            MuiDialogTitle: {
+                styleOverrides: {
+                    // Name of the slot
+                    root: {
+                        // Some CSS
+                        paddingTop: "10px",
+                        paddingBottom: "10px",
+                        marginBottom: "2px"
+                    }
+                }
             }
+
         }
     });
 export default ComponentTheme;
