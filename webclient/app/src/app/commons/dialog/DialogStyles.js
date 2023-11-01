@@ -1,6 +1,5 @@
-import {makeStyles} from "@mui/styles";
 
-const DialogStyles = makeStyles(theme => ({
+const DialogStyles = {
     tabBox: {
         borderBottom: 1,
         borderColor: "divider"
@@ -18,5 +17,5 @@ const DialogStyles = makeStyles(theme => ({
         margin: "8px",
         width: "95%"
     }
-}));
+};
 export default DialogStyles;
