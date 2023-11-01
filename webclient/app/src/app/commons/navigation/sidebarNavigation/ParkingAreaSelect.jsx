@@ -20,6 +20,7 @@ function ParkingAreaSelect() {
     const history = useHistory();
     const [parkingAreaAll, setParkingAreaAll] = useState([]);
     const [openDialog, setOpenDialog] = React.useState(false);
+    const [isCreate, setIsCreate] = React.useState(false);
 
     useEffect(() => {
         reload();
@@ -29,17 +30,6 @@ function ParkingAreaSelect() {
         parkingareaRest.findAll().then(response => {
             setParkingAreaAll(response.data);
         });
-    }
-
-    function goToCreate() {
-        history.push("/parkingarea/create");
-    }
-
-    function goToUpdate() {
-        if (!!selected) {
-            history.push("/parkingarea/update/" + selected.id);
-            setSelected(undefined);
-        }
     }
 
     function handleDelete() {
@@ -56,6 +46,12 @@ function ParkingAreaSelect() {
 
     function handleDialogOpen() {
         setOpenDialog(true);
+        setIsCreate(false);
+    }
+
+    function handleCreateDialogOpen() {
+        setOpenDialog(true);
+        setIsCreate(true);
     }
 
     function handleDialogClose() {
@@ -71,10 +67,10 @@ function ParkingAreaSelect() {
                         <MenuItem key={entity.id} value={entity} >{entity.name}</MenuItem>))}
                 </Select>
                 <Typography align="right">
-                    <IconButton onClick={handleDialogOpen}>
+                    <IconButton onClick={handleCreateDialogOpen}>
                         <AddCircleIcon />
                     </IconButton>
-                    <IconButton onClick={goToUpdate}>
+                    <IconButton onClick={handleDialogOpen}>
                         <EditRoundedIcon />
                     </IconButton>
                     <IconButton onClick={handleDelete}>
@@ -85,6 +81,9 @@ function ParkingAreaSelect() {
             <ParkingAreaDialog
                 open={openDialog}
                 onClose={handleDialogClose}
+                id={selected?.id}
+                isCreate={isCreate}
+                setSelected={setSelected}
             />
         </>
     );
