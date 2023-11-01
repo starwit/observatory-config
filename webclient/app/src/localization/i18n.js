@@ -1,9 +1,11 @@
 import i18n from "i18next";
 import {initReactI18next} from "react-i18next";
 import LanguageDetector from "i18next-browser-languagedetector";
+import translationDeDE from "./translation-de-DE";
 import translationEnEN from "./translation-en-EN";
 
 const resources = {
+    "de-DE": {translation: translationDeDE},
     "en-US": {translation: translationEnEN}
 };
 
@@ -17,7 +19,7 @@ i18n
     .init({
         resources,
         detection: lngDetectinOptions,
-        fallbackLng: ["en-US"],
+        fallbackLng: ["de-DE"],
         keySeparator: false,
         interpolation: {
             escapeValue: false
