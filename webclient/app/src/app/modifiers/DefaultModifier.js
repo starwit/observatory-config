@@ -67,6 +67,12 @@ function isValid(fields, data) {
         if (isNumber(element.type) && !!element.max && data[element.name] !== "" && data[element.name] > element.max) {
             isValid = false;
         }
+        if (isString(element.type) && !!element.max && data[element.name] !== "" && data[element.name].length < element.min) {
+            isValid = false
+        }
+        if (isString(element.type) && !!element.max && data[element.name] !== "" && data[element.name].length > element.max) {
+            isValid = false
+        }
     })
     return isValid;
 }
@@ -81,6 +87,10 @@ function isSelect(fieldType) {
 
 function isMultiSelect(fieldType) {
     return fieldType === "ManyToMany" || fieldType === "OneToMany";
+}
+
+function isString(fieldType) {
+    return fieldType === "string";
 }
 
 function isInput(fieldType) {

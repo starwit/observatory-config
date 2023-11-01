@@ -51,7 +51,7 @@ const translationDeDE = {
     "parkingArea.update.title": "Parkfläche Bearbeiten",
     "parkingArea.id": "id",
     "parkingArea.name": "Name*",
-    "parkingArea.name.hint": "Pflichtfeld ",
+    "parkingArea.name.hint": "Der Name ist ein Pflichtfeld und kann bis zu 150 Zeichen lang sein",
     "parkingArea.parkingConfig": "Konfiguration Parkfläche",
     "parkingArea.selectedTestConfig": "selectedTestConfig",
     "parkingArea.selectedProdConfig": "selectedProdConfig",

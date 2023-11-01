@@ -1,7 +1,7 @@
 import {
     Box, Button,
     Dialog,
-    DialogActions, DialogContent, Stack
+    DialogActions, DialogContent, FormControl, Stack
 } from "@mui/material";
 import PropTypes from "prop-types";
 import React, {useMemo, useEffect} from "react";
@@ -33,30 +33,25 @@ import {
 } from "../../modifiers/ParkingAreaModifier";
 
 function ParkingAreaDialog(props) {
-    const {open, onClose} = props;
+    const {open, onClose, id, isCreate} = props;
     const {t} = useTranslation();
     const [entity, setEntity] = useImmer(entityDefault);
     const [fields, setFields] = useImmer(entityFields);
     const entityRest = useMemo(() => new ParkingAreaRest(), []);
     const parkingconfigRest = useMemo(() => new ParkingConfigRest(), []);
     const [hasFormError, setHasFormError] = React.useState(false);
-    const {id} = useParams();
-
-    function onDialogClose() {
-        onClose();
-    }
 
     useEffect(() => {
-        reloadSelectLists();
-    }, [id]);
+        if (isCreate) {
+            setEntity(entityDefault);
+        } else {
+            reloadSelectLists();
+        }
+    }, [id, isCreate]);
 
     useEffect(() => {
         onEntityChange();
     }, [entity]);
-
-    function onEntityChange() {
-        setHasFormError(!isValid(fields, entity));
-    }
 
     function reloadSelectLists() {
         const selectLists = [];
@@ -78,43 +73,78 @@ function ParkingAreaDialog(props) {
         });
     }
 
+    function onDialogClose() {
+        onClose();
+    }
+
+    function onEntityChange() {
+        setHasFormError(!isValid(fields, entity));
+    }
+
+    function handleSubmit(event) {
+        // turn off page reload
+        event.preventDefault();
+        const tmpOrg = prepareForSave(entity, fields);
+        if (!id) {
+            entityRest.create(tmpOrg).then();
+        } else {
+            entityRest.update(tmpOrg).then();
+        }
+        onClose();
+    }
+
+    function getDialogTitle() {
+        if (!id) {
+            return "parkingArea.create.title";
+        }
+        return "parkingArea.update.title";
+    }
+
     return (
         <Dialog onClose={onDialogClose} open={open} spacing={2}>
-            <DialogHeader onClose={onDialogClose} title={t("parkingArea.create.title")} />
-            <DialogContent>
-                <Stack>
-                    <ValidatedTextField
-                        fullWidth
-                        autoFocus
-                        label={t("parkingArea.name") + "*"}
-                        name="name"
-                        value={entity["name"]}
-                        type="string"
-                        variant="standard"
-                        onChange={e => handleChange(e, setEntity)}
-                        max={10}
-                        helperText={t("parkingArea.name.hint")}
-                    />
-                </Stack >
-            </DialogContent>
-            <DialogActions>
-                <Button>{t("button.cancel")}</Button>
-                <Button
-                    type="submit"
-                    variant="contained"
-                    color="secondary"
-                    disabled={hasFormError}>
-                    {t("button.save")}
-                </Button>
-            </DialogActions>
+            <DialogHeader onClose={onDialogClose} title={t(getDialogTitle())} />
+            <form autoComplete="off" onSubmit={handleSubmit}>
+                <DialogContent>
+
+                    <Stack>
+                        <FormControl>
+                            <ValidatedTextField
+                                fullWidth
+                                autoFocus
+                                label={t("parkingArea.name")}
+                                name={fields[0].name}
+                                value={entity[fields[0].name]}
+                                type={fields[0].type}
+                                variant="standard"
+                                onChange={e => handleChange(e, setEntity)}
+                                max={fields[0].max}
+                                helperText={t("parkingArea.name.hint")}
+                            />
+                        </FormControl>
+                    </Stack >
+
+                </DialogContent>
+                <DialogActions>
+                    <Button
+                        onClick={onDialogClose}
+                    >{t("button.cancel")}</Button>
+                    <Button
+                        type="submit"
+                        disabled={hasFormError}>
+                        {t("button.save")}
+                    </Button>
+                </DialogActions>
+            </form>
         </Dialog >
 
     );
 }
 
 ParkingAreaDialog.propTypes = {
+    id: PropTypes.number,
     open: PropTypes.bool.isRequired,
-    onClose: PropTypes.func.isRequired
+    onClose: PropTypes.func.isRequired,
+    isCreate: PropTypes.bool.isRequired
 };
 
 export default ParkingAreaDialog;
