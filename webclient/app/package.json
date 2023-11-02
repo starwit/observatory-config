@@ -11,7 +11,7 @@
     "@mui/material": "^5.0.0",
     "@mui/styles": "^5.0.0",
     "@mui/x-date-pickers": "^5.0.1",
-    "@starwit/react-image-annotate": "3.0.2-6",
+    "@starwit/react-image-annotate": "4.0.2-0",
     "@starwit/react-starwit": "1.0.6",
     "axios": "^0.24.0",
     "buffer": "npm:buffer@^6.0.3",
@@ -43,8 +43,7 @@
     "zlib": "npm:browserify-zlib@^0.2.0"
   },
   "scripts": {
-    "start": "vite",
-    "dev": "vite",
+    "start": "vite --force",
     "build": "vite build"
   },
   "eslintConfig": {
@@ -66,6 +65,7 @@
     "path": "npm:path-browserify@1.0.1",
     "prop-types": "^15.7.2",
     "stream": "npm:stream-browserify@^3.0.0",
+    "unplugin": "^1.5.0",
     "util": "npm:util@^0.12.5",
     "vfile": "npm:vfile@^6.0.1",
     "vite": "^4.5.0",
