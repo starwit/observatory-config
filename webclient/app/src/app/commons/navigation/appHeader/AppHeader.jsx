@@ -2,13 +2,13 @@ import React from "react";
 // Material UI Components
 import {AppBar, Button, IconButton, Toolbar, Typography} from "@mui/material";
 import HeaderStyles from "../../../assets/styles/HeaderStyles";
-import {useHistory} from "react-router-dom";
+import {useNavigate} from "react-router-dom";
 import {useTranslation} from "react-i18next";
 import {Logout} from "@mui/icons-material";
 
 function AppHeader(props) {
     const {menuItems, title, logo} = props;
-    const history = useHistory();
+    const navigate = useNavigate();
     const {t} = useTranslation();
 
     const LirejarpLogo = styled('img')(({theme}) => HeaderStyles.menuLogoImg(theme))
@@ -26,7 +26,7 @@ function AppHeader(props) {
                     <Spacer/>
                     {menuItems.map(item => (
                         <Button key={item.title} color="inherit" disableRipple sx={HeaderStyles.linkButton}
-                            onClick={() => history.push(item.link)}>{t(item.title)}</Button>
+                            onClick={() => navigate(item.link)}>{t(item.title)}</Button>
                     ))}
                     <IconButton color="inherit" disableRipple sx={HeaderStyles.linkButton}
                         onClick={() => window.location.href = window.location.origin +

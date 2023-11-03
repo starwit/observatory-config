@@ -3,14 +3,14 @@ import React, {useState, useMemo, useEffect} from "react";
 import {useTranslation} from "react-i18next";
 import {OverviewTable} from "@starwit/react-starwit";
 import ParkingConfigRest from "../../services/ParkingConfigRest";
-import {useHistory} from "react-router-dom";
+import {useNavigate} from "react-router-dom";
 import {parkingConfigOverviewFields} from "../../modifiers/ParkingConfigModifier";
 
 function ParkingConfigOverview() {
     const [selected, setSelected] = useState(undefined);
     const {t} = useTranslation();
     const parkingconfigRest = useMemo(() => new ParkingConfigRest(), []);
-    const history = useHistory();
+    const navigate = useNavigate();
     const [parkingConfigAll, setParkingConfigAll] = useState();
 
     useEffect(() => {
@@ -24,12 +24,12 @@ function ParkingConfigOverview() {
     }
 
     function goToCreate() {
-        history.push("/parkingconfig/create");
+        navigate("/parkingconfig/create");
     }
 
     function goToUpdate() {
         if (!!selected) {
-            history.push("/parkingconfig/update/" + selected.id);
+            navigate("/parkingconfig/update/" + selected.id);
             setSelected(undefined);
         }
     }

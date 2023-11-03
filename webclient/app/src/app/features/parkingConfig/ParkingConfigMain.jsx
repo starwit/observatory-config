@@ -1,5 +1,5 @@
 import React from "react";
-import {Route} from "react-router-dom";
+import {Route, Routes} from "react-router-dom";
 import ParkingConfigOverview from "./ParkingConfigOverview";
 import ParkingConfigDetail from "./ParkingConfigDetail";
 
@@ -7,9 +7,11 @@ function ParkingConfigMain() {
     return (
         <>
             <React.Fragment>
-                <Route exact path="/parkingconfig" component={ParkingConfigOverview}/>
-                <Route exact path="/parkingconfig/create" component={ParkingConfigDetail}/>
-                <Route exact path="/parkingconfig/update/:id" component={ParkingConfigDetail}/>
+                <Routes>
+                    <Route path="/" element={<ParkingConfigOverview />}/>
+                    <Route path="create" element={<ParkingConfigDetail />}/>
+                    <Route path="update/:id" element={<ParkingConfigDetail />}/>
+                </Routes>
             </React.Fragment>
         </>
     );

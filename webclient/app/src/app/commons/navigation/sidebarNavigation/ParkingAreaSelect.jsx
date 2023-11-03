@@ -1,6 +1,6 @@
 import React, {useState, useMemo, useEffect} from "react";
 import ParkingAreaRest from "../../../services/ParkingAreaRest";
-import {useHistory} from "react-router-dom";
+import {useNavigate} from "react-router-dom";
 import Select from "@mui/material/Select";
 import MenuItem from "@mui/material/MenuItem";
 import InputLabel from "@mui/material/InputLabel";
@@ -16,7 +16,7 @@ import {
 function ParkingAreaSelect() {
     const [selected, setSelected] = React.useState({});
     const parkingareaRest = useMemo(() => new ParkingAreaRest(), []);
-    const history = useHistory();
+    const navigate = useNavigate();
     const [parkingAreaAll, setParkingAreaAll] = useState([]);
 
     useEffect(() => {
@@ -30,12 +30,12 @@ function ParkingAreaSelect() {
     }
 
     function goToCreate() {
-        history.push("/parkingarea/create");
+        navigate("/parkingarea/create");
     }
 
     function goToUpdate() {
         if (!!selected) {
-            history.push("/parkingarea/update/" + selected.id);
+            navigate("/parkingarea/update/" + selected.id);
             setSelected(undefined);
         }
     }
@@ -49,7 +49,7 @@ function ParkingAreaSelect() {
 
     const handleChange = event => {
         setSelected(event.target.value);
-        history.push("/parkingarea/update/" + event.target.value.id);
+        navigate("/parkingarea/update/" + event.target.value.id);
     };
 
     return (

@@ -3,14 +3,14 @@ import React from "react";
 import logo from "../../assets/images/logo-white.png";
 import {AppBar, Button, IconButton, Toolbar, Typography} from "@mui/material";
 import HeaderStyles from "./../../assets/styles/HeaderStyles";
-import {useHistory} from "react-router-dom";
+import {useNavigate} from "react-router-dom";
 import {useTranslation} from "react-i18next";
 import {Logout} from "@mui/icons-material";
 import {styled} from "@mui/material/styles";
 
 function AppHeader(props) {
     const {menuItems, title} = props;
-    const history = useHistory();
+    const navigate = useNavigate();
     const {t} = useTranslation();
 
     const LirejarpLogo = styled('img')(({theme}) => HeaderStyles.menuLogoImg(theme))
@@ -28,10 +28,10 @@ function AppHeader(props) {
                     <Spacer/>
                     {menuItems.map(item => (
                         <Button key={item.title} color="inherit" disableRipple sx={HeaderStyles.linkButton}
-                            onClick={() => history.push(item.link)}>{t(item.title)}</Button>
+                            onClick={() => navigate(item.link)}>{t(item.title)}</Button>
                     ))}
                     <IconButton color="inherit" disableRipple sx={HeaderStyles.linkButton}
-                        onClick={() => history.push("/logout")}><Logout/></IconButton>
+                        onClick={() => navigate.push("/logout")}><Logout/></IconButton>
                 </Toolbar>
             </AppBar>
             <ContentSpacer/>
