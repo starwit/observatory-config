@@ -42,7 +42,6 @@ function ParkingAreaSelect() {
 
     const handleChange = event => {
         setSelected(event.target.value);
-        navigate("/parkingarea/update/" + event.target.value.id);
     };
 
     function handleDialogOpen() {
