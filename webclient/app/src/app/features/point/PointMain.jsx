@@ -1,5 +1,5 @@
 import React from "react";
-import {Route} from "react-router-dom";
+import {Route, Routes} from "react-router-dom";
 import PointOverview from "./PointOverview";
 import PointDetail from "./PointDetail";
 
@@ -7,9 +7,11 @@ function PointMain() {
     return (
         <>
             <React.Fragment>
-                <Route exact path="/point" component={PointOverview}/>
-                <Route exact path="/point/create" component={PointDetail}/>
-                <Route exact path="/point/update/:id" component={PointDetail}/>
+                <Routes>
+                    <Route path="/" element={<PointOverview />}/>
+                    <Route path="create" element={<PointDetail />}/>
+                    <Route path="update/:id" element={<PointDetail />}/>
+                </Routes>
             </React.Fragment>
         </>
     );

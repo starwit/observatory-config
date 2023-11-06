@@ -1,10 +1,12 @@
 import React from "react";
 import SidebarNavigation from "./sidebarNavigation/SidebarNavigation";
 import NavigationStyles from "./NavigationStyles";
+import {styled} from "@mui/material/styles";
 
 function Navigation(props) {
     const {menuItems, title, logo, removeContentSpacer} = props;
-    const navigationStyles = NavigationStyles();
+
+    const MainDiv = styled('div')(({theme}) => removeContentSpacer ? {} : NavigationStyles.contentSpacer(theme))
 
     function renderCorrectNavigation() {
         return (
@@ -17,9 +19,9 @@ function Navigation(props) {
     }
 
     return (
-        <div style={{height: "100%"}} className={removeContentSpacer ? null : navigationStyles.contentSpacer}>
+        <MainDiv style={{height: "100%"}}>
             {renderCorrectNavigation()}
-        </div>
+        </MainDiv>
     );
 }
 
