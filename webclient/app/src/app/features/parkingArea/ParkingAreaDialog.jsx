@@ -31,6 +31,7 @@ import {
     entityDefault,
     entityFields
 } from "../../modifiers/ParkingAreaModifier";
+import zIndex from "@mui/material/styles/zIndex";
 
 function ParkingAreaDialog(props) {
     const {open, onClose, id, isCreate} = props;
@@ -101,7 +102,7 @@ function ParkingAreaDialog(props) {
     }
 
     return (
-        <Dialog onClose={onDialogClose} open={open} spacing={2}>
+        <Dialog onClose={onDialogClose} open={open} spacing={2} sx={{zIndex: 10000}}>
             <DialogHeader onClose={onDialogClose} title={t(getDialogTitle())} />
             <form autoComplete="off" onSubmit={handleSubmit}>
                 <DialogContent>
