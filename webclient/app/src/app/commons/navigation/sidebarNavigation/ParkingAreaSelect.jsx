@@ -1,6 +1,6 @@
 import React, {useState, useMemo, useEffect} from "react";
 import ParkingAreaRest from "../../../services/ParkingAreaRest";
-import {useHistory} from "react-router-dom";
+import {useNavigate} from "react-router-dom";
 import Select from "@mui/material/Select";
 import MenuItem from "@mui/material/MenuItem";
 import InputLabel from "@mui/material/InputLabel";
@@ -17,7 +17,7 @@ import ParkingAreaDialog from "../../../features/parkingArea/ParkingAreaDialog";
 function ParkingAreaSelect() {
     const [selected, setSelected] = React.useState({});
     const parkingareaRest = useMemo(() => new ParkingAreaRest(), []);
-    const history = useHistory();
+    const navigate = useNavigate();
     const [parkingAreaAll, setParkingAreaAll] = useState([]);
     const [openDialog, setOpenDialog] = React.useState(false);
     const [isCreate, setIsCreate] = React.useState(false);
@@ -32,6 +32,7 @@ function ParkingAreaSelect() {
         });
     }
 
+
     function handleDelete() {
         if (!!selected) {
             parkingareaRest.delete(selected.id).then(reload);
@@ -41,7 +42,7 @@ function ParkingAreaSelect() {
 
     const handleChange = event => {
         setSelected(event.target.value);
-        history.push("/parkingarea/update/" + event.target.value.id);
+        navigate("/parkingarea/update/" + event.target.value.id);
     };
 
     function handleDialogOpen() {

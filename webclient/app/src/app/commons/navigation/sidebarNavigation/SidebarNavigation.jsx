@@ -12,7 +12,7 @@ import {
 import {useTheme} from "@mui/material/styles";
 import {DrawerHeader} from "../../../assets/styles/HeaderStyles";
 import {useTranslation} from "react-i18next";
-import {useHistory} from "react-router-dom";
+import {useNavigate} from "react-router-dom";
 import Divider from "@mui/material/Divider";
 import MenuIcon from "@mui/icons-material/Menu";
 import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
@@ -23,7 +23,7 @@ import Fab from "@mui/material/Fab";
 function SidebarNavigation(props) {
     const drawerWidth = 240;
     const {t} = useTranslation();
-    const history = useHistory();
+    const navigate = useNavigate();
 
     const theme = useTheme();
     const [open, setOpen] = React.useState(false);
@@ -63,7 +63,7 @@ function SidebarNavigation(props) {
                     <List>
                         {props.menuItems.map((menuItem, index) => (
                             <ListItem key={menuItem.title} disablePadding>
-                                <ListItemButton onClick={() => history.push(menuItem.link)}>
+                                <ListItemButton onClick={() => navigate(menuItem.link)}>
                                     <ListItemText primary={t(menuItem.title)} />
                                 </ListItemButton>
                             </ListItem>
