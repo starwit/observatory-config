@@ -37,7 +37,7 @@ function SidebarNavigation(props) {
     };
 
     return (
-        <Box sx={{display: "flex", p: 0.5}}>
+        <Box sx={{display: "flex", p: 0.5, height: "100%"}}>
             <CssBaseline />
             <Fab color="primary" onClick={handleDrawerOpen} >
                 <MenuIcon />
