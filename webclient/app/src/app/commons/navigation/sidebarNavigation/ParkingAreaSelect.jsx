@@ -12,12 +12,15 @@ import {
     IconButton,
     Typography
 } from "@mui/material";
+import ParkingAreaDialog from "../../../features/parkingArea/ParkingAreaDialog";
 
 function ParkingAreaSelect() {
     const [selected, setSelected] = React.useState({});
     const parkingareaRest = useMemo(() => new ParkingAreaRest(), []);
     const navigate = useNavigate();
     const [parkingAreaAll, setParkingAreaAll] = useState([]);
+    const [openDialog, setOpenDialog] = React.useState(false);
+    const [isCreate, setIsCreate] = React.useState(false);
 
     useEffect(() => {
         reload();
@@ -29,16 +32,6 @@ function ParkingAreaSelect() {
         });
     }
 
-    function goToCreate() {
-        navigate("/parkingarea/create");
-    }
-
-    function goToUpdate() {
-        if (!!selected) {
-            navigate("/parkingarea/update/" + selected.id);
-            setSelected(undefined);
-        }
-    }
 
     function handleDelete() {
         if (!!selected) {
@@ -49,28 +42,51 @@ function ParkingAreaSelect() {
 
     const handleChange = event => {
         setSelected(event.target.value);
-        navigate("/parkingarea/update/" + event.target.value.id);
     };
 
+    function handleDialogOpen() {
+        setOpenDialog(true);
+        setIsCreate(false);
+    }
+
+    function handleCreateDialogOpen() {
+        setOpenDialog(true);
+        setIsCreate(true);
+    }
+
+    function handleDialogClose() {
+        setOpenDialog(false);
+    }
+
     return (
-        <FormControl fullWidth>
-            <InputLabel>ParkingArea</InputLabel>
-            <Select value={selected} label="ParkingArea" onChange={handleChange}>
-                {parkingAreaAll.map(entity => (
-                    <MenuItem key={entity.id} value={entity} >{entity.name}</MenuItem> ))}
-            </Select>
-            <Typography align="right">
-                <IconButton onClick={goToCreate}>
-                    <AddCircleIcon/>
-                </IconButton>
-                <IconButton onClick={goToUpdate}>
-                    <EditRoundedIcon/>
-                </IconButton>
-                <IconButton onClick={handleDelete}>
-                    <DeleteIcon/>
-                </IconButton>
-            </Typography>
-        </FormControl>);
+        <>
+            <FormControl fullWidth>
+                <InputLabel>ParkingArea</InputLabel>
+                <Select value={selected} label="ParkingArea" onChange={handleChange}>
+                    {parkingAreaAll.map(entity => (
+                        <MenuItem key={entity.id} value={entity} >{entity.name}</MenuItem>))}
+                </Select>
+                <Typography align="right">
+                    <IconButton onClick={handleCreateDialogOpen}>
+                        <AddCircleIcon />
+                    </IconButton>
+                    <IconButton onClick={handleDialogOpen}>
+                        <EditRoundedIcon />
+                    </IconButton>
+                    <IconButton onClick={handleDelete}>
+                        <DeleteIcon />
+                    </IconButton>
+                </Typography>
+            </FormControl>
+            <ParkingAreaDialog
+                open={openDialog}
+                onClose={handleDialogClose}
+                id={selected?.id}
+                isCreate={isCreate}
+                setSelected={setSelected}
+            />
+        </>
+    );
 }
 
 export default ParkingAreaSelect;
