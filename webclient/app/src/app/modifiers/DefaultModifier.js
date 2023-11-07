@@ -67,10 +67,10 @@ function isValid(fields, data) {
         if (isNumber(element.type) && !!element.max && data[element.name] !== "" && data[element.name] > element.max) {
             isValid = false;
         }
-        if (isString(element.type) && !!element.max && data[element.name] !== "" && data[element.name].length < element.min) {
+        if (isString(element.type) && !!element.max && data[element.name] !== "" && data[element.name]?.length < element.min) {
             isValid = false
         }
-        if (isString(element.type) && !!element.max && data[element.name] !== "" && data[element.name].length > element.max) {
+        if (isString(element.type) && !!element.max && data[element.name] !== "" && data[element.name]?.length > element.max) {
             isValid = false
         }
     })

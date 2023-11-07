@@ -115,6 +115,7 @@ function ImageAnnotate() {
                 onPrevImage={onPrevImage}
                 hideNext={images.length === 1}
                 hidePrev={images.length === 1}
+                hideSettings={true}
                 hideClone
             />
             <Snackbar open={open} autoHideDuration={6000} onClose={handleClose}>

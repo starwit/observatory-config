@@ -1,6 +1,5 @@
 import React, {useState, useMemo, useEffect} from "react";
 import ParkingAreaRest from "../../../services/ParkingAreaRest";
-import {useNavigate} from "react-router-dom";
 import Select from "@mui/material/Select";
 import MenuItem from "@mui/material/MenuItem";
 import InputLabel from "@mui/material/InputLabel";
@@ -13,11 +12,11 @@ import {
     Typography
 } from "@mui/material";
 import ParkingAreaDialog from "../../../features/parkingArea/ParkingAreaDialog";
+import {useImmer} from "use-immer";
 
 function ParkingAreaSelect() {
-    const [selected, setSelected] = React.useState({});
+    const [selected, setSelected] = useImmer({});
     const parkingareaRest = useMemo(() => new ParkingAreaRest(), []);
-    const navigate = useNavigate();
     const [parkingAreaAll, setParkingAreaAll] = useState([]);
     const [openDialog, setOpenDialog] = React.useState(false);
     const [isCreate, setIsCreate] = React.useState(false);
@@ -29,6 +28,14 @@ function ParkingAreaSelect() {
     function reload() {
         parkingareaRest.findAll().then(response => {
             setParkingAreaAll(response.data);
+            if (response?.data[0]) {
+                let currEntity = response?.data.find(entity => entity.id === 1);
+                if (currEntity) {
+                    setSelected(currEntity);
+                } else {
+                    setSelected(response?.data[0]);
+                }
+            }
         });
     }
 
@@ -77,12 +84,13 @@ function ParkingAreaSelect() {
                         <DeleteIcon />
                     </IconButton>
                 </Typography>
-            </FormControl>
+            </FormControl >
             <ParkingAreaDialog
                 open={openDialog}
                 onClose={handleDialogClose}
                 id={selected?.id}
                 isCreate={isCreate}
+                selected={selected}
                 setSelected={setSelected}
             />
         </>
