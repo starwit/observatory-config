@@ -45,6 +45,28 @@ public class ParkingAreaController {
         return this.parkingareaService.findAll();
     }
 
+    @Operation(summary = "Get all parkingarea without selectedTestConfig")
+    @GetMapping(value = "/find-without-selectedTestConfig")
+    public List<ParkingAreaEntity> findAllWithoutSelectedTestConfig() {
+        return parkingareaService.findAllWithoutSelectedTestConfig();
+    }
+
+    @Operation(summary = "Get all parkingarea without other selectedTestConfig")
+    @GetMapping(value = "/find-without-other-selectedTestConfig/{id}")
+    public List<ParkingAreaEntity> findAllWithoutOtherSelectedTestConfig(@PathVariable("id") Long id) {
+        return parkingareaService.findAllWithoutOtherSelectedTestConfig(id);
+    }
+    @Operation(summary = "Get all parkingarea without selectedProdConfig")
+    @GetMapping(value = "/find-without-selectedProdConfig")
+    public List<ParkingAreaEntity> findAllWithoutSelectedProdConfig() {
+        return parkingareaService.findAllWithoutSelectedProdConfig();
+    }
+
+    @Operation(summary = "Get all parkingarea without other selectedProdConfig")
+    @GetMapping(value = "/find-without-other-selectedProdConfig/{id}")
+    public List<ParkingAreaEntity> findAllWithoutOtherSelectedProdConfig(@PathVariable("id") Long id) {
+        return parkingareaService.findAllWithoutOtherSelectedProdConfig(id);
+    }
 
     @Operation(summary = "Get parkingarea with id")
     @GetMapping(value = "/{id}")

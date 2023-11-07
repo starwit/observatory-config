@@ -3,14 +3,14 @@ import React, {useState, useMemo, useEffect} from "react";
 import {useTranslation} from "react-i18next";
 import {OverviewTable} from "@starwit/react-starwit";
 import ParkingAreaRest from "../../services/ParkingAreaRest";
-import {useHistory} from "react-router-dom";
+import {useNavigate} from "react-router-dom";
 import {parkingAreaOverviewFields} from "../../modifiers/ParkingAreaModifier";
 
 function ParkingAreaOverview() {
     const [selected, setSelected] = useState(undefined);
     const {t} = useTranslation();
     const parkingareaRest = useMemo(() => new ParkingAreaRest(), []);
-    const history = useHistory();
+    const navigate = useNavigate();
     const [parkingAreaAll, setParkingAreaAll] = useState();
 
     useEffect(() => {
@@ -20,16 +20,17 @@ function ParkingAreaOverview() {
     function reload() {
         parkingareaRest.findAll().then(response => {
             setParkingAreaAll(response.data);
+            console.log(parkingAreaAll);
         });
     }
 
     function goToCreate() {
-        history.push("/parkingarea/create");
+        navigate("/parkingarea/create");
     }
 
     function goToUpdate() {
         if (!!selected) {
-            history.push("/parkingarea/update/" + selected.id);
+            navigate("/parkingarea/update/" + selected.id);
             setSelected(undefined);
         }
     }

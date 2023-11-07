@@ -1,20 +1,14 @@
 package de.starwit.persistence.entity;
 
+import java.util.Set;
+
 import com.fasterxml.jackson.annotation.JsonFilter;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotBlank;
-import java.util.Set;
-
-import java.time.ZonedDateTime;
-import de.starwit.persistence.serializer.ZonedDateTimeSerializer;
-import de.starwit.persistence.serializer.ZonedDateTimeDeserializer;
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import jakarta.persistence.CascadeType;
 
 /**
  * Classification Entity class
@@ -28,6 +22,9 @@ public class ClassificationEntity extends AbstractEntity<Long> {
     @Column(name = "name", nullable = false)
     private String name;
 
+    @NotBlank
+    @Column(name = "color", nullable = false)
+    private String color;
 
     // entity relations
     @JsonFilter("filterId")
@@ -50,6 +47,14 @@ public class ClassificationEntity extends AbstractEntity<Long> {
 
     public void setPolygon(Set<PolygonEntity> polygon) {
         this.polygon = polygon;
+    }
+
+    public String getColor() {
+        return color;
+    }
+
+    public void setColor(String color) {
+        this.color = color;
     }
 
 }

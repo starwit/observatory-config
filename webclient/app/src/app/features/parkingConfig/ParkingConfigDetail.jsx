@@ -23,7 +23,7 @@ function ParkingConfigDetail() {
     function reloadSelectLists() {
         const selectLists = [];
         const functions = [
-            imageRest.findAllWithoutParkingConfig(id),
+            imageRest.findAllWithoutParkingConfig(id)
         ];
         Promise.all(functions).then(values => {
             selectLists.push({name: "image", data: values[0].data});

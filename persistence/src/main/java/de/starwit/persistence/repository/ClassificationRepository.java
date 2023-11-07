@@ -1,13 +1,19 @@
 package de.starwit.persistence.repository;
 
+import java.util.List;
+import java.util.Set;
+
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.stereotype.Repository;
+
 import de.starwit.persistence.entity.ClassificationEntity;
 
 /**
  * Classification Repository class
  */
-@Repository
 public interface ClassificationRepository extends JpaRepository<ClassificationEntity, Long> {
+
+    Set<ClassificationEntity> findByName(String name);
+
+    List<ClassificationEntity> findAllByOrderByIdAsc();
 
 }

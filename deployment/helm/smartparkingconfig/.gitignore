@@ -4,3 +4,5 @@ Chart.lock
 custom*
 **/*dry*
 **/values-private.yaml
+
+*.values.yaml

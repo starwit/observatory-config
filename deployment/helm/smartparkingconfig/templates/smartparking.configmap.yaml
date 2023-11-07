@@ -1,0 +1,77 @@
+apiVersion: v1
+data:
+  smartparkingconfig.json: |-
+    {
+      "enabled": true,
+      "realm": "smartparkingconfig",
+      "clients": [
+        {
+          "clientId": "smartparkingconfig",
+          "name": "smartparkingconfig",
+          "description": "smartparkingconfig",
+          "enabled": true,
+          "clientAuthenticatorType": "client-secret",
+          "secret": "{{ .Values.auth.client_secret }}",
+          "redirectUris": [
+            "{{ .Values.auth.keycloak_url }}/*"
+          ],
+          "webOrigins": [
+            "+"
+          ]
+        }
+      ],
+      "clientScopes": [
+        {
+          "name": "roles",
+          "protocol": "openid-connect",
+          "protocolMappers": [
+            {
+              "name": "realm roles",
+              "protocol": "openid-connect",
+              "protocolMapper": "oidc-usermodel-realm-role-mapper",
+              "consentRequired": false,
+              "config": {
+                "multivalued": "true",
+                "userinfo.token.claim": "true",
+                "user.attribute": "foo",
+                "id.token.claim": "true",
+                "access.token.claim": "true",
+                "claim.name": "realm_access.roles",
+                "jsonType.label": "String"
+              }
+            }
+          ]
+        }
+      ],
+      "roles": {
+        "realm": [
+          {
+            "name": "admin",
+            "composite": false,
+            "clientRole": false
+          }
+        ]
+      },
+      "users": [
+        {
+          "username": "admin",
+          "email": "admin@example.com",
+          "enabled": true,
+          "firstName": "Admin",
+          "lastName": "User",
+          "credentials": [
+            {
+              "type": "password",
+              "value": "admin"
+            }
+          ],
+          "realmRoles": [
+            "admin"
+          ]
+        }
+      ]
+    }
+kind: ConfigMap
+metadata:
+  creationTimestamp: null
+  name: smartparking

@@ -1,6 +1,9 @@
 package de.starwit.persistence.entity;
 
+import java.util.Set;
+
 import com.fasterxml.jackson.annotation.JsonFilter;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.JoinColumn;
@@ -8,15 +11,6 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
-import java.util.Set;
-
-import java.time.ZonedDateTime;
-import de.starwit.persistence.serializer.ZonedDateTimeSerializer;
-import de.starwit.persistence.serializer.ZonedDateTimeDeserializer;
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import jakarta.persistence.CascadeType;
 
 /**
  * ParkingConfig Entity class
@@ -30,14 +24,8 @@ public class ParkingConfigEntity extends AbstractEntity<Long> {
     @Column(name = "name", nullable = false)
     private String name;
 
-
-    @NotNull
-    @Column(name = "version", nullable = false)
-    private Integer version;
-
-
     // entity relations
-    @JsonFilter("filterId")
+    @JsonFilter("filterImage")
     @OneToMany(mappedBy = "parkingConfig")
     private Set<ImageEntity> image;
 
@@ -53,14 +41,6 @@ public class ParkingConfigEntity extends AbstractEntity<Long> {
 
     public void setName(String name) {
         this.name = name;
-    }
-
-    public Integer getVersion() {
-        return version;
-    }
-
-    public void setVersion(Integer version) {
-        this.version = version;
     }
 
     // entity relations getters and setters

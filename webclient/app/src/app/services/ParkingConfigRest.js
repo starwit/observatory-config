@@ -13,5 +13,9 @@ class ParkingConfigRest extends CrudRest {
             return axios.get(this.baseUrl + "/find-without-other-parkingArea/" + selected);
         }
     }
+
+    savePolygons(entity) {
+        return axios.post(this.baseUrl + "/save-polygons", entity);
+    }
 }
 export default ParkingConfigRest;

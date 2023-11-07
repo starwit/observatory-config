@@ -1,9 +1,10 @@
 package de.starwit.rest.controller;
 
+import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
-
-import jakarta.persistence.EntityNotFoundException;
-import jakarta.validation.Valid;
+import java.util.Set;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -20,11 +21,22 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import de.starwit.persistence.entity.ClassificationEntity;
 import de.starwit.persistence.entity.ImageEntity;
-import de.starwit.service.impl.ImageService;
+import de.starwit.persistence.entity.PointEntity;
+import de.starwit.persistence.entity.PolygonEntity;
 import de.starwit.persistence.exception.NotificationException;
 import de.starwit.rest.exception.NotificationDto;
+import de.starwit.service.dto.ImageDto;
+import de.starwit.service.dto.RegionDto;
+import de.starwit.service.impl.ClassificationService;
+import de.starwit.service.impl.ImageService;
+import de.starwit.service.impl.PointService;
+import de.starwit.service.impl.PolygonService;
+import de.starwit.service.mapper.ImageMapper;
 import io.swagger.v3.oas.annotations.Operation;
+import jakarta.persistence.EntityNotFoundException;
+import jakarta.validation.Valid;
 
 /**
  * Image RestController
@@ -38,6 +50,18 @@ public class ImageController {
 
     @Autowired
     private ImageService imageService;
+
+    @Autowired
+    private ClassificationService classificationService;
+
+    @Autowired
+    private PolygonService polygonService;
+
+    @Autowired
+    private PointService pointService;
+
+    @Autowired
+    private ImageMapper mapper;
 
     @Operation(summary = "Get all image")
     @GetMapping
@@ -57,6 +81,13 @@ public class ImageController {
         return imageService.findAllWithoutOtherParkingConfig(id);
     }
 
+    @Operation(summary = "Get all image without other parkingConfig")
+    @GetMapping(value = "/find-with-polygons/{id}")
+    public List<ImageDto> findFindWithPolygons(@PathVariable("id") Long id) {
+        List<ImageEntity> images = imageService.findByParkingConfigId(id);
+        return mapper.convertToDtoList(images);
+    }
+
     @Operation(summary = "Get image with id")
     @GetMapping(value = "/{id}")
     public ImageEntity findById(@PathVariable("id") Long id) {
@@ -72,7 +103,60 @@ public class ImageController {
     @Operation(summary = "Update image")
     @PutMapping
     public ImageEntity update(@Valid @RequestBody ImageEntity entity) {
-        return imageService.saveOrUpdate(entity);
+        return imageService.saveMetadata(entity);
+    }
+
+    @Operation(summary = "Save polygon to image")
+    @PostMapping(value = "/save-polygons")
+    public void savePolygons(@Valid @RequestBody List<ImageDto> dtos) {
+        for (ImageDto dto : dtos) {
+            savePolygonsPerImage(dto);
+        }
+    }
+
+    private ImageDto savePolygonsPerImage(ImageDto dto) throws EntityNotFoundException {
+        ImageEntity entity = new ImageEntity();
+        if (dto.getId() != null) {
+            entity = imageService.findById(dto.getId());
+            if (entity.getPolygon() != null) {
+                polygonService.deleteAll(entity.getPolygon());
+            }
+            entity.setPolygon(new HashSet<>());
+
+            List<RegionDto> regions = dto.getRegions();
+            for (RegionDto regionDto : regions) {
+                entity.getPolygon().add(createPolygon(regionDto));
+            }
+
+            entity = imageService.saveOrUpdate(entity);
+            return mapper.convertToDto(entity);
+        } else {
+            throw new EntityNotFoundException();
+        }
+    }
+
+    private PolygonEntity createPolygon(RegionDto regionDto) {
+        PolygonEntity polygonEntity = new PolygonEntity();
+        Set<ClassificationEntity> cls = classificationService.findByName(regionDto.getCls());
+        polygonEntity.setClassification(cls);
+        polygonEntity.setOpen(regionDto.getOpen());
+        polygonEntity = polygonService.saveAndFlush(polygonEntity);
+        List<PointEntity> pointEntities = new ArrayList<>();
+        List<List<Double>> points = regionDto.getPoints();
+        if (points != null && !points.isEmpty()) {
+            for (List<Double> point : regionDto.getPoints()) {
+                PointEntity pointEntity = new PointEntity();
+                pointEntity.setXvalue(BigDecimal.valueOf(Math.max(0, Math.min(1, point.get(0)))));
+                pointEntity.setYvalue(BigDecimal.valueOf(Math.max(0, Math.min(1, point.get(1)))));
+                pointEntity.setPolygon(polygonEntity);
+                pointEntity = pointService.saveAndFlush(pointEntity);
+                pointEntities.add(pointEntity);
+
+            }
+        }
+        polygonEntity.setPoint(pointEntities);
+        polygonEntity = polygonService.saveAndFlush(polygonEntity);
+        return polygonEntity;
     }
 
     @Operation(summary = "Delete image")

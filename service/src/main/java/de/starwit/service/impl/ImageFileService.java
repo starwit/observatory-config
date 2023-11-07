@@ -1,6 +1,6 @@
 package de.starwit.service.impl;
 
-import de.starwit.persistence.fileRepository.ImageFileRepository;
+import de.starwit.persistence.repository.ImageFileRepository;
 import de.starwit.service.dto.FileDto;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,7 +30,6 @@ public class ImageFileService {
 
     public ResponseEntity<Resource> prepareResourceResponse(FileDto resource, String fileName) {
 
-
         HttpHeaders header = new HttpHeaders();
         header.add(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=" + fileName);
         header.add("Cache-Control", "no-cache, no-store, must-revalidate");
@@ -43,7 +42,6 @@ public class ImageFileService {
                 .body(resource.getByteArrayResource());
 
     }
-
 
     public FileDto prepareFileDto(String fileName) {
         FileDto fileDto = new FileDto();
@@ -59,6 +57,5 @@ public class ImageFileService {
         }
         return fileDto;
     }
-
 
 }

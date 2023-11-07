@@ -3,14 +3,14 @@ import React, {useState, useMemo, useEffect} from "react";
 import {useTranslation} from "react-i18next";
 import {OverviewTable} from "@starwit/react-starwit";
 import ClassificationRest from "../../services/ClassificationRest";
-import {useHistory} from "react-router-dom";
+import {useNavigate} from "react-router-dom";
 import {classificationOverviewFields} from "../../modifiers/ClassificationModifier";
 
 function ClassificationOverview() {
     const [selected, setSelected] = useState(undefined);
     const {t} = useTranslation();
     const classificationRest = useMemo(() => new ClassificationRest(), []);
-    const history = useHistory();
+    const navigate = useNavigate();
     const [classificationAll, setClassificationAll] = useState();
 
     useEffect(() => {
@@ -24,12 +24,12 @@ function ClassificationOverview() {
     }
 
     function goToCreate() {
-        history.push("/classification/create");
+        navigate("/classification/create");
     }
 
     function goToUpdate() {
         if (!!selected) {
-            history.push("/classification/update/" + selected.id);
+            navigate("/classification/update/" + selected.id);
             setSelected(undefined);
         }
     }

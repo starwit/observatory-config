@@ -3,14 +3,14 @@ import React, {useState, useMemo, useEffect} from "react";
 import {useTranslation} from "react-i18next";
 import {OverviewTable} from "@starwit/react-starwit";
 import PointRest from "../../services/PointRest";
-import {useHistory} from "react-router-dom";
+import {useNavigate} from "react-router-dom";
 import {pointOverviewFields} from "../../modifiers/PointModifier";
 
 function PointOverview() {
     const [selected, setSelected] = useState(undefined);
     const {t} = useTranslation();
     const pointRest = useMemo(() => new PointRest(), []);
-    const history = useHistory();
+    const navigate = useNavigate();
     const [pointAll, setPointAll] = useState();
 
     useEffect(() => {
@@ -24,12 +24,12 @@ function PointOverview() {
     }
 
     function goToCreate() {
-        history.push("/point/create");
+        navigate("/point/create");
     }
 
     function goToUpdate() {
         if (!!selected) {
-            history.push("/point/update/" + selected.id);
+            navigate("/point/update/" + selected.id);
             setSelected(undefined);
         }
     }

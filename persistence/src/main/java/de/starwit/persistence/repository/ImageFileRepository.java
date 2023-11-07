@@ -1,4 +1,4 @@
-package de.starwit.persistence.fileRepository;
+package de.starwit.persistence.repository;
 
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.stereotype.Component;
@@ -7,7 +7,6 @@ import java.io.InputStream;
 
 @Component
 public class ImageFileRepository {
-
 
     public InputStream loadFile(String fileName) {
         String fileLocation = "assets/images/" + fileName;

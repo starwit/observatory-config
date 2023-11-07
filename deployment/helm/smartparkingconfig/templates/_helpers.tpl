@@ -1,7 +1,7 @@
 {{/*
 Expand the name of the chart.
 */}}
-{{- define "reacthookspring.name" -}}
+{{- define "smartparkingconfig.name" -}}
 {{- default .Chart.Name .Values.nameOverride | trunc 63 | trimSuffix "-" }}
 {{- end }}
 
@@ -10,7 +10,7 @@ Create a default fully qualified app name.
 We truncate at 63 chars because some Kubernetes name fields are limited to this (by the DNS naming spec).
 If release name contains chart name it will be used as a full name.
 */}}
-{{- define "reacthookspring.fullname" -}}
+{{- define "smartparkingconfig.fullname" -}}
 {{- if .Values.fullnameOverride }}
 {{- .Values.fullnameOverride | trunc 63 | trimSuffix "-" }}
 {{- else }}
@@ -26,16 +26,16 @@ If release name contains chart name it will be used as a full name.
 {{/*
 Create chart name and version as used by the chart label.
 */}}
-{{- define "reacthookspring.chart" -}}
+{{- define "smartparkingconfig.chart" -}}
 {{- printf "%s-%s" .Chart.Name .Chart.Version | replace "+" "_" | trunc 63 | trimSuffix "-" }}
 {{- end }}
 
 {{/*
 Common labels
 */}}
-{{- define "reacthookspring.labels" -}}
-helm.sh/chart: {{ include "reacthookspring.chart" . }}
-{{ include "reacthookspring.selectorLabels" . }}
+{{- define "smartparkingconfig.labels" -}}
+helm.sh/chart: {{ include "smartparkingconfig.chart" . }}
+{{ include "smartparkingconfig.selectorLabels" . }}
 {{- if .Chart.AppVersion }}
 app.kubernetes.io/version: {{ .Chart.AppVersion | quote }}
 {{- end }}
@@ -45,18 +45,30 @@ app.kubernetes.io/managed-by: {{ .Release.Service }}
 {{/*
 Selector labels
 */}}
-{{- define "reacthookspring.selectorLabels" -}}
-app.kubernetes.io/name: {{ include "reacthookspring.name" . }}
+{{- define "smartparkingconfig.selectorLabels" -}}
+app.kubernetes.io/name: {{ include "smartparkingconfig.name" . }}
 app.kubernetes.io/instance: {{ .Release.Name }}
 {{- end }}
 
 {{/*
 Create the name of the service account to use
 */}}
-{{- define "reacthookspring.serviceAccountName" -}}
+{{- define "smartparkingconfig.serviceAccountName" -}}
 {{- if .Values.serviceAccount.create }}
-{{- default (include "reacthookspring.fullname" .) .Values.serviceAccount.name }}
+{{- default (include "smartparkingconfig.fullname" .) .Values.serviceAccount.name }}
 {{- else }}
 {{- default "default" .Values.serviceAccount.name }}
 {{- end }}
+{{- end }}
+
+{{- define "postgresql.servicename" -}}
+{{- printf "%s-postgresql" .Release.Name }}
+{{- end }}
+
+{{- define "postgresql.secretname" -}}
+{{- printf "%s-postgresql" .Release.Name }}
+{{- end }}
+
+{{- define "keycloak.servicename" -}}
+{{- printf "%s-keycloak" .Release.Name }}
 {{- end }}

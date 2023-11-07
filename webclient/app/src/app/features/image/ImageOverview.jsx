@@ -3,14 +3,14 @@ import React, {useState, useMemo, useEffect} from "react";
 import {useTranslation} from "react-i18next";
 import {OverviewTable} from "@starwit/react-starwit";
 import ImageRest from "../../services/ImageRest";
-import {useHistory} from "react-router-dom";
+import {useNavigate} from "react-router-dom";
 import {imageOverviewFields} from "../../modifiers/ImageModifier";
 
 function ImageOverview() {
     const [selected, setSelected] = useState(undefined);
     const {t} = useTranslation();
     const imageRest = useMemo(() => new ImageRest(), []);
-    const history = useHistory();
+    const navigate = useNavigate();
     const [imageAll, setImageAll] = useState();
 
     useEffect(() => {
@@ -24,12 +24,12 @@ function ImageOverview() {
     }
 
     function goToCreate() {
-        history.push("/image/create");
+        navigate("/image/create");
     }
 
     function goToUpdate() {
         if (!!selected) {
-            history.push("/image/update/" + selected.id);
+            navigate("/image/update/" + selected.id);
             setSelected(undefined);
         }
     }

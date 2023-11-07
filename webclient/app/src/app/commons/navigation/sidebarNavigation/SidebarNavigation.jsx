@@ -1,6 +1,5 @@
 import React from "react";
 import {
-    AppBar,
     Box,
     CssBaseline,
     Drawer,
@@ -8,89 +7,78 @@ import {
     List,
     ListItem,
     ListItemButton,
-    ListItemText,
-    Toolbar,
-    Typography
+    ListItemText
 } from "@mui/material";
-import {Logout} from "@mui/icons-material";
-import HeaderStyles from "../../../assets/styles/HeaderStyles";
+import {useTheme} from "@mui/material/styles";
+import {DrawerHeader} from "../../../assets/styles/HeaderStyles";
 import {useTranslation} from "react-i18next";
-import {useHistory} from "react-router-dom";
+import {useNavigate} from "react-router-dom";
+import Divider from "@mui/material/Divider";
+import MenuIcon from "@mui/icons-material/Menu";
+import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
+import ChevronRightIcon from "@mui/icons-material/ChevronRight";
+import ParkingAreaSelect from "./ParkingAreaSelect";
+import Fab from "@mui/material/Fab";
 
 function SidebarNavigation(props) {
-
-    const headerStyles = HeaderStyles();
     const drawerWidth = 240;
     const {t} = useTranslation();
-    const history = useHistory();
+    const navigate = useNavigate();
 
-    function generateBoxStyles() {
-        let styles = {flexGrow: 1}
-        if (!props.focusMode) {
-            styles.p = 3
-        }
-        return styles
-    }
+    const theme = useTheme();
+    const [open, setOpen] = React.useState(false);
 
-    function renderAppBar() {
-        if (props.focusMode) {
-            return;
-        }
-        return (
-            <AppBar position="fixed" sx={{zIndex: (theme) => theme.zIndex.drawer + 1}}>
-                <Toolbar className={headerStyles.toolbar}>
-                    <img className={headerStyles.menuLogoImg} src={props.logo} alt="Logo of lirejarp"/>
-                    <Typography variant="h6" noWrap>
-                        {props.title}
-                    </Typography>
-                    <div className={headerStyles.spacer}/>
-                    <IconButton color="secondary" disableRipple className={headerStyles.linkButton}
-                                onClick={() => history.push("/logout")}><Logout/></IconButton>
-                </Toolbar>
-            </AppBar>
-        )
-    }
+    const handleDrawerOpen = () => {
+        setOpen(true);
+    };
 
-    function renderAppBarSpacer() {
-        if (props.focusMode) {
-            return;
-        }
-        return (
-            <Toolbar className={headerStyles.toolbar}/>
-        )
-    }
+    const handleDrawerClose = () => {
+        setOpen(false);
+    };
 
     return (
-        <Box sx={{display: 'flex'}}>
-            <CssBaseline/>
-            {renderAppBar()}
+        <Box sx={{display: "flex", p: 0.5, height: "100%"}}>
+            <CssBaseline />
+            <Fab color="primary" onClick={handleDrawerOpen} >
+                <MenuIcon />
+            </Fab>
             <Drawer
-                variant="permanent"
                 sx={{
-                    width: drawerWidth,
-                    flexShrink: 0,
-                    [`& .MuiDrawer-paper`]: {width: drawerWidth, boxSizing: 'border-box'},
+                    "& .MuiDrawer-paper": {
+                        width: drawerWidth,
+                        boxSizing: "border-box"
+                    }
                 }}
+                variant="persistent"
+                anchor="left"
+                open={open}
             >
-                {renderAppBarSpacer()}
-                <Box sx={{overflow: 'auto'}}>
+                <DrawerHeader>
+                    <IconButton onClick={handleDrawerClose}>
+                        {theme.direction === "ltr" ? <ChevronLeftIcon /> : <ChevronRightIcon />}
+                    </IconButton>
+                </DrawerHeader>
+                <Divider />
+                <Box sx={{overflow: "auto"}}>
                     <List>
                         {props.menuItems.map((menuItem, index) => (
                             <ListItem key={menuItem.title} disablePadding>
-                                <ListItemButton onClick={() => history.push(menuItem.link)}>
-                                    <ListItemText primary={t(menuItem.title)}/>
+                                <ListItemButton onClick={() => navigate(menuItem.link)}>
+                                    <ListItemText primary={t(menuItem.title)} />
                                 </ListItemButton>
                             </ListItem>
                         ))}
+                        <ListItem>
+                            <ParkingAreaSelect />
+                        </ListItem>
                     </List>
                 </Box>
             </Drawer>
-            <Box component="main" sx={generateBoxStyles()}>
-                {renderAppBarSpacer()}
+            <Box component="main" sx={{flexGrow: 1, p: 3}}>
                 {props.children}
             </Box>
         </Box>
-    )
+    );
 }
 
 export default SidebarNavigation;

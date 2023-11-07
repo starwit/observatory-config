@@ -1,6 +1,11 @@
 package de.starwit.persistence.entity;
 
+import java.util.List;
+import java.util.Set;
+
 import com.fasterxml.jackson.annotation.JsonFilter;
+
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.JoinColumn;
@@ -9,14 +14,6 @@ import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
-import java.util.Set;
-
-import java.time.ZonedDateTime;
-import de.starwit.persistence.serializer.ZonedDateTimeSerializer;
-import de.starwit.persistence.serializer.ZonedDateTimeDeserializer;
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import jakarta.persistence.CascadeType;
 
 /**
  * Polygon Entity class
@@ -29,7 +26,6 @@ public class PolygonEntity extends AbstractEntity<Long> {
     @Column(name = "open")
     private Boolean open;
 
-
     // entity relations
     @JsonFilter("filterId")
     @ManyToOne
@@ -38,15 +34,12 @@ public class PolygonEntity extends AbstractEntity<Long> {
 
     @JsonFilter("filterId")
     @ManyToMany(cascade = CascadeType.REFRESH)
-    @JoinTable(
-        name = "polygon_classification",
-        joinColumns = @JoinColumn(name = "polygon_id"),
-        inverseJoinColumns = @JoinColumn(name = "classification_id"))
+    @JoinTable(name = "polygon_classification", joinColumns = @JoinColumn(name = "polygon_id"), inverseJoinColumns = @JoinColumn(name = "classification_id"))
     private Set<ClassificationEntity> classification;
 
     @JsonFilter("filterId")
     @OneToMany(mappedBy = "polygon")
-    private Set<PointEntity> point;
+    private List<PointEntity> point;
 
     // entity fields getters and setters
     public Boolean getOpen() {
@@ -74,11 +67,11 @@ public class PolygonEntity extends AbstractEntity<Long> {
         this.classification = classification;
     }
 
-    public Set<PointEntity> getPoint() {
+    public List<PointEntity> getPoint() {
         return point;
     }
 
-    public void setPoint(Set<PointEntity> point) {
+    public void setPoint(List<PointEntity> point) {
         this.point = point;
     }
 

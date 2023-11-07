@@ -1,20 +1,16 @@
 package de.starwit.persistence.entity;
 
+import java.util.Set;
+
 import com.fasterxml.jackson.annotation.JsonFilter;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
-import java.util.Set;
-
-import java.time.ZonedDateTime;
-import de.starwit.persistence.serializer.ZonedDateTimeSerializer;
-import de.starwit.persistence.serializer.ZonedDateTimeDeserializer;
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import jakarta.persistence.CascadeType;
+import jakarta.validation.constraints.NotBlank;
 
 /**
  * Image Entity class
@@ -24,13 +20,13 @@ import jakarta.persistence.CascadeType;
 public class ImageEntity extends AbstractEntity<Long> {
 
     // entity fields
-    @Column(name = "src")
+    @NotBlank
+    @Column(name = "src", nullable = false)
     private String src;
 
-
-    @Column(name = "name")
+    @NotBlank
+    @Column(name = "name", nullable = false)
     private String name;
-
 
     // entity relations
     @JsonFilter("filterId")
