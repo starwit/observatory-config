@@ -1,6 +1,5 @@
 import React, {useState, useMemo, useEffect} from "react";
 import ParkingAreaRest from "../../../services/ParkingAreaRest";
-import {useNavigate} from "react-router-dom";
 import Select from "@mui/material/Select";
 import MenuItem from "@mui/material/MenuItem";
 import InputLabel from "@mui/material/InputLabel";
@@ -12,12 +11,15 @@ import {
     IconButton,
     Typography
 } from "@mui/material";
+import ParkingAreaDialog from "../../../features/parkingArea/ParkingAreaDialog";
+import {useImmer} from "use-immer";
 
 function ParkingAreaSelect() {
-    const [selected, setSelected] = React.useState({});
+    const [selected, setSelected] = useImmer({});
     const parkingareaRest = useMemo(() => new ParkingAreaRest(), []);
-    const navigate = useNavigate();
     const [parkingAreaAll, setParkingAreaAll] = useState([]);
+    const [openDialog, setOpenDialog] = React.useState(false);
+    const [isCreate, setIsCreate] = React.useState(false);
 
     useEffect(() => {
         reload();
@@ -26,19 +28,17 @@ function ParkingAreaSelect() {
     function reload() {
         parkingareaRest.findAll().then(response => {
             setParkingAreaAll(response.data);
+            if (response?.data[0]) {
+                let currEntity = response?.data.find(entity => entity.id === 1);
+                if (currEntity) {
+                    setSelected(currEntity);
+                } else {
+                    setSelected(response?.data[0]);
+                }
+            }
         });
     }
 
-    function goToCreate() {
-        navigate("/parkingarea/create");
-    }
-
-    function goToUpdate() {
-        if (!!selected) {
-            navigate("/parkingarea/update/" + selected.id);
-            setSelected(undefined);
-        }
-    }
 
     function handleDelete() {
         if (!!selected) {
@@ -49,28 +49,52 @@ function ParkingAreaSelect() {
 
     const handleChange = event => {
         setSelected(event.target.value);
-        navigate("/parkingarea/update/" + event.target.value.id);
     };
 
+    function handleDialogOpen() {
+        setOpenDialog(true);
+        setIsCreate(false);
+    }
+
+    function handleCreateDialogOpen() {
+        setOpenDialog(true);
+        setIsCreate(true);
+    }
+
+    function handleDialogClose() {
+        setOpenDialog(false);
+    }
+
     return (
-        <FormControl fullWidth>
-            <InputLabel>ParkingArea</InputLabel>
-            <Select value={selected} label="ParkingArea" onChange={handleChange}>
-                {parkingAreaAll.map(entity => (
-                    <MenuItem key={entity.id} value={entity} >{entity.name}</MenuItem> ))}
-            </Select>
-            <Typography align="right">
-                <IconButton onClick={goToCreate}>
-                    <AddCircleIcon/>
-                </IconButton>
-                <IconButton onClick={goToUpdate}>
-                    <EditRoundedIcon/>
-                </IconButton>
-                <IconButton onClick={handleDelete}>
-                    <DeleteIcon/>
-                </IconButton>
-            </Typography>
-        </FormControl>);
+        <>
+            <FormControl fullWidth>
+                <InputLabel>ParkingArea</InputLabel>
+                <Select value={selected} label="ParkingArea" onChange={handleChange}>
+                    {parkingAreaAll.map(entity => (
+                        <MenuItem key={entity.id} value={entity} >{entity.name}</MenuItem>))}
+                </Select>
+                <Typography align="right">
+                    <IconButton onClick={handleCreateDialogOpen}>
+                        <AddCircleIcon />
+                    </IconButton>
+                    <IconButton onClick={handleDialogOpen}>
+                        <EditRoundedIcon />
+                    </IconButton>
+                    <IconButton onClick={handleDelete}>
+                        <DeleteIcon />
+                    </IconButton>
+                </Typography>
+            </FormControl >
+            <ParkingAreaDialog
+                open={openDialog}
+                onClose={handleDialogClose}
+                id={selected?.id}
+                isCreate={isCreate}
+                selected={selected}
+                setSelected={setSelected}
+            />
+        </>
+    );
 }
 
 export default ParkingAreaSelect;

@@ -10,11 +10,9 @@ function Navigation(props) {
 
     function renderCorrectNavigation() {
         return (
-            <>
-                <SidebarNavigation menuItems={menuItems} title={title} logo={logo} focusMode={removeContentSpacer}>
-                    {props.children}
-                </SidebarNavigation>
-            </>
+            <SidebarNavigation menuItems={menuItems} title={title} logo={logo} focusMode={removeContentSpacer}>
+                {props.children}
+            </SidebarNavigation>
         );
     }
 
