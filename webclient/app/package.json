@@ -7,7 +7,7 @@
     "@mui/icons-material": "^5.0.0",
     "@mui/material": "^5.14.17",
     "@mui/x-date-pickers": "^6.18.1",
-    "@starwit/react-image-annotate": "4.1.0,
+    "@starwit/react-image-annotate": "4.1.0",
     "@starwit/react-starwit": "1.1.1",
     "axios": "1.6.1",
     "buffer": "npm:buffer@^6.0.3",
