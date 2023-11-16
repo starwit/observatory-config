@@ -62,7 +62,7 @@ Each step is executed from the project home directory.
 
     ```bash
     cd webclient/app
-    npm install --legacy-peer-deps
+    npm install
     ```
 
 3) build the project
