@@ -122,10 +122,13 @@ public class ImageController {
                 polygonService.deleteAll(entity.getPolygon());
             }
             entity.setPolygon(new HashSet<>());
-
             List<RegionDto> regions = dto.getRegions();
             for (RegionDto regionDto : regions) {
-                entity.getPolygon().add(createPolygon(regionDto));
+                if(regionDto.getType().equals("polygon")) {
+                    entity.getPolygon().add(createPolygon(regionDto));
+                }else if (regionDto.getType().equals("line")) {
+                    entity.getPolygon().add(createLine(regionDto));
+                }
             }
 
             entity = imageService.saveOrUpdate(entity);
@@ -151,10 +154,35 @@ public class ImageController {
                 pointEntity.setPolygon(polygonEntity);
                 pointEntity = pointService.saveAndFlush(pointEntity);
                 pointEntities.add(pointEntity);
-
             }
         }
         polygonEntity.setPoint(pointEntities);
+        polygonEntity = polygonService.saveAndFlush(polygonEntity);
+        return polygonEntity;
+    }
+
+    private PolygonEntity createLine(RegionDto regionDto) {
+        PolygonEntity polygonEntity = new PolygonEntity();
+        Set<ClassificationEntity> cls = classificationService.findByName(regionDto.getCls());
+        polygonEntity.setClassification(cls);
+        polygonEntity.setOpen(true);
+        polygonEntity = polygonService.saveAndFlush(polygonEntity);
+        List<PointEntity> pointEntities = new ArrayList<>();
+        PointEntity p1 = new PointEntity();
+        p1.setXvalue(BigDecimal.valueOf(Math.max(0, Math.min(1, regionDto.getX1()))));
+        p1.setYvalue(BigDecimal.valueOf(Math.max(0, Math.min(1, regionDto.getY1()))));
+        p1.setPolygon(polygonEntity);
+        p1 = pointService.saveAndFlush(p1);
+        pointEntities.add(p1);
+
+        PointEntity p2 = new PointEntity();
+        p2.setXvalue(BigDecimal.valueOf(Math.max(0, Math.min(1, regionDto.getX2()))));
+        p2.setYvalue(BigDecimal.valueOf(Math.max(0, Math.min(1, regionDto.getY2()))));
+        p2.setPolygon(polygonEntity);
+        p2 = pointService.saveAndFlush(p2);
+        pointEntities.add(p2);
+        polygonEntity.setPoint(pointEntities);
+
         polygonEntity = polygonService.saveAndFlush(polygonEntity);
         return polygonEntity;
     }
