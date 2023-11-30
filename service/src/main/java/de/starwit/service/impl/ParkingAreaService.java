@@ -57,11 +57,11 @@ public class ParkingAreaService implements ServiceInterface<ParkingAreaEntity, P
                 existingItem.setParkingArea(null);
                 this.parkingconfigRepository.save(existingItem);
             }
-        }else{
+        } else {
             ParkingConfigEntity p = new ParkingConfigEntity();
-            p.setName(entity.getName() + " config");
+            p.setName(entity.getName() + "-config");
             p = parkingconfigRepository.saveAndFlush(p);
-            parkingConfigToSave = new HashSet<ParkingConfigEntity>();
+            parkingConfigToSave = new HashSet<>();
             parkingConfigToSave.add(p);
         }
 
