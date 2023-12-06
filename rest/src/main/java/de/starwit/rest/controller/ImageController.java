@@ -1,5 +1,6 @@
 package de.starwit.rest.controller;
 
+import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -10,6 +11,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -19,7 +21,9 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 import de.starwit.persistence.entity.ClassificationEntity;
 import de.starwit.persistence.entity.ImageEntity;
@@ -112,6 +116,21 @@ public class ImageController {
         for (ImageDto dto : dtos) {
             savePolygonsPerImage(dto);
         }
+    }
+
+    @PostMapping("/upload")
+    public void uploadImage(@RequestParam("image") MultipartFile file) throws IOException {
+        imageService.uploadImage(file);
+    }
+
+
+    @GetMapping("/download/{id}")
+    public ResponseEntity<?>  getImageByName(@PathVariable("id") Long id){
+        byte[] image = imageService.getImage(id);
+
+        return ResponseEntity.status(HttpStatus.OK)
+                .contentType(MediaType.valueOf("image/png"))
+                .body(image);
     }
 
     private ImageDto savePolygonsPerImage(ImageDto dto) throws EntityNotFoundException {

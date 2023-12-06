@@ -7,6 +7,7 @@ import com.fasterxml.jackson.annotation.JsonFilter;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.JoinColumn;
+import jakarta.persistence.Lob;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
@@ -22,7 +23,10 @@ public class ImageEntity extends AbstractEntity<Long> {
     // entity fields
     @NotBlank
     @Column(name = "src", nullable = false)
-    private String src;
+    @Lob
+    private byte[] data;
+
+    private String type;
 
     @NotBlank
     @Column(name = "name", nullable = false)
@@ -39,12 +43,20 @@ public class ImageEntity extends AbstractEntity<Long> {
     private ParkingConfigEntity parkingConfig;
 
     // entity fields getters and setters
-    public String getSrc() {
-        return src;
+    public byte[] getData() {
+        return data;
     }
 
-    public void setSrc(String src) {
-        this.src = src;
+    public void setData(byte[] data) {
+        this.data = data;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
     }
 
     public String getName() {
