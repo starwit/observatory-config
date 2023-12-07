@@ -22,7 +22,7 @@ public class ImageEntity extends AbstractEntity<Long> {
 
     // entity fields
     @NotBlank
-    @Column(name = "src", nullable = false)
+    @Column(name = "data", nullable = false)
     @Lob
     private byte[] data;
 
