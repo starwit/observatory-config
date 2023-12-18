@@ -9,6 +9,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestClient;
 import org.springframework.web.client.RestClientResponseException;
@@ -32,19 +33,30 @@ public class DatabackendService {
         restClient = RestClient.create();
     }
 
-    public void sendConfiguration(ImageDto imageDto) {
+    @Async
+    public void syncConfiguration(ImageDto imageDto) {
+        try {
+            ResponseEntity<Void> deleteResponse = restClient.delete()
+                .uri(databackendUri.resolve("api/analytics-job/all"))
+                .retrieve().toBodilessEntity();
+            
+            log.info("Cleared databackend configuration: HTTP " + deleteResponse.getStatusCode());
+        } catch (RestClientResponseException ex) {
+            log.error("Could not clear existing jobs on databackend", ex);
+            return;
+        }
+
         for (RegionDto regionDto : imageDto.getRegions()) {
-            try {
-                // TODO: Get existing configs first? --> Make sure that jobs are not duplicated
+            try {                
                 DatabackendDto dto = toDatabackendDto(imageDto, regionDto);
                 
-                ResponseEntity<Void> res = restClient.post()
-                    .uri(databackendUri)
+                ResponseEntity<Void> postResponse = restClient.post()
+                    .uri(databackendUri.resolve("api/analytics-job"))
                     .contentType(MediaType.APPLICATION_JSON)
                     .body(dto)
                     .retrieve().toBodilessEntity();
 
-                log.info("Successfully sent configuration to databackend: HTTP " + res.getStatusCode());
+                log.info("Successfully sent configuration to databackend: HTTP " + postResponse.getStatusCode());
             } catch (IllegalGeometryException e) {
                 log.error("Illegal geometry (needs to have either exactly 2 or more than 2 points)");
             } catch (RestClientResponseException ex) {

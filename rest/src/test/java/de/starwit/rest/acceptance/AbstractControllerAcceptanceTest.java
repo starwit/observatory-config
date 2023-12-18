@@ -19,6 +19,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.json.JacksonTester;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockHttpServletResponse;
@@ -27,6 +28,7 @@ import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilde
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 import de.starwit.persistence.entity.AbstractEntity;
+import de.starwit.service.impl.DatabackendService;
 
 public abstract class AbstractControllerAcceptanceTest<ENTITY extends AbstractEntity<Long>> {
 
@@ -37,6 +39,9 @@ public abstract class AbstractControllerAcceptanceTest<ENTITY extends AbstractEn
 
     @Autowired
     protected ObjectMapper mapper;
+
+    @MockBean
+    private DatabackendService databackendService;
 
     @BeforeEach
     public void setup() {
