@@ -43,15 +43,10 @@ function ImageAnnotate() {
             if (response.data == null) {
                 return;
             }
-            setImages(response.data.map(image => parseImage(image)));
+            setImages(response.data.map(image => image.data));
         });
     }
 
-    function parseImage(image) {
-        image.src = window.location.pathname + "api/imageFile/name/" + image.src;
-
-        return image;
-    }
 
     function wrapAround(newNumber) {
         return ((newNumber % images?.length) + images?.length) % images?.length;
