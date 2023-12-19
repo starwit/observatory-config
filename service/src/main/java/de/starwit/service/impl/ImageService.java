@@ -41,15 +41,15 @@ public class ImageService implements ServiceInterface<ImageEntity, ImageReposito
     }
 
     public List<ImageEntity> findAllWithoutParkingConfig() {
-        return imageRepository.findAllWithoutParkingConfig();
+        return decompressImageList(imageRepository.findAllWithoutParkingConfig());
     }
 
     public List<ImageEntity> findAllWithoutOtherParkingConfig(Long id) {
-        return imageRepository.findAllWithoutOtherParkingConfig(id);
+        return decompressImageList(imageRepository.findAllWithoutOtherParkingConfig(id));
     }
 
     public List<ImageEntity> findByParkingConfigId(Long id) {
-        return imageRepository.findByParkingConfigId(id);
+        return decompressImageList(imageRepository.findByParkingConfigId(id));
     }
 
     public String uploadImage(MultipartFile imageFile) throws IOException {
@@ -63,10 +63,18 @@ public class ImageService implements ServiceInterface<ImageEntity, ImageReposito
     }
 
     @Transactional
-    public byte[] getImage(Long id) {
+    public byte[] getImageById(Long id) {
         Optional<ImageEntity> dbImage = imageRepository.findById(id);
         byte[] image = decompressImage(dbImage.get().getData());
         return image;
+    }
+
+    @Override
+    public ImageEntity findById(Long id){
+        ImageEntity dbImage = imageRepository.findById(id).get();
+        byte[] byteImage = decompressImage(dbImage.getData());
+        dbImage.setData(byteImage);
+        return dbImage;
     }
 
     @Override
@@ -147,6 +155,14 @@ public class ImageService implements ServiceInterface<ImageEntity, ImageReposito
         } catch (Exception exception) {
         }
         return outputStream.toByteArray();
+    }
+
+    public List<ImageEntity> decompressImageList(List<ImageEntity> imageEntityList){
+        for (ImageEntity imageEntity : imageEntityList) {
+            byte[] byteImage = decompressImage(imageEntity.getData());
+            imageEntity.setData(byteImage);
+        }
+        return imageEntityList;
     }
 }
 
