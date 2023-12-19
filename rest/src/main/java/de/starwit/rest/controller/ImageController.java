@@ -126,7 +126,7 @@ public class ImageController {
 
     @GetMapping("/download/{id}")
     public ResponseEntity<?>  getImageByName(@PathVariable("id") Long id){
-        byte[] image = imageService.getImage(id);
+        byte[] image = imageService.getImageById(id);
 
         return ResponseEntity.status(HttpStatus.OK)
                 .contentType(MediaType.valueOf("image/png"))

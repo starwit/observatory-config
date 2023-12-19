@@ -21,9 +21,7 @@ import jakarta.validation.constraints.NotBlank;
 public class ImageEntity extends AbstractEntity<Long> {
 
     // entity fields
-    @NotBlank
     @Column(name = "data", nullable = false)
-    @Lob
     private byte[] data;
 
     private String type;
