@@ -30,6 +30,7 @@ import de.starwit.rest.exception.NotificationDto;
 import de.starwit.service.dto.ImageDto;
 import de.starwit.service.dto.RegionDto;
 import de.starwit.service.impl.ClassificationService;
+import de.starwit.service.impl.DatabackendService;
 import de.starwit.service.impl.ImageService;
 import de.starwit.service.impl.PointService;
 import de.starwit.service.impl.PolygonService;
@@ -59,6 +60,9 @@ public class ImageController {
 
     @Autowired
     private PointService pointService;
+
+    @Autowired
+    private DatabackendService databackendService;
 
     @Autowired
     private ImageMapper mapper;
@@ -132,6 +136,9 @@ public class ImageController {
             }
 
             entity = imageService.saveOrUpdate(entity);
+
+            databackendService.syncConfiguration(dto);
+            
             return mapper.convertToDto(entity);
         } else {
             throw new EntityNotFoundException();
