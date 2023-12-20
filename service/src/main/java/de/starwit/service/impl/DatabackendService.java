@@ -28,6 +28,9 @@ public class DatabackendService {
 
     private RestClient restClient;
 
+    @Value("${databackend.cameraId}")
+    private String cameraId;
+
     public DatabackendService(@Value("${databackend.url}") URI configuredUri) {
         restClient = RestClient.create();
         // This is a workaround to make sure the URI ends in a "/", s.t. resolve() works properly further down
@@ -70,7 +73,7 @@ public class DatabackendService {
         DatabackendDto dbeDto = new DatabackendDto();
 
         dbeDto.setName("config");
-        dbeDto.setCameraId("stream1");
+        dbeDto.setCameraId(cameraId);
         dbeDto.setDetectionClassId(2);
         dbeDto.setEnabled(true);
         dbeDto.setParkingAreaId(1L);
