@@ -24,13 +24,14 @@ public class DatabackendService {
 
     private Logger log = LoggerFactory.getLogger(this.getClass());
     
-    @Value("${databackend.url}")
     private URI databackendUri;
 
     private RestClient restClient;
 
-    public DatabackendService() {
+    public DatabackendService(@Value("${databackend.url}") URI configuredUri) {
         restClient = RestClient.create();
+        // This is a workaround to make sure the URI ends in a "/", s.t. resolve() works properly further down
+        this.databackendUri = URI.create(configuredUri.toString() + "/").resolve("");
     }
 
     @Async
@@ -69,27 +70,42 @@ public class DatabackendService {
         DatabackendDto dbeDto = new DatabackendDto();
 
         dbeDto.setName("config");
-        dbeDto.setCameraId(imageDto.getName());
+        dbeDto.setCameraId("stream1");
         dbeDto.setDetectionClassId(2);
         dbeDto.setEnabled(true);
         dbeDto.setParkingAreaId(1L);
 
-        if (regionDto.getPoints().size() == 2) {
+        List<GeometryPointsDto> geometryPoints = new ArrayList<>();
+
+        if (regionDto.getType().equals("line")) {
+
             dbeDto.setType("LINE_CROSSING");
-        } else if (regionDto.getPoints().size() > 2) {
+            GeometryPointsDto point1 = new GeometryPointsDto();
+            point1.setX(regionDto.getX1() * imageDto.getImageWidth());
+            point1.setY(regionDto.getY1() * imageDto.getImageHeight());
+            point1.setOrderIdx(0);
+            GeometryPointsDto point2 = new GeometryPointsDto();
+            point2.setX(regionDto.getX2() * imageDto.getImageWidth());
+            point2.setY(regionDto.getY2() * imageDto.getImageHeight());
+            point2.setOrderIdx(1);
+            geometryPoints.add(point1);
+            geometryPoints.add(point2);
+
+        } else if (regionDto.getType().equals("polygon")) {
+
             dbeDto.setType("AREA_OCCUPANCY");
+            for (int i = 0; i < regionDto.getPoints().size(); i++) {
+                GeometryPointsDto point = new GeometryPointsDto();
+                point.setX(regionDto.getPoints().get(i).get(0) * imageDto.getImageWidth());            
+                point.setY(regionDto.getPoints().get(i).get(1) * imageDto.getImageHeight());
+                point.setOrderIdx(i);
+                geometryPoints.add(point);
+            }
+
         } else {
             throw new IllegalGeometryException();
         }
 
-        List<GeometryPointsDto> geometryPoints = new ArrayList<>();
-        for (int i = 0; i < regionDto.getPoints().size(); i++) {
-            GeometryPointsDto point = new GeometryPointsDto();
-            point.setX(regionDto.getPoints().get(i).get(0));            
-            point.setY(regionDto.getPoints().get(i).get(1));            
-            point.setOrderIdx(i);
-            geometryPoints.add(point);
-        }
         dbeDto.setGeometryPoints(geometryPoints);
         
         return dbeDto;
