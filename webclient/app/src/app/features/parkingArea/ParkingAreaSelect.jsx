@@ -1,5 +1,5 @@
 import React, {useState, useMemo, useEffect} from "react";
-import ParkingAreaRest from "../../../services/ParkingAreaRest";
+import ParkingAreaRest from "../../services/ParkingAreaRest";
 import Select from "@mui/material/Select";
 import MenuItem from "@mui/material/MenuItem";
 import InputLabel from "@mui/material/InputLabel";
@@ -11,7 +11,7 @@ import {
     IconButton,
     Typography
 } from "@mui/material";
-import ParkingAreaDialog from "../../../features/parkingArea/ParkingAreaDialog";
+import ParkingAreaDialog from "./ParkingAreaDialog";
 import {useImmer} from "use-immer";
 
 function ParkingAreaSelect() {
@@ -62,6 +62,7 @@ function ParkingAreaSelect() {
     }
 
     function handleDialogClose() {
+        reload();
         setOpenDialog(false);
     }
 

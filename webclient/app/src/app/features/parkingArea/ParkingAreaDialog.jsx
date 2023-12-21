@@ -1,27 +1,16 @@
 import {
-    Box, Button,
+    Button,
     Dialog,
     DialogActions, DialogContent, FormControl, Stack
 } from "@mui/material";
 import PropTypes from "prop-types";
 import React, {useMemo, useEffect} from "react";
-import {useParams} from "react-router-dom";
 import {useImmer} from "use-immer";
 import {useTranslation} from "react-i18next";
 import DialogHeader from "../../commons/dialog/DialogHeader";
 import {ValidatedTextField, addSelectLists} from "@starwit/react-starwit";
 import {
     handleChange,
-    handleDateTime,
-    handleMultiSelect,
-    handleSelect,
-    isDate,
-    isDateTime,
-    isEnum,
-    isInput,
-    isMultiSelect,
-    isSelect,
-    isTime,
     isValid,
     prepareForSave
 } from "../../modifiers/DefaultModifier";
@@ -31,7 +20,6 @@ import {
     entityDefault,
     entityFields
 } from "../../modifiers/ParkingAreaModifier";
-import zIndex from "@mui/material/styles/zIndex";
 
 function ParkingAreaDialog(props) {
     const {open, onClose, id, isCreate} = props;
@@ -145,7 +133,8 @@ ParkingAreaDialog.propTypes = {
     id: PropTypes.number,
     open: PropTypes.bool.isRequired,
     onClose: PropTypes.func.isRequired,
-    isCreate: PropTypes.bool.isRequired
+    isCreate: PropTypes.bool.isRequired,
+    selected: PropTypes.object
 };
 
 export default ParkingAreaDialog;
