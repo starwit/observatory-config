@@ -78,21 +78,7 @@ Each step is executed from the project home directory.
     ```
    You can also run the main-class via Visual Studio Code.
 
-5) add Database to pgAdmin
-
-    * open http://localhost:5050/ 
-    * click on "Add new Server"
-    * enter any name
-    * click on Connection
-    * type in the following:
-    Host name: smartparkingconfig-db;
-    Maintaince DB: smartparkingconfig;
-    username: smartparkingconfig;
-    passwort: smartparkingconfig:
-    * now save the settings and you shoud be able to access the Database
-
 * **The Application can be reached under http://localhost:8081/smartparkinkconfig/**
-* **Project Builder can be reached under http://localhost:8081/starwit/**
 * **If you are using keycloak:**
     * **default user/password is admin/admin**
     * **keycloak can be reached under http://localhost:8080/auth**
@@ -118,12 +104,12 @@ You can start the spring boot application in debug mode. See Spring Boot documen
 
 ## Postgres Client
 
-The database is available under localhost:3006
+The database is available under smartparkingconfig-db:5432 (using pgadmin of docker compose script)
 
 ```
-Username:starwit
-Database:starwit
-Password:starwit
+Username:smartparkingconfig
+Database:smartparkingconfig
+Password:smartparkingconfig
 ```
 PGAdmin is recommended to access database for development purpose. It can be deployed via docker-compose file.
 
