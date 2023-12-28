@@ -23,6 +23,7 @@ public class ImageMapper implements CustomMapper<ImageEntity, ImageDto> {
             dto.setId(entity.getId());
             dto.setData(entity.getData());
             dto.setName(entity.getName());
+            dto.setType(entity.getType());
             if (entity.getPolygon() != null) {
                 dto.setRegions(polygonMapper.convertToDtoList(entity.getPolygon()));
             }
