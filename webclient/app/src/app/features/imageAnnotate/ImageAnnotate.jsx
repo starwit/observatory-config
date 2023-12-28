@@ -14,7 +14,6 @@ const Alert = React.forwardRef(function Alert(props, ref) {
 
 function ImageAnnotate() {
     const {t} = useTranslation();
-
     const [classifications, setClassifications] = useState();
     const [images, setImages] = useState(null);
     const [open, setOpen] = useState(false);
@@ -43,8 +42,23 @@ function ImageAnnotate() {
             if (response.data == null) {
                 return;
             }
-            setImages(response.data.map(image => image.data));
+            setImages(response.data.map(image => convertToImage(image)));
         });
+    }
+
+    // function arrayBufferToBase64(buffer) {
+    //     var binary = '';
+    //     var bytes = [].slice.call(new Uint8Array(buffer));
+    //     bytes.forEach((b) => binary += String.fromCharCode(b));
+    //     return window.btoa(binary);
+    // }
+
+    function convertToImage(image) {
+        console.log(image);
+        var base64Flag = 'data:'+image.type+';base64,';
+        // var imageStr =
+        //     this.arrayBufferToBase64(image.data);
+        return base64Flag + image.data;
     }
 
 

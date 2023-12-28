@@ -1,6 +1,6 @@
 import {
     Box, Button,
-    Dialog,
+    Dialog,Input,
     DialogActions, DialogContent, FormControl, Stack
 } from "@mui/material";
 import PropTypes from "prop-types";
@@ -32,6 +32,8 @@ import {
     entityFields
 } from "../../modifiers/ParkingAreaModifier";
 import zIndex from "@mui/material/styles/zIndex";
+import UploadFileIcon from "@mui/icons-material/UploadFile";
+
 
 function ParkingAreaDialog(props) {
     const {open, onClose, id, isCreate} = props;
@@ -41,6 +43,7 @@ function ParkingAreaDialog(props) {
     const entityRest = useMemo(() => new ParkingAreaRest(), []);
     const parkingconfigRest = useMemo(() => new ParkingConfigRest(), []);
     const [hasFormError, setHasFormError] = React.useState(false);
+    const [image, setImage] = useImmer();
 
     useEffect(() => {
         if (isCreate) {
@@ -86,13 +89,22 @@ function ParkingAreaDialog(props) {
         // turn off page reload
         event.preventDefault();
         const tmpOrg = prepareForSave(entity, fields);
-        if (!id) {
-            entityRest.create(tmpOrg).then();
+        console.log(tmpOrg);
+        if (isCreate) {
+            var entity = entityRest.create(tmpOrg).then();
+            console.log(entity);
         } else {
             entityRest.update(tmpOrg).then();
         }
         onClose();
     }
+
+    const handleImageUpload = (e) => {
+    if (!e.target.files) {
+      return;
+    }
+    setImage(e.target.files);
+  };
 
     function getDialogTitle() {
         if (!id) {
@@ -121,6 +133,18 @@ function ParkingAreaDialog(props) {
                                 max={fields[0].max}
                                 helperText={t("parkingArea.name.hint")}
                             />
+                            <input
+                            accept="image/*"
+                            id="image-picker"
+                            type="file"
+                            hidden
+                            onChange={handleImageUpload}
+                            />
+                            <label htmlFor="image-picker">
+                            <Button variant="outlined" component="span" startIcon={<UploadFileIcon />}>
+                                Upload Image
+                            </Button>
+                            </label> 
                         </FormControl>
                     </Stack >
 
