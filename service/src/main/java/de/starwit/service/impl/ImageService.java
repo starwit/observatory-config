@@ -52,14 +52,13 @@ public class ImageService implements ServiceInterface<ImageEntity, ImageReposito
         return decompressImageList(imageRepository.findByParkingConfigId(id));
     }
 
-    public String uploadImage(MultipartFile imageFile) throws IOException {
+    public ImageEntity uploadImage(MultipartFile imageFile) throws IOException {
         ImageEntity newEntity = new ImageEntity();
         newEntity.setName(imageFile.getOriginalFilename());
         newEntity.setType(imageFile.getContentType());
         newEntity.setData(compressImage(imageFile.getBytes()));
 
-        imageRepository.save(newEntity);
-        return "file uploaded successfully : " + imageFile.getOriginalFilename();
+        return imageRepository.save(newEntity);
     }
 
     @Transactional
