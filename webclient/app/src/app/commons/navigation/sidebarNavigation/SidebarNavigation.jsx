@@ -68,7 +68,7 @@ function SidebarNavigation(props) {
                                 </ListItemButton>
                             </ListItem>
                         ))}
-                        <ListItem>
+                        <ListItem key="ParkingAreaSelect">
                             <ParkingAreaSelect />
                         </ListItem>
                     </List>

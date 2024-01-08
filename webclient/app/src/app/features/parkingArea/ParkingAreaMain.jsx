@@ -5,15 +5,13 @@ import ParkingAreaDetail from "./ParkingAreaDetail";
 
 function ParkingAreaMain() {
     return (
-        <>
-            <React.Fragment>
-                <Routes>
-                    <Route path="/" element={<ParkingAreaOverview />}/>
-                    <Route path="create" element={<ParkingAreaDetail />}/>
-                    <Route path="update/:id" element={<ParkingAreaDetail />}/>
-                </Routes>
-            </React.Fragment>
-        </>
+        <React.Fragment>
+            <Routes>
+                <Route path="/" element={<ParkingAreaOverview />} />
+                <Route path="create" element={<ParkingAreaDetail />} />
+                <Route path="update/:id" element={<ParkingAreaDetail />} />
+            </Routes>
+        </React.Fragment>
     );
 }
 

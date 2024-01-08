@@ -8,59 +8,37 @@ import React, {useMemo, useEffect} from "react";
 import {useImmer} from "use-immer";
 import {useTranslation} from "react-i18next";
 import DialogHeader from "../../commons/dialog/DialogHeader";
-import {ValidatedTextField, addSelectLists} from "@starwit/react-starwit";
+import {ValidatedTextField} from "@starwit/react-starwit";
 import {
     handleChange,
     isValid,
     prepareForSave
 } from "../../modifiers/DefaultModifier";
 import ParkingAreaRest from "../../services/ParkingAreaRest";
-import ParkingConfigRest from "../../services/ParkingConfigRest";
 import {
     entityDefault,
     entityFields
 } from "../../modifiers/ParkingAreaModifier";
 
 function ParkingAreaDialog(props) {
-    const {open, onClose, id, isCreate} = props;
+    const {open, onClose, selected, isCreate, update} = props;
     const {t} = useTranslation();
     const [entity, setEntity] = useImmer(entityDefault);
-    const [fields, setFields] = useImmer(entityFields);
+    const fields = entityFields;
     const entityRest = useMemo(() => new ParkingAreaRest(), []);
-    const parkingconfigRest = useMemo(() => new ParkingConfigRest(), []);
     const [hasFormError, setHasFormError] = React.useState(false);
 
     useEffect(() => {
         if (isCreate) {
             setEntity(entityDefault);
         } else {
-            reloadSelectLists();
+            setEntity(selected);
         }
-    }, [id, isCreate]);
+    }, [selected, isCreate]);
 
     useEffect(() => {
         onEntityChange();
     }, [entity]);
-
-    function reloadSelectLists() {
-        const selectLists = [];
-        const functions = [
-            parkingconfigRest.findAllWithoutParkingArea(id)
-        ];
-        Promise.all(functions).then(values => {
-            selectLists.push({name: "parkingConfig", data: values[0].data});
-            if (id) {
-                entityRest.findById(id).then(response => {
-                    setEntity(response.data);
-                    selectLists.push({name: "selectedTestConfig", data: response.data.parkingConfig});
-                    selectLists.push({name: "selectedProdConfig", data: response.data.parkingConfig});
-                    addSelectLists(response.data, fields, setFields, selectLists);
-                });
-            } else {
-                addSelectLists(entity, fields, setFields, selectLists);
-            }
-        });
-    }
 
     function onDialogClose() {
         onClose();
@@ -74,27 +52,26 @@ function ParkingAreaDialog(props) {
         // turn off page reload
         event.preventDefault();
         const tmpOrg = prepareForSave(entity, fields);
-        if (!id) {
-            entityRest.create(tmpOrg).then();
+        if (entity.id) {
+            entityRest.update(tmpOrg).then(response => update(response.data));
         } else {
-            entityRest.update(tmpOrg).then();
+            entityRest.create(tmpOrg).then(response => update(response.data));
         }
         onClose();
     }
 
     function getDialogTitle() {
-        if (!id) {
-            return "parkingArea.create.title";
+        if (entity?.id) {
+            return "parkingArea.update.title";
         }
-        return "parkingArea.update.title";
+        return "parkingArea.create.title";
     }
 
     return (
         <Dialog onClose={onDialogClose} open={open} spacing={2} sx={{zIndex: 10000}}>
             <DialogHeader onClose={onDialogClose} title={t(getDialogTitle())} />
-            <form autoComplete="off" onSubmit={handleSubmit}>
+            <form autoComplete="off">
                 <DialogContent>
-
                     <Stack>
                         <FormControl>
                             <ValidatedTextField
@@ -111,14 +88,14 @@ function ParkingAreaDialog(props) {
                             />
                         </FormControl>
                     </Stack >
-
                 </DialogContent>
                 <DialogActions>
                     <Button
                         onClick={onDialogClose}
                     >{t("button.cancel")}</Button>
                     <Button
-                        type="submit"
+                        // type="submit"
+                        onClick={handleSubmit}
                         disabled={hasFormError}>
                         {t("button.save")}
                     </Button>
@@ -130,11 +107,11 @@ function ParkingAreaDialog(props) {
 }
 
 ParkingAreaDialog.propTypes = {
-    id: PropTypes.number,
     open: PropTypes.bool.isRequired,
     onClose: PropTypes.func.isRequired,
+    selected: PropTypes.object,
     isCreate: PropTypes.bool.isRequired,
-    selected: PropTypes.object
+    update: PropTypes.func.isRequired
 };
 
 export default ParkingAreaDialog;

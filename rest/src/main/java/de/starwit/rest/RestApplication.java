@@ -11,7 +11,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
  *
  */
 @SpringBootApplication(scanBasePackages = { "de.starwit.rest", "de.starwit.service", "de.starwit.persistence",
-        "de.starwit.application.config" })
+        "de.starwit.application.config", "de.starwit.persistence.repository" })
 public class RestApplication {
 
     public static void main(String[] args) {

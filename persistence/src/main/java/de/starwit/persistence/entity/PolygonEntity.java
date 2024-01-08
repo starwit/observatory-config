@@ -38,7 +38,7 @@ public class PolygonEntity extends AbstractEntity<Long> {
     private Set<ClassificationEntity> classification;
 
     @JsonFilter("filterId")
-    @OneToMany(mappedBy = "polygon")
+    @OneToMany(mappedBy = "polygon", orphanRemoval = true)
     private List<PointEntity> point;
 
     // entity fields getters and setters

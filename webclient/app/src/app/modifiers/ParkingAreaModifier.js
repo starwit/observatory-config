@@ -1,6 +1,6 @@
 const entityDefault = {
     name: "",
-    id: undefined
+    id: ""
 };
 
 const entityFields = [
