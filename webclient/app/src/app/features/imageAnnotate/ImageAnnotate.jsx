@@ -116,6 +116,7 @@ function ImageAnnotate() {
             <ReactImageAnnotate
                 labelImages
                 regionClsList={classifications.map(classification => classification.name)}
+                regionColorList={classifications.map(classification => classification.color)}
                 onExit={event => {
                     console.log("save image");
                     console.log(event.images);
