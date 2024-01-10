@@ -11,6 +11,8 @@ public class RegionDto {
 
     private String id;
 
+    private String name;
+    
     private List<List<Double>> points;
 
     private Boolean open;
@@ -27,6 +29,14 @@ public class RegionDto {
 
     private double y2;
 
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+    
     public double getX1() {
         return x1;
     }
