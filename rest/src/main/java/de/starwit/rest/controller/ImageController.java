@@ -124,34 +124,36 @@ public class ImageController {
             entity = imageService.findById(dto.getId());
             if (entity.getPolygon() != null) {
                 polygonService.deleteAll(entity.getPolygon());
+                polygonService.getRepository().flush();
             }
-            entity.setPolygon(new HashSet<>());
+            entity.getPolygon().removeAll(entity.getPolygon());
+            entity = imageService.saveAndFlush(entity);
             List<RegionDto> regions = dto.getRegions();
             for (RegionDto regionDto : regions) {
-                if(regionDto.getType().equals("polygon")) {
-                    entity.getPolygon().add(createPolygon(regionDto));
-                }else if (regionDto.getType().equals("line")) {
-                    entity.getPolygon().add(createLine(regionDto));
+                if (regionDto.getType().equals("polygon")) {
+                    entity.addToPolygons(createPolygon(entity, regionDto));
+                } else if (regionDto.getType().equals("line")) {
+                    entity.addToPolygons(createLine(entity, regionDto));
                 }
             }
 
             entity = imageService.saveOrUpdate(entity);
-
             databackendService.syncConfiguration(dto);
-            
+
             return mapper.convertToDto(entity);
+
         } else {
             throw new EntityNotFoundException();
         }
     }
 
-    private PolygonEntity createPolygon(RegionDto regionDto) {
+    private PolygonEntity createPolygon(ImageEntity entity, RegionDto regionDto) {
         PolygonEntity polygonEntity = new PolygonEntity();
         Set<ClassificationEntity> cls = classificationService.findByName(regionDto.getCls());
         polygonEntity.setClassification(cls);
         polygonEntity.setOpen(regionDto.getOpen());
+        polygonEntity.setImage(entity);
         polygonEntity = polygonService.saveAndFlush(polygonEntity);
-        List<PointEntity> pointEntities = new ArrayList<>();
         List<List<Double>> points = regionDto.getPoints();
         if (points != null && !points.isEmpty()) {
             for (List<Double> point : regionDto.getPoints()) {
@@ -160,37 +162,32 @@ public class ImageController {
                 pointEntity.setYvalue(BigDecimal.valueOf(Math.max(0, Math.min(1, point.get(1)))));
                 pointEntity.setPolygon(polygonEntity);
                 pointEntity = pointService.saveAndFlush(pointEntity);
-                pointEntities.add(pointEntity);
+                polygonEntity.addToPoints(pointEntity);
             }
         }
-        polygonEntity.setPoint(pointEntities);
-        polygonEntity = polygonService.saveAndFlush(polygonEntity);
         return polygonEntity;
     }
 
-    private PolygonEntity createLine(RegionDto regionDto) {
+    private PolygonEntity createLine(ImageEntity entity, RegionDto regionDto) {
         PolygonEntity polygonEntity = new PolygonEntity();
         Set<ClassificationEntity> cls = classificationService.findByName(regionDto.getCls());
         polygonEntity.setClassification(cls);
         polygonEntity.setOpen(true);
+        polygonEntity.setImage(entity);
         polygonEntity = polygonService.saveAndFlush(polygonEntity);
-        List<PointEntity> pointEntities = new ArrayList<>();
         PointEntity p1 = new PointEntity();
         p1.setXvalue(BigDecimal.valueOf(Math.max(0, Math.min(1, regionDto.getX1()))));
         p1.setYvalue(BigDecimal.valueOf(Math.max(0, Math.min(1, regionDto.getY1()))));
         p1.setPolygon(polygonEntity);
         p1 = pointService.saveAndFlush(p1);
-        pointEntities.add(p1);
+        polygonEntity.addToPoints(p1);
 
         PointEntity p2 = new PointEntity();
         p2.setXvalue(BigDecimal.valueOf(Math.max(0, Math.min(1, regionDto.getX2()))));
         p2.setYvalue(BigDecimal.valueOf(Math.max(0, Math.min(1, regionDto.getY2()))));
         p2.setPolygon(polygonEntity);
         p2 = pointService.saveAndFlush(p2);
-        pointEntities.add(p2);
-        polygonEntity.setPoint(pointEntities);
-
-        polygonEntity = polygonService.saveAndFlush(polygonEntity);
+        polygonEntity.addToPoints(p2);
         return polygonEntity;
     }
 

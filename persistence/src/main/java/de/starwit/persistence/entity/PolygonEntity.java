@@ -1,5 +1,6 @@
 package de.starwit.persistence.entity;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
@@ -38,7 +39,7 @@ public class PolygonEntity extends AbstractEntity<Long> {
     private Set<ClassificationEntity> classification;
 
     @JsonFilter("filterId")
-    @OneToMany(mappedBy = "polygon", orphanRemoval = true)
+    @OneToMany(mappedBy = "polygon", orphanRemoval = true, cascade = CascadeType.ALL)
     private List<PointEntity> point;
 
     // entity fields getters and setters
@@ -73,6 +74,14 @@ public class PolygonEntity extends AbstractEntity<Long> {
 
     public void setPoint(List<PointEntity> point) {
         this.point = point;
+    }
+
+    public void addToPoints(PointEntity child) {
+        child.setPolygon(this);
+        if (this.point == null) {
+            this.point = new ArrayList<>();
+        }
+        this.point.add(child);
     }
 
 }
