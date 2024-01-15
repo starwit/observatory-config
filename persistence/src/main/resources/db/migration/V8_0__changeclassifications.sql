@@ -1,4 +1,4 @@
-TRUNCATE "classification" CASCADE;
+DELETE FROM "classification";
 
 INSERT INTO "classification"(
 	"name", "color")
