@@ -173,6 +173,7 @@ public class ImageController {
         Set<ClassificationEntity> cls = classificationService.findByName(regionDto.getCls());
         polygonEntity.setClassification(cls);
         polygonEntity.setOpen(true);
+        polygonEntity.setName(regionDto.getName());
         polygonEntity = polygonService.saveAndFlush(polygonEntity);
         List<PointEntity> pointEntities = new ArrayList<>();
         PointEntity p1 = new PointEntity();

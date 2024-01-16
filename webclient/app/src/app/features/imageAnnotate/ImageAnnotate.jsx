@@ -7,10 +7,25 @@ import {Typography} from "@mui/material";
 import ImageRest from "../../services/ImageRest";
 import Snackbar from "@mui/material/Snackbar";
 import MuiAlert from "@mui/material/Alert";
+import {setIn} from 'seamless-immutable';
 
 const Alert = React.forwardRef(function Alert(props, ref) {
     return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
 });
+
+const userReducer = (state, action) => {
+    switch (action.type) {
+        case "SELECT_CLASSIFICATION": {
+            switch (action.cls) {
+                case "Lichtschranke": {
+                    return setIn(state, ["selectedTool"], "create-line");
+                }
+            }
+        }   
+    }
+    
+    return state;
+};
 
 function ImageAnnotate() {
     const {t} = useTranslation();
@@ -74,7 +89,7 @@ function ImageAnnotate() {
         imageRest.savePolygons(event).then(response => {
             reloadImages();
             if (response.status == 200) {
-                handleMessage("success", "Saved successfuly");
+                handleMessage("success", "Saved successfully");
             } else {
                 handleMessage("error", "Failed to Save! Error " + response.status);
             }
@@ -101,13 +116,12 @@ function ImageAnnotate() {
             <ReactImageAnnotate
                 labelImages
                 regionClsList={classifications.map(classification => classification.name)}
+                regionColorList={classifications.map(classification => classification.color)}
                 onExit={event => {
                     console.log("save image");
                     console.log(event.images);
                     savePolygons(event.images);
                 }}
-                //enabledTools={["select", "create-polygon", "create-box", "create-line"]}
-                enabledTools={["select", "create-polygon", "create-line"]}
                 images={images}
                 hideHeaderText
                 selectedImage={selectedImage}
@@ -117,6 +131,8 @@ function ImageAnnotate() {
                 hidePrev={images.length === 1}
                 hideSettings={true}
                 hideClone
+                enabledRegionProps={["name"]}
+                userReducer={userReducer}
             />
             <Snackbar open={open} autoHideDuration={6000} onClose={handleClose}>
                 <Alert onClose={handleClose} severity={messageInfo ? messageInfo.severity : undefined}
