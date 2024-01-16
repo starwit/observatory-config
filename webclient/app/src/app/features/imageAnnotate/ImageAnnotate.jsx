@@ -89,9 +89,9 @@ function ImageAnnotate() {
         imageRest.savePolygons(event).then(response => {
             reloadImages();
             if (response.status == 200) {
-                handleMessage("success", "Saved successfully");
+                handleMessage("success", t("response.save.success"));
             } else {
-                handleMessage("error", "Failed to Save! Error " + response.status);
+                handleMessage("error", t("response.save.failed"));
             }
         });
     }

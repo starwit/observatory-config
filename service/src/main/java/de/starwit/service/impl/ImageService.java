@@ -29,6 +29,10 @@ public class ImageService implements ServiceInterface<ImageEntity, ImageReposito
         return imageRepository;
     }
 
+    public ImageEntity saveAndFlush(ImageEntity entity) {
+        return imageRepository.saveAndFlush(entity);
+    }
+
     public List<ImageEntity> findAllWithoutParkingConfig() {
         return imageRepository.findAllWithoutParkingConfig();
     }
@@ -39,36 +43,6 @@ public class ImageService implements ServiceInterface<ImageEntity, ImageReposito
 
     public List<ImageEntity> findByParkingConfigId(Long id) {
         return imageRepository.findByParkingConfigId(id);
-    }
-
-    @Override
-    public ImageEntity saveOrUpdate(ImageEntity entity) {
-
-        Set<PolygonEntity> polygonToSave = entity.getPolygon();
-
-        if (entity.getId() != null) {
-            ImageEntity entityPrev = this.findById(entity.getId());
-            if (entityPrev != null && entityPrev.getPolygon() != null) {
-                for (PolygonEntity item : entityPrev.getPolygon()) {
-                    PolygonEntity existingItem = polygonRepository.getReferenceById(item.getId());
-                    existingItem.setImage(null);
-                    this.polygonRepository.save(existingItem);
-                }
-            }
-        }
-
-        entity.setPolygon(null);
-        entity = this.getRepository().save(entity);
-        this.getRepository().flush();
-
-        if (polygonToSave != null && !polygonToSave.isEmpty()) {
-            for (PolygonEntity item : polygonToSave) {
-                PolygonEntity newItem = polygonRepository.getReferenceById(item.getId());
-                newItem.setImage(entity);
-                polygonRepository.save(newItem);
-            }
-        }
-        return this.getRepository().getReferenceById(entity.getId());
     }
 
     public ImageEntity saveMetadata(ImageEntity entity) {
