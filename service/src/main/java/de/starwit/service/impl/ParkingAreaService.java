@@ -8,9 +8,11 @@ import org.springframework.stereotype.Service;
 import de.starwit.persistence.entity.ImageEntity;
 import de.starwit.persistence.entity.ParkingAreaEntity;
 import de.starwit.persistence.entity.ParkingConfigEntity;
+import de.starwit.persistence.exception.NotificationException;
 import de.starwit.persistence.repository.ImageRepository;
 import de.starwit.persistence.repository.ParkingAreaRepository;
 import de.starwit.persistence.repository.ParkingConfigRepository;
+import jakarta.persistence.EntityNotFoundException;
 
 /**
  * 
@@ -48,6 +50,14 @@ public class ParkingAreaService implements ServiceInterface<ParkingAreaEntity, P
 
     public List<ParkingAreaEntity> findAllWithoutOtherSelectedProdConfig(Long id) {
         return parkingareaRepository.findAllWithoutOtherSelectedProdConfig(id);
+    }
+
+    @Override
+    public void delete(Long id) throws NotificationException {
+        // TODO: fix display of correct Parking Area
+        if (id != 1) {
+            this.getRepository().deleteById(id);
+        }
     }
 
     @Override
