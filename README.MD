@@ -51,11 +51,11 @@ https://docs.github.com/en/actions/hosting-your-own-runners/managing-self-hosted
 
 Each step is executed from the project home directory.
 
-1) go to the deployment folder and start the environment (database and keycloak) via docker-compose:
+1) go to the deployment folder and start the environment (database and keycloak) via docker compose:
 
     ```bash
     cd deployment
-    docker-compose -f localenv-docker-compose.yml up
+    docker compose -f localenv-docker-compose.yml up
     ```
 
 2) go to `webclient/app` and install the frontend applications dependencies
@@ -65,7 +65,7 @@ Each step is executed from the project home directory.
     npm install
     ```
 
-3) build the project
+3) go to Main Folder and build the project
 
     ```bash
     mvn clean install -P frontend
@@ -78,7 +78,7 @@ Each step is executed from the project home directory.
     ```
    You can also run the main-class via Visual Studio Code.
 
-* **The Application can be reached under http://localhost:8081/smartparkinkconfig/**
+* **The Application can be reached under http://localhost:8081/smartparkingconfig/**
 * **If you are using keycloak:**
     * **default user/password is admin/admin**
     * **keycloak can be reached under http://localhost:8080/auth**
