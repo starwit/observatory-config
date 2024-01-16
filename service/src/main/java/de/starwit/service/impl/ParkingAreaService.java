@@ -1,5 +1,6 @@
 package de.starwit.service.impl;
 
+import java.util.HashSet;
 import java.util.List;
 import de.starwit.persistence.entity.ParkingAreaEntity;
 import de.starwit.persistence.repository.ParkingAreaRepository;
@@ -47,7 +48,6 @@ public class ParkingAreaService implements ServiceInterface<ParkingAreaEntity, P
 
     @Override
     public ParkingAreaEntity saveOrUpdate(ParkingAreaEntity entity) {
-
         Set<ParkingConfigEntity> parkingConfigToSave = entity.getParkingConfig();
 
         if (entity.getId() != null) {
@@ -57,6 +57,12 @@ public class ParkingAreaService implements ServiceInterface<ParkingAreaEntity, P
                 existingItem.setParkingArea(null);
                 this.parkingconfigRepository.save(existingItem);
             }
+        } else {
+            ParkingConfigEntity p = new ParkingConfigEntity();
+            p.setName(entity.getName() + "-config");
+            p = parkingconfigRepository.saveAndFlush(p);
+            parkingConfigToSave = new HashSet<>();
+            parkingConfigToSave.add(p);
         }
 
         entity.setParkingConfig(null);

@@ -16,6 +16,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.json.JacksonTester;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockHttpServletResponse;
@@ -23,6 +24,7 @@ import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 
 import de.starwit.persistence.entity.AbstractEntity;
+import de.starwit.service.impl.DatabackendService;
 
 @WithMockUser(username = "admin", roles = { "ADMIN", "PBUSER" })
 @WebMvcTest()
@@ -36,6 +38,9 @@ public abstract class AbstractControllerIntegrationTest<ENTITY extends AbstractE
 
     @Autowired
     protected ObjectMapper mapper;
+
+    @MockBean
+    private DatabackendService databackendService;
 
     @BeforeEach
     public void setup() {
