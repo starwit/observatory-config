@@ -172,6 +172,7 @@ public class ImageController {
         polygonEntity.setClassification(cls);
         polygonEntity.setOpen(true);
         polygonEntity.setImage(entity);
+        polygonEntity.setName(regionDto.getName());
         polygonEntity = polygonService.saveAndFlush(polygonEntity);
         PointEntity p1 = new PointEntity();
         p1.setXvalue(BigDecimal.valueOf(Math.max(0, Math.min(1, regionDto.getX1()))));

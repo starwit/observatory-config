@@ -42,6 +42,17 @@ public class PolygonEntity extends AbstractEntity<Long> {
     @OneToMany(mappedBy = "polygon", orphanRemoval = true, cascade = CascadeType.ALL)
     private List<PointEntity> point;
 
+    @JsonFilter("filterId")
+    private String name;
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
     // entity fields getters and setters
     public Boolean getOpen() {
         return open;

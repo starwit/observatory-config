@@ -1,0 +1,1 @@
+ALTER TABLE "polygon" ADD COLUMN "name" VARCHAR(255);

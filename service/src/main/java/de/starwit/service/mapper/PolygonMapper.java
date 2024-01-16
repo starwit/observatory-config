@@ -31,6 +31,7 @@ public class PolygonMapper implements CustomMapper<PolygonEntity, RegionDto> {
                 dto.setColor(cls.getColor());
             }
             dto.setOpen(entity.getOpen());
+            dto.setName(entity.getName());
             
             List<List<Double>> points = pointMapper.convertToDtoList(entity.getPoint());
             if (points.size() == 2) {
@@ -55,6 +56,7 @@ public class PolygonMapper implements CustomMapper<PolygonEntity, RegionDto> {
             PolygonEntity entity = new PolygonEntity();
             entity.setOpen(dto.getOpen());
             entity.setPoint(pointMapper.convertToEntityList(dto.getPoints()));
+            entity.setName(dto.getName());
             try {
                 entity.setId(Long.parseLong(dto.getId()));
             } catch (NumberFormatException e) {

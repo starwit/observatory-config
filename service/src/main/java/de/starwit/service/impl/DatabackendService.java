@@ -11,6 +11,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.ResourceAccessException;
 import org.springframework.web.client.RestClient;
 import org.springframework.web.client.RestClientResponseException;
 
@@ -45,7 +46,7 @@ public class DatabackendService {
                 .retrieve().toBodilessEntity();
             
             log.info("Cleared databackend configuration: HTTP " + deleteResponse.getStatusCode());
-        } catch (RestClientResponseException ex) {
+        } catch (RestClientResponseException | ResourceAccessException ex) {
             log.error("Could not clear existing jobs on databackend", ex);
             return;
         }
@@ -63,7 +64,7 @@ public class DatabackendService {
                 log.info("Successfully sent configuration to databackend: HTTP " + postResponse.getStatusCode());
             } catch (IllegalGeometryException e) {
                 log.error("Illegal geometry (needs to have either exactly 2 or more than 2 points)");
-            } catch (RestClientResponseException ex) {
+            } catch (RestClientResponseException | ResourceAccessException ex) {
                 log.error("Could not send configuration to databackend", ex);
             }
         }
@@ -72,7 +73,7 @@ public class DatabackendService {
     private DatabackendDto toDatabackendDto(ImageDto imageDto, RegionDto regionDto) throws IllegalGeometryException {
         DatabackendDto dbeDto = new DatabackendDto();
 
-        dbeDto.setName("config");
+        dbeDto.setName(regionDto.getName());
         dbeDto.setCameraId(cameraId);
         dbeDto.setDetectionClassId(2);
         dbeDto.setEnabled(true);
