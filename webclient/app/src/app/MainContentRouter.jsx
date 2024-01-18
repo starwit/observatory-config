@@ -17,15 +17,11 @@ function MainContentRouter() {
     return (
         <>
             <Navigation
-                menuItems={appItems}
-                title={t("app.baseName")}
-                logo={logo}
-                removeContentSpacer={location.pathname === "/"}
+  
             >
                 <Routes>
                     <Route path={"/"} element={<ImageAnnotate />}/>
-                    <Route path={"/parkingconfig/*"} element={<ParkingConfigMain />}/>
-                    <Route path={"/parkingarea/*"} element={<ParkingAreaMain />}/>
+ 
                 </Routes>
             </Navigation>
         </>
