@@ -100,7 +100,7 @@ function ParkingAreaSelect() {
     return (
         <>
             <FormControl fullWidth>
-                <InputLabel>Parkbereich</InputLabel>
+                <InputLabel>Parkfläche</InputLabel>
                 <Select value={selected.id} label="ParkingArea" onChange={handleChange}>
                     {parkingAreaAll.map(entity => (
                         <MenuItem key={entity.id} value={entity.id} >{entity.name}</MenuItem>))}
