@@ -4,18 +4,11 @@ description: Smart Parking Config App
 
 type: application
 
-# Chart version, Versions are expected to follow Semantic Versioning (https://semver.org/)
-version: 0.1.0
+version: 0.2.0
 
-# Docker image version number
 appVersion: "latest"
 
 dependencies:
-  - name: keycloak
-    version: "16.1.1"
-    repository: "oci://registry-1.docker.io/bitnamicharts"
-    condition: auth.included_keycloak.enabled
-
   - name: postgresql
     version: "12.11.2"
     repository: "oci://registry-1.docker.io/bitnamicharts"
