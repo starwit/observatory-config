@@ -1,8 +1,6 @@
-image:
-  tag: "latest"
 
 app:
-  context_path: "/smartparkingconfig"
+  context_path: "/"
 
 ##see bitwarden for docker registry
 pullSecret:
@@ -10,10 +8,8 @@ pullSecret:
   password: "<<bitwarden>>"
 
 auth:
-  included_keycloak:
-    enabled: true
-  mode: included # possible values: disabled, included, extern
-  keycloak_url: http://<<hostname>>/auth/realms/smartparkingconfig # will be used for readyness probe
+  enabled: true
+  keycloak_url: http://<<hostname>>/realms/smartparkingconfig # will be used for readyness probe
   client_id: smartparkingconfig
   client_secret: smartparkingconfig # TODO get from secret
 
@@ -22,15 +18,6 @@ postgresql:
     database: smartparkingconfig
     username: smartparkingconfig
     password: smartparkingconfig
-
-keycloak:
-  httpRelativePath: /auth/ # set context path for keycloak console
-  auth:
-    adminUser: admin
-    adminPassword: adminadmin
-  ingress:
-    enabled: true
-    hostname: <<hostname>>
 
 ingress:
   enabled: true
