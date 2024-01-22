@@ -48,32 +48,4 @@ public class PolygonService implements ServiceInterface<PolygonEntity, PolygonRe
         }
         polygonRepository.deleteAll(entities);
     }
-
-    @Override
-    public PolygonEntity saveOrUpdate(PolygonEntity entity) {
-
-        List<PointEntity> pointToSave = entity.getPoint();
-
-        if (entity.getId() != null) {
-            PolygonEntity entityPrev = this.findById(entity.getId());
-            if (entityPrev.getPoint() != null && !entityPrev.getPoint().isEmpty()) {
-                for (PointEntity item : entityPrev.getPoint()) {
-                    PointEntity existingItem = pointRepository.getReferenceById(item.getId());
-                    existingItem.setPolygon(null);
-                    this.pointRepository.save(existingItem);
-                }
-            }
-        }
-        entity = this.getRepository().save(entity);
-        this.getRepository().flush();
-
-        if (pointToSave != null && !pointToSave.isEmpty()) {
-            for (PointEntity item : pointToSave) {
-                PointEntity newItem = pointRepository.getReferenceById(item.getId());
-                newItem.setPolygon(entity);
-                pointRepository.save(newItem);
-            }
-        }
-        return this.getRepository().getReferenceById(entity.getId());
-    }
 }

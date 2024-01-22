@@ -1,5 +1,6 @@
 package de.starwit.persistence.entity;
 
+import java.util.HashSet;
 import java.util.Set;
 
 import com.fasterxml.jackson.annotation.JsonFilter;
@@ -32,7 +33,7 @@ public class ImageEntity extends AbstractEntity<Long> {
 
     // entity relations
     @JsonFilter("filterId")
-    @OneToMany(mappedBy = "image")
+    @OneToMany(mappedBy = "image", orphanRemoval = true)
     private Set<PolygonEntity> polygon;
 
     @JsonFilter("filterId")
@@ -80,6 +81,14 @@ public class ImageEntity extends AbstractEntity<Long> {
 
     public void setParkingConfig(ParkingConfigEntity parkingConfig) {
         this.parkingConfig = parkingConfig;
+    }
+
+    public void addToPolygons(PolygonEntity child) {
+        child.setImage(this);
+        if (this.polygon == null) {
+            this.polygon = new HashSet<>();
+        }
+        this.polygon.add(child);
     }
 
 }

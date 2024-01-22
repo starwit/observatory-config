@@ -1,8 +1,10 @@
 package de.starwit.service.dto;
 
 import java.util.List;
+import java.util.Map;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 import de.starwit.persistence.entity.AbstractEntity;
 
@@ -16,6 +18,10 @@ public class ImageDto extends AbstractEntity<Long> {
     private String name;
 
     private List<RegionDto> regions;
+
+    private int imageHeight;
+    
+    private int imageWidth;
 
     public byte[] getData() {
         return data;
@@ -47,6 +53,28 @@ public class ImageDto extends AbstractEntity<Long> {
 
     public void setRegions(List<RegionDto> regions) {
         this.regions = regions;
+    }
+
+    public int getImageHeight() {
+        return imageHeight;
+    }
+
+    public void setImageHeight(int imageHeight) {
+        this.imageHeight = imageHeight;
+    }
+
+    public int getImageWidth() {
+        return imageWidth;
+    }
+
+    public void setImageWidth(int imageWidth) {
+        this.imageWidth = imageWidth;
+    }
+
+    @JsonProperty("pixelSize")
+    private void unpackImageDimensions(Map<String, Integer> image) {
+        imageHeight = image.get("h");
+        imageWidth = image.get("w");
     }
 
 }

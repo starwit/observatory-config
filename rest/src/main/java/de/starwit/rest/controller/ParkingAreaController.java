@@ -56,6 +56,7 @@ public class ParkingAreaController {
     public List<ParkingAreaEntity> findAllWithoutOtherSelectedTestConfig(@PathVariable("id") Long id) {
         return parkingareaService.findAllWithoutOtherSelectedTestConfig(id);
     }
+
     @Operation(summary = "Get all parkingarea without selectedProdConfig")
     @GetMapping(value = "/find-without-selectedProdConfig")
     public List<ParkingAreaEntity> findAllWithoutSelectedProdConfig() {
