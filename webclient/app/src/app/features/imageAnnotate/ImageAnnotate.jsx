@@ -16,6 +16,7 @@ function ImageAnnotate() {
     const {t} = useTranslation();
     const [classifications, setClassifications] = useState();
     const [images, setImages] = useState(null);
+    const [imageSrc, setImageSrc] = useState('');
     const [open, setOpen] = useState(false);
     const [messageInfo, setMessageInfo] = React.useState(undefined);
     const [selectedImage, setSelectedImage] = useState(0);
@@ -42,7 +43,8 @@ function ImageAnnotate() {
             if (response.data == null) {
                 return;
             }
-            setImages(response.data.map(image => convertToImage(image)));
+            setImageSrc('data:'+response.data[0].type+';base64,'+response.data[0].data);
+            setImages(response.data.map(image => 'data:'+image.type+';base64,'+image.data));
         });
     }
 
@@ -56,6 +58,7 @@ function ImageAnnotate() {
     function convertToImage(image) {
         console.log(image);
         var base64Flag = 'data:'+image.type+';base64,';
+
         // var imageStr =
         //     this.arrayBufferToBase64(image.data);
         return base64Flag + image.data;
@@ -107,6 +110,7 @@ function ImageAnnotate() {
 
     return (
         <>
+            <img src={imageSrc} />
             <ReactImageAnnotate
                 labelImages
                 regionClsList={classifications.map(classification => classification.name)}
@@ -133,6 +137,7 @@ function ImageAnnotate() {
                     {messageInfo ? messageInfo.message : undefined}
                 </Alert>
             </Snackbar>
+            
 
         </>
     );
