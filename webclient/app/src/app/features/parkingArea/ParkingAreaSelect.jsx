@@ -14,7 +14,6 @@ import {
 } from "@mui/material";
 import ParkingAreaDialog from "./ParkingAreaDialog";
 import {useImmer} from "use-immer";
-import {produce} from "immer";
 import {
     entityDefault
 } from "../../modifiers/ParkingAreaModifier";
@@ -49,31 +48,11 @@ function ParkingAreaSelect() {
     function update(modifiedEntity) {
         if (isCreate) {
             parkingareaRest.findAll().then(response => {
-                setParkingAreaAll(response.data);
-                const index = response.data.findIndex(entity => entity.name === modifiedEntity.name);
-                setSelectedArea(response.data[index]);
-                setIsCreate(false);
+                navigate(`${modifiedEntity.id}`);
             });
         } else {
             reload();
-            setSelectedArea(updateSelected(modifiedEntity));
-            setParkingAreaAll(updateParkingAreaAll(modifiedEntity));
         }
-    }
-
-    function updateParkingAreaAll(modifiedEntity) {
-        return produce(parkingAreaAll, draft => {
-            const index = draft.findIndex(entity => entity.id === selectedArea.id);
-            if (index !== -1) {
-                draft[index] = modifiedEntity;
-            }
-        });
-    }
-
-    function updateSelected(modifiedEntity) {
-        return produce(selectedArea, draft => {
-            draft.name = modifiedEntity.name;
-        });
     }
 
     function handleDelete() {
