@@ -60,6 +60,7 @@ const translationDeDE = {
     "home.welcome": "Welcome to SmartParkingConfig",
     "general.loading": "Loading",
     "button.submit": "OK",
+    "button.upload.image": "Bild hochladen",
     "button.create": "Add",
     "button.update": "Edit",
     "button.delete": "Delete",
