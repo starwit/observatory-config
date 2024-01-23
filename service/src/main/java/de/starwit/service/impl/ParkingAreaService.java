@@ -79,7 +79,8 @@ public class ParkingAreaService implements ServiceInterface<ParkingAreaEntity, P
             entity.setSelectedProdConfig(p);
             p = parkingconfigRepository.saveAndFlush(p);
             ImageEntity image = new ImageEntity();
-            image.setSrc("parking_south.jpg");
+            // TODO: save images
+            image.setData(null);
             image.setName(entity.getName());
             image.setParkingConfig(p);
             imageRepository.saveAndFlush(image);
