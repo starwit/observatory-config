@@ -1,6 +1,7 @@
 import React from "react";
 import ReactImageAnnotate from "@starwit/react-image-annotate";
 import {useEffect, useMemo, useState} from "react";
+import {useParams} from "react-router-dom";
 import {useTranslation} from "react-i18next";
 import ClassificationRest from "../../services/ClassificationRest";
 import {Typography} from "@mui/material";
@@ -37,7 +38,7 @@ function ImageAnnotate() {
     const [selectedImage, setSelectedImage] = useState(0);
     const classificationRest = useMemo(() => new ClassificationRest(), []);
     const imageRest = useMemo(() => new ImageRest(), []);
-    const id = 1;// TODO: useParams();
+    const {imageId} = useParams();
 
     useEffect(() => {
         reloadClassification();
@@ -45,7 +46,7 @@ function ImageAnnotate() {
 
     useEffect(() => {
         reloadImages();
-    }, [id]);
+    }, [imageId]);
 
     function reloadClassification() {
         classificationRest.findAll().then(response => {
@@ -54,7 +55,7 @@ function ImageAnnotate() {
     }
 
     function reloadImages() {
-        imageRest.findWithPolygons(id).then(response => {
+        imageRest.findWithPolygons(imageId).then(response => {
             if (response.data == null) {
                 return;
             }
