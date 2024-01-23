@@ -19,8 +19,8 @@ import {
     entityDefault,
     entityFields
 } from "../../modifiers/ParkingAreaModifier";
-import zIndex from "@mui/material/styles/zIndex";
 import UploadFileIcon from "@mui/icons-material/UploadFile";
+import ImageRest from "../../services/ImageRest";
 
 
 function ParkingAreaDialog(props) {
@@ -29,6 +29,7 @@ function ParkingAreaDialog(props) {
     const [entity, setEntity] = useImmer(entityDefault);
     const fields = entityFields;
     const entityRest = useMemo(() => new ParkingAreaRest(), []);
+    const imageRest = useMemo(()=> new ImageRest(), []);
     const [hasFormError, setHasFormError] = React.useState(false);
     const [image, setImage] = useImmer();
 
@@ -59,6 +60,8 @@ function ParkingAreaDialog(props) {
         if (entity.id) {
             entityRest.update(tmpOrg).then(response => update(response.data));
         } else {
+            var imageEntity=imageRest.upload(image);
+            console.log(imageEntity);
             entityRest.create(tmpOrg).then(response => update(response.data));
         }
         onClose();
@@ -106,7 +109,7 @@ function ParkingAreaDialog(props) {
                             />
                             <label htmlFor="image-picker">
                             <Button variant="outlined" component="span" startIcon={<UploadFileIcon />}>
-                                Upload Image
+                                {t("button.upload.image")}
                             </Button>
                             </label> 
                         </FormControl>
