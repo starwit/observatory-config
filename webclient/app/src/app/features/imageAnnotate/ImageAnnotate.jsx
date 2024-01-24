@@ -8,24 +8,26 @@ import ImageRest from "../../services/ImageRest";
 import Snackbar from "@mui/material/Snackbar";
 import MuiAlert from "@mui/material/Alert";
 import {setIn} from 'seamless-immutable';
+import {classificationSelectTools} from "../../AppConfig";
 
 const Alert = React.forwardRef(function Alert(props, ref) {
     return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
 });
 
 const userReducer = (state, action) => {
-    switch (action.type) {
-        case "SELECT_CLASSIFICATION": {
-            switch (action.cls) {
-                case "Lichtschranke": {
-                    return setIn(state, ["selectedTool"], "create-line");
-                }
+    if ("SELECT_CLASSIFICATION" == action.type) {
+        let select = classificationSelectTools[0];
+        classificationSelectTools.forEach((c) => {
+            if (c.classification == action.cls) {
+                select = c;
             }
-        }   
+        });
+        return setIn(state, ["selectedTool"], select.selectTool);
     }
-    
+
     return state;
 };
+
 
 function ImageAnnotate() {
     const {t} = useTranslation();
