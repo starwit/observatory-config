@@ -1,8 +1,3 @@
-DELETE FROM "classification";
-
-INSERT INTO "classification"(
-	"name", "color")
-	VALUES ('Lichtschranke', '#f44336');
 INSERT INTO "classification"(
 	"name", "color")
 	VALUES ('Sperrfläche', '#e9881e');
