@@ -17,6 +17,7 @@ import {useImmer} from "use-immer";
 import {
     entityDefault
 } from "../../modifiers/ParkingAreaModifier";
+import {useTranslation} from "react-i18next";
 
 function ParkingAreaSelect() {
     const [selectedArea, setSelectedArea] = useImmer(entityDefault);
@@ -24,6 +25,7 @@ function ParkingAreaSelect() {
     const [parkingAreaAll, setParkingAreaAll] = useImmer([]);
     const [openDialog, setOpenDialog] = React.useState(false);
     const [isCreate, setIsCreate] = React.useState(false);
+    const {t} = useTranslation();
     const navigate = useNavigate();
     const locationId = parseInt(useLocation().pathname.match(/^\/(\d+)/)[1]);
 
@@ -88,8 +90,8 @@ function ParkingAreaSelect() {
     return (
         <>
             <FormControl fullWidth>
-                <InputLabel>ParkingArea</InputLabel>
-                <Select value={selectedArea.id} label="ParkingArea" onChange={handleChange}>
+                <InputLabel>{t("parkingArea.title")}</InputLabel>
+                <Select value={selectedArea.id} label={t("parkingArea.title")} onChange={handleChange}>
                     {parkingAreaAll.map(entity => (
                         <MenuItem key={entity.id} value={entity.id} >{entity.name}</MenuItem>))}
                 </Select>
