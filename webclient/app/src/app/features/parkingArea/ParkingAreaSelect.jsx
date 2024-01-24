@@ -19,6 +19,15 @@ import {
 } from "../../modifiers/ParkingAreaModifier";
 import {useTranslation} from "react-i18next";
 
+function deriveIdFromLocation(location) {
+    const m = location.pathname.match(/^\/(\d+)$/);
+    if (m === null) {
+        return undefined;
+    }
+    console.log(location)
+    return parseInt(m[1]);
+}
+
 function ParkingAreaSelect() {
     const [selectedArea, setSelectedArea] = useImmer(entityDefault);
     const parkingareaRest = useMemo(() => new ParkingAreaRest(), [entityDefault]);
@@ -27,7 +36,7 @@ function ParkingAreaSelect() {
     const [isCreate, setIsCreate] = React.useState(false);
     const {t} = useTranslation();
     const navigate = useNavigate();
-    const locationId = parseInt(useLocation().pathname.match(/^\/(\d+)/)[1]);
+    const locationId = deriveIdFromLocation(useLocation());
 
     useEffect(() => {
         reload();
@@ -42,7 +51,7 @@ function ParkingAreaSelect() {
             if (preselectedArea !== undefined) {
                 setSelectedArea(preselectedArea);
             } else {
-                setSelectedArea(loadedAreas[0])
+                navigate(`/${loadedAreas[0].id}`);
             }
         });
     }
