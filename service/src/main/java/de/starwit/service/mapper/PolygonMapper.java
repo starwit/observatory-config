@@ -27,12 +27,12 @@ public class PolygonMapper implements CustomMapper<PolygonEntity, RegionDto> {
             if (entity.getClassification() != null && !entity.getClassification().isEmpty()
                     && entity.getClassification().iterator().hasNext()) {
                 ClassificationEntity cls = entity.getClassification().iterator().next();
-                dto.setClassification(cls.getName();
+                dto.setClassification(cls.getName());
                 dto.setColor(cls.getColor());
             }
             dto.setOpen(entity.getOpen());
             dto.setName(entity.getName());
-            
+
             List<List<Double>> points = pointMapper.convertToDtoList(entity.getPoint());
             if (points.size() == 2) {
                 dto.setType("line");
