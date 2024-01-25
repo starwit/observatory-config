@@ -12,14 +12,14 @@ public class RegionDto {
     private String id;
 
     private String name;
-    
+
     private List<List<Double>> points;
 
     private Boolean open;
 
     private String color;
 
-    private String cls;
+    private String classification;
 
     private double x1;
 
@@ -36,7 +36,7 @@ public class RegionDto {
     public void setName(String name) {
         this.name = name;
     }
-    
+
     public double getX1() {
         return x1;
     }
@@ -101,12 +101,12 @@ public class RegionDto {
         this.color = color;
     }
 
-    public String getCls() {
-        return cls;
+    public String getClassification() {
+        return classification;
     }
 
-    public void setCls(String cls) {
-        this.cls = cls;
+    public void setClassification(String classification) {
+        this.classification = classification;
     }
 
     public String getId() {

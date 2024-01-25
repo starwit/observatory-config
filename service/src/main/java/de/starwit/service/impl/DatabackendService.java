@@ -79,7 +79,7 @@ public class DatabackendService {
         dbeDto.setDetectionClassId(2);
         dbeDto.setEnabled(true);
         dbeDto.setParkingAreaId(1L);
-        dbeDto.setCls(cameraId);
+        dbeDto.setCls(regionDto.getClassification());
 
         List<GeometryPointsDto> geometryPoints = new ArrayList<>();
 
