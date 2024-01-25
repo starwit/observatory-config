@@ -19,7 +19,7 @@ public class RegionDto {
 
     private String color;
 
-    private String classification;
+    private String cls;
 
     private double x1;
 
@@ -101,12 +101,12 @@ public class RegionDto {
         this.color = color;
     }
 
-    public String getClassification() {
-        return classification;
+    public String getCls() {
+        return cls;
     }
 
-    public void setClassification(String classification) {
-        this.classification = classification;
+    public void setCls(String cls) {
+        this.cls = cls;
     }
 
     public String getId() {
