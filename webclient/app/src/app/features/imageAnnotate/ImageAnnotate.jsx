@@ -16,7 +16,7 @@ const Alert = React.forwardRef(function Alert(props, ref) {
 
 const userReducer = (state, action) => {
     if ("SELECT_CLASSIFICATION" == action.type) {
-        const select = classificationSelectTools.find((select = c) => (c.classification == action.cls));
+        const select = classificationSelectTools.find((c) => c.classification == action.cls);
         if (select !== undefined) {
 
             return setIn(state, ["selectedTool"], select.selectTool);
