@@ -64,6 +64,8 @@ function ParkingAreaDialog(props) {
     const {getRootProps, getInputProps} = useDropzone({onDrop});
 
     function onDialogClose() {
+        setSelectedFile(null);
+        setPreviewUrl('');
         onClose();
     }
 
