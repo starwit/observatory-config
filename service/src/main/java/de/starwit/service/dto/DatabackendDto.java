@@ -10,6 +10,7 @@ public class DatabackendDto {
     private Integer detectionClassId;
     private Boolean enabled;
     private List<GeometryPointsDto> geometryPoints;
+    private String classification;
 
     public String getName() {
         return name;
@@ -18,7 +19,7 @@ public class DatabackendDto {
     public void setName(String name) {
         this.name = name;
     }
-    
+
     public Long getParkingAreaId() {
         return parkingAreaId;
     }
@@ -34,7 +35,7 @@ public class DatabackendDto {
     public void setType(String type) {
         this.type = type;
     }
-    
+
     public String getCameraId() {
         return cameraId;
     }
@@ -62,8 +63,16 @@ public class DatabackendDto {
     public List<GeometryPointsDto> getGeometryPoints() {
         return geometryPoints;
     }
-    
+
     public void setGeometryPoints(List<GeometryPointsDto> geometryPoints) {
         this.geometryPoints = geometryPoints;
-    }    
+    }
+
+    public String getClassification() {
+        return classification;
+    }
+
+    public void setClassification(String classification) {
+        this.classification = classification;
+    }
 }

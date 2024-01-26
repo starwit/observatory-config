@@ -151,6 +151,7 @@ public class ImageController {
         polygonEntity.setClassification(cls);
         polygonEntity.setOpen(regionDto.getOpen());
         polygonEntity.setImage(entity);
+        polygonEntity.setName(regionDto.getName());
         polygonEntity = polygonService.saveAndFlush(polygonEntity);
         List<List<Double>> points = regionDto.getPoints();
         if (points != null && !points.isEmpty()) {
