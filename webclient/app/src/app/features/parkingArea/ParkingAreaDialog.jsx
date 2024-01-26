@@ -76,16 +76,20 @@ function ParkingAreaDialog(props) {
         event.preventDefault();
         const tmpOrg = prepareForSave(entity, fields);
         if (entity.id) {
-            entityRest.update(tmpOrg).then(response => update(response.data));
+            entityRest.update(tmpOrg)
+                .then(response => {
+                    uploadFile();
+                    update(response.data);
+                });
         } else {
-            var imageEntity = imageRest.upload(image);
+            imageEntity = imageRest.upload(image);
             console.log(imageEntity);
             entityRest.create(tmpOrg).then(response => update(response.data));
         }
         onClose();
     }
 
-    function uploadFile(event) {
+    function uploadFile() {
         if (!selectedFile) {
             alert('Bitte füllen Sie alle Felder aus und wählen Sie eine Datei aus.');
             return;
@@ -96,7 +100,6 @@ function ParkingAreaDialog(props) {
         try {
             imageRest.test(formData)
                 .then(response => {
-                    setResult(response.data);
                     console.log('Upload successful:', response.data);
                 })
                 .catch(error => {
