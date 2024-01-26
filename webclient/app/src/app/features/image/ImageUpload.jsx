@@ -1,7 +1,8 @@
 import React, {useState} from 'react';
 import axios from 'axios';
 import {useDropzone} from 'react-dropzone';
-import {Button, TextField, Typography, Container, Paper, Avatar, FormControl} from '@mui/material';
+import {Typography, FormControl} from '@mui/material';
+import ImageUploadStyles from '../../assets/styles/ImageUploadStyles';
 
 const ImageUpload = () => {
     const [selectedFile, setSelectedFile] = useState(null);
@@ -48,11 +49,7 @@ const ImageUpload = () => {
             <Typography variant="caption">Bild hochladen</Typography>
             <FormControl {...getRootProps()} style={dropzoneStyle}>
                 <input {...getInputProps()} />
-                {isDragActive ? (
-                    <Typography variant="overline">Datei hier ablegen...</Typography>
-                ) : (
-                    <Typography variant="overline">Datei hier ablegen oder klicken, um eine Datei auszuwählen.</Typography>
-                )}
+                <Typography variant="overline">Datei hier ablegen...</Typography>
                 {previewUrl && <img src={previewUrl} alt="Vorschau" style={previewStyle} />}
             </FormControl>
             {/*
@@ -98,7 +95,7 @@ const dropzoneStyle = {
 
 const previewStyle = {
     maxWidth: '100%',
-    maxHeight: '200px',
+    maxHeight: '300px',
     margin: '10px 0',
 };
 

@@ -1,10 +1,10 @@
 import {
     Box, Button,
-    Dialog, Input,
+    Dialog, Typography,
     DialogActions, DialogContent, FormControl, Stack
 } from "@mui/material";
 import PropTypes from "prop-types";
-import React, {useMemo, useEffect} from "react";
+import React, {useMemo, useEffect, useState} from "react";
 import {useImmer} from "use-immer";
 import {useTranslation} from "react-i18next";
 import DialogHeader from "../../commons/dialog/DialogHeader";
@@ -19,9 +19,10 @@ import {
     entityDefault,
     entityFields
 } from "../../modifiers/ParkingAreaModifier";
-import UploadFileIcon from "@mui/icons-material/UploadFile";
 import ImageRest from "../../services/ImageRest";
-import ImageUpload from "../image/ImageUpload";
+import {useDropzone} from 'react-dropzone';
+import ImageUploadStyles from "../../assets/styles/ImageUploadStyles";
+
 
 
 function ParkingAreaDialog(props) {
@@ -32,7 +33,21 @@ function ParkingAreaDialog(props) {
     const entityRest = useMemo(() => new ParkingAreaRest(), []);
     const imageRest = useMemo(() => new ImageRest(), []);
     const [hasFormError, setHasFormError] = React.useState(false);
-    const [image, setImage] = useImmer();
+    const [selectedFile, setSelectedFile] = useState(null);
+    const [previewUrl, setPreviewUrl] = useState('');
+
+    const onDrop = (acceptedFiles) => {
+        const file = acceptedFiles[0];
+        setSelectedFile(file);
+
+        // Vorschaubild erzeugen
+        const reader = new FileReader();
+        reader.onloadend = () => {
+            setPreviewUrl(reader.result);
+        };
+        reader.readAsDataURL(file);
+    };
+
 
     useEffect(() => {
         if (isCreate) {
@@ -45,6 +60,8 @@ function ParkingAreaDialog(props) {
     useEffect(() => {
         onEntityChange();
     }, [entity]);
+
+    const {getRootProps, getInputProps} = useDropzone({onDrop});
 
     function onDialogClose() {
         onClose();
@@ -68,11 +85,28 @@ function ParkingAreaDialog(props) {
         onClose();
     }
 
-    const handleImageUpload = (e) => {
-        if (!e.target.files) {
+    function uploadFile(event) {
+        if (!selectedFile) {
+            alert('Bitte füllen Sie alle Felder aus und wählen Sie eine Datei aus.');
             return;
         }
-        setImage(e.target.files);
+
+        const formData = new FormData();
+        formData.append('image', selectedFile);
+        try {
+            imageRest.test(formData)
+                .then(response => {
+                    setResult(response.data);
+                    console.log('Upload successful:', response.data);
+                })
+                .catch(error => {
+                    console.error(error);
+                });
+
+            // Hier kannst du die Antwort weiterverarbeiten, z.B. den Dateipfad anzeigen.
+        } catch (error) {
+            console.error('Upload failed:', error);
+        }
     };
 
     function getDialogTitle() {
@@ -102,7 +136,12 @@ function ParkingAreaDialog(props) {
                                 max={fields[0].max}
                                 helperText={t("parkingArea.name.hint")}
                             />
-                            <ImageUpload />
+                        </FormControl>
+                        <Typography variant="caption">Bild hochladen</Typography>
+                        <FormControl {...getRootProps()} sx={ImageUploadStyles.dropzoneStyle}>
+                            <input {...getInputProps()} />
+                            <Typography variant="overline">Datei hier ablegen...</Typography>
+                            {previewUrl && <img src={previewUrl} style={ImageUploadStyles.previewStyle} alt="Vorschau" />}
                         </FormControl>
                     </Stack >
                 </DialogContent>
