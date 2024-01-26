@@ -24,7 +24,6 @@ function deriveIdFromLocation(location) {
     if (m === null) {
         return undefined;
     }
-    console.log(location)
     return parseInt(m[1]);
 }
 
