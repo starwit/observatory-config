@@ -10,7 +10,7 @@ public class DatabackendDto {
     private Integer detectionClassId;
     private Boolean enabled;
     private List<GeometryPointsDto> geometryPoints;
-    private String cls;
+    private String classification;
 
     public String getName() {
         return name;
@@ -68,11 +68,11 @@ public class DatabackendDto {
         this.geometryPoints = geometryPoints;
     }
 
-    public String getCls() {
-        return cls;
+    public String getClassification() {
+        return classification;
     }
 
-    public void setCls(String cls) {
-        this.cls = cls;
+    public void setClassification(String classification) {
+        this.classification = classification;
     }
 }
