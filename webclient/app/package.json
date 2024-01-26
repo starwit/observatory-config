@@ -27,6 +27,7 @@
     "react-i18next": "^13.4.0",
     "react-router": "^6.18.0",
     "react-router-dom": "^6.18.0",
+    "react-dropzone": "14.2.3",
     "stream": "npm:stream-browserify@^3.0.0",
     "use-immer": "^0.9.0",
     "util": "npm:util@^0.12.5",

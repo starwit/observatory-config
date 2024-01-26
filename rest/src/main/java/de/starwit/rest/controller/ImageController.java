@@ -1,5 +1,6 @@
 package de.starwit.rest.controller;
 
+import java.io.File;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.List;
@@ -11,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -121,18 +123,26 @@ public class ImageController {
     }
 
     @PostMapping("/upload")
+    @CrossOrigin
     public void uploadImage(@RequestParam("image") MultipartFile file) throws IOException {
         imageService.uploadImage(file);
     }
 
-
     @GetMapping("/download/{id}")
-    public ResponseEntity<?>  getImageByName(@PathVariable("id") Long id){
-        byte[] image = imageService.getImageById(id);
+    public ResponseEntity<?> getImageByName(@PathVariable("id") Long id) {
+        byte[] image = imageService.findById(id).getData();
 
         return ResponseEntity.status(HttpStatus.OK)
                 .contentType(MediaType.valueOf("image/png"))
                 .body(image);
+    }
+
+    @PostMapping("/test")
+    public ResponseEntity<String> handleFileUpload(@RequestParam("image") MultipartFile file) {
+        String UPLOAD_PATH = "/";
+        String fileName = file.getOriginalFilename();
+        System.out.println(fileName);
+        return ResponseEntity.ok("File uploaded successfully.");
     }
 
     private ImageDto savePolygonsPerImage(ImageDto dto) throws EntityNotFoundException {

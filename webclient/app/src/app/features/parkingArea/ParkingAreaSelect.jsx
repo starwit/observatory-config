@@ -18,6 +18,7 @@ import {
     entityDefault
 } from "../../modifiers/ParkingAreaModifier";
 import {useTranslation} from "react-i18next";
+import {UploadFile} from "@mui/icons-material";
 
 function ParkingAreaSelect() {
     const [selected, setSelected] = useImmer(entityDefault);

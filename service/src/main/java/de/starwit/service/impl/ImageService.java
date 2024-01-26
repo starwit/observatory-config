@@ -32,9 +32,6 @@ public class ImageService implements ServiceInterface<ImageEntity, ImageReposito
     @Autowired
     private ImageRepository imageRepository;
 
-    @Autowired
-    private PolygonRepository polygonRepository;
-
     @Override
     public ImageRepository getRepository() {
         return imageRepository;
@@ -45,39 +42,24 @@ public class ImageService implements ServiceInterface<ImageEntity, ImageReposito
     }
 
     public List<ImageEntity> findAllWithoutParkingConfig() {
-        return decompressImageList(imageRepository.findAllWithoutParkingConfig());
+        return imageRepository.findAllWithoutParkingConfig();
     }
 
     public List<ImageEntity> findAllWithoutOtherParkingConfig(Long id) {
-        return decompressImageList(imageRepository.findAllWithoutOtherParkingConfig(id));
+        return imageRepository.findAllWithoutOtherParkingConfig(id);
     }
 
     public List<ImageEntity> findByParkingConfigId(Long id) {
-        return decompressImageList(imageRepository.findByParkingConfigId(id));
+        return imageRepository.findByParkingConfigId(id);
     }
 
     public ImageEntity uploadImage(MultipartFile imageFile) throws IOException {
         ImageEntity newEntity = new ImageEntity();
         newEntity.setName(imageFile.getOriginalFilename());
         newEntity.setType(imageFile.getContentType());
-        newEntity.setData(compressImage(imageFile.getBytes()));
+        newEntity.setData(imageFile.getBytes());
 
         return imageRepository.save(newEntity);
-    }
-
-    @Transactional
-    public byte[] getImageById(Long id) {
-        Optional<ImageEntity> dbImage = imageRepository.findById(id);
-        byte[] image = decompressImage(dbImage.get().getData());
-        return image;
-    }
-
-    @Override
-    public ImageEntity findById(Long id){
-        ImageEntity dbImage = imageRepository.findById(id).get();
-        byte[] byteImage = decompressImage(dbImage.getData());
-        dbImage.setData(byteImage);
-        return dbImage;
     }
 
     public ImageEntity saveMetadata(ImageEntity entity) {
@@ -93,50 +75,4 @@ public class ImageService implements ServiceInterface<ImageEntity, ImageReposito
         }
         return null;
     }
-
-    public static byte[] compressImage(byte[] data) {
-
-        Deflater deflater = new Deflater();
-        deflater.setLevel(Deflater.BEST_COMPRESSION);
-        deflater.setInput(data);
-        deflater.finish();
-
-        ByteArrayOutputStream outputStream = new ByteArrayOutputStream(data.length);
-        byte[] tmp = new byte[4*1024];
-        while (!deflater.finished()) {
-            int size = deflater.deflate(tmp);
-            outputStream.write(tmp, 0, size);
-        }
-        try {
-            outputStream.close();
-        } catch (Exception e) {
-        }
-        return outputStream.toByteArray();
-    }
-
-    public static byte[] decompressImage(byte[] data) {
-        Inflater inflater = new Inflater();
-        inflater.setInput(data);
-        ByteArrayOutputStream outputStream = new ByteArrayOutputStream(data.length);
-        byte[] tmp = new byte[4*1024];
-        try {
-            while (!inflater.finished()) {
-                int count = inflater.inflate(tmp);
-                outputStream.write(tmp, 0, count);
-            }
-            outputStream.close();
-        } catch (Exception exception) {
-        }
-        return outputStream.toByteArray();
-    }
-
-    public List<ImageEntity> decompressImageList(List<ImageEntity> imageEntityList){
-        for (ImageEntity imageEntity : imageEntityList) {
-            byte[] byteImage = decompressImage(imageEntity.getData());
-            imageEntity.setData(byteImage);
-        }
-        return imageEntityList;
-    }
 }
-
-

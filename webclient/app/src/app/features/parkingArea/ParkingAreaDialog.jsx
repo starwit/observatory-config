@@ -1,6 +1,6 @@
 import {
     Box, Button,
-    Dialog,Input,
+    Dialog, Input,
     DialogActions, DialogContent, FormControl, Stack
 } from "@mui/material";
 import PropTypes from "prop-types";
@@ -21,6 +21,7 @@ import {
 } from "../../modifiers/ParkingAreaModifier";
 import UploadFileIcon from "@mui/icons-material/UploadFile";
 import ImageRest from "../../services/ImageRest";
+import ImageUpload from "../image/ImageUpload";
 
 
 function ParkingAreaDialog(props) {
@@ -29,7 +30,7 @@ function ParkingAreaDialog(props) {
     const [entity, setEntity] = useImmer(entityDefault);
     const fields = entityFields;
     const entityRest = useMemo(() => new ParkingAreaRest(), []);
-    const imageRest = useMemo(()=> new ImageRest(), []);
+    const imageRest = useMemo(() => new ImageRest(), []);
     const [hasFormError, setHasFormError] = React.useState(false);
     const [image, setImage] = useImmer();
 
@@ -60,7 +61,7 @@ function ParkingAreaDialog(props) {
         if (entity.id) {
             entityRest.update(tmpOrg).then(response => update(response.data));
         } else {
-            var imageEntity=imageRest.upload(image);
+            var imageEntity = imageRest.upload(image);
             console.log(imageEntity);
             entityRest.create(tmpOrg).then(response => update(response.data));
         }
@@ -68,11 +69,11 @@ function ParkingAreaDialog(props) {
     }
 
     const handleImageUpload = (e) => {
-    if (!e.target.files) {
-      return;
-    }
-    setImage(e.target.files);
-  };
+        if (!e.target.files) {
+            return;
+        }
+        setImage(e.target.files);
+    };
 
     function getDialogTitle() {
         if (entity?.id) {
@@ -82,6 +83,7 @@ function ParkingAreaDialog(props) {
     }
 
     return (
+
         <Dialog onClose={onDialogClose} open={open} spacing={2} sx={{zIndex: 10000}}>
             <DialogHeader onClose={onDialogClose} title={t(getDialogTitle())} />
             <form autoComplete="off">
@@ -100,18 +102,7 @@ function ParkingAreaDialog(props) {
                                 max={fields[0].max}
                                 helperText={t("parkingArea.name.hint")}
                             />
-                            <input
-                            accept="image/*"
-                            id="image-picker"
-                            type="file"
-                            hidden
-                            onChange={handleImageUpload}
-                            />
-                            <label htmlFor="image-picker">
-                            <Button variant="outlined" component="span" startIcon={<UploadFileIcon />}>
-                                {t("button.upload.image")}
-                            </Button>
-                            </label> 
+                            <ImageUpload />
                         </FormControl>
                     </Stack >
                 </DialogContent>
