@@ -32,7 +32,7 @@ public class PolygonMapper implements CustomMapper<PolygonEntity, RegionDto> {
             }
             dto.setOpen(entity.getOpen());
             dto.setName(entity.getName());
-            
+
             List<List<Double>> points = pointMapper.convertToDtoList(entity.getPoint());
             if (points.size() == 2) {
                 dto.setType("line");

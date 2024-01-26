@@ -1,4 +1,5 @@
 import React, {useState, useMemo, useEffect} from "react";
+import {useNavigate, useLocation} from "react-router-dom";
 import ParkingAreaRest from "../../services/ParkingAreaRest";
 import Select from "@mui/material/Select";
 import MenuItem from "@mui/material/MenuItem";
@@ -13,20 +14,29 @@ import {
 } from "@mui/material";
 import ParkingAreaDialog from "./ParkingAreaDialog";
 import {useImmer} from "use-immer";
-import {produce} from "immer";
 import {
     entityDefault
 } from "../../modifiers/ParkingAreaModifier";
 import {useTranslation} from "react-i18next";
 import {UploadFile} from "@mui/icons-material";
 
+function deriveIdFromLocation(location) {
+    const m = location.pathname.match(/^\/(\d+)$/);
+    if (m === null) {
+        return undefined;
+    }
+    return parseInt(m[1]);
+}
+
 function ParkingAreaSelect() {
-    const [selected, setSelected] = useImmer(entityDefault);
+    const [selectedArea, setSelectedArea] = useImmer(entityDefault);
     const parkingareaRest = useMemo(() => new ParkingAreaRest(), [entityDefault]);
     const [parkingAreaAll, setParkingAreaAll] = useImmer([]);
     const [openDialog, setOpenDialog] = React.useState(false);
     const [isCreate, setIsCreate] = React.useState(false);
     const {t} = useTranslation();
+    const navigate = useNavigate();
+    const locationId = deriveIdFromLocation(useLocation());
 
     useEffect(() => {
         reload();
@@ -34,55 +44,41 @@ function ParkingAreaSelect() {
 
     function reload() {
         parkingareaRest.findAll().then(response => {
-            setParkingAreaAll(response.data);
-            if (selected?.id == "") {setSelected(response.data[0]);}
+            const loadedAreas = response.data;
+            setParkingAreaAll(loadedAreas);
+
+            const preselectedArea = loadedAreas.find(entity => entity.id === locationId);
+            if (preselectedArea !== undefined) {
+                setSelectedArea(preselectedArea);
+            } else {
+                navigate(`/${loadedAreas[0].id}`);
+            }
         });
     }
 
     function update(modifiedEntity) {
         if (isCreate) {
             parkingareaRest.findAll().then(response => {
-                setParkingAreaAll(response.data);
-                const index = response.data.findIndex(entity => entity.name === modifiedEntity.name);
-                setSelected(response.data[index]);
-                setIsCreate(false);
+                navigate(`${modifiedEntity.id}`);
             });
         } else {
             reload();
-            setSelected(updateSelected(modifiedEntity));
-            setParkingAreaAll(updateParkingAreaAll(modifiedEntity));
         }
     }
 
-    function updateParkingAreaAll(modifiedEntity) {
-        return produce(parkingAreaAll, draft => {
-            const index = draft.findIndex(entity => entity.id === selected.id);
-            if (index !== -1) {
-                draft[index] = modifiedEntity;
-            }
-        });
-    }
-
-    function updateSelected(modifiedEntity) {
-        return produce(selected, draft => {
-            draft.name = modifiedEntity.name;
-        });
-    }
-
     function handleDelete() {
-        if (!!selected) {
-            parkingareaRest.delete(selected.id).then(response => {
+        if (!!selectedArea) {
+            parkingareaRest.delete(selectedArea.id).then(response => {
                 parkingareaRest.findAll().then(response => {
-                    setParkingAreaAll(response.data);
-                    setSelected(response.data[0]);
+                    navigate(`/${response.data[0].id}`);
                 });
             });
         }
     }
 
     const handleChange = event => {
-        const value = parkingAreaAll.find(entity => entity.id === event.target.value);
-        setSelected(value);
+        const newParkingAreaId = event.target.value;
+        navigate(`/${newParkingAreaId}`);
     };
 
     function handleDialogOpen() {
@@ -104,7 +100,7 @@ function ParkingAreaSelect() {
         <>
             <FormControl fullWidth>
                 <InputLabel>{t("parkingArea.title")}</InputLabel>
-                <Select value={selected.id} label={t("parkingArea.title")} onChange={handleChange}>
+                <Select value={selectedArea.id} label={t("parkingArea.title")} onChange={handleChange}>
                     {parkingAreaAll.map(entity => (
                         <MenuItem key={entity.id} value={entity.id} >{entity.name}</MenuItem>))}
                 </Select>
@@ -124,7 +120,7 @@ function ParkingAreaSelect() {
                 open={openDialog}
                 onClose={handleDialogClose}
                 isCreate={isCreate}
-                selected={selected}
+                selected={selectedArea}
                 update={update}
             />
         </>

@@ -1,6 +1,7 @@
 import React from "react";
 import ReactImageAnnotate from "@starwit/react-image-annotate";
 import {useEffect, useMemo, useState} from "react";
+import {useParams} from "react-router-dom";
 import {useTranslation} from "react-i18next";
 import ClassificationRest from "../../services/ClassificationRest";
 import {Typography} from "@mui/material";
@@ -8,24 +9,23 @@ import ImageRest from "../../services/ImageRest";
 import Snackbar from "@mui/material/Snackbar";
 import MuiAlert from "@mui/material/Alert";
 import {setIn} from 'seamless-immutable';
+import {classificationSelectTools} from "../../AppConfig";
 
 const Alert = React.forwardRef(function Alert(props, ref) {
     return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
 });
 
 const userReducer = (state, action) => {
-    switch (action.type) {
-        case "SELECT_CLASSIFICATION": {
-            switch (action.cls) {
-                case "Lichtschranke": {
-                    return setIn(state, ["selectedTool"], "create-line");
-                }
-            }
-        }   
+    if ("SELECT_CLASSIFICATION" == action.type) {
+        const select = classificationSelectTools.find((c) => c.classification == action.cls);
+        if (select !== undefined) {
+
+            return setIn(state, ["selectedTool"], select.selectTool);
+        }
     }
-    
     return state;
 };
+
 
 function ImageAnnotate() {
     const {t} = useTranslation();
@@ -37,7 +37,7 @@ function ImageAnnotate() {
     const [selectedImage, setSelectedImage] = useState(0);
     const classificationRest = useMemo(() => new ClassificationRest(), []);
     const imageRest = useMemo(() => new ImageRest(), []);
-    const id = 1;// TODO: useParams();
+    const {imageId} = useParams();
 
     useEffect(() => {
         reloadClassification();
@@ -45,7 +45,7 @@ function ImageAnnotate() {
 
     useEffect(() => {
         reloadImages();
-    }, [id]);
+    }, [imageId]);
 
     function reloadClassification() {
         classificationRest.findAll().then(response => {
@@ -54,7 +54,7 @@ function ImageAnnotate() {
     }
 
     function reloadImages() {
-        imageRest.findWithPolygons(id).then(response => {
+        imageRest.findWithPolygons(imageId).then(response => {
             if (response.data == null) {
                 return;
             }
