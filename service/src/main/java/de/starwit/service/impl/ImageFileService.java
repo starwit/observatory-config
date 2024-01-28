@@ -49,6 +49,7 @@ public class ImageFileService {
     public FileDto prepareFileDto(ImageEntity image) {
         FileDto fileDto = new FileDto();
         fileDto.setByteArrayResource(new ByteArrayResource(image.getData()));
+        fileDto.setFileSize(Long.valueOf(image.getData().length));
         return fileDto;
     }
 

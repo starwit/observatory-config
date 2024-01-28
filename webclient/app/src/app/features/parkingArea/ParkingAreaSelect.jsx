@@ -63,6 +63,7 @@ function ParkingAreaSelect() {
             });
         } else {
             reload();
+            navigate(`${modifiedEntity.id}`);
         }
     }
 

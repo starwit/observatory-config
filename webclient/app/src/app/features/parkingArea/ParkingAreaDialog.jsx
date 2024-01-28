@@ -80,39 +80,26 @@ function ParkingAreaDialog(props) {
         if (entity.id) {
             entityRest.update(tmpOrg)
                 .then(response => {
-                    uploadFile(response.data?.selectedProdConfig?.id);
-                    update(response.data);
+                    uploadFile(response.data, response.data?.selectedProdConfig?.id);
                 });
         } else {
             entityRest.create(tmpOrg).then(response => {
-                uploadFile(response.data?.selectedProdConfig?.id);
-                update(response.data);
+                uploadFile(response.data, response.data?.selectedProdConfig?.id);
             });
         }
         onClose();
     }
 
-    function uploadFile(activeParkingConfigId) {
+    function uploadFile(data, activeParkingConfigId) {
         if (!selectedFile) {
-            alert('Bitte füllen Sie alle Felder aus und wählen Sie eine Datei aus.');
+            update(data);
             return;
         }
-
         const formData = new FormData();
         formData.append('image', selectedFile);
-        try {
-            imageRest.upload(formData, activeParkingConfigId)
-                .then(response => {
-                    console.log('Upload successful:', response.data);
-                })
-                .catch(error => {
-                    console.error(error);
-                });
-
-            // Hier kannst du die Antwort weiterverarbeiten, z.B. den Dateipfad anzeigen.
-        } catch (error) {
-            console.error('Upload failed:', error);
-        }
+        imageRest.upload(formData, activeParkingConfigId).then(() => {
+            update(data);
+        });
     };
 
     function getDialogTitle() {
@@ -143,11 +130,11 @@ function ParkingAreaDialog(props) {
                                 helperText={t("parkingArea.name.hint")}
                             />
                         </FormControl>
-                        <Typography variant="caption">Bild hochladen</Typography>
+                        <Typography variant="caption">{t("parkingArea.image.hint")}</Typography>
                         <FormControl {...getRootProps()} sx={ImageUploadStyles.dropzoneStyle}>
                             <input {...getInputProps()} />
-                            <Typography variant="overline">Datei hier ablegen...</Typography>
-                            {previewUrl && <img src={previewUrl} style={ImageUploadStyles.previewStyle} alt="Vorschau" />}
+                            <Typography variant="overline">{t("parkingArea.image")}</Typography>
+                            {previewUrl && <img src={previewUrl} style={ImageUploadStyles.previewStyle} alt={t("parkingArea.image.preview")} />}
                         </FormControl>
                     </Stack >
                 </DialogContent>

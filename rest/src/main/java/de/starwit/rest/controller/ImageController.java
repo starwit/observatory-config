@@ -144,14 +144,6 @@ public class ImageController {
                 .body(image);
     }
 
-    @PostMapping("/test")
-    public ResponseEntity<String> handleFileUpload(@RequestParam("image") MultipartFile file) {
-        String UPLOAD_PATH = "/";
-        String fileName = file.getOriginalFilename();
-        System.out.println(fileName);
-        return ResponseEntity.ok("File uploaded successfully.");
-    }
-
     private ImageDto savePolygonsPerImage(ImageDto dto) throws EntityNotFoundException {
         ImageEntity entity = new ImageEntity();
         if (dto.getId() != null) {

@@ -1,5 +1,6 @@
 package de.starwit.persistence.entity;
 
+import java.util.List;
 import java.util.Set;
 
 import com.fasterxml.jackson.annotation.JsonFilter;
@@ -28,7 +29,7 @@ public class ParkingAreaEntity extends AbstractEntity<Long> {
     // entity relations
     @JsonFilter("filterIdName")
     @OneToMany(mappedBy = "parkingArea", orphanRemoval = true)
-    private Set<ParkingConfigEntity> parkingConfig;
+    private List<ParkingConfigEntity> parkingConfig;
 
     @JsonFilter("filterIdName")
     @OneToOne(cascade = { CascadeType.REFRESH, CascadeType.REMOVE }, orphanRemoval = true)
@@ -50,11 +51,11 @@ public class ParkingAreaEntity extends AbstractEntity<Long> {
     }
 
     // entity relations getters and setters
-    public Set<ParkingConfigEntity> getParkingConfig() {
+    public List<ParkingConfigEntity> getParkingConfig() {
         return parkingConfig;
     }
 
-    public void setParkingConfig(Set<ParkingConfigEntity> parkingConfig) {
+    public void setParkingConfig(List<ParkingConfigEntity> parkingConfig) {
         this.parkingConfig = parkingConfig;
     }
 

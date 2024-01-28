@@ -29,9 +29,9 @@ const userReducer = (state, action) => {
 
 function ImageAnnotate() {
     const {t} = useTranslation();
+
     const [classifications, setClassifications] = useState();
     const [images, setImages] = useState(null);
-    const [imageSrc, setImageSrc] = useState('');
     const [open, setOpen] = useState(false);
     const [messageInfo, setMessageInfo] = React.useState(undefined);
     const [selectedImage, setSelectedImage] = useState(0);
@@ -58,45 +58,26 @@ function ImageAnnotate() {
             if (response.data == null) {
                 return;
             }
-            //setImageSrc('data:' + response.data[0].type + ';base64,' + response.data[0].data);
-            //setImages(response.data.map(image => 'data:' + response.data[0].type + ';base64,' + response.data[0].data));
             setImages(response.data.map(image => parseImage(image)));
         });
     }
 
     function parseImage(image) {
-        image.src = window.location.pathname + "api/imageFile/name/" + image.src;
+        image.src = window.location.pathname + "api/imageFile/id/" + image.id;
 
         return image;
     }
-
-    // function arrayBufferToBase64(buffer) {
-    //     var binary = '';
-    //     var bytes = [].slice.call(new Uint8Array(buffer));
-    //     bytes.forEach((b) => binary += String.fromCharCode(b));
-    //     return window.btoa(binary);
-    // }
-
-    function convertToImage(image) {
-        console.log(image);
-        var base64Flag = 'data:' + image.type + ';base64,';
-
-        // var imageStr =
-        //     this.arrayBufferToBase64(image.data);
-        return base64Flag + image.data;
-    }
-
 
     function wrapAround(newNumber) {
         return ((newNumber % images?.length) + images?.length) % images?.length;
     }
 
     function onNextImage() {
-        setSelectedImage(0);
+        setSelectedImage(wrapAround(selectedImage + 1));
     }
 
     function onPrevImage() {
-        setSelectedImage(0);
+        setSelectedImage(wrapAround(selectedImage - 1));
     }
 
     function handleMessage(severity, message) {
@@ -132,7 +113,6 @@ function ImageAnnotate() {
 
     return (
         <>
-            <img src={imageSrc} />
             <ReactImageAnnotate
                 labelImages
                 regionClsList={classifications.map(classification => classification.name)}
@@ -160,7 +140,6 @@ function ImageAnnotate() {
                     {messageInfo ? messageInfo.message : undefined}
                 </Alert>
             </Snackbar>
-
 
         </>
     );

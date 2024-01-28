@@ -56,13 +56,18 @@ public class ImageService implements ServiceInterface<ImageEntity, ImageReposito
 
     public ImageEntity uploadImage(MultipartFile imageFile, ParkingConfigEntity parkingConfigEntity)
             throws IOException {
-        ImageEntity newEntity = new ImageEntity();
-        newEntity.setName(imageFile.getOriginalFilename());
-        newEntity.setType(imageFile.getContentType());
-        newEntity.setData(imageFile.getBytes());
-        newEntity.setParkingConfig(parkingConfigEntity);
-
-        return imageRepository.save(newEntity);
+        ImageEntity imageEntity = new ImageEntity();
+        List<ImageEntity> images = imageRepository.findByParkingConfigId(parkingConfigEntity.getId());
+        if (images == null || images.isEmpty()) {
+            imageEntity = new ImageEntity();
+        } else {
+            imageEntity = images.get(0);
+        }
+        imageEntity.setName(parkingConfigEntity.getName());
+        imageEntity.setType(imageFile.getContentType());
+        imageEntity.setData(imageFile.getBytes());
+        imageEntity.setParkingConfig(parkingConfigEntity);
+        return imageRepository.save(imageEntity);
     }
 
     public ImageEntity saveMetadata(ImageEntity entity) {
