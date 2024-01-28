@@ -58,9 +58,16 @@ function ImageAnnotate() {
             if (response.data == null) {
                 return;
             }
-            setImageSrc('data:'+response.data[0].type+';base64,'+response.data[0].data);
-            setImages(response.data.map(image => 'data:'+image.type+';base64,'+image.data));
+            //setImageSrc('data:' + response.data[0].type + ';base64,' + response.data[0].data);
+            //setImages(response.data.map(image => 'data:' + response.data[0].type + ';base64,' + response.data[0].data));
+            setImages(response.data.map(image => parseImage(image)));
         });
+    }
+
+    function parseImage(image) {
+        image.src = window.location.pathname + "api/imageFile/name/" + image.src;
+
+        return image;
     }
 
     // function arrayBufferToBase64(buffer) {
@@ -72,7 +79,7 @@ function ImageAnnotate() {
 
     function convertToImage(image) {
         console.log(image);
-        var base64Flag = 'data:'+image.type+';base64,';
+        var base64Flag = 'data:' + image.type + ';base64,';
 
         // var imageStr =
         //     this.arrayBufferToBase64(image.data);
@@ -85,11 +92,11 @@ function ImageAnnotate() {
     }
 
     function onNextImage() {
-        setSelectedImage(wrapAround(selectedImage + 1));
+        setSelectedImage(0);
     }
 
     function onPrevImage() {
-        setSelectedImage(wrapAround(selectedImage - 1));
+        setSelectedImage(0);
     }
 
     function handleMessage(severity, message) {
@@ -153,7 +160,7 @@ function ImageAnnotate() {
                     {messageInfo ? messageInfo.message : undefined}
                 </Alert>
             </Snackbar>
-            
+
 
         </>
     );

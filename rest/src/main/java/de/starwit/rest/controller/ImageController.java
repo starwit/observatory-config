@@ -27,6 +27,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import de.starwit.persistence.entity.ClassificationEntity;
 import de.starwit.persistence.entity.ImageEntity;
+import de.starwit.persistence.entity.ParkingConfigEntity;
 import de.starwit.persistence.entity.PointEntity;
 import de.starwit.persistence.entity.PolygonEntity;
 import de.starwit.persistence.exception.NotificationException;
@@ -36,6 +37,7 @@ import de.starwit.service.dto.RegionDto;
 import de.starwit.service.impl.ClassificationService;
 import de.starwit.service.impl.DatabackendService;
 import de.starwit.service.impl.ImageService;
+import de.starwit.service.impl.ParkingConfigService;
 import de.starwit.service.impl.PointService;
 import de.starwit.service.impl.PolygonService;
 import de.starwit.service.mapper.ImageMapper;
@@ -64,6 +66,9 @@ public class ImageController {
 
     @Autowired
     private PointService pointService;
+
+    @Autowired
+    private ParkingConfigService parkingConfigService;
 
     @Autowired
     private DatabackendService databackendService;
@@ -122,10 +127,12 @@ public class ImageController {
         }
     }
 
-    @PostMapping("/upload")
+    @PostMapping("/upload/{parkingconfigid}")
     @CrossOrigin
-    public void uploadImage(@RequestParam("image") MultipartFile file) throws IOException {
-        imageService.uploadImage(file);
+    public void uploadImage(@RequestParam("image") MultipartFile file, @PathVariable("parkingconfigid") Long id)
+            throws IOException {
+        ParkingConfigEntity prodConfigEntity = parkingConfigService.findById(id);
+        imageService.uploadImage(file, prodConfigEntity);
     }
 
     @GetMapping("/download/{id}")

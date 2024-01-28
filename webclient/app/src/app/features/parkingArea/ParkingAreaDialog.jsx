@@ -80,18 +80,19 @@ function ParkingAreaDialog(props) {
         if (entity.id) {
             entityRest.update(tmpOrg)
                 .then(response => {
-                    uploadFile();
+                    uploadFile(response.data?.selectedProdConfig?.id);
                     update(response.data);
                 });
         } else {
-            imageEntity = imageRest.upload(image);
-            console.log(imageEntity);
-            entityRest.create(tmpOrg).then(response => update(response.data));
+            entityRest.create(tmpOrg).then(response => {
+                uploadFile(response.data?.selectedProdConfig?.id);
+                update(response.data);
+            });
         }
         onClose();
     }
 
-    function uploadFile() {
+    function uploadFile(activeParkingConfigId) {
         if (!selectedFile) {
             alert('Bitte füllen Sie alle Felder aus und wählen Sie eine Datei aus.');
             return;
@@ -100,7 +101,7 @@ function ParkingAreaDialog(props) {
         const formData = new FormData();
         formData.append('image', selectedFile);
         try {
-            imageRest.test(formData)
+            imageRest.upload(formData, activeParkingConfigId)
                 .then(response => {
                     console.log('Upload successful:', response.data);
                 })
