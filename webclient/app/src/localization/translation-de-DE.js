@@ -55,6 +55,7 @@ const translationDeDE = {
     "parkingArea.image": "Datei hier ablegen...",
     "parkingArea.image.hint": "Bild ersetzen",
     "parkingArea.image.preview": "Vorschau",
+    "parkingArea.fileTooLarge": "Maximale Dateigröße = 4 MB",
     "parkingArea.parkingConfig": "Konfiguration Parkfläche",
     "parkingArea.selectedTestConfig": "selectedTestConfig",
     "parkingArea.selectedProdConfig": "selectedProdConfig",

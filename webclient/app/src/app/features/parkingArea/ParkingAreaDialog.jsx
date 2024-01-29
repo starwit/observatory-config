@@ -35,8 +35,11 @@ function ParkingAreaDialog(props) {
     const [hasFormError, setHasFormError] = React.useState(false);
     const [selectedFile, setSelectedFile] = useState(null);
     const [previewUrl, setPreviewUrl] = useState('');
+    const [rejected, setRejected] = useState(false);
 
-    const onDrop = (acceptedFiles) => {
+    const onDropAccepted = (acceptedFiles) => {
+        setRejected(false);
+
         const file = acceptedFiles[0];
         setSelectedFile(file);
 
@@ -48,6 +51,9 @@ function ParkingAreaDialog(props) {
         reader.readAsDataURL(file);
     };
 
+    const onDropRejected = () => {
+        setRejected(true);
+    };
 
     useEffect(() => {
         if (isCreate) {
@@ -61,11 +67,12 @@ function ParkingAreaDialog(props) {
         onEntityChange();
     }, [entity]);
 
-    const {getRootProps, getInputProps} = useDropzone({onDrop});
+    const {getRootProps, getInputProps} = useDropzone({onDropAccepted, onDropRejected, maxSize: 4194304});
 
     function onDialogClose() {
         setSelectedFile(null);
         setPreviewUrl('');
+        setRejected(false);
         onClose();
     }
 
@@ -134,6 +141,7 @@ function ParkingAreaDialog(props) {
                         <FormControl {...getRootProps()} sx={ImageUploadStyles.dropzoneStyle}>
                             <input {...getInputProps()} />
                             <Typography variant="overline">{t("parkingArea.image")}</Typography>
+                            {rejected ? <Typography variant="overline" sx={{color: "red"}}>{t("parkingArea.fileTooLarge")}</Typography> : ""}
                             {previewUrl && <img src={previewUrl} style={ImageUploadStyles.previewStyle} alt={t("parkingArea.image.preview")} />}
                         </FormControl>
                     </Stack >
