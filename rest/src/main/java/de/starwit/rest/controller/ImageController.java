@@ -1,5 +1,7 @@
 package de.starwit.rest.controller;
 
+import java.io.File;
+import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.Set;
@@ -8,7 +10,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -17,10 +21,13 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 import de.starwit.persistence.entity.ClassificationEntity;
 import de.starwit.persistence.entity.ImageEntity;
+import de.starwit.persistence.entity.ParkingConfigEntity;
 import de.starwit.persistence.entity.PointEntity;
 import de.starwit.persistence.entity.PolygonEntity;
 import de.starwit.persistence.exception.NotificationException;
@@ -30,6 +37,7 @@ import de.starwit.service.dto.RegionDto;
 import de.starwit.service.impl.ClassificationService;
 import de.starwit.service.impl.DatabackendService;
 import de.starwit.service.impl.ImageService;
+import de.starwit.service.impl.ParkingConfigService;
 import de.starwit.service.impl.PointService;
 import de.starwit.service.impl.PolygonService;
 import de.starwit.service.mapper.ImageMapper;
@@ -58,6 +66,9 @@ public class ImageController {
 
     @Autowired
     private PointService pointService;
+
+    @Autowired
+    private ParkingConfigService parkingConfigService;
 
     @Autowired
     private DatabackendService databackendService;
@@ -114,6 +125,23 @@ public class ImageController {
         for (ImageDto dto : dtos) {
             savePolygonsPerImage(dto);
         }
+    }
+
+    @PostMapping("/upload/{parkingconfigid}")
+    @CrossOrigin
+    public void uploadImage(@RequestParam("image") MultipartFile file, @PathVariable("parkingconfigid") Long id)
+            throws IOException {
+        ParkingConfigEntity prodConfigEntity = parkingConfigService.findById(id);
+        imageService.uploadImage(file, prodConfigEntity);
+    }
+
+    @GetMapping("/download/{id}")
+    public ResponseEntity<?> getImageByName(@PathVariable("id") Long id) {
+        byte[] image = imageService.findById(id).getData();
+
+        return ResponseEntity.status(HttpStatus.OK)
+                .contentType(MediaType.valueOf("image/png"))
+                .body(image);
     }
 
     private ImageDto savePolygonsPerImage(ImageDto dto) throws EntityNotFoundException {

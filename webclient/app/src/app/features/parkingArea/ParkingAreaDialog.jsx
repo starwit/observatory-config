@@ -1,10 +1,10 @@
 import {
     Button,
-    Dialog,
+    Dialog, Typography,
     DialogActions, DialogContent, FormControl, Stack
 } from "@mui/material";
 import PropTypes from "prop-types";
-import React, {useMemo, useEffect} from "react";
+import React, {useMemo, useEffect, useState} from "react";
 import {useImmer} from "use-immer";
 import {useTranslation} from "react-i18next";
 import DialogHeader from "../../commons/dialog/DialogHeader";
@@ -19,6 +19,11 @@ import {
     entityDefault,
     entityFields
 } from "../../modifiers/ParkingAreaModifier";
+import ImageRest from "../../services/ImageRest";
+import {useDropzone} from 'react-dropzone';
+import ImageUploadStyles from "../../assets/styles/ImageUploadStyles";
+
+
 
 function ParkingAreaDialog(props) {
     const {open, onClose, selected, isCreate, update} = props;
@@ -26,7 +31,29 @@ function ParkingAreaDialog(props) {
     const [entity, setEntity] = useImmer(entityDefault);
     const fields = entityFields;
     const entityRest = useMemo(() => new ParkingAreaRest(), []);
+    const imageRest = useMemo(() => new ImageRest(), []);
     const [hasFormError, setHasFormError] = React.useState(false);
+    const [selectedFile, setSelectedFile] = useState(null);
+    const [previewUrl, setPreviewUrl] = useState('');
+    const [rejected, setRejected] = useState(false);
+
+    const onDropAccepted = (acceptedFiles) => {
+        setRejected(false);
+
+        const file = acceptedFiles[0];
+        setSelectedFile(file);
+
+        // Vorschaubild erzeugen
+        const reader = new FileReader();
+        reader.onloadend = () => {
+            setPreviewUrl(reader.result);
+        };
+        reader.readAsDataURL(file);
+    };
+
+    const onDropRejected = () => {
+        setRejected(true);
+    };
 
     useEffect(() => {
         if (isCreate) {
@@ -40,7 +67,12 @@ function ParkingAreaDialog(props) {
         onEntityChange();
     }, [entity]);
 
+    const {getRootProps, getInputProps} = useDropzone({onDropAccepted, onDropRejected, maxSize: 4194304});
+
     function onDialogClose() {
+        setSelectedFile(null);
+        setPreviewUrl('');
+        setRejected(false);
         onClose();
     }
 
@@ -53,12 +85,29 @@ function ParkingAreaDialog(props) {
         event.preventDefault();
         const tmpOrg = prepareForSave(entity, fields);
         if (entity.id) {
-            entityRest.update(tmpOrg).then(response => update(response.data));
+            entityRest.update(tmpOrg)
+                .then(response => {
+                    uploadFile(response.data, response.data?.selectedProdConfig?.id);
+                });
         } else {
-            entityRest.create(tmpOrg).then(response => update(response.data));
+            entityRest.create(tmpOrg).then(response => {
+                uploadFile(response.data, response.data?.selectedProdConfig?.id);
+            });
         }
         onClose();
     }
+
+    function uploadFile(data, activeParkingConfigId) {
+        if (!selectedFile) {
+            update(data);
+            return;
+        }
+        const formData = new FormData();
+        formData.append('image', selectedFile);
+        imageRest.upload(formData, activeParkingConfigId).then(() => {
+            update(data);
+        });
+    };
 
     function getDialogTitle() {
         if (entity?.id) {
@@ -68,6 +117,7 @@ function ParkingAreaDialog(props) {
     }
 
     return (
+
         <Dialog onClose={onDialogClose} open={open} spacing={2} sx={{zIndex: 10000}}>
             <DialogHeader onClose={onDialogClose} title={t(getDialogTitle())} />
             <form autoComplete="off">
@@ -86,6 +136,13 @@ function ParkingAreaDialog(props) {
                                 max={fields[0].max}
                                 helperText={t("parkingArea.name.hint")}
                             />
+                        </FormControl>
+                        <Typography variant="caption">{t("parkingArea.image.hint")}</Typography>
+                        <FormControl {...getRootProps()} sx={ImageUploadStyles.dropzoneStyle}>
+                            <input {...getInputProps()} />
+                            <Typography variant="overline">{t("parkingArea.image")}</Typography>
+                            {rejected ? <Typography variant="overline" sx={{color: "red"}}>{t("parkingArea.fileTooLarge")}</Typography> : ""}
+                            {previewUrl && <img src={previewUrl} style={ImageUploadStyles.previewStyle} alt={t("parkingArea.image.preview")} />}
                         </FormControl>
                     </Stack >
                 </DialogContent>

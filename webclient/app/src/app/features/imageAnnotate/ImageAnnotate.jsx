@@ -63,7 +63,7 @@ function ImageAnnotate() {
     }
 
     function parseImage(image) {
-        image.src = window.location.pathname + "api/imageFile/name/" + image.src;
+        image.src = window.location.pathname + "api/imageFile/id/" + image.id;
 
         return image;
     }

@@ -11,7 +11,9 @@ import de.starwit.persistence.entity.AbstractEntity;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class ImageDto extends AbstractEntity<Long> {
 
-    private String src;
+    private byte[] data;
+
+    private String type;
 
     private String name;
 
@@ -21,12 +23,20 @@ public class ImageDto extends AbstractEntity<Long> {
     
     private int imageWidth;
 
-    public String getSrc() {
-        return src;
+    public byte[] getData() {
+        return data;
     }
 
-    public void setSrc(String src) {
-        this.src = src;
+    public void setData(byte[] data) {
+        this.data = data;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
     }
 
     public String getName() {

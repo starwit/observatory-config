@@ -18,6 +18,7 @@ import {
     entityDefault
 } from "../../modifiers/ParkingAreaModifier";
 import {useTranslation} from "react-i18next";
+import {UploadFile} from "@mui/icons-material";
 
 function deriveIdFromLocation(location) {
     const m = location.pathname.match(/^\/(\d+)$/);
@@ -62,6 +63,7 @@ function ParkingAreaSelect() {
             });
         } else {
             reload();
+            navigate(`${modifiedEntity.id}`);
         }
     }
 

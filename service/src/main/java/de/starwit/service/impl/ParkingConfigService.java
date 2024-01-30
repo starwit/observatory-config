@@ -40,7 +40,7 @@ public class ParkingConfigService implements ServiceInterface<ParkingConfigEntit
     @Override
     public ParkingConfigEntity saveOrUpdate(ParkingConfigEntity entity) {
 
-        Set<ImageEntity> imageToSave = entity.getImage();
+        List<ImageEntity> imageToSave = entity.getImage();
 
         if (entity.getId() != null) {
             ParkingConfigEntity entityPrev = this.findById(entity.getId());

@@ -21,5 +21,11 @@ class ImageRest extends CrudRest {
     savePolygons(entityList) {
         return axios.post(this.baseUrl + "/save-polygons", entityList);
     }
+
+    upload(data, id) {
+        const config = {headers: {"Content-Type": "multipart/form-data"}};
+
+        return axios.post(this.baseUrl + "/upload/" + id, data, config);
+    }
 }
 export default ImageRest;

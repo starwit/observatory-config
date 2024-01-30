@@ -1,6 +1,6 @@
 package de.starwit.persistence.entity;
 
-import java.util.Set;
+import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonFilter;
 
@@ -27,7 +27,7 @@ public class ParkingConfigEntity extends AbstractEntity<Long> {
     // entity relations
     @JsonFilter("filterImage")
     @OneToMany(mappedBy = "parkingConfig", orphanRemoval = true)
-    private Set<ImageEntity> image;
+    private List<ImageEntity> image;
 
     @JsonFilter("filterId")
     @ManyToOne
@@ -44,11 +44,11 @@ public class ParkingConfigEntity extends AbstractEntity<Long> {
     }
 
     // entity relations getters and setters
-    public Set<ImageEntity> getImage() {
+    public List<ImageEntity> getImage() {
         return image;
     }
 
-    public void setImage(Set<ImageEntity> image) {
+    public void setImage(List<ImageEntity> image) {
         this.image = image;
     }
 

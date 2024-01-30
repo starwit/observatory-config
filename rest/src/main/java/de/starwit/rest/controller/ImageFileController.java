@@ -24,8 +24,8 @@ public class ImageFileController {
     @Autowired
     private ImageFileService imageFileService;
 
-    @GetMapping(value = "/name/{imageFilename}")
-    public ResponseEntity<Resource> getImageWithFileName(@PathVariable("imageFilename") String imageFilename) {
-        return this.imageFileService.getImageWithFilename(imageFilename);
+    @GetMapping(value = "/id/{id}")
+    public ResponseEntity<Resource> getImageWithId(@PathVariable("id") Long id) {
+        return this.imageFileService.getImageWithId(id);
     }
 }
