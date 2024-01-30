@@ -1,5 +1,5 @@
 import {
-    Box, Button,
+    Button,
     Dialog, Typography,
     DialogActions, DialogContent, FormControl, Stack
 } from "@mui/material";
