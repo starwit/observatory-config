@@ -56,6 +56,8 @@ jobs:
         name: artifact
         path: application/target/application-${{ env.VERSION }}.jar
 
+    - name: install cm push plugin
+      run: helm plugin install https://github.com/chartmuseum/helm-push
     - name: add internal Helm registry
       run: helm repo add starwit-internal ${{ vars.CHARTMUSEUM_URL }} --username=${{ secrets.CHARTMUSEUM_USER }} --password=${{ secrets.CHARTMUSEUM_PASSWORD }}
     - name: run helm update
@@ -70,7 +72,7 @@ jobs:
         echo "HELM_VERSION=$(grep version: Chart.yaml | head -1 | awk '{print $2}')" >> $GITHUB_ENV
     - name: run helm push
       working-directory: deployment/helm
-      run: helm push smartparkingconfig-${{ env.HELM_VERSION }}.tgz starwit-internal
+      run: helm cm-push smartparkingconfig-${{ env.HELM_VERSION }}.tgz starwit-internal
 
     - name: Log in to the Container registry
       uses: docker/login-action@f054a8b539a109f9f41c372932f1ae047eff08c9
