@@ -56,8 +56,8 @@ jobs:
         name: artifact
         path: application/target/application-${{ env.VERSION }}.jar
 
-    - name: login to Helm registry
-      run: helm registry login ${{ vars.CHARTMUSEUM_URL }} -u ${{ secrets.CHARTMUSEUM_USER }} -p ${{ secrets.CHARTMUSEUM_PASSWORD }}
+    - name: add internal Helm registry
+      run: helm repo add starwit-internal ${{ vars.CHARTMUSEUM_URL }} --username=${{ secrets.CHARTMUSEUM_USER }} --password=${{ secrets.CHARTMUSEUM_PASSWORD }}
     - name: run helm update
       working-directory: deployment/helm/smartparkingconfig
       run: helm dep update
