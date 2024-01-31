@@ -10,8 +10,8 @@ env:
   IMAGE_NAME: ${{ github.repository }}
 
 jobs:
-  prepare:
-    name: "set up"
+  build:
+    name: "Building and publishing project"
     runs-on: [self-hosted, linux, X64]
 
     steps:
@@ -35,27 +35,21 @@ jobs:
     - run: npm --version
     - run: node --version
     - run: mvn --version
-    - name: npm install
-      run: |
-        if [ -d "webclient/app" ]; then
-          cd webclient/app
-          npm install
-        fi
     - name: install cm push plugin
       run: helm plugin install https://github.com/chartmuseum/helm-push
+      continue-on-error: true # skip if plugin is already installed
 
-  build:
-    needs: prepare
-    if: success() || failure()
-    name: "Building and publishing project"
-    runs-on: [self-hosted, linux, X64]
-
-    steps:
     - name: get version from pom.xml
       run: |
         echo "VERSION_BUILD=$( mvn help:evaluate -Dexpression=project.version -q -DforceStdout )-${{ github.run_number }}" >> $GITHUB_ENV
         echo "VERSION=$( mvn help:evaluate -Dexpression=project.version -q -DforceStdout )" >> $GITHUB_ENV
 
+    - name: npm install
+      run: |
+        if [ -d "webclient/app" ]; then
+          cd webclient/app
+          npm install
+        fi        
     - name: Build with Maven
       run: mvn clean -B package -P frontend --file pom.xml
       env:
