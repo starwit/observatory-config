@@ -72,7 +72,7 @@ jobs:
         echo "HELM_VERSION=$(grep version: Chart.yaml | head -1 | awk '{print $2}')" >> $GITHUB_ENV
     - name: run helm push
       working-directory: deployment/helm
-      run: helm cm-push smartparkingconfig-${{ env.HELM_VERSION }}.tgz starwit-internal
+      run: helm cm-push -f smartparkingconfig-${{ env.HELM_VERSION }}.tgz starwit-internal
 
     - name: Log in to the Container registry
       uses: docker/login-action@f054a8b539a109f9f41c372932f1ae047eff08c9
