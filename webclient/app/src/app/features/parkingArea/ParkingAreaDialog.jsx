@@ -104,10 +104,15 @@ function ParkingAreaDialog(props) {
         }
         const formData = new FormData();
         formData.append('image', selectedFile);
-        imageRest.upload(formData, activeParkingConfigId).then(() => {
+        try {
+            imageRest.upload(formData, activeParkingConfigId).then(() => {
+                update(data);
+            });
+        } catch (error) {
+            console.error(error);
             update(data);
-        });
-    };
+        }
+    }
 
     function getDialogTitle() {
         if (entity?.id) {

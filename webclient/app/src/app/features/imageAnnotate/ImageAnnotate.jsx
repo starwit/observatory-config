@@ -6,6 +6,7 @@ import {useTranslation} from "react-i18next";
 import ClassificationRest from "../../services/ClassificationRest";
 import {Typography} from "@mui/material";
 import ImageRest from "../../services/ImageRest";
+import ParkingAreaRest from "../../services/ParkingAreaRest";
 import Snackbar from "@mui/material/Snackbar";
 import MuiAlert from "@mui/material/Alert";
 import {setIn} from 'seamless-immutable';
@@ -37,15 +38,16 @@ function ImageAnnotate() {
     const [selectedImage, setSelectedImage] = useState(0);
     const classificationRest = useMemo(() => new ClassificationRest(), []);
     const imageRest = useMemo(() => new ImageRest(), []);
-    const {imageId} = useParams();
+    const parkingAreaRest = useMemo(() => new ParkingAreaRest(), [])
+    const {parkingAreaId} = useParams();
 
     useEffect(() => {
         reloadClassification();
     }, []);
 
     useEffect(() => {
-        reloadImages();
-    }, [imageId]);
+        reloadParkingAreas();
+    }, [parkingAreaId]);
 
     function reloadClassification() {
         classificationRest.findAll().then(response => {
@@ -53,8 +55,18 @@ function ImageAnnotate() {
         });
     }
 
-    function reloadImages() {
-        imageRest.findWithPolygons(imageId).then(response => {
+    function reloadParkingAreas() {
+        parkingAreaRest.findById(parkingAreaId).then(response => {
+            if (response.data == null) {
+                return;
+            } else if (response.data?.selectedProdConfig !== undefined) {
+                reloadImages(response.data?.selectedProdConfig.id);
+            }
+        });
+    }
+
+    function reloadImages(prodConfigId) {
+        imageRest.findWithPolygons(prodConfigId).then(response => {
             if (response.data == null) {
                 return;
             }
