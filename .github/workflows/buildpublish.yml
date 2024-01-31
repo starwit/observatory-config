@@ -10,8 +10,8 @@ env:
   IMAGE_NAME: ${{ github.repository }}
 
 jobs:
-  build:
-    name: "Building project with Java 17"
+  prepare:
+    name: "set up"
     runs-on: [self-hosted, linux, X64]
 
     steps:
@@ -41,6 +41,16 @@ jobs:
           cd webclient/app
           npm install
         fi
+    - name: install cm push plugin
+      run: helm plugin install https://github.com/chartmuseum/helm-push
+
+  build:
+    needs: prepare
+    if: success() || failure()
+    name: "Building and publishing project"
+    runs-on: [self-hosted, linux, X64]
+
+    steps:
     - name: get version from pom.xml
       run: |
         echo "VERSION_BUILD=$( mvn help:evaluate -Dexpression=project.version -q -DforceStdout )-${{ github.run_number }}" >> $GITHUB_ENV
@@ -56,8 +66,6 @@ jobs:
         name: artifact
         path: application/target/application-${{ env.VERSION }}.jar
 
-    - name: install cm push plugin
-      run: helm plugin install https://github.com/chartmuseum/helm-push
     - name: add internal Helm registry
       run: helm repo add starwit-internal ${{ vars.CHARTMUSEUM_URL }} --username=${{ secrets.CHARTMUSEUM_USER }} --password=${{ secrets.CHARTMUSEUM_PASSWORD }}
     - name: run helm update
