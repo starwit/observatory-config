@@ -5,7 +5,6 @@ import Navigation from "./commons/navigation/Navigation";
 import {useLocation} from "react-router-dom";
 
 function MainContentRouter() {
-
     // I have absolutely no idea why, but if you remove this, `navigate()` in `ParkingAreaSelect` breaks...
     useLocation();
 
@@ -13,7 +12,7 @@ function MainContentRouter() {
         <>
             <Navigation>
                 <Routes>
-                    <Route path={"/:imageId"} element={<ImageAnnotate />}/>
+                    <Route path={"/:parkingAreaId"} element={<ImageAnnotate />} />
                 </Routes>
             </Navigation>
         </>
