@@ -89,13 +89,32 @@ function ImageAnnotate() {
     function handleMessage(severity, message) {
         enqueueSnackbar(message, {variant: severity});
     }
-
+    
     function savePolygons(event) {
-        imageRest.savePolygons(event).then(() => {
+        if (!validateRegionNames(event.images[event.selectedImage].regions)) {
+            handleMessage("error", t("error.image.notunique"))
+            return;
+        }
+        
+        imageRest.savePolygons(event.images).then(() => {
             handleMessage("success", t("response.save.success"));
-            reloadImages();
+            reloadParkingAreas();
         })
         .catch(() => handleMessage("error", t("response.save.failed")));
+    }
+
+    function validateRegionNames(regions) {
+        const names = regions.map(r => r.name);
+        return validateNonEmpty(names) && validateUnique(names);
+    }
+
+    function validateNonEmpty(entries) {
+        return entries.every(n => n !== undefined && n !== "");
+    }
+    
+    function validateUnique(entries) {
+        const uniqueNames = new Set(entries);
+        return uniqueNames.size === entries.length;
     }
 
     if (!classifications || !images) {
@@ -112,11 +131,7 @@ function ImageAnnotate() {
                 labelImages
                 regionClsList={classifications.map(classification => classification.name)}
                 regionColorList={classifications.map(classification => classification.color)}
-                onExit={event => {
-                    console.log("save image");
-                    console.log(event.images);
-                    savePolygons(event.images);
-                }}
+                onExit={savePolygons}
                 images={images}
                 hideHeaderText
                 selectedImage={selectedImage}

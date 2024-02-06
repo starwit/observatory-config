@@ -92,6 +92,7 @@ const translationDeDE = {
     "error.apptemplate.notfound": "Die Vorlage konnte nicht gefunden werden.",
     "error.app.notfound": "Die Anwendung konnte nicht gefunden werden.",
     "error.entity.notfound": "Dieses Element konnte nicht gefunden werden.",
+    "error.image.notunique": "Namen müssen gesetzt und eindeutig sein!",
     "response.save.success": "Speichern erfolgreich.",
     "response.save.failed": "Speichern fehlgeschlagen!"
 };
