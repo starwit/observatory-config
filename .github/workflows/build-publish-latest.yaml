@@ -37,6 +37,7 @@ jobs:
     - name: get version from pom.xml
       run: |      
         echo "VERSION_BUILD=$( mvn help:evaluate -Dexpression=project.version -q -DforceStdout )-${{ github.run_number }}" >> $GITHUB_ENV
+        echo "VERSION_JAR=$( mvn help:evaluate -Dexpression=project.version -q -DforceStdout )" >> $GITHUB_ENV
 
     - name: npm install
       run: |
