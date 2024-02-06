@@ -12,7 +12,7 @@ const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
     <Router>
         <MainTheme>
-            <SnackbarProvider maxSnack={5}>
+            <SnackbarProvider maxSnack={5} classes={{containerRoot: "snackbar-root"}}>
                 <App />
             </SnackbarProvider>
         </MainTheme>

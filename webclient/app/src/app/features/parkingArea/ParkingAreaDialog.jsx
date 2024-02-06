@@ -22,6 +22,7 @@ import {
 import ImageRest from "../../services/ImageRest";
 import {useDropzone} from 'react-dropzone';
 import ImageUploadStyles from "../../assets/styles/ImageUploadStyles";
+import { useSnackbar } from "notistack";
 
 
 
@@ -35,11 +36,9 @@ function ParkingAreaDialog(props) {
     const [hasFormError, setHasFormError] = React.useState(false);
     const [selectedFile, setSelectedFile] = useState(null);
     const [previewUrl, setPreviewUrl] = useState('');
-    const [rejected, setRejected] = useState(false);
+    const { enqueueSnackbar } = useSnackbar();
 
     const onDropAccepted = (acceptedFiles) => {
-        setRejected(false);
-
         const file = acceptedFiles[0];
         setSelectedFile(file);
 
@@ -52,7 +51,7 @@ function ParkingAreaDialog(props) {
     };
 
     const onDropRejected = () => {
-        setRejected(true);
+        enqueueSnackbar(t("parkingArea.fileTooLarge"), {variant: "warning"});
     };
 
     useEffect(() => {
@@ -72,7 +71,6 @@ function ParkingAreaDialog(props) {
     function onDialogClose() {
         setSelectedFile(null);
         setPreviewUrl('');
-        setRejected(false);
         onClose();
     }
 
@@ -146,7 +144,6 @@ function ParkingAreaDialog(props) {
                         <FormControl {...getRootProps()} sx={ImageUploadStyles.dropzoneStyle}>
                             <input {...getInputProps()} />
                             <Typography variant="overline">{t("parkingArea.image")}</Typography>
-                            {rejected ? <Typography variant="overline" sx={{color: "red"}}>{t("parkingArea.fileTooLarge")}</Typography> : ""}
                             {previewUrl && <img src={previewUrl} style={ImageUploadStyles.previewStyle} alt={t("parkingArea.image.preview")} />}
                         </FormControl>
                     </Stack >
