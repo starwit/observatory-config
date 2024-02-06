@@ -1,8 +1,6 @@
 name: Build and Publish
 
 on:
-  pull_request:
-    branches: [ master, versionupgrade ]
   workflow_dispatch:
 
 env:
@@ -11,11 +9,14 @@ env:
 
 jobs:
   build:
-    name: "Building project with Java 17"
+    name: "Build and publish with build number"
     runs-on: [self-hosted, linux, X64]
 
     steps:
-    - uses: actions/checkout@v2
+    - name: checkout
+      uses: actions/checkout@v2
+    - name: get helm
+      uses: azure/setup-helm@v3      
     - name: Set up JDK 17
       uses: actions/setup-java@v3
       with:
@@ -32,12 +33,17 @@ jobs:
     - run: npm --version
     - run: node --version
     - run: mvn --version
+
+    - name: get version from pom.xml
+      run: |
+        echo "VERSION_BUILD=$( mvn help:evaluate -Dexpression=project.version -q -DforceStdout )-${{ github.run_number }}" >> $GITHUB_ENV
+
     - name: npm install
       run: |
         if [ -d "webclient/app" ]; then
           cd webclient/app
           npm install
-        fi
+        fi        
     - name: Build with Maven
       run: mvn clean -B package -P frontend --file pom.xml
       env:
@@ -46,11 +52,7 @@ jobs:
       uses: actions/upload-artifact@v1
       with:
         name: artifact
-        path: application/target/application-0.0.1-SNAPSHOT.jar
-
-    - name: get version from pom.xml
-      run: |
-        echo "VERSION=$( mvn help:evaluate -Dexpression=project.version -q -DforceStdout )-${{ github.run_number }}" >> $GITHUB_ENV
+        path: application/target/application-${{ env.VERSION }}.jar
 
     - name: Log in to the Container registry
       uses: docker/login-action@f054a8b539a109f9f41c372932f1ae047eff08c9
@@ -64,5 +66,5 @@ jobs:
       with:
         context: .
         push: true
-        tags: ${{ vars.INTERNAL_REGISTRY_URL }}/smartparkingconfig:${{ env.VERSION }}
+        tags: ${{ vars.INTERNAL_REGISTRY_URL }}/smartparkingconfig:${{ env.VERSION_BUILD }}
         labels: "latest"
