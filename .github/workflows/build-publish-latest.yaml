@@ -49,11 +49,6 @@ jobs:
       run: mvn clean -B package -P frontend --file pom.xml
       env:
          CI: false
-    - name: Upload Maven build artifact
-      uses: actions/upload-artifact@v1
-      with:
-        name: artifact
-        path: application/target/application-${{ env.VERSION_JAR }}.jar
 
     - name: Log in to the Container registry
       uses: docker/login-action@f054a8b539a109f9f41c372932f1ae047eff08c9
