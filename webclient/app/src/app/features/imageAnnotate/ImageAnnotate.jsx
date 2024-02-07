@@ -93,7 +93,7 @@ function ImageAnnotate() {
     function savePolygons(event) {
         imageRest.savePolygons(event).then(() => {
             handleMessage("success", t("response.save.success"));
-            reloadImages();
+            reloadParkingAreas();
         })
     }
 
@@ -112,8 +112,6 @@ function ImageAnnotate() {
                 regionClsList={classifications.map(classification => classification.name)}
                 regionColorList={classifications.map(classification => classification.color)}
                 onExit={event => {
-                    console.log("save image");
-                    console.log(event.images);
                     savePolygons(event.images);
                 }}
                 images={images}
