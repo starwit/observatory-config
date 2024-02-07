@@ -95,7 +95,6 @@ function ImageAnnotate() {
             handleMessage("success", t("response.save.success"));
             reloadImages();
         })
-        .catch(() => handleMessage("error", t("response.save.failed")));
     }
 
     if (!classifications || !images) {
