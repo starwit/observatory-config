@@ -7,14 +7,9 @@ import ClassificationRest from "../../services/ClassificationRest";
 import {Typography} from "@mui/material";
 import ImageRest from "../../services/ImageRest";
 import ParkingAreaRest from "../../services/ParkingAreaRest";
-import Snackbar from "@mui/material/Snackbar";
-import MuiAlert from "@mui/material/Alert";
 import {setIn} from 'seamless-immutable';
+import { useSnackbar } from 'notistack';
 import {classificationSelectTools} from "../../AppConfig";
-
-const Alert = React.forwardRef(function Alert(props, ref) {
-    return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
-});
 
 const userReducer = (state, action) => {
     if ("SELECT_CLASSIFICATION" == action.type) {
@@ -33,8 +28,7 @@ function ImageAnnotate() {
 
     const [classifications, setClassifications] = useState();
     const [images, setImages] = useState(null);
-    const [open, setOpen] = useState(false);
-    const [messageInfo, setMessageInfo] = React.useState(undefined);
+    const { enqueueSnackbar } = useSnackbar();
     const [selectedImage, setSelectedImage] = useState(0);
     const classificationRest = useMemo(() => new ClassificationRest(), []);
     const imageRest = useMemo(() => new ImageRest(), []);
@@ -93,19 +87,14 @@ function ImageAnnotate() {
     }
 
     function handleMessage(severity, message) {
-        setMessageInfo({severity: severity, message: message});
-        setOpen(true);
+        enqueueSnackbar(message, {variant: severity});
     }
 
     function savePolygons(event) {
-        imageRest.savePolygons(event).then(response => {
+        imageRest.savePolygons(event).then(() => {
+            handleMessage("success", t("response.save.success"));
             reloadImages();
-            if (response.status == 200) {
-                handleMessage("success", t("response.save.success"));
-            } else {
-                handleMessage("error", t("response.save.failed"));
-            }
-        });
+        })
     }
 
     if (!classifications || !images) {
@@ -115,13 +104,6 @@ function ImageAnnotate() {
     if (images.length === 0) {
         return <Typography>{t("parkingConfig.image.empty")}</Typography>;
     }
-
-    const handleClose = (event, reason) => {
-        if (reason === "clickaway") {
-            return;
-        }
-        setOpen(false);
-    };
 
     return (
         <>
@@ -146,13 +128,6 @@ function ImageAnnotate() {
                 enabledRegionProps={["name"]}
                 userReducer={userReducer}
             />
-            <Snackbar open={open} autoHideDuration={6000} onClose={handleClose}>
-                <Alert onClose={handleClose} severity={messageInfo ? messageInfo.severity : undefined}
-                    sx={{width: "100%"}}>
-                    {messageInfo ? messageInfo.message : undefined}
-                </Alert>
-            </Snackbar>
-
         </>
     );
 }
