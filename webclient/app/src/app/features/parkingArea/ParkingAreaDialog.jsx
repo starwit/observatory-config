@@ -8,7 +8,7 @@ import React, {useMemo, useEffect, useState} from "react";
 import {useImmer} from "use-immer";
 import {useTranslation} from "react-i18next";
 import DialogHeader from "../../commons/dialog/DialogHeader";
-import {ValidatedTextField} from "@starwit/react-starwit";
+import ValidatedTextField from "../../commons/validatedTextField/ValidatedTextField";
 import {
     handleChange,
     isValid,
