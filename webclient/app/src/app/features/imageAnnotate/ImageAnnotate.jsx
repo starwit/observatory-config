@@ -39,11 +39,8 @@ function ImageAnnotate() {
 
     useEffect(() => {
         reloadClassification();
-    }, []);
-
-    useEffect(() => {
         reloadParkingAreas();
-    }, [parkingAreaId]);
+    }, []);
 
     function reloadClassification() {
         classificationRest.findAll().then(response => {

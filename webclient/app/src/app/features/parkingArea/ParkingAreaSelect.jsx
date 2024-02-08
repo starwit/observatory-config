@@ -27,7 +27,7 @@ function ParkingAreaSelect() {
     const [isCreate, setIsCreate] = React.useState(false);
     const {t} = useTranslation();
     const {parkingAreaId} = useParams();
-    const nav = "/";
+    const nav = "/parkingarea/";
     const navigate = useNavigate();
 
     useEffect(() => {
