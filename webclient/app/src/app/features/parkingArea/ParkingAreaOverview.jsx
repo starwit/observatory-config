@@ -6,12 +6,15 @@ import {useTranslation} from "react-i18next";
 import ParkingAreaRest from "../../services/ParkingAreaRest";
 import ParkingAreaCard from "./ParkingAreaCard";
 import {useNavigate} from "react-router";
+import ParkingAreaDialog from "./ParkingAreaDialog";
 
 function ParkingAreaOverview() {
     const {t} = useTranslation();
     const navigate = useNavigate();
     const parkingAreaRest = useMemo(() => new ParkingAreaRest(), []);
     const [parkingAreas, setParkingAreas] = useState(null);
+    const [openUpdateDialog, setOpenUpdateDialog] = useState(false);
+
 
     const loadParkingAreas = useCallback(() => {
         setParkingAreas(null);
@@ -23,6 +26,10 @@ function ParkingAreaOverview() {
     useEffect(() => {
         loadParkingAreas();
     }, [loadParkingAreas]);
+
+    function update() {
+        loadParkingAreas();
+    };
 
     function deleteById(id) {
         return parkingAreaRest.delete(id)
@@ -51,9 +58,7 @@ function ParkingAreaOverview() {
                 {parkingAreas?.map(area => (
                     <Grid item sm={6} xs={12} key={area.id}>
                         <ParkingAreaCard
-                            onEditClick={() => {
-                                navigate("/#/" + area.id);
-                            }}
+                            onEditClick={update}
                             onDeleteClick={deleteById}
                             parkingArea={area} />
                     </Grid>
@@ -68,7 +73,14 @@ function ParkingAreaOverview() {
                 {t("parkingAreas.title")}
             </Typography>
             {renderParkingAreas()}
-            <AddFabButton onClick={() => navigate("/create/edit")} />
+            <ParkingAreaDialog
+                open={openUpdateDialog}
+                onClose={() => setOpenUpdateDialog(false)}
+                isCreate={true}
+                selected={null}
+                update={() => update()}
+            />
+            <AddFabButton onClick={() => setOpenUpdateDialog(true)} />
         </Container>
     );
 }

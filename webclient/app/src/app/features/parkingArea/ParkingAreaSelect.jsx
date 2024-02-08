@@ -114,24 +114,24 @@ function ParkingAreaSelect() {
                             key={entity.id} value={entity.id} >{entity.name}</MenuItem>))}
                 </Select>
             </FormControl >
-            <FormControl>
+            {/* <FormControl>
                 <IconButton sx={{height: "2rem"}}
                     onClick={handleCreateDialogOpen}>
                     <AddCircleIcon fontSize="small" />
                 </IconButton>
-            </FormControl>
+            </FormControl> */}
             <FormControl>
                 <IconButton sx={{height: "2rem"}}
                     onClick={handleDialogOpen}>
                     <EditRoundedIcon fontSize="small" />
                 </IconButton>
             </FormControl>
-            <FormControl>
+            {/* <FormControl>
                 <IconButton sx={{height: "2rem"}}
                     onClick={handleDelete}>
                     <DeleteIcon fontSize="small" />
                 </IconButton>
-            </FormControl>
+            </FormControl> */}
             <ParkingAreaDialog
                 open={openDialog}
                 onClose={handleDialogClose}

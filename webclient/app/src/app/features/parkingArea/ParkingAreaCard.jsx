@@ -3,8 +3,9 @@ import {Card, CardActionArea, CardActions, CardContent, Divider, Grid, IconButto
 import {Delete, Edit, MoreHoriz} from "@mui/icons-material";
 import PropTypes from "prop-types";
 import {useTranslation} from "react-i18next";
-import {ConfirmationDialog} from "@starwit/react-starwit";
 import {useNavigate} from "react-router";
+import ConfirmationDialog from "../../commons/dialog/ConfirmationDialog";
+import ParkingAreaDialog from "./ParkingAreaDialog";
 
 function ParkingAreaCard(props) {
     const {parkingArea, onDeleteClick, onEditClick} = props;
@@ -12,6 +13,8 @@ function ParkingAreaCard(props) {
     const {t} = useTranslation();
 
     const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
+
+    const [openUpdateDialog, setOpenUpdateDialog] = useState(false);
 
     return (
         <>
@@ -24,7 +27,7 @@ function ParkingAreaCard(props) {
                             </Typography>
                         </Grid>
                         <Grid item xs={5} align="right">
-                            <IconButton onClick={onEditClick}>
+                            <IconButton onClick={() => setOpenUpdateDialog(true)}>
                                 <Edit fontSize={"small"} />
                             </IconButton>
                             <IconButton onClick={() => setOpenDeleteDialog(true)}>
@@ -45,12 +48,19 @@ function ParkingAreaCard(props) {
                 </CardActionArea>
             </Card>
             <ConfirmationDialog
-                title={t("app.delete.title")}
-                message={t("app.delete.message")}
+                title={t("parkingArea.delete.title")}
+                message={t("parkingArea.delete.message")}
                 open={openDeleteDialog}
                 onClose={() => setOpenDeleteDialog(false)}
                 onSubmit={() => onDeleteClick(parkingArea.id)}
                 confirmTitle={t("button.delete")}
+            />
+            <ParkingAreaDialog
+                open={openUpdateDialog}
+                onClose={() => setOpenUpdateDialog(false)}
+                isCreate={false}
+                selected={parkingArea}
+                update={() => onEditClick()}
             />
         </>
     );

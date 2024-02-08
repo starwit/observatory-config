@@ -60,6 +60,8 @@ const translationDeDE = {
     "parkingArea.parkingConfig": "Konfiguration Parkfläche",
     "parkingArea.selectedTestConfig": "selectedTestConfig",
     "parkingArea.selectedProdConfig": "selectedProdConfig",
+    "parkingArea.delete.title": "Parkfläche Löschen?",
+    "parkingArea.delete.message": "Die Parkfläche und alle enthaltenen Konfigurationen werden unwiderruflich gelöscht.",
     "app.baseName": "SmartParkingConfig",
     "home.title": "Willkommen",
     "home.welcome": "Wilkommen zu SmartParkingConfig",
