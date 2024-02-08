@@ -4,12 +4,14 @@ import {useEffect, useMemo, useState} from "react";
 import {useParams} from "react-router-dom";
 import {useTranslation} from "react-i18next";
 import ClassificationRest from "../../services/ClassificationRest";
-import {Typography} from "@mui/material";
+import {Box, Container, FormControl, Stack, Typography} from "@mui/material";
 import ImageRest from "../../services/ImageRest";
 import ParkingAreaRest from "../../services/ParkingAreaRest";
 import {setIn} from 'seamless-immutable';
-import { useSnackbar } from 'notistack';
+import {useSnackbar} from 'notistack';
 import {classificationSelectTools} from "../../AppConfig";
+import ParkingAreaSelect from "../parkingArea/ParkingAreaSelect";
+import {AppBar} from "../../assets/styles/HeaderStyles";
 
 const userReducer = (state, action) => {
     if ("SELECT_CLASSIFICATION" == action.type) {
@@ -28,7 +30,7 @@ function ImageAnnotate() {
 
     const [classifications, setClassifications] = useState();
     const [images, setImages] = useState(null);
-    const { enqueueSnackbar } = useSnackbar();
+    const {enqueueSnackbar} = useSnackbar();
     const [selectedImage, setSelectedImage] = useState(0);
     const classificationRest = useMemo(() => new ClassificationRest(), []);
     const imageRest = useMemo(() => new ImageRest(), []);
@@ -50,13 +52,15 @@ function ImageAnnotate() {
     }
 
     function reloadParkingAreas() {
-        parkingAreaRest.findById(parkingAreaId).then(response => {
-            if (response.data == null) {
-                return;
-            } else if (response.data?.selectedProdConfig !== undefined) {
-                reloadImages(response.data?.selectedProdConfig.id);
-            }
-        });
+        if (parkingAreaId !== "undefined") {
+            parkingAreaRest.findById(parkingAreaId).then(response => {
+                if (response.data == null) {
+                    return;
+                } else if (response.data?.selectedProdConfig !== undefined) {
+                    reloadImages(response.data?.selectedProdConfig.id);
+                }
+            });
+        }
     }
 
     function reloadImages(prodConfigId) {
@@ -70,7 +74,7 @@ function ImageAnnotate() {
 
     function parseImage(image) {
         image.src = window.location.pathname + "api/imageFile/id/" + image.id;
-
+        image.name = "";
         return image;
     }
 
@@ -79,7 +83,7 @@ function ImageAnnotate() {
     }
 
     function onNextImage() {
-        setSelectedImage(wrapAround(selectedImage + 1));
+        setSelectedImage(wrapAround(selectedImage));
     }
 
     function onPrevImage() {
@@ -98,16 +102,39 @@ function ImageAnnotate() {
     }
 
     if (!classifications || !images) {
-        return <Typography>{t("general.loading")}</Typography>;
+        return (
+            <>
+                <AppBar sx={{bgcolor: "white", color: "black", width: "100%"}}>
+                    <ParkingAreaSelect />
+                </AppBar>
+                <Box sx={{padding: "3rem", paddingTop: "5rem"}}>
+                    <Typography variant="h5">{t("general.loading")}</Typography>
+                </Box>
+            </>
+        );
     }
 
     if (images.length === 0) {
-        return <Typography>{t("parkingConfig.image.empty")}</Typography>;
+        return (
+            <>
+                <AppBar sx={{bgcolor: "white", color: "black", width: "100%"}}>
+                    <ParkingAreaSelect />
+                </AppBar>
+                <Box sx={{padding: "3rem", paddingTop: "5rem"}}>
+                    <Typography variant="h5">{t("parkingConfig.image.empty")}</Typography>
+                </Box>
+            </>
+
+        );
     }
 
     return (
         <>
+            <AppBar color="transparent" sx={{boxShadow: "none", width: "100%", right: "8rem", left: "0rem"}}>
+                <ParkingAreaSelect />
+            </AppBar>
             <ReactImageAnnotate
+                sx={{width: '99%'}}
                 labelImages
                 regionClsList={classifications.map(classification => classification.name)}
                 regionColorList={classifications.map(classification => classification.color)}
