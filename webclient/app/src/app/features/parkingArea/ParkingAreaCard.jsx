@@ -37,7 +37,6 @@ function ParkingAreaCard(props) {
                 <CardActionArea onClick={() => navigate("/parkingarea/" + parkingArea.id)}>
                     <CardContent>
                         <Typography variant="body2">
-                            das ist ein Test
                         </Typography>
                         <CardActions>
                             <MoreHoriz color="primary" />

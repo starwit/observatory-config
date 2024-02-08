@@ -1,11 +1,11 @@
 
+import {Home} from "@mui/icons-material";
 import AddCircleIcon from "@mui/icons-material/AddCircle";
 import DeleteIcon from "@mui/icons-material/Delete";
 import EditRoundedIcon from "@mui/icons-material/EditRounded";
 import {
     IconButton,
-    Stack,
-    Toolbar
+    Stack
 } from "@mui/material";
 import FormControl from "@mui/material/FormControl";
 import MenuItem from "@mui/material/MenuItem";
@@ -19,7 +19,6 @@ import {
 } from "../../modifiers/ParkingAreaModifier";
 import ParkingAreaRest from "../../services/ParkingAreaRest";
 import ParkingAreaDialog from "./ParkingAreaDialog";
-import {AppBar} from "../../assets/styles/HeaderStyles";
 
 function ParkingAreaSelect() {
     const [selectedArea, setSelectedArea] = useImmer(entityDefault);
@@ -48,6 +47,10 @@ function ParkingAreaSelect() {
                 navigate(`${nav}${loadedAreas[0].id}`);
             }
         });
+    }
+
+    function home() {
+        navigate("/");
     }
 
     function update(modifiedEntity) {
@@ -97,6 +100,12 @@ function ParkingAreaSelect() {
             useFlexGap
             flexWrap="nowrap"
         >
+            <FormControl sx={{paddingLeft: "0.5rem"}}>
+                <IconButton sx={{height: "2rem"}}
+                    onClick={home}>
+                    <Home fontSize="small" />
+                </IconButton>
+            </FormControl>
             <FormControl sx={{boxShadow: "none", width: "20rem"}}>
                 <Select sx={{height: "2rem", margin: "0rem"}}
                     value={selectedArea.id} onChange={handleChange}>

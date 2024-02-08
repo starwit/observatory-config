@@ -101,7 +101,7 @@ function ImageAnnotate() {
     if (!classifications || !images) {
         return (
             <>
-                <AppBar sx={{bgcolor: "white", color: "black", width: "100%", left: "0rem", paddingLeft: "3rem"}}>
+                <AppBar sx={{bgcolor: "white", color: "black", width: "100%", left: "0rem"}}>
                     <ParkingAreaSelect />
                 </AppBar>
                 <Box sx={{padding: "3rem", paddingTop: "5rem"}}>
@@ -114,8 +114,8 @@ function ImageAnnotate() {
     if (images.length === 0) {
         return (
             <>
-                <AppBar sx={{bgcolor: "white", color: "black", width: "100%", left: "0rem", paddingLeft: "3rem"}}>
-                    <ParkingAreaSelect sx={{}} />
+                <AppBar sx={{bgcolor: "white", color: "black", width: "100%", left: "0rem"}}>
+                    <ParkingAreaSelect />
                 </AppBar>
                 <Box sx={{padding: "3rem", paddingTop: "5rem"}}>
                     <Typography variant="h5">{t("parkingConfig.image.empty")}</Typography>
@@ -127,7 +127,7 @@ function ImageAnnotate() {
 
     return (
         <>
-            <AppBar color="transparent" sx={{boxShadow: "none", left: "3rem", right: "8rem", width: "80%"}}>
+            <AppBar color="transparent" sx={{boxShadow: "none", left: "0rem", right: "8rem", width: "80%"}}>
                 <ParkingAreaSelect />
             </AppBar>
             <ReactImageAnnotate

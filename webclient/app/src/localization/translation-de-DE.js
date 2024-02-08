@@ -46,6 +46,7 @@ const translationDeDE = {
     "parkingConfig.name.hint": "Pflichtfeld ",
     "parkingConfig.image": "image",
     "parkingArea": "Parkfläche",
+    "parkingAreas.title": "Parkflächen",
     "parkingArea.title": "Parkfläche",
     "parkingArea.create.title": "Parkfläche Anlegen",
     "parkingArea.update.title": "Parkfläche Bearbeiten",

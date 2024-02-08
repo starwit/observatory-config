@@ -12,7 +12,7 @@ function MainContentRouter() {
         <Navigation>
             <Routes>
                 <Route path={"/parkingarea/:parkingAreaId"} element={<ImageAnnotate />} />
-                <Route path="/test/" element={<ParkingAreaOverview />} />
+                <Route path="/" element={<ParkingAreaOverview />} />
             </Routes>
         </Navigation>
     );

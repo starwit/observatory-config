@@ -33,13 +33,15 @@ const ColorTheme = createTheme({
         body1: {},
         body2: {},
         h1: {
-            fontSize: "2rem",
+            fontSize: "1.8rem",
             fontWeight: 400,
+            padding: "1rem",
             textTransform: "uppercase"
         },
         h2: {
-            fontSize: "2rem",
+            fontSize: "1.8rem",
             fontWeight: 400,
+            paddingTop: "1rem",
             textTransform: "uppercase"
         },
         h5: {
