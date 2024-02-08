@@ -1,6 +1,8 @@
 
 name: Create release and tag
 
+# Full workflow to build and publish Maven, Docker, Helm; TODO automatic version update. Everything depends on version in pom.xml
+
 on:
   workflow_dispatch:
     inputs:
@@ -71,39 +73,14 @@ jobs:
           cd webclient/app
           npm install --legacy-peer-deps
         fi
+
+    - name: get version from pom.xml
+      run: |
+        echo "VERSION=$( mvn help:evaluate -Dexpression=project.version -q -DforceStdout )" >> $GITHUB_ENV        
     - name: Build with Maven
       run: mvn clean -B package -P frontend --file pom.xml
       env:
          CI: false
-    - name: Upload Maven build artifact
-      uses: actions/upload-artifact@v1
-      with:
-        name: artifact
-        path: application/target/application-0.0.1-SNAPSHOT.jar
-
-    # - name: Log in to the Container registry
-    #   uses: docker/login-action@f054a8b539a109f9f41c372932f1ae047eff08c9
-    #   with:
-    #     registry: ${{ env.REGISTRY }}
-    #     username: ${{ github.actor }}
-    #     password: ${{ secrets.GITHUB_TOKEN }}
-
-    # - name: Build and push Docker image
-    #   uses: docker/build-push-action@ad44023a93711e3deb337508980b4b5e9bcdc5dc
-    #   with:
-    #     context: .
-    #     push: true
-    #     tags: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ steps.publish_tag.outputs.tag_name }}
-
-    # - name: Build docker image with tag version and push to dockerhub
-    #   uses: docker/build-push-action@v1
-    #   with:
-    #     username: ${{ secrets.DOCKER_USERNAME  }}
-    #     password: ${{ secrets.DOCKER_PASSWORD }}
-    #     repository: ghcr.io/smartparkingconfig
-    #     tags: ${{ steps.publish_tag.outputs.tag_name }}
-    #     path: .
-    #     dockerfile: ./Dockerfile
 
     - name: Log in to the Container registry
       uses: docker/login-action@f054a8b539a109f9f41c372932f1ae047eff08c9
@@ -117,5 +94,32 @@ jobs:
       with:
         context: .
         push: true
-        tags: ${{ vars.INTERNAL_REGISTRY_URL }}/smartparkingconfig:latest
-        labels: "test"
+        tags: ${{ vars.INTERNAL_REGISTRY_URL }}/smartparkingconfig:${{ env.VERSION }}
+        labels: "release"
+
+
+  publish_helm:
+    name: "Publish helm chart"
+    runs-on: [self-hosted, linux, X64]
+
+    steps:
+      - name: checkout
+        uses: actions/checkout@v2
+
+      - name: get helm
+        uses: azure/setup-helm@v3  
+      - name: add internal Helm registry
+        run: helm repo add starwit-internal ${{ vars.CHARTMUSEUM_URL }} --username=${{ secrets.CHARTMUSEUM_USER }} --password=${{ secrets.CHARTMUSEUM_PASSWORD }}
+      - name: run helm update
+        working-directory: deployment/helm/smartparkingconfig
+        run: helm dep update
+      - name: run helm package
+        working-directory: deployment/helm
+        run: helm package smartparkingconfig
+      - name: get version number
+        working-directory: deployment/helm/smartparkingconfig
+        run: |
+          echo "HELM_VERSION=$(grep version: Chart.yaml | head -1 | awk '{print $2}')" >> $GITHUB_ENV
+      - name: run helm push
+        working-directory: deployment/helm
+        run: helm cm-push -f smartparkingconfig-${{ env.HELM_VERSION }}.tgz starwit-internal   

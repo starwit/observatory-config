@@ -1,7 +1,8 @@
 import React from "react";
 import MainContentRouter from "./MainContentRouter";
 import {CssBaseline} from "@mui/material";
-import {ErrorHandler} from "@starwit/react-starwit";
+import ErrorHandler from "./errorHandler/ErrorHandler.jsx";
+
 
 function App() {
     return (
