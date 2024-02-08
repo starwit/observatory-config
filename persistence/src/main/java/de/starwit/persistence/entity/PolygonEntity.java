@@ -15,12 +15,16 @@ import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
+import jakarta.persistence.UniqueConstraint;
+import jakarta.validation.constraints.NotNull;
 
 /**
  * Polygon Entity class
  */
 @Entity
-@Table(name = "polygon")
+@Table(name = "polygon", uniqueConstraints = {
+    @UniqueConstraint(columnNames = {"name", "image_id"})
+})
 public class PolygonEntity extends AbstractEntity<Long> {
 
     // entity fields
@@ -43,6 +47,7 @@ public class PolygonEntity extends AbstractEntity<Long> {
     private List<PointEntity> point;
 
     @JsonFilter("filterId")
+    @NotNull
     private String name;
 
     public String getName() {

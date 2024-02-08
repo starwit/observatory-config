@@ -99,21 +99,7 @@ function ImageAnnotate() {
         imageRest.savePolygons(event.images).then(() => {
             handleMessage("success", t("response.save.success"));
             reloadParkingAreas();
-        })
-    }
-
-    function validateRegionNames(regions) {
-        const names = regions.map(r => r.name);
-        return validateNonEmpty(names) && validateUnique(names);
-    }
-
-    function validateNonEmpty(entries) {
-        return entries.every(n => n !== undefined && n !== "");
-    }
-    
-    function validateUnique(entries) {
-        const uniqueNames = new Set(entries);
-        return uniqueNames.size === entries.length;
+        });
     }
 
     function validateRegionNames(regions) {

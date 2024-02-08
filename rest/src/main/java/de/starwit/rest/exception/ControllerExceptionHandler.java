@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import jakarta.persistence.EntityNotFoundException;
+import jakarta.validation.ConstraintViolationException;
 
 import com.fasterxml.jackson.databind.exc.InvalidDefinitionException;
 
@@ -122,12 +123,19 @@ public class ControllerExceptionHandler extends ResponseEntityExceptionHandler {
     }
 
     @ExceptionHandler(value = { DataIntegrityViolationException.class })
-    public ResponseEntity<Object> handleException(SQLIntegrityConstraintViolationException ex) {
+    public ResponseEntity<Object> handleException(DataIntegrityViolationException ex) {
         NotificationDto output = new NotificationDto("error.sqlIntegrityConstaint",
                 "Given data is not in the right format to be saved.");
-        if (ex.getMessage().contains("Duplicate entry")) {
+        if (ex.getMessage().contains("unique constraint")) {
             output.setMessageKey("error.unique");
         }
+        return new ResponseEntity<>(output, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(value = { ConstraintViolationException.class })
+    public ResponseEntity<Object> handleException(ConstraintViolationException ex) {
+        NotificationDto output = new NotificationDto("error.constraintViolation", 
+                "An constraint was violated (not null?)");
         return new ResponseEntity<>(output, HttpStatus.BAD_REQUEST);
     }
 
