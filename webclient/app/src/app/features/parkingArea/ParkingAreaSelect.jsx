@@ -4,7 +4,8 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import EditRoundedIcon from "@mui/icons-material/EditRounded";
 import {
     IconButton,
-    Stack
+    Stack,
+    Toolbar
 } from "@mui/material";
 import FormControl from "@mui/material/FormControl";
 import MenuItem from "@mui/material/MenuItem";
@@ -18,6 +19,7 @@ import {
 } from "../../modifiers/ParkingAreaModifier";
 import ParkingAreaRest from "../../services/ParkingAreaRest";
 import ParkingAreaDialog from "./ParkingAreaDialog";
+import {AppBar} from "../../assets/styles/HeaderStyles";
 
 function ParkingAreaSelect() {
     const [selectedArea, setSelectedArea] = useImmer(entityDefault);
@@ -89,14 +91,13 @@ function ParkingAreaSelect() {
     }
 
     return (
-
         <Stack
             direction="row"
-            sx={{marginTop: "0.5rem", height: "2.25rem", width: "100%", paddingLeft: "3rem"}}
+            sx={{marginTop: "0.4rem", height: "2.2rem", color: "dimgrey"}}
             useFlexGap
             flexWrap="nowrap"
         >
-            <FormControl sx={{boxShadow: "none", width: "30%"}}>
+            <FormControl sx={{boxShadow: "none", width: "20rem"}}>
                 <Select sx={{height: "2rem", margin: "0rem"}}
                     value={selectedArea.id} onChange={handleChange}>
                     {parkingAreaAll.map(entity => (
@@ -107,19 +108,19 @@ function ParkingAreaSelect() {
             <FormControl>
                 <IconButton sx={{height: "2rem"}}
                     onClick={handleCreateDialogOpen}>
-                    <AddCircleIcon />
+                    <AddCircleIcon fontSize="small" />
                 </IconButton>
             </FormControl>
             <FormControl>
                 <IconButton sx={{height: "2rem"}}
                     onClick={handleDialogOpen}>
-                    <EditRoundedIcon />
+                    <EditRoundedIcon fontSize="small" />
                 </IconButton>
             </FormControl>
             <FormControl>
                 <IconButton sx={{height: "2rem"}}
                     onClick={handleDelete}>
-                    <DeleteIcon />
+                    <DeleteIcon fontSize="small" />
                 </IconButton>
             </FormControl>
             <ParkingAreaDialog
