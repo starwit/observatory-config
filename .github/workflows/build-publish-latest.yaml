@@ -5,9 +5,10 @@ on:
 
 env:
   REGISTRY: ghcr.io
+
   IMAGE_NAME: smartparkingconfig
-  DOCKERHUB_USERNAME: starwit
-  DOCKERHUB_ORG: starwitorg  
+  #DOCKERHUB_USERNAME: starwit
+  #DOCKERHUB_ORG: starwitorg  
 
 jobs:
   build:
@@ -62,5 +63,5 @@ jobs:
       with:
         context: .
         push: true
-        tags: ${{ env.DOCKERHUB_ORG }}/${{ env.IMAGE_NAME }}:${{ env.VERSION_BUILD }}
+        tags: ${{ vars.INTERNAL_REGISTRY_URL }}/${{env.IMAGE_NAME}}:${{ env.VERSION_BUILD }}
         labels: "latest"
