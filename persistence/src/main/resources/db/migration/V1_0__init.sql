@@ -16,6 +16,7 @@ CREATE TABLE "polygon"
     "open" BOOLEAN,
     "image_id" BIGINT,
     "name" VARCHAR(255) NOT NULL,
+    "classification_id" BIGINT,
     "id" BIGINT NOT NULL DEFAULT nextval('polygon_id_seq'),
     CONSTRAINT "polygon_pkey" PRIMARY KEY ("id"),
     CONSTRAINT "polygon_name_image" UNIQUE ("name", "image_id")
@@ -74,19 +75,8 @@ ALTER TABLE "polygon"
     FOREIGN KEY ("image_id")
     REFERENCES "image" ("id");
 
-CREATE TABLE "polygon_classification" (
-    "polygon_id" BIGINT NOT NULL,
-    "classification_id" BIGINT NOT NULL,
-    PRIMARY KEY ("polygon_id", "classification_id")
-);
-
-ALTER TABLE "polygon_classification"
+ALTER TABLE "polygon"
     ADD CONSTRAINT "fk_polygon_classification"
-    FOREIGN KEY ("polygon_id")
-    REFERENCES "polygon" ("id");
-
-ALTER TABLE "polygon_classification"
-    ADD CONSTRAINT "fk_classification_classification"
     FOREIGN KEY ("classification_id")
     REFERENCES "classification" ("id");
 

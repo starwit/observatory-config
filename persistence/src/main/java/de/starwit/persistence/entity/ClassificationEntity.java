@@ -4,9 +4,11 @@ import java.util.Set;
 
 import com.fasterxml.jackson.annotation.JsonFilter;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.ManyToMany;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotBlank;
 
@@ -28,7 +30,7 @@ public class ClassificationEntity extends AbstractEntity<Long> {
 
     // entity relations
     @JsonFilter("filterId")
-    @ManyToMany(mappedBy = "classification")
+    @OneToMany(mappedBy = "classification", orphanRemoval = true, cascade = CascadeType.ALL)
     private Set<PolygonEntity> polygon;
 
     // entity fields getters and setters

@@ -175,7 +175,7 @@ public class ImageController {
 
     private PolygonEntity createPolygon(ImageEntity entity, RegionDto regionDto) {
         PolygonEntity polygonEntity = new PolygonEntity();
-        Set<ClassificationEntity> cls = classificationService.findByName(regionDto.getCls());
+        ClassificationEntity cls = classificationService.findByName(regionDto.getCls());
         polygonEntity.setClassification(cls);
         polygonEntity.setOpen(regionDto.getOpen());
         polygonEntity.setImage(entity);
@@ -197,7 +197,7 @@ public class ImageController {
 
     private PolygonEntity createLine(ImageEntity entity, RegionDto regionDto) {
         PolygonEntity polygonEntity = new PolygonEntity();
-        Set<ClassificationEntity> cls = classificationService.findByName(regionDto.getCls());
+        ClassificationEntity cls = classificationService.findByName(regionDto.getCls());
         polygonEntity.setClassification(cls);
         polygonEntity.setOpen(true);
         polygonEntity.setImage(entity);

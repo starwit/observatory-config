@@ -38,9 +38,9 @@ public class PolygonEntity extends AbstractEntity<Long> {
     private ImageEntity image;
 
     @JsonFilter("filterId")
-    @ManyToMany(cascade = CascadeType.REFRESH)
-    @JoinTable(name = "polygon_classification", joinColumns = @JoinColumn(name = "polygon_id"), inverseJoinColumns = @JoinColumn(name = "classification_id"))
-    private Set<ClassificationEntity> classification;
+    @ManyToOne
+    @JoinColumn(name = "classification_id")
+    private ClassificationEntity classification;
 
     @JsonFilter("filterId")
     @OneToMany(mappedBy = "polygon", orphanRemoval = true, cascade = CascadeType.ALL)
@@ -76,11 +76,11 @@ public class PolygonEntity extends AbstractEntity<Long> {
         this.image = image;
     }
 
-    public Set<ClassificationEntity> getClassification() {
+    public ClassificationEntity getClassification() {
         return classification;
     }
 
-    public void setClassification(Set<ClassificationEntity> classification) {
+    public void setClassification(ClassificationEntity classification) {
         this.classification = classification;
     }
 

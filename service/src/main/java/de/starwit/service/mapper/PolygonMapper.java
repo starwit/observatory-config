@@ -24,9 +24,8 @@ public class PolygonMapper implements CustomMapper<PolygonEntity, RegionDto> {
         if (entity != null) {
             RegionDto dto = new RegionDto();
             dto.setId(entity.getId().toString());
-            if (entity.getClassification() != null && !entity.getClassification().isEmpty()
-                    && entity.getClassification().iterator().hasNext()) {
-                ClassificationEntity cls = entity.getClassification().iterator().next();
+            if (entity.getClassification() != null) {
+                ClassificationEntity cls = entity.getClassification();
                 dto.setCls(cls.getName());
                 dto.setColor(cls.getColor());
             }

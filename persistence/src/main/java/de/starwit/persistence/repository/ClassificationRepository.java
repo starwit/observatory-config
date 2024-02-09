@@ -12,7 +12,7 @@ import de.starwit.persistence.entity.ClassificationEntity;
  */
 public interface ClassificationRepository extends JpaRepository<ClassificationEntity, Long> {
 
-    Set<ClassificationEntity> findByName(String name);
+    ClassificationEntity findOneByName(String name);
 
     List<ClassificationEntity> findAllByOrderByIdAsc();
 
