@@ -15,16 +15,19 @@ CREATE TABLE "polygon"
 (
     "open" BOOLEAN,
     "image_id" BIGINT,
+    "name" VARCHAR(255) NOT NULL,
     "id" BIGINT NOT NULL DEFAULT nextval('polygon_id_seq'),
-    CONSTRAINT "polygon_pkey" PRIMARY KEY ("id")
+    CONSTRAINT "polygon_pkey" PRIMARY KEY ("id"),
+    CONSTRAINT "polygon_name_image" UNIQUE ("name", "image_id")
 );
 
 CREATE SEQUENCE IF NOT EXISTS "image_id_seq";
 
 CREATE TABLE "image"
 (
-    "src" VARCHAR(255),
-    "name" VARCHAR(255),
+    "name" VARCHAR(255) NOT NULL,
+    "data" BYTEA,
+    "type" VARCHAR(255),
     "parkingconfig_id" BIGINT,
     "id" BIGINT NOT NULL DEFAULT nextval('image_id_seq'),
     CONSTRAINT "image_pkey" PRIMARY KEY ("id")
@@ -34,7 +37,8 @@ CREATE SEQUENCE IF NOT EXISTS "classification_id_seq";
 
 CREATE TABLE "classification"
 (
-    "name" VARCHAR(255) NOT NULL ,
+    "name" VARCHAR(255) NOT NULL,
+    "color" VARCHAR(7) NOT NULL DEFAULT '#000',
     "id" BIGINT NOT NULL DEFAULT nextval('classification_id_seq'),
     CONSTRAINT "classification_pkey" PRIMARY KEY ("id")
 );
@@ -43,8 +47,7 @@ CREATE SEQUENCE IF NOT EXISTS "parkingconfig_id_seq";
 
 CREATE TABLE "parkingconfig"
 (
-    "name" VARCHAR(255) NOT NULL ,
-    "version" INTEGER NOT NULL ,
+    "name" VARCHAR(255) NOT NULL,
     "parkingarea_id" BIGINT,
     "id" BIGINT NOT NULL DEFAULT nextval('parkingconfig_id_seq'),
     CONSTRAINT "parkingconfig_pkey" PRIMARY KEY ("id")
@@ -54,9 +57,9 @@ CREATE SEQUENCE IF NOT EXISTS "parkingarea_id_seq";
 
 CREATE TABLE "parkingarea"
 (
-    "name" VARCHAR(255) NOT NULL ,
-    "activeconfigversion" INTEGER,
-    "testconfigversion" INTEGER,
+    "name" VARCHAR(255) NOT NULL,
+    "prodconfig_id" BIGINT UNIQUE,
+    "testconfig_id" BIGINT UNIQUE,
     "id" BIGINT NOT NULL DEFAULT nextval('parkingarea_id_seq'),
     CONSTRAINT "parkingarea_pkey" PRIMARY KEY ("id")
 );
@@ -97,3 +100,12 @@ ALTER TABLE "parkingconfig"
     FOREIGN KEY ("parkingarea_id")
     REFERENCES "parkingarea" ("id");
 
+ALTER TABLE "parkingarea"
+    ADD CONSTRAINT "fk_parkingarea_testconfig"
+    FOREIGN KEY ("testconfig_id")
+    REFERENCES "parkingconfig" ("id");
+
+ALTER TABLE "parkingarea"
+    ADD CONSTRAINT "fk_parkingarea_prodconfig"
+    FOREIGN KEY ("prodconfig_id")
+    REFERENCES "parkingconfig" ("id");
