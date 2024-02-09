@@ -5,7 +5,6 @@ import DialogActions from "@mui/material/DialogActions";
 import {useTranslation} from "react-i18next";
 import {DialogContent, DialogContentText, DialogTitle} from "@mui/material";
 import PropTypes from "prop-types";
-import {LoadingButton} from "@mui/lab";
 
 function ConfirmationDialog(props) {
     const {open, onClose, onSubmit, title, message, confirmTitle} = props;
@@ -41,9 +40,8 @@ function ConfirmationDialog(props) {
             </DialogContent>
             <DialogActions>
                 <Button onClick={onClose}>{t("button.cancel")}</Button>
-                <LoadingButton loading={isProcessing} onClick={confirmAction} autoFocus>
-                    {confirmTitle ? confirmTitle : t("button.yes")}
-                </LoadingButton>
+                <Button onClick={confirmAction} autoFocus>{t("button.submit")}
+                </Button>
             </DialogActions>
         </Dialog>
     );

@@ -1,11 +1,11 @@
-import {Add} from "@mui/icons-material";
 import {Container, Grid, Typography} from "@mui/material";
-import {AddFabButton, LoadingSpinner, Statement} from "@starwit/react-starwit";
+import AddFabButton from "../../commons/addFabButton/AddFabButton";
+import LoadingSpinner from "../../commons/loadingSpinner/LoadingSpinner";
 import React, {useCallback, useEffect, useMemo, useState} from "react";
 import {useTranslation} from "react-i18next";
+import {useNavigate} from "react-router";
 import ParkingAreaRest from "../../services/ParkingAreaRest";
 import ParkingAreaCard from "./ParkingAreaCard";
-import {useNavigate} from "react-router";
 import ParkingAreaDialog from "./ParkingAreaDialog";
 
 function ParkingAreaOverview() {
@@ -46,10 +46,7 @@ function ParkingAreaOverview() {
 
         if (parkingAreas.length === 0) {
             return (
-                <Statement
-                    icon={<Add />}
-                    message={t("parkingAreas.empty")}
-                />
+                null
             );
         }
 
