@@ -8,7 +8,7 @@ import {Typography} from "@mui/material";
 import ImageRest from "../../services/ImageRest";
 import ParkingAreaRest from "../../services/ParkingAreaRest";
 import {setIn} from 'seamless-immutable';
-import { useSnackbar } from 'notistack';
+import {useSnackbar} from 'notistack';
 import {classificationSelectTools} from "../../AppConfig";
 
 const userReducer = (state, action) => {
@@ -28,7 +28,7 @@ function ImageAnnotate() {
 
     const [classifications, setClassifications] = useState();
     const [images, setImages] = useState(null);
-    const { enqueueSnackbar } = useSnackbar();
+    const {enqueueSnackbar} = useSnackbar();
     const [selectedImage, setSelectedImage] = useState(0);
     const classificationRest = useMemo(() => new ClassificationRest(), []);
     const imageRest = useMemo(() => new ImageRest(), []);
