@@ -28,6 +28,18 @@ jobs:
       with:
         fetch-depth: '0'
 
+    - name: Set up JDK 21
+      uses: actions/setup-java@v4
+      with:
+        distribution: 'temurin'
+        java-version: 21
+    - name: setup node
+      uses: actions/setup-node@v3
+      with:
+        node-version: 18
+    - run: npm --version
+    - run: node --version
+
     - name: generate tag and release body
       run: |
         RELEASE_TYPE=$(sh ${{ github.workspace }}/.github/workflows/getReleaseType.sh ${{ env.release-type }})
@@ -58,17 +70,6 @@ jobs:
     #     tag_name: ${{ steps.publish_tag.outputs.tag_name }}
     #     body_path: CHANGELOG.md
 
-    - name: Set up JDK 21
-      uses: actions/setup-java@v4
-      with:
-        distribution: 'temurin'
-        java-version: 21
-    - name: setup node
-      uses: actions/setup-node@v3
-      with:
-        node-version: 18
-    - run: npm --version
-    - run: node --version
     - name: npm install
       run: |
         if [ -d "webclient/app" ]; then
