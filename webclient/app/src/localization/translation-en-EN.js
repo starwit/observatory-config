@@ -50,6 +50,7 @@ const translationEnEN = {
     "parkingArea.create.title": "Create ParkingArea",
     "parkingArea.update.title": "Edit ParkingArea",
     "parkingArea.id": "id",
+    "parkingAreas.title": "Parking Areas",
     "parkingArea.name": "name*",
     "parkingArea.name.hint": "Value is required. ",
     "parkingArea.parkingConfig": "parkingConfig",

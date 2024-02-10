@@ -21,4 +21,6 @@ public interface ParkingAreaRepository extends JpaRepository<ParkingAreaEntity, 
 
     @Query("SELECT e FROM ParkingAreaEntity e WHERE NOT EXISTS (SELECT r FROM e.selectedProdConfig r WHERE r.id <> ?1)")
     public List<ParkingAreaEntity> findAllWithoutOtherSelectedProdConfig(Long id);
+
+    public List<ParkingAreaEntity> findAllByOrderByNameAsc();
 }
