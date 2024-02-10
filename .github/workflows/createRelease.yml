@@ -14,6 +14,8 @@ on:
 env:
   REGISTRY: ghcr.io
   IMAGE_NAME: smartparkingconfig
+  DOCKERHUB_USERNAME: starwit
+  DOCKERHUB_ORG: starwitorg   
   release-type: ${{ github.event.inputs.release-type }}
 
 jobs:
@@ -25,6 +27,22 @@ jobs:
     - uses: actions/checkout@v2
       with:
         fetch-depth: '0'
+
+    - name: Set up JDK 21
+      uses: actions/setup-java@v4
+      with:
+        distribution: 'temurin'
+        java-version: 21
+    - name: Set up Maven
+      uses: stCarolas/setup-maven@v4.5
+      with:
+         maven-version: 3.9.2        
+    - name: setup node
+      uses: actions/setup-node@v3
+      with:
+        node-version: 18
+    - run: npm --version
+    - run: node --version
 
     - name: generate tag and release body
       run: |
@@ -41,32 +59,21 @@ jobs:
     - name: Echo CHANGELOG.md
       run: echo '${{ steps.package.outputs.content }}'
 
-    - name: publish tag
-      id: publish_tag
-      run: |
-        git push --follow-tags
-        echo ::set-output name=tag_name::$(git describe HEAD --abbrev=0)
+    # - name: publish tag
+    #   id: publish_tag
+    #   run: |
+    #     git push --follow-tags
+    #     echo ::set-output name=tag_name::$(git describe HEAD --abbrev=0)
 
-    - name: create release
-      uses: actions/create-release@v1
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      with:
-        release_name: Release ${{ steps.publish_tag.outputs.tag_name }}
-        tag_name: ${{ steps.publish_tag.outputs.tag_name }}
-        body_path: CHANGELOG.md
+    # - name: create release
+    #   uses: actions/create-release@v1
+    #   env:
+    #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    #   with:
+    #     release_name: Release ${{ steps.publish_tag.outputs.tag_name }}
+    #     tag_name: ${{ steps.publish_tag.outputs.tag_name }}
+    #     body_path: CHANGELOG.md
 
-    - name: Set up JDK 17
-      uses: actions/setup-java@v2
-      with:
-        distribution: 'zulu'
-        java-version: 17
-    - name: setup node
-      uses: actions/setup-node@v3
-      with:
-        node-version: 18
-    - run: npm --version
-    - run: node --version
     - name: npm install
       run: |
         if [ -d "webclient/app" ]; then
@@ -94,7 +101,7 @@ jobs:
       with:
         context: .
         push: true
-        tags: ${{ vars.INTERNAL_REGISTRY_URL }}/smartparkingconfig:${{ env.VERSION }}
+        tags: ${{ vars.INTERNAL_REGISTRY_URL }}/${{env.IMAGE_NAME}}:${{ env.VERSION }}
         labels: "release"
 
 
