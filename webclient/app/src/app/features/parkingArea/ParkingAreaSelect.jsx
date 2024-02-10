@@ -1,32 +1,25 @@
-import React, {useState, useMemo, useEffect} from "react";
-import {useNavigate, useLocation} from "react-router-dom";
-import ParkingAreaRest from "../../services/ParkingAreaRest";
-import Select from "@mui/material/Select";
-import MenuItem from "@mui/material/MenuItem";
-import InputLabel from "@mui/material/InputLabel";
-import FormControl from "@mui/material/FormControl";
+
 import AddCircleIcon from "@mui/icons-material/AddCircle";
 import DeleteIcon from "@mui/icons-material/Delete";
 import EditRoundedIcon from "@mui/icons-material/EditRounded";
 import {
     IconButton,
-    Typography
+    Stack,
+    Toolbar
 } from "@mui/material";
-import ParkingAreaDialog from "./ParkingAreaDialog";
+import FormControl from "@mui/material/FormControl";
+import MenuItem from "@mui/material/MenuItem";
+import Select from "@mui/material/Select";
+import React, {useEffect, useMemo} from "react";
+import {useTranslation} from "react-i18next";
+import {useNavigate, useParams} from "react-router-dom";
 import {useImmer} from "use-immer";
 import {
     entityDefault
 } from "../../modifiers/ParkingAreaModifier";
-import {useTranslation} from "react-i18next";
-import {UploadFile} from "@mui/icons-material";
-
-function deriveIdFromLocation(location) {
-    const m = location.pathname.match(/^\/(\d+)$/);
-    if (m === null) {
-        return undefined;
-    }
-    return parseInt(m[1]);
-}
+import ParkingAreaRest from "../../services/ParkingAreaRest";
+import ParkingAreaDialog from "./ParkingAreaDialog";
+import {AppBar} from "../../assets/styles/HeaderStyles";
 
 function ParkingAreaSelect() {
     const [selectedArea, setSelectedArea] = useImmer(entityDefault);
@@ -35,23 +28,24 @@ function ParkingAreaSelect() {
     const [openDialog, setOpenDialog] = React.useState(false);
     const [isCreate, setIsCreate] = React.useState(false);
     const {t} = useTranslation();
+    const {parkingAreaId} = useParams();
+    const nav = "/";
     const navigate = useNavigate();
-    const locationId = deriveIdFromLocation(useLocation());
 
     useEffect(() => {
         reload();
-    }, []);
+    }, [parkingAreaId]);
 
     function reload() {
         parkingareaRest.findAll().then(response => {
             const loadedAreas = response.data;
             setParkingAreaAll(loadedAreas);
 
-            const preselectedArea = loadedAreas.find(entity => entity.id === locationId);
+            const preselectedArea = loadedAreas.find(entity => entity.id === parseInt(parkingAreaId));
             if (preselectedArea !== undefined) {
                 setSelectedArea(preselectedArea);
             } else {
-                navigate(`/${loadedAreas[0].id}`);
+                navigate(`${nav}${loadedAreas[0].id}`);
             }
         });
     }
@@ -59,11 +53,10 @@ function ParkingAreaSelect() {
     function update(modifiedEntity) {
         if (isCreate) {
             parkingareaRest.findAll().then(response => {
-                navigate(`${modifiedEntity.id}`);
+                navigate(`${nav}${modifiedEntity.id}`);
             });
         } else {
-            reload();
-            navigate(`${modifiedEntity.id}`);
+            navigate(`${nav}${modifiedEntity.id}`);
         }
     }
 
@@ -71,7 +64,7 @@ function ParkingAreaSelect() {
         if (!!selectedArea) {
             parkingareaRest.delete(selectedArea.id).then(response => {
                 parkingareaRest.findAll().then(response => {
-                    navigate(`/${response.data[0].id}`);
+                    navigate(`${nav}${response.data[0].id}`);
                 });
             });
         }
@@ -79,7 +72,7 @@ function ParkingAreaSelect() {
 
     const handleChange = event => {
         const newParkingAreaId = event.target.value;
-        navigate(`/${newParkingAreaId}`);
+        navigate(`${nav}${newParkingAreaId}`);
     };
 
     function handleDialogOpen() {
@@ -98,25 +91,38 @@ function ParkingAreaSelect() {
     }
 
     return (
-        <>
-            <FormControl fullWidth>
-                <InputLabel>{t("parkingArea.title")}</InputLabel>
-                <Select value={selectedArea.id} label={t("parkingArea.title")} onChange={handleChange}>
+        <Stack
+            direction="row"
+            sx={{marginTop: "0.4rem", height: "2.2rem", color: "dimgrey"}}
+            useFlexGap
+            flexWrap="nowrap"
+        >
+            <FormControl sx={{boxShadow: "none", width: "20rem"}}>
+                <Select sx={{height: "2rem", margin: "0rem"}}
+                    value={selectedArea.id} onChange={handleChange}>
                     {parkingAreaAll.map(entity => (
-                        <MenuItem key={entity.id} value={entity.id} >{entity.name}</MenuItem>))}
+                        <MenuItem sx={{margin: "0rem"}}
+                            key={entity.id} value={entity.id} >{entity.name}</MenuItem>))}
                 </Select>
-                <Typography align="right">
-                    <IconButton onClick={handleCreateDialogOpen}>
-                        <AddCircleIcon />
-                    </IconButton>
-                    <IconButton onClick={handleDialogOpen}>
-                        <EditRoundedIcon />
-                    </IconButton>
-                    <IconButton onClick={handleDelete}>
-                        <DeleteIcon />
-                    </IconButton>
-                </Typography>
             </FormControl >
+            <FormControl>
+                <IconButton sx={{height: "2rem"}}
+                    onClick={handleCreateDialogOpen}>
+                    <AddCircleIcon fontSize="small" />
+                </IconButton>
+            </FormControl>
+            <FormControl>
+                <IconButton sx={{height: "2rem"}}
+                    onClick={handleDialogOpen}>
+                    <EditRoundedIcon fontSize="small" />
+                </IconButton>
+            </FormControl>
+            <FormControl>
+                <IconButton sx={{height: "2rem"}}
+                    onClick={handleDelete}>
+                    <DeleteIcon fontSize="small" />
+                </IconButton>
+            </FormControl>
             <ParkingAreaDialog
                 open={openDialog}
                 onClose={handleDialogClose}
@@ -124,7 +130,7 @@ function ParkingAreaSelect() {
                 selected={selectedArea}
                 update={update}
             />
-        </>
+        </Stack >
     );
 }
 

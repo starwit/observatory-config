@@ -37,44 +37,9 @@ function SidebarNavigation(props) {
     };
 
     return (
-        <Box sx={{display: "flex", p: 0.5, height: "100%"}}>
+        <Box sx={{display: "flex", height: "100%"}}>
             <CssBaseline />
-            <Fab color="primary" onClick={handleDrawerOpen} >
-                <MenuIcon />
-            </Fab>
-            <Drawer
-                sx={{
-                    "& .MuiDrawer-paper": {
-                        width: drawerWidth,
-                        boxSizing: "border-box"
-                    }
-                }}
-                variant="persistent"
-                anchor="left"
-                open={open}
-            >
-                <DrawerHeader>
-                    <IconButton onClick={handleDrawerClose}>
-                        {theme.direction === "ltr" ? <ChevronLeftIcon /> : <ChevronRightIcon />}
-                    </IconButton>
-                </DrawerHeader>
-                <Divider />
-                <Box sx={{overflow: "auto"}}>
-                    <List>
-                        {props.menuItems.map((menuItem, index) => (
-                            <ListItem key={menuItem.title} disablePadding>
-                                <ListItemButton onClick={() => navigate(menuItem.link)}>
-                                    <ListItemText primary={t(menuItem.title)} />
-                                </ListItemButton>
-                            </ListItem>
-                        ))}
-                        <ListItem key="ParkingAreaSelect">
-                            <ParkingAreaSelect />
-                        </ListItem>
-                    </List>
-                </Box>
-            </Drawer>
-            <Box component="main" sx={{flexGrow: 1, p: 3}}>
+            <Box component="main" sx={{flexGrow: 1}}>
                 {props.children}
             </Box>
         </Box>
