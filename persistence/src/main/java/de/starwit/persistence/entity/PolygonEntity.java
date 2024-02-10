@@ -15,12 +15,16 @@ import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
+import jakarta.persistence.UniqueConstraint;
+import jakarta.validation.constraints.NotNull;
 
 /**
  * Polygon Entity class
  */
 @Entity
-@Table(name = "polygon")
+@Table(name = "polygon", uniqueConstraints = {
+    @UniqueConstraint(columnNames = {"name", "image_id"})
+})
 public class PolygonEntity extends AbstractEntity<Long> {
 
     // entity fields
@@ -34,15 +38,16 @@ public class PolygonEntity extends AbstractEntity<Long> {
     private ImageEntity image;
 
     @JsonFilter("filterId")
-    @ManyToMany(cascade = CascadeType.REFRESH)
-    @JoinTable(name = "polygon_classification", joinColumns = @JoinColumn(name = "polygon_id"), inverseJoinColumns = @JoinColumn(name = "classification_id"))
-    private Set<ClassificationEntity> classification;
+    @ManyToOne
+    @JoinColumn(name = "classification_id")
+    private ClassificationEntity classification;
 
     @JsonFilter("filterId")
     @OneToMany(mappedBy = "polygon", orphanRemoval = true, cascade = CascadeType.ALL)
     private List<PointEntity> point;
 
     @JsonFilter("filterId")
+    @NotNull
     private String name;
 
     public String getName() {
@@ -71,11 +76,11 @@ public class PolygonEntity extends AbstractEntity<Long> {
         this.image = image;
     }
 
-    public Set<ClassificationEntity> getClassification() {
+    public ClassificationEntity getClassification() {
         return classification;
     }
 
-    public void setClassification(Set<ClassificationEntity> classification) {
+    public void setClassification(ClassificationEntity classification) {
         this.classification = classification;
     }
 

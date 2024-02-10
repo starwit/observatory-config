@@ -30,8 +30,8 @@ public class ClassificationService implements ServiceInterface<ClassificationEnt
         return this.getRepository().findAllByOrderByIdAsc();
     }
 
-    public Set<ClassificationEntity> findByName(String cls) {
-        return classificationRepository.findByName(cls);
+    public ClassificationEntity findByName(String cls) {
+        return classificationRepository.findOneByName(cls);
     }
 
 }
