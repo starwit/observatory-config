@@ -23,8 +23,7 @@ import ImageRest from "../../services/ImageRest";
 import {useDropzone} from 'react-dropzone';
 import ImageUploadStyles from "../../assets/styles/ImageUploadStyles";
 import { useSnackbar } from "notistack";
-
-
+import TextFieldWithAddButton from "../../commons/TextFieldWithButton/TextFieldWithButton";
 
 function ParkingAreaDialog(props) {
     const {open, onClose, selected, isCreate, update} = props;
@@ -53,6 +52,7 @@ function ParkingAreaDialog(props) {
     const onDropRejected = () => {
         enqueueSnackbar(t("parkingArea.fileTooLarge"), {variant: "warning"});
     };
+
 
     useEffect(() => {
         if (isCreate) {
@@ -140,6 +140,7 @@ function ParkingAreaDialog(props) {
                                 helperText={t("parkingArea.name.hint")}
                             />
                         </FormControl>
+                        <TextFieldWithAddButton />
                         <Typography variant="caption">{t("parkingArea.image.hint")}</Typography>
                         <FormControl {...getRootProps()} sx={ImageUploadStyles.dropzoneStyle}>
                             <input {...getInputProps()} />
