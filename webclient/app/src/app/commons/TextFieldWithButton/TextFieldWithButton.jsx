@@ -34,8 +34,8 @@ function TextFieldWithAddAndRemoveButton() {
             value={input}
             onChange={(e) => handleInputChange(index, e.target.value)}
             label={`CamID ${index + 1}`}
-            variant="filled" // Ansonsten weißer Cursor auf weißen Grund
-            // fullWidth - sieht extrem scheisse aus!!!
+            variant="standard"
+            fullWidth
             required={index === 0} // Setze das erste Textfeld als Pflichtfeld
           />
           {index !== 0 && ( // Ein Feld muss stehen bleiben
