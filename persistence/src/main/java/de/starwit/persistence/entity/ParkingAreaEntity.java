@@ -1,5 +1,6 @@
 package de.starwit.persistence.entity;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Set;
 
@@ -12,6 +13,8 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
+import jakarta.validation.constraints.Max;
+import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 
 /**
@@ -40,6 +43,16 @@ public class ParkingAreaEntity extends AbstractEntity<Long> {
     @OneToOne(cascade = { CascadeType.REFRESH, CascadeType.REMOVE }, orphanRemoval = true)
     @JoinColumn(name = "prodconfig_id", referencedColumnName = "id", unique = true)
     private ParkingConfigEntity selectedProdConfig;
+  
+    @Min(value = -90)
+    @Max(value = 90)
+    @Column(name = "centerlatitude")
+    private BigDecimal centerlatitude;
+
+    @Min(value = -180)
+    @Max(value = 180)
+    @Column(name = "centerlongitude")
+    private BigDecimal centerlongitude;
 
     // entity fields getters and setters
     public String getName() {
@@ -73,6 +86,22 @@ public class ParkingAreaEntity extends AbstractEntity<Long> {
 
     public void setSelectedProdConfig(ParkingConfigEntity selectedProdConfig) {
         this.selectedProdConfig = selectedProdConfig;
+    }
+
+    public BigDecimal getCenterlatitude() {
+        return centerlatitude;
+    }
+
+    public void setCenterlatitude(BigDecimal centerlatitude) {
+        this.centerlatitude = centerlatitude;
+    }
+
+    public BigDecimal getCenterlongitude() {
+        return centerlongitude;
+    }
+
+    public void setCenterlongitude(BigDecimal centerlongitude) {
+        this.centerlongitude = centerlongitude;
     }
 
 }
