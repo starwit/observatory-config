@@ -5,11 +5,15 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import de.starwit.persistence.entity.CameraEntity;
+import de.starwit.persistence.entity.ImageEntity;
 import de.starwit.persistence.entity.ParkingAreaEntity;
 import de.starwit.persistence.entity.ParkingConfigEntity;
 import de.starwit.persistence.exception.NotificationException;
+import de.starwit.persistence.repository.CameraRepository;
 import de.starwit.persistence.repository.ParkingAreaRepository;
 import de.starwit.persistence.repository.ParkingConfigRepository;
+import jakarta.persistence.EntityNotFoundException;
 
 /**
  * 
@@ -24,6 +28,9 @@ public class ParkingAreaService implements ServiceInterface<ParkingAreaEntity, P
 
     @Autowired
     private ParkingConfigRepository parkingconfigRepository;
+
+    @Autowired
+    private CameraRepository cameraRepository;
 
     @Override
     public ParkingAreaRepository getRepository() {
@@ -84,10 +91,28 @@ public class ParkingAreaService implements ServiceInterface<ParkingAreaEntity, P
                 p.setName(entity.getName());
                 if (p.getImage() != null && !p.getImage().isEmpty()) {
                     p.getImage().get(0).setName(entity.getName());
+                    saveCamera(p.getImage().get(0));
                 }
                 p = parkingconfigRepository.saveAndFlush(p);
             }
         }
+
         return this.getRepository().getReferenceById(entity.getId());
+    }
+
+    private void saveCamera(ImageEntity imageEntity) {
+        if (imageEntity.getCamera() != null) {
+            CameraEntity cameraEntity = imageEntity.getCamera();
+            CameraEntity c = null;
+            if (cameraEntity.getId() != null) {
+                c = cameraRepository.findById(cameraEntity.getId())
+                        .orElseThrow(() -> new EntityNotFoundException(String.valueOf(cameraEntity.getId())));
+            } else {
+                c = new CameraEntity();
+            }
+            c.setUuid(cameraEntity.getUuid());
+            c.setImage(imageEntity);
+            c = cameraRepository.saveAndFlush(c);
+        }
     }
 }

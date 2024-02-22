@@ -8,9 +8,9 @@ import com.fasterxml.jackson.annotation.JsonFilter;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.JoinColumn;
-import jakarta.persistence.Lob;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
+import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotBlank;
 
@@ -40,6 +40,9 @@ public class ImageEntity extends AbstractEntity<Long> {
     @ManyToOne
     @JoinColumn(name = "parkingconfig_id")
     private ParkingConfigEntity parkingConfig;
+
+    @OneToOne(mappedBy = "image")
+    private CameraEntity camera;
 
     // entity fields getters and setters
     public byte[] getData() {
@@ -89,6 +92,14 @@ public class ImageEntity extends AbstractEntity<Long> {
             this.polygon = new HashSet<>();
         }
         this.polygon.add(child);
+    }
+
+    public CameraEntity getCamera() {
+        return camera;
+    }
+
+    public void setCamera(CameraEntity camera) {
+        this.camera = camera;
     }
 
 }
