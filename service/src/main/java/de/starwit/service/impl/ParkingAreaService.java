@@ -1,15 +1,20 @@
 package de.starwit.service.impl;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import de.starwit.persistence.entity.CameraEntity;
+import de.starwit.persistence.entity.ImageEntity;
 import de.starwit.persistence.entity.ParkingAreaEntity;
 import de.starwit.persistence.entity.ParkingConfigEntity;
 import de.starwit.persistence.exception.NotificationException;
+import de.starwit.persistence.repository.CameraRepository;
 import de.starwit.persistence.repository.ParkingAreaRepository;
 import de.starwit.persistence.repository.ParkingConfigRepository;
+import jakarta.persistence.EntityNotFoundException;
 
 /**
  * 
@@ -24,6 +29,9 @@ public class ParkingAreaService implements ServiceInterface<ParkingAreaEntity, P
 
     @Autowired
     private ParkingConfigRepository parkingconfigRepository;
+
+    @Autowired
+    private CameraRepository cameraRepository;
 
     @Override
     public ParkingAreaRepository getRepository() {
@@ -84,10 +92,30 @@ public class ParkingAreaService implements ServiceInterface<ParkingAreaEntity, P
                 p.setName(entity.getName());
                 if (p.getImage() != null && !p.getImage().isEmpty()) {
                     p.getImage().get(0).setName(entity.getName());
+                    saveCamera(p.getImage().get(0));
                 }
                 p = parkingconfigRepository.saveAndFlush(p);
             }
         }
+
         return this.getRepository().getReferenceById(entity.getId());
+    }
+
+    private void saveCamera(ImageEntity imageEntity) {
+        List<CameraEntity> addedCameras = imageEntity.getCamera();
+        List<CameraEntity> newCameraList = new ArrayList<>();
+        List<CameraEntity> existingCameras = cameraRepository.findAll();
+        if (addedCameras != null && !addedCameras.isEmpty()){
+            for (CameraEntity camera : addedCameras) {
+                List<CameraEntity> existingCamera = cameraRepository.findBySaeId(camera.getSaeId());
+                if (existingCamera != null && !existingCamera.isEmpty()) {
+                    newCameraList.add(existingCamera.get(0));
+                } else {
+                    newCameraList.add(camera);
+                }
+            }
+        }
+
+        List<Long> cameraIds = cameraRepository.findAllWithEmptyImage();
     }
 }

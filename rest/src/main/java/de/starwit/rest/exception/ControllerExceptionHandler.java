@@ -1,13 +1,7 @@
 package de.starwit.rest.exception;
 
-import java.sql.SQLIntegrityConstraintViolationException;
 import java.util.HashMap;
 import java.util.Map;
-
-import jakarta.persistence.EntityNotFoundException;
-import jakarta.validation.ConstraintViolationException;
-
-import com.fasterxml.jackson.databind.exc.InvalidDefinitionException;
 
 import org.hibernate.HibernateException;
 import org.slf4j.Logger;
@@ -31,7 +25,11 @@ import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
+import com.fasterxml.jackson.databind.exc.InvalidDefinitionException;
+
 import de.starwit.persistence.exception.NotificationException;
+import jakarta.persistence.EntityNotFoundException;
+import jakarta.validation.ConstraintViolationException;
 
 @ControllerAdvice(basePackages = "de.starwit.rest")
 public class ControllerExceptionHandler extends ResponseEntityExceptionHandler {
@@ -134,7 +132,7 @@ public class ControllerExceptionHandler extends ResponseEntityExceptionHandler {
 
     @ExceptionHandler(value = { ConstraintViolationException.class })
     public ResponseEntity<Object> handleException(ConstraintViolationException ex) {
-        NotificationDto output = new NotificationDto("error.constraintViolation", 
+        NotificationDto output = new NotificationDto("error.constraintViolation",
                 "An constraint was violated (not null?)");
         return new ResponseEntity<>(output, HttpStatus.BAD_REQUEST);
     }

@@ -1,14 +1,14 @@
 package de.starwit.service.impl;
 
 import java.util.List;
-import de.starwit.persistence.entity.ParkingConfigEntity;
-import de.starwit.persistence.repository.ParkingConfigRepository;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.Set;
 import de.starwit.persistence.entity.ImageEntity;
+import de.starwit.persistence.entity.ParkingConfigEntity;
 import de.starwit.persistence.repository.ImageRepository;
+import de.starwit.persistence.repository.ParkingConfigRepository;
 
 /**
  * 

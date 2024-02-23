@@ -1,6 +1,8 @@
 package de.starwit.persistence.entity;
 
+import java.math.BigDecimal;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import com.fasterxml.jackson.annotation.JsonFilter;
@@ -8,10 +10,11 @@ import com.fasterxml.jackson.annotation.JsonFilter;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.JoinColumn;
-import jakarta.persistence.Lob;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
+import jakarta.validation.constraints.Max;
+import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 
 /**
@@ -40,6 +43,29 @@ public class ImageEntity extends AbstractEntity<Long> {
     @ManyToOne
     @JoinColumn(name = "parkingconfig_id")
     private ParkingConfigEntity parkingConfig;
+
+    @JsonFilter("filterCamera")
+    @OneToMany(mappedBy = "image")
+    private List<CameraEntity> camera;
+
+    @Min(value = -90)
+    @Max(value = 90)
+    @Column(name = "topleftlatitude")
+    private BigDecimal topleftlatitude;
+
+    @Min(value = -180)
+    @Max(value = 180)
+    @Column(name = "topleftlongitude")
+    private BigDecimal topleftlongitude;
+
+    @Column(name = "degreeperpixelx")
+    private BigDecimal degreeperpixelx;
+
+    @Column(name = "degreeperpixely")
+    private BigDecimal degreeperpixely;
+
+    @Column(name = "georeferenced")
+    private Boolean geoReferenced;
 
     // entity fields getters and setters
     public byte[] getData() {
@@ -91,4 +117,51 @@ public class ImageEntity extends AbstractEntity<Long> {
         this.polygon.add(child);
     }
 
+    public BigDecimal getTopleftlatitude() {
+        return topleftlatitude;
+    }
+
+    public void setTopleftlatitude(BigDecimal topleftlatitude) {
+        this.topleftlatitude = topleftlatitude;
+    }
+
+    public BigDecimal getTopleftlongitude() {
+        return topleftlongitude;
+    }
+
+    public void setTopleftlongitude(BigDecimal topleftlongitude) {
+        this.topleftlongitude = topleftlongitude;
+    }
+
+    public BigDecimal getDegreeperpixelx() {
+        return degreeperpixelx;
+    }
+
+    public void setDegreeperpixelx(BigDecimal degreeperpixelx) {
+        this.degreeperpixelx = degreeperpixelx;
+    }
+
+    public BigDecimal getDegreeperpixely() {
+        return degreeperpixely;
+    }
+
+    public void setDegreeperpixely(BigDecimal degreeperpixely) {
+        this.degreeperpixely = degreeperpixely;
+    }
+
+    public Boolean getGeoReferenced() {
+        return geoReferenced;
+    }
+
+    public void setGeoReferenced(Boolean geoReferenced) {
+        this.geoReferenced = geoReferenced;
+    }
+
+    public List<CameraEntity> getCamera() {
+        return camera;
+    }
+
+    public void setCamera(List<CameraEntity> camera) {
+        this.camera = camera;
+    }
 }

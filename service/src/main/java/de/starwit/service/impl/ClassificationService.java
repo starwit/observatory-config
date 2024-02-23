@@ -1,13 +1,12 @@
 package de.starwit.service.impl;
 
-import de.starwit.persistence.entity.ClassificationEntity;
-import de.starwit.persistence.repository.ClassificationRepository;
-
 import java.util.List;
-import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import de.starwit.persistence.entity.ClassificationEntity;
+import de.starwit.persistence.repository.ClassificationRepository;
 
 /**
  * 

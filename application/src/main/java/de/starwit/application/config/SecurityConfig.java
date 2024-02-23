@@ -1,10 +1,13 @@
 package de.starwit.application.config;
 
-import jakarta.servlet.FilterChain;
-import jakarta.servlet.ServletException;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
-import lombok.RequiredArgsConstructor;
+import java.io.IOException;
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.function.Supplier;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,20 +23,24 @@ import org.springframework.security.core.authority.mapping.GrantedAuthoritiesMap
 import org.springframework.security.oauth2.client.oidc.web.logout.OidcClientInitiatedLogoutSuccessHandler;
 import org.springframework.security.oauth2.client.registration.ClientRegistrationRepository;
 import org.springframework.security.oauth2.core.oidc.user.OidcUserAuthority;
-import org.springframework.security.oauth2.core.user.OAuth2UserAuthority;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.logout.LogoutSuccessHandler;
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
-import org.springframework.security.web.csrf.*;
+import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
+import org.springframework.security.web.csrf.CsrfToken;
+import org.springframework.security.web.csrf.CsrfTokenRequestAttributeHandler;
+import org.springframework.security.web.csrf.CsrfTokenRequestHandler;
+import org.springframework.security.web.csrf.XorCsrfTokenRequestAttributeHandler;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
-import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.filter.OncePerRequestFilter;
 
-import java.io.IOException;
-import java.util.*;
-import java.util.function.Supplier;
+import jakarta.servlet.FilterChain;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import lombok.RequiredArgsConstructor;
 
 @Profile("auth")
 @Configuration
@@ -95,7 +102,8 @@ public class SecurityConfig {
                 if (authority instanceof OidcUserAuthority) {
                     try {
                         final OidcUserAuthority oidcUserAuthority = (OidcUserAuthority) authority;
-                        final Map<String,Object> realmAccessMap = oidcUserAuthority.getUserInfo().getClaimAsMap("realm_access");
+                        final Map<String, Object> realmAccessMap = oidcUserAuthority.getUserInfo()
+                                .getClaimAsMap("realm_access");
                         if (realmAccessMap == null) {
                             LOG.error("claims do not contain 'realm_access' map");
                             return;
@@ -103,13 +111,17 @@ public class SecurityConfig {
                         @SuppressWarnings("unchecked")
                         final List<String> roles = (List<String>) realmAccessMap.get("roles");
 
-                        mappedAuthorities.addAll(roles.stream().map(role -> new SimpleGrantedAuthority("ROLE_" + role)).toList());
+                        mappedAuthorities.addAll(
+                                roles.stream().map(role -> new SimpleGrantedAuthority("ROLE_" + role)).toList());
                     } catch (NullPointerException e) {
-                        LOG.error("Could not read the roles from claims.realm_access.roles -- Is the Mapper set up correctly?");
+                        LOG.error(
+                                "Could not read the roles from claims.realm_access.roles -- Is the Mapper set up correctly?");
                     } catch (ClassCastException e) {
-                        LOG.error("claims.realm_access.roles does not contain a list of roles. Please check your configuration.", e);
+                        LOG.error(
+                                "claims.realm_access.roles does not contain a list of roles. Please check your configuration.",
+                                e);
                     }
-                } 
+                }
             });
 
             return mappedAuthorities;
