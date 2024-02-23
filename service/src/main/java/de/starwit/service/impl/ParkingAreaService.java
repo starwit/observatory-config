@@ -1,5 +1,6 @@
 package de.starwit.service.impl;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -101,18 +102,20 @@ public class ParkingAreaService implements ServiceInterface<ParkingAreaEntity, P
     }
 
     private void saveCamera(ImageEntity imageEntity) {
-        if (imageEntity.getCamera() != null) {
-            CameraEntity cameraEntity = imageEntity.getCamera();
-            CameraEntity c = null;
-            if (cameraEntity.getId() != null) {
-                c = cameraRepository.findById(cameraEntity.getId())
-                        .orElseThrow(() -> new EntityNotFoundException(String.valueOf(cameraEntity.getId())));
-            } else {
-                c = new CameraEntity();
+        List<CameraEntity> addedCameras = imageEntity.getCamera();
+        List<CameraEntity> newCameraList = new ArrayList<>();
+        List<CameraEntity> existingCameras = cameraRepository.findAll();
+        if (addedCameras != null && !addedCameras.isEmpty()){
+            for (CameraEntity camera : addedCameras) {
+                List<CameraEntity> existingCamera = cameraRepository.findBySaeId(camera.getSaeId());
+                if (existingCamera != null && !existingCamera.isEmpty()) {
+                    newCameraList.add(existingCamera.get(0));
+                } else {
+                    newCameraList.add(camera);
+                }
             }
-            c.setUuid(cameraEntity.getUuid());
-            c.setImage(imageEntity);
-            c = cameraRepository.saveAndFlush(c);
         }
+
+        List<Long> cameraIds = cameraRepository.findAllWithEmptyImage();
     }
 }

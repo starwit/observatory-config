@@ -2,6 +2,7 @@ package de.starwit.persistence.entity;
 
 import java.math.BigDecimal;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import com.fasterxml.jackson.annotation.JsonFilter;
@@ -11,7 +12,6 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
-import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
@@ -44,8 +44,9 @@ public class ImageEntity extends AbstractEntity<Long> {
     @JoinColumn(name = "parkingconfig_id")
     private ParkingConfigEntity parkingConfig;
 
-    @OneToOne(mappedBy = "image")
-    private CameraEntity camera;
+    @JsonFilter("filterCamera")
+    @OneToMany(mappedBy = "image")
+    private List<CameraEntity> camera;
 
     @Min(value = -90)
     @Max(value = 90)
@@ -116,14 +117,6 @@ public class ImageEntity extends AbstractEntity<Long> {
         this.polygon.add(child);
     }
 
-    public CameraEntity getCamera() {
-        return camera;
-    }
-
-    public void setCamera(CameraEntity camera) {
-        this.camera = camera;
-    }
-
     public BigDecimal getTopleftlatitude() {
         return topleftlatitude;
     }
@@ -164,5 +157,11 @@ public class ImageEntity extends AbstractEntity<Long> {
         this.geoReferenced = geoReferenced;
     }
 
+    public List<CameraEntity> getCamera() {
+        return camera;
+    }
 
+    public void setCamera(List<CameraEntity> camera) {
+        this.camera = camera;
+    }
 }

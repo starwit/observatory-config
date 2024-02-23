@@ -2,8 +2,8 @@ CREATE SEQUENCE IF NOT EXISTS "camera_id_seq";
 
 CREATE TABLE "camera"
 (
-    "uuid" VARCHAR(255) UNIQUE,
-    "image_id" BIGINT UNIQUE,
+    "saeid" VARCHAR(255) NOT NULL UNIQUE,
+    "image_id" BIGINT,
     "id" BIGINT NOT NULL DEFAULT nextval('camera_id_seq'),
     CONSTRAINT "camera_pkey" PRIMARY KEY ("id")
 );

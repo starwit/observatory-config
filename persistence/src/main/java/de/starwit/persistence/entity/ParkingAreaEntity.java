@@ -2,7 +2,6 @@ package de.starwit.persistence.entity;
 
 import java.math.BigDecimal;
 import java.util.List;
-import java.util.Set;
 
 import com.fasterxml.jackson.annotation.JsonFilter;
 

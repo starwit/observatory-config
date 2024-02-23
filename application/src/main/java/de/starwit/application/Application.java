@@ -37,7 +37,8 @@ public class Application {
                 SimpleBeanPropertyFilter.filterOutAllExcept("id", "name", "image"));
         filterProvider.addFilter("filterIdNameImageCamera",
                 SimpleBeanPropertyFilter.filterOutAllExcept("id", "name", "image", "camera"));
-        filterProvider.addFilter("filterImage", SimpleBeanPropertyFilter.filterOutAllExcept("id", "name", "src"));
+        filterProvider.addFilter("filterImage", SimpleBeanPropertyFilter.filterOutAllExcept("id", "name", "src", "camera"));
+        filterProvider.addFilter("filterCamera", SimpleBeanPropertyFilter.filterOutAllExcept("id", "saeId"));
         mapper.setFilterProvider(filterProvider);
         return mapper;
     }

@@ -2,11 +2,10 @@ package de.starwit.persistence.entity;
 
 import com.fasterxml.jackson.annotation.JsonFilter;
 
-import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.JoinColumn;
-import jakarta.persistence.OneToOne;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotBlank;
 
@@ -19,22 +18,22 @@ public class CameraEntity extends AbstractEntity<Long> {
 
     // entity fields
     @NotBlank
-    @Column(name = "uuid", nullable = false)
-    private String uuid;
+    @Column(name = "saeid", nullable = false, unique = true)
+    private String saeId;
 
     // entity relations
     @JsonFilter("filterId")
-    @OneToOne(cascade = CascadeType.REFRESH)
-    @JoinColumn(name = "image_id", referencedColumnName = "id", unique = true)
+    @ManyToOne
+    @JoinColumn(name = "image_id")
     private ImageEntity image;
 
     // entity fields getters and setters
-    public String getUuid() {
-        return uuid;
+    public String getSaeId() {
+        return saeId;
     }
 
-    public void setUuid(String uuid) {
-        this.uuid = uuid;
+    public void setSaeId(String saeId) {
+        this.saeId = saeId;
     }
 
     // entity relations getters and setters
@@ -45,5 +44,4 @@ public class CameraEntity extends AbstractEntity<Long> {
     public void setImage(ImageEntity image) {
         this.image = image;
     }
-
 }
