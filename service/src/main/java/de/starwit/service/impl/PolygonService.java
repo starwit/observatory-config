@@ -6,7 +6,6 @@ import java.util.Set;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import de.starwit.persistence.entity.PointEntity;
 import de.starwit.persistence.entity.PolygonEntity;
 import de.starwit.persistence.repository.PointRepository;
 import de.starwit.persistence.repository.PolygonRepository;

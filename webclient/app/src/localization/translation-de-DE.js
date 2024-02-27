@@ -47,6 +47,7 @@ const translationDeDE = {
     "parkingConfig.image": "image",
     "parkingArea": "Parkfläche",
     "parkingAreas.title": "Parkflächen",
+    "parkingAreas.loading": "Parkflächen werden geladen",
     "parkingArea.title": "Parkfläche",
     "parkingArea.create.title": "Parkfläche Anlegen",
     "parkingArea.update.title": "Parkfläche Bearbeiten",
@@ -73,6 +74,7 @@ const translationDeDE = {
     "button.delete": "Löschen",
     "button.save": "Speichern",
     "button.cancel": "Abbrechen",
+    "button.close": "Schließen",
     "select.none": "keine Auswahl",
     "error.inUse": "Es wurde mehr als eine Zeile mit dem angegebenen Bezeichner gefunden",
     "error.sqlIntegrityConstaint": "Die angegebenen Daten haben nicht das richtige Format, um gespeichert zu werden. Bitte prüfen Sie die zugehörigen Einträge.",
@@ -97,6 +99,8 @@ const translationDeDE = {
     "error.entity.notfound": "Dieses Element konnte nicht gefunden werden.",
     "error.image.notunique": "Namen müssen gesetzt und eindeutig sein!",
     "response.save.success": "Speichern erfolgreich.",
-    "response.save.failed": "Speichern fehlgeschlagen!"
+    "response.save.failed": "Speichern fehlgeschlagen!",
+    "confirm.dialog.title": "Bestätigen des Dialog Titels",
+    "confirm.dialog.description": "Bestätigen der Dialog Beschreibung"
 };
 export default translationDeDE;
