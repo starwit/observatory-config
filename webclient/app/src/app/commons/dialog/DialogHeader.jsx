@@ -4,8 +4,10 @@ import {
 } from "@mui/material";
 import PropTypes from "prop-types";
 import React from "react";
+import {useTranslation} from "react-i18next";
 
 function DialogHeader(props) {
+    const {t} = useTranslation();
     const {title, onClose} = props;
 
     function onDialogClose() {
@@ -18,7 +20,7 @@ function DialogHeader(props) {
                 {title}
             </DialogTitle>
             <IconButton
-                aria-label="close"
+                aria-label={t("button.close")}
                 onClick={onDialogClose}
                 sx={{
                     position: "absolute",

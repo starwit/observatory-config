@@ -1,7 +1,7 @@
 import {
     Button,
     Dialog, Typography,
-    DialogActions, DialogContent, FormControl, Stack
+    DialogActions, DialogContent, FormControl, Stack, TextField
 } from "@mui/material";
 import PropTypes from "prop-types";
 import React, {useMemo, useEffect, useState} from "react";
@@ -23,7 +23,7 @@ import ImageRest from "../../services/ImageRest";
 import {useDropzone} from 'react-dropzone';
 import ImageUploadStyles from "../../assets/styles/ImageUploadStyles";
 import { useSnackbar } from "notistack";
-import TextFieldWithAddButton from "../../commons/TextFieldWithButton/TextFieldWithButton";
+import CamIDField from "../../commons/CamIDField/CamIDField";
 
 function ParkingAreaDialog(props) {
     const {open, onClose, selected, isCreate, update} = props;
@@ -140,7 +140,7 @@ function ParkingAreaDialog(props) {
                                 helperText={t("parkingArea.name.hint")}
                             />
                         </FormControl>
-                        <TextFieldWithAddButton />
+                        <CamIDField />
                         <Typography variant="caption">{t("parkingArea.image.hint")}</Typography>
                         <FormControl {...getRootProps()} sx={ImageUploadStyles.dropzoneStyle}>
                             <input {...getInputProps()} />

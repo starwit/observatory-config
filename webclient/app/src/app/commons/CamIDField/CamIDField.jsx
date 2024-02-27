@@ -1,18 +1,20 @@
 import React, { useState } from 'react';
-import TextField from '@mui/material/TextField';
 import IconButton from '@mui/material/IconButton';
 import AddIcon from '@mui/icons-material/Add';
 import RemoveIcon from '@mui/icons-material/Remove';
+import ValidatedTextField from '../validatedTextField/ValidatedTextField';
+import { Stack } from '@mui/material';
+import {useTranslation} from "react-i18next";
 
-function TextFieldWithAddAndRemoveButton() {
-  const [inputs, setInputs] = useState(['']); // Zustand für Eingabefelder
+function CamIDField() {
+  const {t} = useTranslation();
+  const [inputs, setInputs] = useState(['']);
 
   const handleAddTextField = () => {
-    setInputs([...inputs, '']);  // Füge ein weiteres Eingabefeld hinzu
+    setInputs([...inputs, '']);
   };
 
   const handleRemoveTextField = (index) => {
-    // Überprüfe, ob es sich nicht um das erste Feld handelt
     if (index !== 0) {
       const newInputs = [...inputs];
       newInputs.splice(index, 1);
@@ -23,35 +25,35 @@ function TextFieldWithAddAndRemoveButton() {
   const handleInputChange = (index, value) => {
     const newInputs = [...inputs];
     newInputs[index] = value;
-    setInputs(newInputs); // Aktualisiere den Zustand für das entsprechende Eingabefeld
+    setInputs(newInputs);
   };
 
   return (
-    <div>
+    <>
       {inputs.map((input, index) => (
-        <div key={index} style={{ display: 'flex', alignItems: 'center', marginBottom: '8px' }}>
-          <TextField
+        <Stack key={index} direction={'row'} style={{ display: 'flex', alignItems: 'center', marginBottom: '8px' }}>
+          <ValidatedTextField
             value={input}
             onChange={(e) => handleInputChange(index, e.target.value)}
             label={`CamID ${index + 1}`}
             variant="standard"
             fullWidth
-            required={index === 0} // Setze das erste Textfeld als Pflichtfeld
+            required={index === 0}
           />
-          {index !== 0 && ( // Ein Feld muss stehen bleiben
-            <IconButton onClick={() => handleRemoveTextField(index)} aria-label="Löschen">
+          {index !== 0 && (
+            <IconButton onClick={() => handleRemoveTextField(index)} aria-label={t("button.delete")}>
               <RemoveIcon />
             </IconButton>
           )}
           {index === inputs.length - 1 && (
-            <IconButton onClick={handleAddTextField} aria-label="Hinzufügen">
+            <IconButton onClick={handleAddTextField} aria-label={t("button.create")}>
               <AddIcon />
             </IconButton>
           )}
-        </div>
+        </Stack>
       ))}
-    </div>
+    </>
   );
 }
 
-export default TextFieldWithAddAndRemoveButton;
+export default CamIDField;

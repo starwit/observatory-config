@@ -51,6 +51,7 @@ const translationEnEN = {
     "parkingArea.update.title": "Edit ParkingArea",
     "parkingArea.id": "id",
     "parkingAreas.title": "Parking Areas",
+    "parkingAreas.loading": "Loading Parking Areas",
     "parkingArea.name": "name*",
     "parkingArea.name.hint": "Value is required. ",
     "parkingArea.parkingConfig": "parkingConfig",
@@ -66,6 +67,7 @@ const translationEnEN = {
     "button.create": "Add",
     "button.update": "Edit",
     "button.delete": "Delete",
+    "button.close": "Close",
     "select.none": "None",
     "error.inUse": "More than one row with the given identifier was found",
     "error.sqlIntegrityConstaint": "Given data is not in the right format to be saved. Please check related entries.",
@@ -90,6 +92,8 @@ const translationEnEN = {
     "error.entity.notfound": "This element could not be found.",
     "error.image.notunique": "Names must be set and unique!",
     "response.save.success": "Saved successfully.",
-    "response.save.failed": "Failed to save!"
+    "response.save.failed": "Failed to save!",
+    "confirm.dialog.title": "Confirm the Dialog Title",
+    "confirm.dialog.description": "Confirm the Dialog Description"
 };
 export default translationEnEN;
