@@ -45,12 +45,12 @@ public class ParkingAreaEntity extends AbstractEntity<Long> {
   
     @Min(value = -90)
     @Max(value = 90)
-    @Column(name = "centerlatitude")
+    @Column(name = "center_latitude")
     private BigDecimal centerlatitude;
 
     @Min(value = -180)
     @Max(value = 180)
-    @Column(name = "centerlongitude")
+    @Column(name = "center_longitude")
     private BigDecimal centerlongitude;
 
     // entity fields getters and setters

@@ -50,18 +50,18 @@ public class ImageEntity extends AbstractEntity<Long> {
 
     @Min(value = -90)
     @Max(value = 90)
-    @Column(name = "topleftlatitude")
+    @Column(name = "top_left_latitude")
     private BigDecimal topleftlatitude;
 
     @Min(value = -180)
     @Max(value = 180)
-    @Column(name = "topleftlongitude")
+    @Column(name = "top_left_longitude")
     private BigDecimal topleftlongitude;
 
-    @Column(name = "degreeperpixelx")
+    @Column(name = "degree_per_pixel_x")
     private BigDecimal degreeperpixelx;
 
-    @Column(name = "degreeperpixely")
+    @Column(name = "degree_per_pixel_y")
     private BigDecimal degreeperpixely;
 
     @Column(name = "georeferenced")

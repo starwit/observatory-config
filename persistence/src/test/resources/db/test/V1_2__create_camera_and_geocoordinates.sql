@@ -13,11 +13,11 @@ ALTER TABLE "camera"
     FOREIGN KEY ("image_id")
     REFERENCES "image" ("id");
 
-ALTER TABLE "parkingarea" ADD "centerlatitude" DECIMAL(22,19);
-ALTER TABLE "parkingarea" ADD "centerlongitude" DECIMAL(22,19);
+ALTER TABLE "parkingarea" ADD "center_latitude" DECIMAL(22,19);
+ALTER TABLE "parkingarea" ADD "center_longitude" DECIMAL(22,19);
 
-ALTER TABLE "image" ADD "topleftlatitude" DECIMAL(22,19);
-ALTER TABLE "image" ADD "topleftlongitude" DECIMAL(22,19);
-ALTER TABLE "image" ADD "degreeperpixelx" DECIMAL(19,2);
-ALTER TABLE "image" ADD "degreeperpixely" DECIMAL(19,2);
+ALTER TABLE "image" ADD "top_left_latitude" DECIMAL(22,19);
+ALTER TABLE "image" ADD "top_left_longitude" DECIMAL(22,19);
+ALTER TABLE "image" ADD "degree_per_pixel_x" DECIMAL(19,2);
+ALTER TABLE "image" ADD "degree_per_pixel_y" DECIMAL(19,2);
 ALTER TABLE "image" ADD "georeferenced" BOOLEAN;
