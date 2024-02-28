@@ -72,7 +72,7 @@ public class ParkingAreaService implements ServiceInterface<ParkingAreaEntity, P
         if (entity.getId() != null) {
             ParkingAreaEntity entityPrev = this.findById(entity.getId());
             entityPrev.setName(entity.getName());
-            if (entity.getParkingConfig() != null || !entity.getParkingConfig().isEmpty()) {
+            if (entity.getParkingConfig() != null && !entity.getParkingConfig().isEmpty()) {
                 ParkingConfigEntity pc = entity.getParkingConfig().get(0);
                 pc.setName(entity.getName());
                 entity.setSelectedProdConfig(pc);
@@ -92,7 +92,7 @@ public class ParkingAreaService implements ServiceInterface<ParkingAreaEntity, P
                 p.setName(entity.getName());
                 if (p.getImage() != null && !p.getImage().isEmpty()) {
                     p.getImage().get(0).setName(entity.getName());
-                    saveCamera(p.getImage().get(0));
+                    //saveCamera(p.getImage().get(0));
                 }
                 p = parkingconfigRepository.saveAndFlush(p);
             }
