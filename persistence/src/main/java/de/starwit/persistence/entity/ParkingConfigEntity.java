@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonFilter;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.JoinColumn;
@@ -26,7 +27,7 @@ public class ParkingConfigEntity extends AbstractEntity<Long> {
 
     // entity relations
     @JsonFilter("filterImage")
-    @OneToMany(mappedBy = "parkingConfig", orphanRemoval = true)
+    @OneToMany(mappedBy = "parkingConfig", cascade = { CascadeType.ALL }, orphanRemoval = true)
     private List<ImageEntity> image;
 
     @JsonFilter("filterId")
