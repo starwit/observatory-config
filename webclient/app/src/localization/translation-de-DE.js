@@ -54,6 +54,7 @@ const translationDeDE = {
     "parkingArea.id": "id",
     "parkingArea.name": "Name*",
     "parkingArea.name.hint": "Der Name ist ein Pflichtfeld und kann bis zu 150 Zeichen lang sein",
+    "parkingArea.saeIds.hint": "Es muss mindestens eine Kamera ID gesetzt sein",
     "parkingArea.image": "Datei hier ablegen...",
     "parkingArea.image.hint": "Bild ersetzen",
     "parkingArea.image.preview": "Vorschau",

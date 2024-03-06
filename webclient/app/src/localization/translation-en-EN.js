@@ -54,6 +54,7 @@ const translationEnEN = {
     "parkingAreas.loading": "Loading Parking Areas",
     "parkingArea.name": "name*",
     "parkingArea.name.hint": "Value is required. ",
+    "parkingArea.saeIds.hint": "Value is required. ",
     "parkingArea.parkingConfig": "parkingConfig",
     "parkingArea.fileTooLarge": "Maximum Filesize = 4 MB",
     "parkingArea.selectedTestConfig": "selectedTestConfig",
