@@ -85,11 +85,11 @@ function ParkingAreaDialog(props) {
         if (entity.id) {
             entityRest.update(tmpOrg)
                 .then(response => {
-                    uploadFile(response.data, response.data?.selectedProdConfig?.id);
+                    uploadFile(response.data, response.data?.selectedProdConfigId);
                 });
         } else {
             entityRest.create(tmpOrg).then(response => {
-                uploadFile(response.data, response.data?.selectedProdConfig?.id);
+                uploadFile(response.data, response.data?.selectedProdConfigId);
             });
         }
         onClose();
@@ -140,7 +140,6 @@ function ParkingAreaDialog(props) {
                                 helperText={t("parkingArea.name.hint")}
                             />
                         </FormControl>
-                        <CamIDField />
                         <Typography variant="caption">{t("parkingArea.image.hint")}</Typography>
                         <FormControl {...getRootProps()} sx={ImageUploadStyles.dropzoneStyle}>
                             <input {...getInputProps()} />

@@ -24,4 +24,6 @@ public interface CameraRepository extends CustomRepository<CameraEntity, Long> {
     public List<Long> findAllWithEmptyImage();
 
     public List<CameraEntity> findBySaeIdAndImage(String saeId, ImageEntity image);
+
+    public List<CameraEntity> findByImage(ImageEntity image);
 }

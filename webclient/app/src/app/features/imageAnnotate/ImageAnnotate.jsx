@@ -53,8 +53,8 @@ function ImageAnnotate() {
             parkingAreaRest.findById(parkingAreaId).then(response => {
                 if (response.data == null) {
                     return;
-                } else if (response.data?.selectedProdConfig !== undefined) {
-                    reloadImages(response.data?.selectedProdConfig.id);
+                } else if (response.data?.selectedProdConfigId !== undefined) {
+                    reloadImages(response.data?.selectedProdConfigId);
                 }
             });
         }
