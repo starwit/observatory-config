@@ -27,13 +27,15 @@ public class ParkingAreaMapper implements CustomMapper<ParkingAreaEntity, Parkin
             if (pc.getImage() != null && !pc.getImage().isEmpty()){
                 ImageEntity image = pc.getImage().get(0);
                 List<String> cameras = new ArrayList<>();
-                image.getCamera().forEach(camera -> {cameras.add(camera.getSaeId());});
-                dto.setSaeIds(cameras);
+                if(image.getCamera() != null && !image.getCamera().isEmpty()) {
+                    image.getCamera().forEach(camera -> {cameras.add(camera.getSaeId());});
+                    dto.setSaeIds(cameras);
+                }
                 dto.setDegreeperpixelx(image.getDegreeperpixelx());
                 dto.setDegreeperpixely(image.getDegreeperpixely());
                 dto.setGeoReferenced(image.getGeoReferenced());
                 dto.setTopleftlatitude(image.getTopleftlatitude());
-                dto.setCenterlongitude(image.getTopleftlongitude());
+                dto.setTopleftlongitude(image.getTopleftlongitude());
             }
         }
         return dto;
@@ -67,41 +69,52 @@ public class ParkingAreaMapper implements CustomMapper<ParkingAreaEntity, Parkin
             return entity;
         }
         List<ParkingConfigEntity> pcs = new ArrayList<>();
-        pcs.add(getDefaultParkingConfig(dto));
+        pcs.add(getDefaultParkingConfig(dto, entity));
         entity.setParkingConfig(pcs);
         return entity;
     }
 
-    public ParkingConfigEntity getDefaultParkingConfig(ParkingAreaDto dto) {
-        List<ImageEntity> images = getDefaultImages(dto);
-
+    public ParkingConfigEntity getDefaultParkingConfig(ParkingAreaDto dto, ParkingAreaEntity entity) {
         ParkingConfigEntity pc = new ParkingConfigEntity();
         pc.setName(dto.getName());
-        pc.setImage(images);
+        pc.setParkingArea(entity);
         return pc;
     }
 
-    public List<ImageEntity> getDefaultImages(ParkingAreaDto dto) {
-        ImageEntity image = new ImageEntity();
-        image = mapImageData(dto, image);
-
-        List<CameraEntity> cameras = new ArrayList<>();
-        if (dto.getSaeIds() != null){
-            dto.getSaeIds().forEach(saeId -> {cameras.add(new CameraEntity(saeId));});
-        }
-        image.setCamera(cameras);
+    public ParkingConfigEntity addDefaultImage(ParkingAreaDto dto, ParkingConfigEntity parkingConfigEntity) {
         List<ImageEntity> images = new ArrayList<>();
-        images.add(image);
-        return images;
+        images.add(getDefaultImage(dto, parkingConfigEntity));
+        parkingConfigEntity.setImage(images);
+        return parkingConfigEntity;
     }
 
-    public ImageEntity mapImageData(ParkingAreaDto dto, ImageEntity image) {
-        if (image == null) {
+    public List<CameraEntity> getDefaultCameras(ParkingAreaDto dto, ImageEntity image) {
+        if (dto.getSaeIds() == null) {
             return null;
         }
+        List<CameraEntity> cameras = new ArrayList<>();
+        dto.getSaeIds().forEach(saeId -> {
+            cameras.add(new CameraEntity(saeId, image));
+        });
+        return cameras;
+    }
+
+    public ImageEntity getDefaultImage(ParkingAreaDto dto, ParkingConfigEntity parkingConfigEntity) {
+        if (parkingConfigEntity == null) {
+            return null;
+        }
+        ImageEntity image = new ImageEntity();
+        mapImageData(dto, parkingConfigEntity, image);
+        return image;
+    }
+
+    public ImageEntity mapImageData(ParkingAreaDto dto, ParkingConfigEntity parkingConfigEntity, ImageEntity image) {
         image.setDegreeperpixelx(dto.getDegreeperpixelx());
         image.setDegreeperpixely(dto.getDegreeperpixely());
+        image.setTopleftlatitude(dto.getTopleftlatitude());
+        image.setTopleftlongitude(dto.getTopleftlongitude());
         image.setGeoReferenced(dto.getGeoReferenced());
+        image.setParkingConfig(parkingConfigEntity);
         image.setName(dto.getName());
         return image;
     }

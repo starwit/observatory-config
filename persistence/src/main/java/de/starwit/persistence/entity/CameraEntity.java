@@ -30,8 +30,9 @@ public class CameraEntity extends AbstractEntity<Long> {
     public CameraEntity() {
     }
     
-    public CameraEntity(String saeId) {
+    public CameraEntity(String saeId, ImageEntity image) {
         this.saeId = saeId;
+        this.image = image;
     }
 
     // entity fields getters and setters
