@@ -8,7 +8,7 @@ import { Stack } from '@mui/material';
 import {useTranslation} from "react-i18next";
 
 function CamIDField(props) {
-  const {value} = props;
+  const {value, handleChange} = props;
   const {t} = useTranslation();
   const [inputs, setInputs] = useState([""]);
 
@@ -16,7 +16,11 @@ function CamIDField(props) {
     if (value !== null) {
       setInputs(value);
     }
-  }, [value]);
+  }, []);
+
+  useEffect(() => {
+    handleChange(inputs)
+  }, [inputs]);
 
   const handleAddTextField = () => {
     setInputs([...inputs, '']);
@@ -67,6 +71,6 @@ function CamIDField(props) {
 
 CamIDField.propTypes = {
   value: PropTypes.array,
-  handleSaeIds: PropTypes.func
+  handleChange: PropTypes.func
 };
 export default CamIDField;

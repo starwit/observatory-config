@@ -119,6 +119,12 @@ function ParkingAreaDialog(props) {
         return "parkingArea.create.title";
     }
 
+    function handleSaeIdsChange(value) {
+        setEntity(draft => {
+            draft["saeIds"] = value;
+        });
+    }
+
     return (
 
         <Dialog onClose={onDialogClose} open={open} spacing={2} sx={{zIndex: 10000}}>
@@ -140,7 +146,7 @@ function ParkingAreaDialog(props) {
                                 helperText={t("parkingArea.name.hint")}
                             />
                         </FormControl>
-                        <CamIDField value={entity?.saeIds} />
+                        <CamIDField value={entity?.saeIds} handleChange={handleSaeIdsChange}/>
                         <Typography variant="caption">{t("parkingArea.image.hint")}</Typography>
                         <FormControl {...getRootProps()} sx={ImageUploadStyles.dropzoneStyle}>
                             <input {...getInputProps()} />
