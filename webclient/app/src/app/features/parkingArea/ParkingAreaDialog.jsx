@@ -140,6 +140,7 @@ function ParkingAreaDialog(props) {
                                 helperText={t("parkingArea.name.hint")}
                             />
                         </FormControl>
+                        <CamIDField value={entity?.saeIds} />
                         <Typography variant="caption">{t("parkingArea.image.hint")}</Typography>
                         <FormControl {...getRootProps()} sx={ImageUploadStyles.dropzoneStyle}>
                             <input {...getInputProps()} />
