@@ -30,14 +30,14 @@ public class DatabackendService {
 
     private RestClient restClient;
 
-    @Value("${databackend.cameraId}")
     private String cameraId;
 
-    public DatabackendService(@Value("${databackend.url}") URI configuredUri) {
+    public DatabackendService(@Value("${databackend.url}") URI configuredUri, @Value("${databackend.cameraId}") String cameraId) {
         restClient = RestClient.create();
         // This is a workaround to make sure the URI ends in a "/", s.t. resolve() works
         // properly further down
         this.databackendUri = URI.create(configuredUri.toString() + "/").resolve("");
+        this.cameraId = cameraId;
     }
 
     @Async
@@ -72,7 +72,7 @@ public class DatabackendService {
         }
     }
 
-    private DatabackendDto toDatabackendDto(ImageDto imageDto, RegionDto regionDto) throws IllegalGeometryException {
+    DatabackendDto toDatabackendDto(ImageDto imageDto, RegionDto regionDto) throws IllegalGeometryException {
         DatabackendDto dbeDto = new DatabackendDto();
 
         dbeDto.setName(regionDto.getName());
