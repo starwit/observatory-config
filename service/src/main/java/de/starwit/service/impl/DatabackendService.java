@@ -1,5 +1,6 @@
 package de.starwit.service.impl;
 
+import java.math.BigDecimal;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
@@ -29,14 +30,14 @@ public class DatabackendService {
 
     private RestClient restClient;
 
-    @Value("${databackend.cameraId}")
     private String cameraId;
 
-    public DatabackendService(@Value("${databackend.url}") URI configuredUri) {
+    public DatabackendService(@Value("${databackend.url}") URI configuredUri, @Value("${databackend.cameraId}") String cameraId) {
         restClient = RestClient.create();
         // This is a workaround to make sure the URI ends in a "/", s.t. resolve() works
         // properly further down
         this.databackendUri = URI.create(configuredUri.toString() + "/").resolve("");
+        this.cameraId = cameraId;
     }
 
     @Async
@@ -71,7 +72,7 @@ public class DatabackendService {
         }
     }
 
-    private DatabackendDto toDatabackendDto(ImageDto imageDto, RegionDto regionDto) throws IllegalGeometryException {
+    DatabackendDto toDatabackendDto(ImageDto imageDto, RegionDto regionDto) throws IllegalGeometryException {
         DatabackendDto dbeDto = new DatabackendDto();
 
         dbeDto.setName(regionDto.getName());
@@ -89,6 +90,8 @@ public class DatabackendService {
             GeometryPointsDto point1 = new GeometryPointsDto();
             point1.setX(regionDto.getX1());
             point1.setY(regionDto.getY1());
+            point1.setLongitude(imageDto.getTopleftlongitude().add(imageDto.getDegreeperpixelx().multiply(BigDecimal.valueOf(point1.getX()))));
+            point1.setLatitude(imageDto.getTopleftlatitude().add(imageDto.getDegreeperpixely().multiply(BigDecimal.valueOf(point1.getY()))));
             point1.setOrderIdx(0);
             GeometryPointsDto point2 = new GeometryPointsDto();
             point2.setX(regionDto.getX2());
