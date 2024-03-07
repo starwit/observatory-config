@@ -135,9 +135,10 @@ function ParkingAreaDialog(props) {
                         <Grid item xs={8}>
                             <FormControl key={fields[0].name} fullWidth>
                                 <UpdateField
+                                    focused
                                     entity={entity}
                                     field={fields[0]}
-                                    prefix="parkingarea"
+                                    prefix="parkingArea"
                                     handleChange={e => handleChange(e, setEntity)}
                                 />
                             </FormControl>
@@ -147,16 +148,16 @@ function ParkingAreaDialog(props) {
                                 <UpdateField
                                     entity={entity}
                                     field={fields[1]}
-                                    prefix="parkingarea"
+                                    prefix="parkingArea"
                                     handleChange={e => handleChange(e, setEntity)}
                                 />
                             </FormControl>
                         </Grid>
-                        <Grid item xs={12}>                 
+                        <Grid item xs={8}>
+                            <Grid container spacing={2}>
+                            <Grid item xs={12}>                 
                             <CamIDField value={entity?.saeIds} handleChange={handleSaeIdsChange}/>
                         </Grid>
-                        <Grid item xs={6}>
-                            <Grid container spacing={2}>
                                 {fields?.slice(2).map(field => {
                                         return (
                                             <Grid item xs={6}>
@@ -164,7 +165,7 @@ function ParkingAreaDialog(props) {
                                                     <UpdateField
                                                         entity={entity}
                                                         field={field}
-                                                        prefix="parkingarea"
+                                                        prefix="parkingArea"
                                                         handleChange={e => handleChange(e, setEntity)}
                                                     />
                                                 </FormControl>
@@ -174,7 +175,7 @@ function ParkingAreaDialog(props) {
                                 }
                             </Grid>
                         </Grid>
-                        <Grid item xs={6}> 
+                        <Grid item xs={4}> 
                             <Stack> 
                             <Typography variant="caption">{t("parkingArea.image.hint")}</Typography>
                             <FormControl {...getRootProps()} sx={ImageUploadStyles.dropzoneStyle}>
