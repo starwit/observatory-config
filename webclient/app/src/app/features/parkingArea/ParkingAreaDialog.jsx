@@ -160,7 +160,7 @@ function ParkingAreaDialog(props) {
                                 </Grid>
                                 {fields?.slice(2).map(field => {
                                         return (
-                                            <Grid item xs={6}>
+                                            <Grid key={field.name} item xs={6}>
                                                 <FormControl key={field.name} fullWidth>
                                                     <UpdateField
                                                         entity={entity}

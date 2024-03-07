@@ -16,7 +16,7 @@ function UpdateField(props) {
                 <FormControlLabel
                     control={
                         <Checkbox
-                            checked={entity[field.name] !== null ? entity[field.name] : ""}
+                            checked={entity[field.name] !== null ? entity[field.name] : false}
                             value={entity[field.name] !== null ? entity[field.name] : ""}
                             name={field.name} onChange={handleChange} key={field.name}
                             id={"checkbox-" + field.name}
