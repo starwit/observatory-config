@@ -68,7 +68,7 @@ const translationEnEN = {
     "parkingArea.topleftlongitude.hint": "",
     "parkingArea.degreeperpixelx": "Degree per pixel width",
     "parkingArea.degreeperpixelx.hint": "",
-    "parkingArea.degreeperpixely": "Degree per pixel high",
+    "parkingArea.degreeperpixely": "Degree per pixel height",
     "parkingArea.degreeperpixely.hint": "",
     "parkingArea.parkingConfig": "parkingConfig",
     "parkingArea.fileTooLarge": "Maximum Filesize = 4 MB",
