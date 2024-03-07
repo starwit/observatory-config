@@ -14,7 +14,7 @@ function CamIDField(props) {
   const [inputs, setInputs] = useState([""]);
 
   useEffect(() => {
-    if (value !== null && value != undefined ) {
+    if (value !== null && value !== undefined ) {
       setInputs(value);
     } else {
       setInputs([""])
