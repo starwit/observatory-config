@@ -1,14 +1,14 @@
 import {
     Button,
     Dialog, Typography,
-    DialogActions, DialogContent, FormControl, Stack, TextField
+    DialogActions, DialogContent, FormControl, Stack, TextField, Grid
 } from "@mui/material";
 import PropTypes from "prop-types";
 import React, {useMemo, useEffect, useState} from "react";
 import {useImmer} from "use-immer";
 import {useTranslation} from "react-i18next";
 import DialogHeader from "../../commons/dialog/DialogHeader";
-import ValidatedTextField from "../../commons/validatedTextField/ValidatedTextField";
+import ValidatedTextField from "../../commons/form/ValidatedTextField";
 import {
     handleChange,
     isValid,
@@ -24,6 +24,7 @@ import {useDropzone} from 'react-dropzone';
 import ImageUploadStyles from "../../assets/styles/ImageUploadStyles";
 import { useSnackbar } from "notistack";
 import CamIDField from "../../commons/CamIDField/CamIDField";
+import UpdateField from "../../commons/form/UpdateField";
 
 function ParkingAreaDialog(props) {
     const {open, onClose, selected, isCreate, update} = props;
@@ -126,34 +127,64 @@ function ParkingAreaDialog(props) {
     }
 
     return (
-
-        <Dialog onClose={onDialogClose} open={open} spacing={2} sx={{zIndex: 10000}}>
-            <DialogHeader onClose={onDialogClose} title={t(getDialogTitle())} />
+        <Dialog onClose={onDialogClose} open={open} spacing={2} sx={{zIndex: 10000}} maxWidth="lg">
+            <DialogHeader onClose={onDialogClose} title={t(getDialogTitle())}/>
             <form autoComplete="off">
                 <DialogContent>
-                    <Stack>
-                        <FormControl>
-                            <ValidatedTextField
-                                fullWidth
-                                autoFocus
-                                label={t("parkingArea.name")}
-                                name={fields[0].name}
-                                value={entity[fields[0].name]}
-                                type={fields[0].type}
-                                variant="standard"
-                                onChange={e => handleChange(e, setEntity)}
-                                max={fields[0].max}
-                                helperText={t("parkingArea.name.hint")}
-                            />
-                        </FormControl>
-                        <CamIDField value={entity?.saeIds} handleChange={handleSaeIdsChange}/>
-                        <Typography variant="caption">{t("parkingArea.image.hint")}</Typography>
-                        <FormControl {...getRootProps()} sx={ImageUploadStyles.dropzoneStyle}>
-                            <input {...getInputProps()} />
-                            <Typography variant="overline">{t("parkingArea.image")}</Typography>
-                            {previewUrl && <img src={previewUrl} style={ImageUploadStyles.previewStyle} alt={t("parkingArea.image.preview")} />}
-                        </FormControl>
-                    </Stack >
+                    <Grid container spacing={2}>
+                        <Grid item xs={8}>
+                            <FormControl key={fields[0].name} fullWidth>
+                                <UpdateField
+                                    entity={entity}
+                                    field={fields[0]}
+                                    prefix="parkingarea"
+                                    handleChange={e => handleChange(e, setEntity)}
+                                />
+                            </FormControl>
+                        </Grid>
+                        <Grid item xs={4}>
+                            <FormControl key={fields[1].name} fullWidth>
+                                <UpdateField
+                                    entity={entity}
+                                    field={fields[1]}
+                                    prefix="parkingarea"
+                                    handleChange={e => handleChange(e, setEntity)}
+                                />
+                            </FormControl>
+                        </Grid>
+                        <Grid item xs={12}>                 
+                            <CamIDField value={entity?.saeIds} handleChange={handleSaeIdsChange}/>
+                        </Grid>
+                        <Grid item xs={6}>
+                            <Grid container spacing={2}>
+                                {fields?.slice(2).map(field => {
+                                        return (
+                                            <Grid item xs={6}>
+                                                <FormControl key={field.name} fullWidth>
+                                                    <UpdateField
+                                                        entity={entity}
+                                                        field={field}
+                                                        prefix="parkingarea"
+                                                        handleChange={e => handleChange(e, setEntity)}
+                                                    />
+                                                </FormControl>
+                                            </Grid>
+                                        );
+                                    })
+                                }
+                            </Grid>
+                        </Grid>
+                        <Grid item xs={6}> 
+                            <Stack> 
+                            <Typography variant="caption">{t("parkingArea.image.hint")}</Typography>
+                            <FormControl {...getRootProps()} sx={ImageUploadStyles.dropzoneStyle}>
+                                <input {...getInputProps()} />
+                                <Typography variant="overline">{t("parkingArea.image")}</Typography>
+                                {previewUrl && <img src={previewUrl} style={ImageUploadStyles.previewStyle} alt={t("parkingArea.image.preview")} />}
+                            </FormControl>
+                            </Stack> 
+                        </Grid>
+                    </Grid>
                 </DialogContent>
                 <DialogActions>
                     <Button

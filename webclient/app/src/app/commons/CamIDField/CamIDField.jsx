@@ -3,9 +3,10 @@ import PropTypes from "prop-types";
 import IconButton from '@mui/material/IconButton';
 import AddIcon from '@mui/icons-material/Add';
 import RemoveIcon from '@mui/icons-material/Remove';
-import ValidatedTextField from '../validatedTextField/ValidatedTextField';
+import ValidatedTextField from '../form/ValidatedTextField';
 import { Stack } from '@mui/material';
 import {useTranslation} from "react-i18next";
+import UpdateFieldStyles from '../form/UpdateFieldStyles';
 
 function CamIDField(props) {
   const {value, handleChange} = props;
@@ -43,15 +44,16 @@ function CamIDField(props) {
   return (
     <>
       {inputs.map((input, index) => (
-        <Stack key={index} direction={'row'} style={{ display: 'flex', alignItems: 'center', marginBottom: '8px' }}>
+        <Stack key={index} direction={'row'}>
           <ValidatedTextField
             value={input !== undefined ? input : ""}
             onChange={(e) => handleInputChange(index, e.target.value)}
             label={`CamID ${index + 1}`}
+            sx={UpdateFieldStyles.textField}
             variant="standard"
             fullWidth
             required={index === 0}
-            helperText={t("parkingArea.saeIds.hint")}
+            helperText={""}
           />
           {index !== 0 && (
             <IconButton onClick={() => handleRemoveTextField(index)} aria-label={t("button.delete")}>
