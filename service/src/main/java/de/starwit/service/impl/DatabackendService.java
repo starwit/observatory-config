@@ -88,14 +88,14 @@ public class DatabackendService {
 
             dbeDto.setType("LINE_CROSSING");
             GeometryPointsDto point1 = new GeometryPointsDto();
-            point1.setX(regionDto.getX1() * imageDto.getImageWidth());
-            point1.setY(regionDto.getY1() * imageDto.getImageHeight());
+            point1.setX(regionDto.getX1());
+            point1.setY(regionDto.getY1());
             point1.setLongitude(imageDto.getTopleftlongitude().add(imageDto.getDegreeperpixelx().multiply(BigDecimal.valueOf(point1.getX()))));
             point1.setLatitude(imageDto.getTopleftlatitude().add(imageDto.getDegreeperpixely().multiply(BigDecimal.valueOf(point1.getY()))));
             point1.setOrderIdx(0);
             GeometryPointsDto point2 = new GeometryPointsDto();
-            point2.setX(regionDto.getX2() * imageDto.getImageWidth());
-            point2.setY(regionDto.getY2() * imageDto.getImageHeight());
+            point2.setX(regionDto.getX2());
+            point2.setY(regionDto.getY2());
             point2.setOrderIdx(1);
             geometryPoints.add(point1);
             geometryPoints.add(point2);
@@ -105,8 +105,8 @@ public class DatabackendService {
             dbeDto.setType("AREA_OCCUPANCY");
             for (int i = 0; i < regionDto.getPoints().size(); i++) {
                 GeometryPointsDto point = new GeometryPointsDto();
-                point.setX(regionDto.getPoints().get(i).get(0) * imageDto.getImageWidth());
-                point.setY(regionDto.getPoints().get(i).get(1) * imageDto.getImageHeight());
+                point.setX(regionDto.getPoints().get(i).get(0));
+                point.setY(regionDto.getPoints().get(i).get(1));
                 point.setOrderIdx(i);
                 geometryPoints.add(point);
             }
