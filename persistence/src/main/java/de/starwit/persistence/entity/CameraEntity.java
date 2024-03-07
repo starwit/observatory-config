@@ -18,7 +18,7 @@ public class CameraEntity extends AbstractEntity<Long> {
 
     // entity fields
     @NotBlank
-    @Column(name = "saeid", nullable = false, unique = true)
+    @Column(name = "saeid", nullable = false)
     private String saeId;
 
     // entity relations
@@ -26,6 +26,14 @@ public class CameraEntity extends AbstractEntity<Long> {
     @ManyToOne
     @JoinColumn(name = "image_id")
     private ImageEntity image;
+
+    public CameraEntity() {
+    }
+    
+    public CameraEntity(String saeId, ImageEntity image) {
+        this.saeId = saeId;
+        this.image = image;
+    }
 
     // entity fields getters and setters
     public String getSaeId() {

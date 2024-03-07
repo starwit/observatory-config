@@ -53,7 +53,7 @@ ValidatedTextField.propTypes = {
     max: PropTypes.number,
     type: PropTypes.any,
     onChange: PropTypes.func.isRequired,
-    value: PropTypes.string,
+    value: PropTypes.any,
     isCreate: PropTypes.bool
 };
 

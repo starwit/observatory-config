@@ -7,8 +7,10 @@ import java.util.Set;
 
 import com.fasterxml.jackson.annotation.JsonFilter;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
@@ -45,7 +47,7 @@ public class ImageEntity extends AbstractEntity<Long> {
     private ParkingConfigEntity parkingConfig;
 
     @JsonFilter("filterCamera")
-    @OneToMany(mappedBy = "image")
+    @OneToMany(mappedBy = "image", cascade = { CascadeType.ALL }, orphanRemoval = true)
     private List<CameraEntity> camera;
 
     @Min(value = -90)

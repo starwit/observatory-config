@@ -12,9 +12,11 @@ import de.starwit.persistence.entity.ParkingAreaEntity;
 import de.starwit.persistence.entity.ParkingConfigEntity;
 import de.starwit.persistence.exception.NotificationException;
 import de.starwit.persistence.repository.CameraRepository;
+import de.starwit.persistence.repository.ImageRepository;
 import de.starwit.persistence.repository.ParkingAreaRepository;
 import de.starwit.persistence.repository.ParkingConfigRepository;
-import jakarta.persistence.EntityNotFoundException;
+import de.starwit.service.dto.ParkingAreaDto;
+import de.starwit.service.mapper.ParkingAreaMapper;
 
 /**
  * 
@@ -31,7 +33,12 @@ public class ParkingAreaService implements ServiceInterface<ParkingAreaEntity, P
     private ParkingConfigRepository parkingconfigRepository;
 
     @Autowired
+    private ImageRepository imageRepository;
+
+    @Autowired
     private CameraRepository cameraRepository;
+
+    private ParkingAreaMapper mapper = new ParkingAreaMapper();
 
     @Override
     public ParkingAreaRepository getRepository() {
@@ -66,56 +73,84 @@ public class ParkingAreaService implements ServiceInterface<ParkingAreaEntity, P
         }
     }
 
-    @Override
-    public ParkingAreaEntity saveOrUpdate(ParkingAreaEntity entity) {
-
-        if (entity.getId() != null) {
-            ParkingAreaEntity entityPrev = this.findById(entity.getId());
-            entityPrev.setName(entity.getName());
-            if (entity.getParkingConfig() != null && !entity.getParkingConfig().isEmpty()) {
-                ParkingConfigEntity pc = entity.getParkingConfig().get(0);
-                pc.setName(entity.getName());
-                entity.setSelectedProdConfig(pc);
-            }
+    public ParkingAreaDto saveOrUpdateDto(ParkingAreaDto dto){
+        if (dto == null) {
+            return null;
         }
-
-        entity = this.getRepository().saveAndFlush(entity);
-        ParkingConfigEntity p = new ParkingConfigEntity();
-        if (entity.getParkingConfig() == null || entity.getParkingConfig().isEmpty()) {
-            p.setName(entity.getName());
-            p.setParkingArea(entity);
-            entity.setSelectedProdConfig(p);
-            p = parkingconfigRepository.saveAndFlush(p);
+        ParkingAreaEntity entity = null;
+        if (dto.getId() == null) {
+            entity = mapper.convertToEntity(dto);
+            if (entity != null) {
+                entity = parkingareaRepository.saveAndFlush(entity);
+                entity = createDefaultParkingConfig(dto, entity);
+            }
         } else {
-            if (entity.getSelectedProdConfig() != null) {
-                p = entity.getSelectedProdConfig();
-                p.setName(entity.getName());
-                if (p.getImage() != null && !p.getImage().isEmpty()) {
-                    p.getImage().get(0).setName(entity.getName());
-                    //saveCamera(p.getImage().get(0));
+            entity = this.findById(dto.getId());
+            entity = mapper.convertToEntity(dto, entity);
+            if (dto.getSelectedProdConfigId() == null) {
+                entity = createDefaultParkingConfig(dto, entity);
+            } else {
+                long pcId = dto.getSelectedProdConfigId();
+                ParkingConfigEntity pc = parkingconfigRepository.getReferenceById(pcId);
+                pc.setName(dto.getName());
+                pc.setParkingArea(entity);
+                entity.setSelectedProdConfig(pc);
+                entity = parkingareaRepository.saveAndFlush(entity);
+                if (pc.getImage() == null 
+                    || pc.getImage().isEmpty() 
+                    || pc.getImage().get(0) == null 
+                    || pc.getImage().get(0).getId() == null) {
+                    ImageEntity image = mapper.getDefaultImage(dto, entity.getSelectedProdConfig());
+                    image = image == null ? null : imageRepository.saveAndFlush(image);
+                    List<CameraEntity> cameras = mapper.getDefaultCameras(dto, image);
+                    cameras = cameras == null ? null : cameraRepository.saveAllAndFlush(cameras);
+                    imageRepository.refresh(image);
+                } else {
+                    long imageId = pc.getImage().get(0).getId();
+                    ImageEntity image = imageRepository.getReferenceById(imageId);
+                    image = mapper.mapImageData(dto, pc, image);
+                    image = image == null ? null : imageRepository.saveAndFlush(image);
+                    mapAndSaveCameras(dto.getSaeIds(), image);
+                    imageRepository.refresh(image);
                 }
-                p = parkingconfigRepository.saveAndFlush(p);
+                parkingconfigRepository.refresh(pc);
+                entity.setSelectedTestConfig(null);
+                entity = parkingareaRepository.saveAndFlush(entity);
             }
         }
-
-        return this.getRepository().getReferenceById(entity.getId());
+        parkingareaRepository.refresh(entity);
+        return mapper.convertToDto(entity);
     }
 
-    private void saveCamera(ImageEntity imageEntity) {
-        List<CameraEntity> addedCameras = imageEntity.getCamera();
+    private ParkingAreaEntity createDefaultParkingConfig(ParkingAreaDto dto, ParkingAreaEntity entity) {
+        entity = mapper.addDefaultParkingConfig(dto, entity);
+        entity.setSelectedProdConfig(entity.getParkingConfig().get(0));
+        entity = parkingareaRepository.saveAndFlush(entity);
+        ImageEntity image = mapper.getDefaultImage(dto, entity.getSelectedProdConfig());
+        image = image == null ? null : imageRepository.saveAndFlush(image);
+        List<CameraEntity> cameras = mapper.getDefaultCameras(dto, image);
+        cameras = cameras == null ? null : cameraRepository.saveAllAndFlush(cameras);
+        imageRepository.refresh(image);
+        return entity;
+    }
+
+    private void mapAndSaveCameras(List<String> addedCameras, ImageEntity image) {
         List<CameraEntity> newCameraList = new ArrayList<>();
-        List<CameraEntity> existingCameras = cameraRepository.findAll();
         if (addedCameras != null && !addedCameras.isEmpty()){
-            for (CameraEntity camera : addedCameras) {
-                List<CameraEntity> existingCamera = cameraRepository.findBySaeId(camera.getSaeId());
+            for (String saeId : addedCameras) {
+                List<CameraEntity> existingCamera = cameraRepository.findBySaeIdAndImage(saeId, image);
                 if (existingCamera != null && !existingCamera.isEmpty()) {
-                    newCameraList.add(existingCamera.get(0));
+                    existingCamera.get(0).setImage(image);
+                    newCameraList.addAll(existingCamera);
                 } else {
+                    CameraEntity camera = new CameraEntity(saeId, image);
                     newCameraList.add(camera);
                 }
             }
         }
-
-        List<Long> cameraIds = cameraRepository.findAllWithEmptyImage();
+        List<CameraEntity> toBeRemoved = cameraRepository.findByImage(image);
+        toBeRemoved.removeAll(newCameraList);
+        cameraRepository.deleteAll(toBeRemoved);
+        cameraRepository.saveAllAndFlush(newCameraList);
     }
 }

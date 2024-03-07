@@ -2,9 +2,6 @@ package de.starwit.rest.controller;
 
 import java.util.List;
 
-import jakarta.persistence.EntityNotFoundException;
-import jakarta.validation.Valid;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,11 +17,14 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import de.starwit.persistence.entity.ParkingAreaEntity;
-import de.starwit.service.impl.ParkingAreaService;
 import de.starwit.persistence.exception.NotificationException;
 import de.starwit.rest.exception.NotificationDto;
+import de.starwit.service.dto.ParkingAreaDto;
+import de.starwit.service.impl.ParkingAreaService;
+import de.starwit.service.mapper.ParkingAreaMapper;
 import io.swagger.v3.oas.annotations.Operation;
+import jakarta.persistence.EntityNotFoundException;
+import jakarta.validation.Valid;
 
 /**
  * ParkingArea RestController
@@ -39,52 +39,31 @@ public class ParkingAreaController {
     @Autowired
     private ParkingAreaService parkingareaService;
 
+
+    private ParkingAreaMapper mapper = new ParkingAreaMapper();
+
     @Operation(summary = "Get all parkingarea")
     @GetMapping
-    public List<ParkingAreaEntity> findAll() {
-        return this.parkingareaService.findAll();
-    }
-
-    @Operation(summary = "Get all parkingarea without selectedTestConfig")
-    @GetMapping(value = "/find-without-selectedTestConfig")
-    public List<ParkingAreaEntity> findAllWithoutSelectedTestConfig() {
-        return parkingareaService.findAllWithoutSelectedTestConfig();
-    }
-
-    @Operation(summary = "Get all parkingarea without other selectedTestConfig")
-    @GetMapping(value = "/find-without-other-selectedTestConfig/{id}")
-    public List<ParkingAreaEntity> findAllWithoutOtherSelectedTestConfig(@PathVariable("id") Long id) {
-        return parkingareaService.findAllWithoutOtherSelectedTestConfig(id);
-    }
-
-    @Operation(summary = "Get all parkingarea without selectedProdConfig")
-    @GetMapping(value = "/find-without-selectedProdConfig")
-    public List<ParkingAreaEntity> findAllWithoutSelectedProdConfig() {
-        return parkingareaService.findAllWithoutSelectedProdConfig();
-    }
-
-    @Operation(summary = "Get all parkingarea without other selectedProdConfig")
-    @GetMapping(value = "/find-without-other-selectedProdConfig/{id}")
-    public List<ParkingAreaEntity> findAllWithoutOtherSelectedProdConfig(@PathVariable("id") Long id) {
-        return parkingareaService.findAllWithoutOtherSelectedProdConfig(id);
+    public List<ParkingAreaDto> findAll() {
+        return mapper.convertToDtoList(this.parkingareaService.findAll());
     }
 
     @Operation(summary = "Get parkingarea with id")
     @GetMapping(value = "/{id}")
-    public ParkingAreaEntity findById(@PathVariable("id") Long id) {
-        return this.parkingareaService.findById(id);
+    public ParkingAreaDto findById(@PathVariable("id") Long id) {
+        return mapper.convertToDto(this.parkingareaService.findById(id));
     }
 
     @Operation(summary = "Create parkingarea")
     @PostMapping
-    public ParkingAreaEntity save(@Valid @RequestBody ParkingAreaEntity entity) {
-        return update(entity);
+    public ParkingAreaDto save(@Valid @RequestBody ParkingAreaDto dto) {
+        return update(dto);
     }
 
     @Operation(summary = "Update parkingarea")
     @PutMapping
-    public ParkingAreaEntity update(@Valid @RequestBody ParkingAreaEntity entity) {
-        return parkingareaService.saveOrUpdate(entity);
+    public ParkingAreaDto update(@Valid @RequestBody ParkingAreaDto dto) {
+        return parkingareaService.saveOrUpdateDto(dto);
     }
 
     @Operation(summary = "Delete parkingarea")

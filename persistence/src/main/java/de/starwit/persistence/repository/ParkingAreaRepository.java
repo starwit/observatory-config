@@ -1,14 +1,15 @@
 package de.starwit.persistence.repository;
 
 import java.util.List;
-import org.springframework.data.jpa.repository.JpaRepository;
+
 import org.springframework.data.jpa.repository.Query;
+
 import de.starwit.persistence.entity.ParkingAreaEntity;
 
 /**
  * ParkingArea Repository class
  */
-public interface ParkingAreaRepository extends JpaRepository<ParkingAreaEntity, Long> {
+public interface ParkingAreaRepository extends CustomRepository<ParkingAreaEntity, Long> {
 
     @Query("SELECT e FROM ParkingAreaEntity e WHERE NOT EXISTS (SELECT r FROM e.selectedTestConfig r)")
     public List<ParkingAreaEntity> findAllWithoutSelectedTestConfig();

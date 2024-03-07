@@ -30,16 +30,16 @@ public class ParkingAreaEntity extends AbstractEntity<Long> {
 
     // entity relations
     @JsonFilter("filterIdNameImageCamera")
-    @OneToMany(mappedBy = "parkingArea", orphanRemoval = true)
+    @OneToMany(mappedBy = "parkingArea", cascade = { CascadeType.ALL }, orphanRemoval = true)
     private List<ParkingConfigEntity> parkingConfig;
 
     @JsonFilter("filterIdNameImageCamera")
-    @OneToOne(cascade = { CascadeType.REFRESH, CascadeType.REMOVE }, orphanRemoval = true)
+    @OneToOne(cascade = { CascadeType.ALL })
     @JoinColumn(name = "testconfig_id", referencedColumnName = "id", unique = true)
     private ParkingConfigEntity selectedTestConfig;
 
     @JsonFilter("filterIdNameImageCamera")
-    @OneToOne(cascade = { CascadeType.REFRESH, CascadeType.REMOVE }, orphanRemoval = true)
+    @OneToOne(cascade = { CascadeType.ALL })
     @JoinColumn(name = "prodconfig_id", referencedColumnName = "id", unique = true)
     private ParkingConfigEntity selectedProdConfig;
   
