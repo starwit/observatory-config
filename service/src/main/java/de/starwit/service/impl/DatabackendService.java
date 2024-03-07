@@ -7,6 +7,7 @@ import java.util.List;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -16,10 +17,12 @@ import org.springframework.web.client.ResourceAccessException;
 import org.springframework.web.client.RestClient;
 import org.springframework.web.client.RestClientResponseException;
 
+import de.starwit.persistence.entity.ImageEntity;
+import de.starwit.persistence.entity.PolygonEntity;
+import de.starwit.persistence.repository.ImageRepository;
+import de.starwit.persistence.repository.ParkingAreaRepository;
 import de.starwit.service.dto.DatabackendDto;
 import de.starwit.service.dto.GeometryPointsDto;
-import de.starwit.service.dto.ImageDto;
-import de.starwit.service.dto.RegionDto;
 
 @Service
 public class DatabackendService {
@@ -32,6 +35,12 @@ public class DatabackendService {
 
     private String cameraId;
 
+    @Autowired
+    private ImageRepository imageRepository;
+
+    @Autowired
+    private ParkingAreaRepository parkingAreaRepository;
+
     public DatabackendService(@Value("${databackend.url}") URI configuredUri, @Value("${databackend.cameraId}") String cameraId) {
         restClient = RestClient.create();
         // This is a workaround to make sure the URI ends in a "/", s.t. resolve() works
@@ -41,7 +50,13 @@ public class DatabackendService {
     }
 
     @Async
-    public void syncConfiguration(ImageDto imageDto) {
+    public void triggerConfigurationSync(Long updatedImageId) {
+        ImageEntity updatedImage = imageRepository.findById(updatedImageId).orElse(null);
+        if (updatedImage == null) {
+            log.warn("Could not find image for id " + updatedImageId);
+            return;
+        }
+        
         try {
             ResponseEntity<Void> deleteResponse = restClient.delete()
                     .uri(databackendUri.resolve("api/analytics-job/all"))
@@ -53,9 +68,9 @@ public class DatabackendService {
             return;
         }
 
-        for (RegionDto regionDto : imageDto.getRegions()) {
+        for (PolygonEntity polygon : updatedImage.getPolygon()) {
             try {
-                DatabackendDto dto = toDatabackendDto(imageDto, regionDto);
+                DatabackendDto dto = toDatabackendDto(updatedImage, polygon);
 
                 ResponseEntity<Void> postResponse = restClient.post()
                         .uri(databackendUri.resolve("api/analytics-job"))
@@ -72,43 +87,30 @@ public class DatabackendService {
         }
     }
 
-    DatabackendDto toDatabackendDto(ImageDto imageDto, RegionDto regionDto) throws IllegalGeometryException {
+    DatabackendDto toDatabackendDto(ImageEntity imageEntity, PolygonEntity polygonEntity) throws IllegalGeometryException {
         DatabackendDto dbeDto = new DatabackendDto();
 
-        dbeDto.setName(regionDto.getName());
-        dbeDto.setCameraId(cameraId);
+        dbeDto.setName(polygonEntity.getName());
+        dbeDto.setCameraId(imageEntity.getCamera().get(0).getSaeId());
         dbeDto.setDetectionClassId(2);
         dbeDto.setEnabled(true);
         dbeDto.setParkingAreaId(1L);
-        dbeDto.setClassification(regionDto.getCls());
+        dbeDto.setClassification(polygonEntity.getClassification().getName());
+        dbeDto.setGeoReferenced(imageEntity.getGeoReferenced());
 
         List<GeometryPointsDto> geometryPoints = new ArrayList<>();
 
-        if (regionDto.getType().equals("line")) {
+        if (polygonEntity.getPoint().size() == 2) {
 
             dbeDto.setType("LINE_CROSSING");
-            GeometryPointsDto point1 = new GeometryPointsDto();
-            point1.setX(regionDto.getX1());
-            point1.setY(regionDto.getY1());
-            point1.setLongitude(imageDto.getTopleftlongitude().add(imageDto.getDegreeperpixelx().multiply(BigDecimal.valueOf(point1.getX()))));
-            point1.setLatitude(imageDto.getTopleftlatitude().add(imageDto.getDegreeperpixely().multiply(BigDecimal.valueOf(point1.getY()))));
-            point1.setOrderIdx(0);
-            GeometryPointsDto point2 = new GeometryPointsDto();
-            point2.setX(regionDto.getX2());
-            point2.setY(regionDto.getY2());
-            point2.setOrderIdx(1);
-            geometryPoints.add(point1);
-            geometryPoints.add(point2);
+            geometryPoints.add(createGeometryPoint(polygonEntity, imageEntity, 0));
+            geometryPoints.add(createGeometryPoint(polygonEntity, imageEntity, 1));
 
-        } else if (regionDto.getType().equals("polygon")) {
+        } else if (polygonEntity.getPoint().size() > 2) {
 
             dbeDto.setType("AREA_OCCUPANCY");
-            for (int i = 0; i < regionDto.getPoints().size(); i++) {
-                GeometryPointsDto point = new GeometryPointsDto();
-                point.setX(regionDto.getPoints().get(i).get(0));
-                point.setY(regionDto.getPoints().get(i).get(1));
-                point.setOrderIdx(i);
-                geometryPoints.add(point);
+            for (int i = 0; i < polygonEntity.getPoint().size(); i++) {
+                geometryPoints.add(createGeometryPoint(polygonEntity, imageEntity, i));
             }
 
         } else {
@@ -118,6 +120,24 @@ public class DatabackendService {
         dbeDto.setGeometryPoints(geometryPoints);
 
         return dbeDto;
+    }
+
+    private static GeometryPointsDto createGeometryPoint(PolygonEntity polygon, ImageEntity image, int orderIdx) {
+        GeometryPointsDto point = new GeometryPointsDto();
+        point.setOrderIdx(orderIdx);
+
+        BigDecimal xValue = polygon.getPoint().get(orderIdx).getXvalue();
+        BigDecimal yValue = polygon.getPoint().get(orderIdx).getYvalue();
+
+        if (image.getGeoReferenced()) {
+            point.setLatitude(image.getTopleftlatitude().add(image.getDegreeperpixelx().multiply(xValue)));
+            point.setLongitude(image.getTopleftlongitude().add(image.getDegreeperpixely().multiply(yValue)));
+        } else {
+            point.setX(xValue.doubleValue());
+            point.setY(yValue.doubleValue());
+        }
+        
+        return point;
     }
 
     class IllegalGeometryException extends Exception {

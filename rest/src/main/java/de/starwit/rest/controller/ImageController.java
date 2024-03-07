@@ -162,7 +162,7 @@ public class ImageController {
             }
 
             entity = imageService.saveOrUpdate(entity);
-            databackendService.syncConfiguration(dto);
+            databackendService.triggerConfigurationSync(entity.getId());
 
             return mapper.convertToDto(entity);
 
