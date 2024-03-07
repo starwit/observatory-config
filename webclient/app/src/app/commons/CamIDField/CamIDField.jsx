@@ -52,8 +52,8 @@ function CamIDField(props) {
             sx={UpdateFieldStyles.textField}
             variant="standard"
             fullWidth
-            required={index === 0}
             helperText={""}
+            notNull={index === 0}
           />
           {index !== 0 && (
             <IconButton onClick={() => handleRemoveTextField(index)} aria-label={t("button.delete")}>

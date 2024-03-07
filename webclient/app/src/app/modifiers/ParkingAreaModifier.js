@@ -29,7 +29,7 @@ const entityFields = [
         name: "centerlongitude",
         type: "bigdecimal",
         regex: null,
-        min: 0,
+        min: -180,
         max: 180,
         notNull: false
     },
@@ -45,7 +45,7 @@ const entityFields = [
         name: "topleftlongitude",
         type: "bigdecimal",
         regex: null,
-        min: 0,
+        min: -180,
         max: 180,
         notNull: false
     },
@@ -53,12 +53,14 @@ const entityFields = [
         name: "degreeperpixelx",
         type: "bigdecimal",
         regex: null,
+        min: 0,
         notNull: false
     },
     {
         name: "degreeperpixely",
         type: "bigdecimal",
         regex: null,
+        min: 0,
         notNull: false
     }
 ];
