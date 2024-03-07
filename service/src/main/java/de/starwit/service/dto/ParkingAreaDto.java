@@ -19,31 +19,24 @@ public class ParkingAreaDto {
 
     @Min(value = -90)
     @Max(value = 90)
-    @Column(name = "top_left_latitude")
     private BigDecimal topleftlatitude;
 
     @Min(value = -180)
     @Max(value = 180)
-    @Column(name = "top_left_longitude")
     private BigDecimal topleftlongitude;
 
-    @Column(name = "degree_per_pixel_x")
     private BigDecimal degreeperpixelx;
 
-    @Column(name = "degree_per_pixel_y")
     private BigDecimal degreeperpixely;
 
-    @Column(name = "georeferenced")
     private Boolean geoReferenced;
    
     @Min(value = -90)
     @Max(value = 90)
-    @Column(name = "center_latitude")
     private BigDecimal centerlatitude;
 
     @Min(value = -180)
     @Max(value = 180)
-    @Column(name = "center_longitude")
     private BigDecimal centerlongitude;
 
     public Long getId() {
