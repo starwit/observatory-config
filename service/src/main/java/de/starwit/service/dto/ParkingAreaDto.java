@@ -24,10 +24,8 @@ public class ParkingAreaDto {
     @Max(value = 180)
     private BigDecimal topleftlongitude;
 
-    @Min(value = 0)
     private BigDecimal degreeperpixelx;
 
-    @Min(value = 0)
     private BigDecimal degreeperpixely;
 
     private Boolean geoReferenced;
