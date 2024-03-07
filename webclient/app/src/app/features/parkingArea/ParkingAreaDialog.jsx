@@ -155,9 +155,9 @@ function ParkingAreaDialog(props) {
                         </Grid>
                         <Grid item xs={8}>
                             <Grid container spacing={2}>
-                            <Grid item xs={12}>                 
-                            <CamIDField value={entity?.saeIds} handleChange={handleSaeIdsChange}/>
-                        </Grid>
+                                <Grid item xs={12}>                 
+                                    <CamIDField value={entity?.saeIds} handleChange={handleSaeIdsChange}/>
+                                </Grid>
                                 {fields?.slice(2).map(field => {
                                         return (
                                             <Grid item xs={6}>

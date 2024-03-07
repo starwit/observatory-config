@@ -14,8 +14,10 @@ function CamIDField(props) {
   const [inputs, setInputs] = useState([""]);
 
   useEffect(() => {
-    if (value !== null) {
+    if (value !== null && value != undefined ) {
       setInputs(value);
+    } else {
+      setInputs([""])
     }
   }, []);
 
@@ -43,7 +45,7 @@ function CamIDField(props) {
 
   return (
     <>
-      {inputs?.map((input, index) => (
+      {inputs.map((input, index) => (
         <Stack key={index} direction={'row'}>
           <ValidatedTextField
             value={input !== undefined ? input : ""}
