@@ -33,20 +33,17 @@ public class DatabackendService {
 
     private RestClient restClient;
 
-    private String cameraId;
-
     @Autowired
     private ImageRepository imageRepository;
 
     @Autowired
     private ParkingAreaRepository parkingAreaRepository;
 
-    public DatabackendService(@Value("${databackend.url}") URI configuredUri, @Value("${databackend.cameraId}") String cameraId) {
+    public DatabackendService(@Value("${databackend.url}") URI configuredUri) {
         restClient = RestClient.create();
         // This is a workaround to make sure the URI ends in a "/", s.t. resolve() works
         // properly further down
         this.databackendUri = URI.create(configuredUri.toString() + "/").resolve("");
-        this.cameraId = cameraId;
     }
 
     @Async
