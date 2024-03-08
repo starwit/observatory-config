@@ -67,7 +67,7 @@ public class DatabackendServiceTest {
         assertThat(dbeDto.getType()).isEqualTo("LINE_CROSSING");
         assertThat(dbeDto.getGeoReferenced()).isTrue();  
         assertThat(dbeDto.getGeometryPoints().get(1).getX()).isNull();;
-        assertThat(dbeDto.getGeometryPoints().get(1).getLatitude().doubleValue()).isEqualTo(52.01);
+        assertThat(dbeDto.getGeometryPoints().get(1).getLatitude().doubleValue()).isEqualTo(52.5);
     }
 
     @Test
@@ -90,7 +90,7 @@ public class DatabackendServiceTest {
         assertThat(dbeDto.getParkingAreaId()).isEqualTo(1);
         assertThat(dbeDto.getType()).isEqualTo("AREA_OCCUPANCY");
         assertThat(dbeDto.getGeoReferenced()).isFalse();
-        assertThat(dbeDto.getGeometryPoints().get(2).getY()).isEqualTo(10);
+        assertThat(dbeDto.getGeometryPoints().get(2).getY()).isEqualTo(0.5);
         assertThat(dbeDto.getGeometryPoints().get(2).getLatitude()).isNull();
     }
 
@@ -115,7 +115,8 @@ public class DatabackendServiceTest {
         assertThat(dbeDto.getType()).isEqualTo("AREA_OCCUPANCY");
         assertThat(dbeDto.getGeoReferenced()).isTrue();
         assertThat(dbeDto.getGeometryPoints().get(2).getY()).isNull();
-        assertThat(dbeDto.getGeometryPoints().get(2).getLongitude().doubleValue()).isEqualTo(10.01);
+        assertThat(dbeDto.getGeometryPoints().get(2).getLongitude().doubleValue()).isEqualTo(10.0);
+        assertThat(dbeDto.getGeometryPoints().get(2).getLatitude().doubleValue()).isEqualTo(52.5);
     }
 
     PolygonEntity createLineWithDefaults() {
@@ -131,7 +132,7 @@ public class DatabackendServiceTest {
     
         polygon.setPoint(Arrays.asList(
             createPoint(1, 0, 0),
-            createPoint(2, 10, 10)
+            createPoint(2, 0.5, 0.5)
         )); 
 
         return polygon;
@@ -150,8 +151,8 @@ public class DatabackendServiceTest {
 
         polygon.setPoint(Arrays.asList(
             createPoint(1, 0, 0),
-            createPoint(2, 10, 0),
-            createPoint(3, 0, 10)
+            createPoint(2, 0.5, 0),
+            createPoint(3, 0, 0.5)
         ));
 
         return polygon;
@@ -166,6 +167,8 @@ public class DatabackendServiceTest {
         image.setId(1L);
         image.setName("testImage");
         image.setType("testType");
+        image.setImageHeight(1000);
+        image.setImageWidth(1000);
         image.setDegreeperpixelx(new BigDecimal(0.001));
         image.setDegreeperpixely(new BigDecimal(0.001));
         image.setGeoReferenced(false);
