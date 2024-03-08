@@ -69,6 +69,12 @@ public class ImageEntity extends AbstractEntity<Long> {
     @Column(name = "georeferenced")
     private Boolean geoReferenced;
 
+    @Column(name = "image_height")
+    private Integer imageHeight;
+
+    @Column(name = "image_width")
+    private Integer imageWidth;
+
     // entity fields getters and setters
     public byte[] getData() {
         return data;
@@ -166,4 +172,21 @@ public class ImageEntity extends AbstractEntity<Long> {
     public void setCamera(List<CameraEntity> camera) {
         this.camera = camera;
     }
+
+    public Integer getImageHeight() {
+        return imageHeight;
+    }
+
+    public void setImageHeight(Integer imageHeight) {
+        this.imageHeight = imageHeight;
+    }
+
+    public Integer getImageWidth() {
+        return imageWidth;
+    }
+
+    public void setImageWidth(Integer imageWidth) {
+        this.imageWidth = imageWidth;
+    }
+
 }

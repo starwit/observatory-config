@@ -23,6 +23,7 @@ import de.starwit.persistence.repository.ImageRepository;
 import de.starwit.persistence.repository.ParkingAreaRepository;
 import de.starwit.service.dto.DatabackendDto;
 import de.starwit.service.dto.GeometryPointsDto;
+import jakarta.transaction.Transactional;
 
 @Service
 public class DatabackendService {
@@ -47,6 +48,7 @@ public class DatabackendService {
     }
 
     @Async
+    @Transactional
     public void triggerConfigurationSync(Long updatedImageId) {
         ImageEntity updatedImage = imageRepository.findById(updatedImageId).orElse(null);
         if (updatedImage == null) {
@@ -125,10 +127,12 @@ public class DatabackendService {
 
         BigDecimal xValue = polygon.getPoint().get(orderIdx).getXvalue();
         BigDecimal yValue = polygon.getPoint().get(orderIdx).getYvalue();
+        BigDecimal xPixels = xValue.multiply(BigDecimal.valueOf(image.getImageWidth()));
+        BigDecimal yPixels = yValue.multiply(BigDecimal.valueOf(image.getImageHeight()));
 
         if (image.getGeoReferenced()) {
-            point.setLatitude(image.getTopleftlatitude().add(image.getDegreeperpixelx().multiply(xValue)));
-            point.setLongitude(image.getTopleftlongitude().add(image.getDegreeperpixely().multiply(yValue)));
+            point.setLatitude(image.getTopleftlatitude().add(image.getDegreeperpixely().multiply(yPixels)));
+            point.setLongitude(image.getTopleftlongitude().add(image.getDegreeperpixelx().multiply(xPixels)));
         } else {
             point.setX(xValue.doubleValue());
             point.setY(yValue.doubleValue());
