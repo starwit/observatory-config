@@ -2,7 +2,7 @@ DROP TABLE "camera";
 
 CREATE TABLE "camera"
 (
-    "saeid" VARCHAR(255) NOT NULL UNIQUE,
+    "saeid" VARCHAR(255) NOT NULL,
     "image_id" BIGINT,
     "id" BIGINT NOT NULL DEFAULT nextval('camera_id_seq'),
     CONSTRAINT "camera_pkey" PRIMARY KEY ("id")
