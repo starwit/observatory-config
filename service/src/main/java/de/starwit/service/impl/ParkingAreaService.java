@@ -68,9 +68,7 @@ public class ParkingAreaService implements ServiceInterface<ParkingAreaEntity, P
 
     @Override
     public void delete(Long id) throws NotificationException {
-        if (id != 1) {
             this.getRepository().deleteById(id);
-        }
     }
 
     public ParkingAreaDto saveOrUpdateDto(ParkingAreaDto dto){
