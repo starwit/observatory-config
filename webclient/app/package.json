@@ -6,7 +6,7 @@
     "@mui/icons-material": "^5.0.0",
     "@mui/material": "^5.14.17",
     "@mui/x-date-pickers": "^6.18.1",
-    "@starwit/react-image-annotate": "4.3.5-0",
+    "@starwit/react-image-annotate": "5.0.1",
     "axios": "1.6.7",
     "buffer": "npm:buffer@^6.0.3",
     "crypto": "npm:crypto-browserify@^3.12.0",
