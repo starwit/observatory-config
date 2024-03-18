@@ -151,6 +151,8 @@ public class ImageController {
                 polygonService.getRepository().flush();
             }
             entity.getPolygon().removeAll(entity.getPolygon());
+            entity.setImageHeight(dto.getImageHeight());
+            entity.setImageWidth(dto.getImageWidth());
             entity = imageService.saveAndFlush(entity);
             List<RegionDto> regions = dto.getRegions();
             for (RegionDto regionDto : regions) {
@@ -162,7 +164,7 @@ public class ImageController {
             }
 
             entity = imageService.saveOrUpdate(entity);
-            databackendService.syncConfiguration(dto);
+            databackendService.triggerConfigurationSync(entity.getId());
 
             return mapper.convertToDto(entity);
 

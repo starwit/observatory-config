@@ -8,9 +8,6 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import de.starwit.persistence.entity.AbstractEntity;
-import jakarta.persistence.Column;
-import jakarta.validation.constraints.Max;
-import jakarta.validation.constraints.Min;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class ImageDto extends AbstractEntity<Long> {

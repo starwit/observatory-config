@@ -11,6 +11,7 @@ public class DatabackendDto {
     private Boolean enabled;
     private List<GeometryPointsDto> geometryPoints;
     private String classification;
+    private Boolean geoReferenced;
 
     public String getName() {
         return name;
@@ -74,5 +75,13 @@ public class DatabackendDto {
 
     public void setClassification(String classification) {
         this.classification = classification;
+    }
+
+    public Boolean getGeoReferenced() {
+        return geoReferenced;
+    }
+
+    public void setGeoReferenced(Boolean geoReferenced) {
+        this.geoReferenced = geoReferenced;
     }
 }
