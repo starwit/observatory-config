@@ -1,23 +1,21 @@
 package de.starwit.service.impl;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
 import java.math.BigDecimal;
 import java.net.URI;
 import java.util.Arrays;
-import java.util.List;
-import static org.assertj.core.api.Assertions.assertThat;
 
-import org.hibernate.internal.util.compare.CalendarComparator;
 import org.junit.jupiter.api.Test;
-import org.mockito.internal.util.collections.Sets;
 
 import de.starwit.persistence.entity.CameraEntity;
 import de.starwit.persistence.entity.ClassificationEntity;
 import de.starwit.persistence.entity.ImageEntity;
+import de.starwit.persistence.entity.ParkingAreaEntity;
+import de.starwit.persistence.entity.ParkingConfigEntity;
 import de.starwit.persistence.entity.PointEntity;
 import de.starwit.persistence.entity.PolygonEntity;
 import de.starwit.service.dto.DatabackendDto;
-import de.starwit.service.dto.ImageDto;
-import de.starwit.service.dto.RegionDto;
 import de.starwit.service.impl.DatabackendService.IllegalGeometryException;
 
 public class DatabackendServiceTest {
@@ -162,6 +160,13 @@ public class DatabackendServiceTest {
         CameraEntity camera = new CameraEntity();
         camera.setSaeId("stream1");
 
+        ParkingAreaEntity parkingArea = new ParkingAreaEntity();
+        parkingArea.setId(1L);
+
+        ParkingConfigEntity parkingConfig = new ParkingConfigEntity();
+        parkingConfig.setId(1L);
+        parkingConfig.setParkingArea(parkingArea);
+
         ImageEntity image = new ImageEntity();
 
         image.setId(1L);
@@ -175,6 +180,7 @@ public class DatabackendServiceTest {
         image.setTopleftlongitude(new BigDecimal(10));
         image.setTopleftlatitude(new BigDecimal(52));
         image.setCamera(Arrays.asList(camera));
+        image.setParkingConfig(parkingConfig);
 
         return image;
     }
