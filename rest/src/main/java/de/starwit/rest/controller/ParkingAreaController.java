@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.RestController;
 import de.starwit.persistence.exception.NotificationException;
 import de.starwit.rest.exception.NotificationDto;
 import de.starwit.service.dto.ParkingAreaDto;
+import de.starwit.service.impl.DatabackendService;
 import de.starwit.service.impl.ParkingAreaService;
 import de.starwit.service.mapper.ParkingAreaMapper;
 import io.swagger.v3.oas.annotations.Operation;
@@ -39,6 +40,8 @@ public class ParkingAreaController {
     @Autowired
     private ParkingAreaService parkingareaService;
 
+    @Autowired
+    private DatabackendService databackendService;
 
     private ParkingAreaMapper mapper = new ParkingAreaMapper();
 
@@ -70,6 +73,7 @@ public class ParkingAreaController {
     @DeleteMapping(value = "/{id}")
     public void delete(@PathVariable("id") Long id) throws NotificationException {
         parkingareaService.delete(id);
+        databackendService.triggerConfigurationSync();
     }
 
     @ExceptionHandler(value = { EntityNotFoundException.class })
