@@ -49,27 +49,33 @@ public class DatabackendService {
 
     @Async
     @Transactional
-    public void triggerConfigurationSync(Long updatedImageId) {
-        ImageEntity updatedImage = imageRepository.findById(updatedImageId).orElse(null);
-        if (updatedImage == null) {
-            log.warn("Could not find image for id " + updatedImageId);
-            return;
-        }
+    public void triggerConfigurationSync() {
+        // Delete all and write all configs again for now, because of robustness
+        List<ImageEntity> allImages = imageRepository.findAll();
+
+        log.info("Syncing configuration.");
         
         try {
             ResponseEntity<Void> deleteResponse = restClient.delete()
                     .uri(databackendUri.resolve("api/analytics-job/all"))
                     .retrieve().toBodilessEntity();
 
-            log.info("Cleared databackend configuration: HTTP " + deleteResponse.getStatusCode());
+            log.debug("Cleared databackend configuration: HTTP " + deleteResponse.getStatusCode());
         } catch (RestClientResponseException | ResourceAccessException ex) {
             log.error("Could not clear existing jobs on databackend", ex);
             return;
         }
 
-        for (PolygonEntity polygon : updatedImage.getPolygon()) {
+        for (ImageEntity image : allImages) {
+            sendConfig(image);
+        }
+        
+    }
+
+    public void sendConfig(ImageEntity image) {
+        for (PolygonEntity polygon : image.getPolygon()) {
             try {
-                DatabackendDto dto = toDatabackendDto(updatedImage, polygon);
+                DatabackendDto dto = toDatabackendDto(image, polygon);
 
                 ResponseEntity<Void> postResponse = restClient.post()
                         .uri(databackendUri.resolve("api/analytics-job"))
@@ -77,7 +83,7 @@ public class DatabackendService {
                         .body(dto)
                         .retrieve().toBodilessEntity();
 
-                log.info("Successfully sent configuration to databackend: HTTP " + postResponse.getStatusCode());
+                log.debug("Successfully sent configuration to databackend: HTTP " + postResponse.getStatusCode());
             } catch (IllegalGeometryException e) {
                 log.error("Illegal geometry (needs to have either exactly 2 or more than 2 points)");
             } catch (RestClientResponseException | ResourceAccessException ex) {
@@ -93,7 +99,7 @@ public class DatabackendService {
         dbeDto.setCameraId(imageEntity.getCamera().get(0).getSaeId());
         dbeDto.setDetectionClassId(2);
         dbeDto.setEnabled(true);
-        dbeDto.setParkingAreaId(1L);
+        dbeDto.setParkingAreaId(imageEntity.getParkingConfig().getParkingArea().getId());
         dbeDto.setClassification(polygonEntity.getClassification().getName());
         dbeDto.setGeoReferenced(imageEntity.getGeoReferenced());
 
