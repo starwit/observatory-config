@@ -110,6 +110,7 @@ const translationEnEN = {
     "response.save.success": "Saved successfully.",
     "response.save.failed": "Failed to save!",
     "confirm.dialog.title": "Confirm the Dialog Title",
-    "confirm.dialog.description": "Confirm the Dialog Description"
+    "confirm.dialog.description": "Confirm the Dialog Description",
+    "track.diag": "The configuration will be saved and processing of data will start/stop. Do you want to proceed?"
 };
 export default translationEnEN;

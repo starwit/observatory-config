@@ -5,7 +5,8 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import EditRoundedIcon from "@mui/icons-material/EditRounded";
 import {
     IconButton,
-    Stack
+    Stack,
+    Typography
 } from "@mui/material";
 import FormControl from "@mui/material/FormControl";
 import MenuItem from "@mui/material/MenuItem";
@@ -19,6 +20,13 @@ import {
 } from "../../modifiers/ParkingAreaModifier";
 import ParkingAreaRest from "../../services/ParkingAreaRest";
 import ParkingAreaDialog from "./ParkingAreaDialog";
+import { useState } from "react";
+import StopCircleIcon from '@mui/icons-material/StopCircle';
+import PlayCircleFilledWhiteIcon from '@mui/icons-material/PlayCircleFilledWhite';
+import Dialog from '@mui/material/Dialog';
+import DialogContent from '@mui/material/DialogContent';
+import DialogActions from "@mui/material/DialogActions";
+import Button from "@mui/material/Button";
 
 function ParkingAreaSelect() {
     const [selectedArea, setSelectedArea] = useImmer(entityDefault);
@@ -30,6 +38,8 @@ function ParkingAreaSelect() {
     const {parkingAreaId} = useParams();
     const nav = "/parkingarea/";
     const navigate = useNavigate();
+    const [track, setTrack] = useState(false);
+    const [startTrack, setStartTrack] = useState(false);
 
     useEffect(() => {
         reload();
@@ -126,6 +136,26 @@ function ParkingAreaSelect() {
                     <EditRoundedIcon fontSize="small" />
                 </IconButton>
             </FormControl>
+
+            {/* TRACKING BUTTON */}
+            <FormControl>
+            <IconButton sx={{height: "2rem"}}
+                onClick={() => setTrack(!track)}>
+                {startTrack ? <StopCircleIcon fontSize="small" color="error" /> : <PlayCircleFilledWhiteIcon fontSize="small" />} 
+            </IconButton>
+            <Dialog open={track} onClose={() => {setTrack(false); setStartTrack(false);}}>
+            <DialogContent>
+            {t("track.diag")}
+            </DialogContent>
+            <DialogActions>
+            <Button onClick={() => {setTrack(false); setStartTrack(true);}}>Start</Button>
+            <Button onClick={() => {setTrack(false); setStartTrack(false);}}>Stop</Button>
+            </DialogActions>
+            </Dialog>                
+            </FormControl>
+
+
+
             {/* <FormControl>
                 <IconButton sx={{height: "2rem"}}
                     onClick={handleDelete}>
@@ -142,5 +172,6 @@ function ParkingAreaSelect() {
         </Stack >
     );
 }
+
 
 export default ParkingAreaSelect;
