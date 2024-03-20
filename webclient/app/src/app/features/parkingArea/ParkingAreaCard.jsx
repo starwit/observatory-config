@@ -1,6 +1,6 @@
 import React, {useState} from "react";
 import {Card, CardActionArea, CardActions, CardContent, Divider, Grid, IconButton, Typography} from "@mui/material";
-import {Delete, Edit, MoreHoriz} from "@mui/icons-material";
+import {Delete, Edit, MoreHoriz, ContentCopy} from "@mui/icons-material";
 import PropTypes from "prop-types";
 import {useTranslation} from "react-i18next";
 import {useNavigate} from "react-router";
@@ -27,12 +27,16 @@ function ParkingAreaCard(props) {
                             </Typography>
                         </Grid>
                         <Grid item xs={5} align="right">
+                        <IconButton onClick={() => setOpenUpdateDialog(true)}>
+                                <ContentCopy fontSize={"small"} />
+                            </IconButton>
                             <IconButton onClick={() => setOpenUpdateDialog(true)}>
                                 <Edit fontSize={"small"} />
                             </IconButton>
                             <IconButton onClick={() => setOpenDeleteDialog(true)}>
                                 <Delete fontSize={"small"} />
                             </IconButton>
+
                         </Grid>
                     </Grid>
                 </CardContent>
