@@ -79,6 +79,8 @@ const translationDeDE = {
     "parkingArea.selectedProdConfig": "selectedProdConfig",
     "parkingArea.delete.title": "Parkfläche Löschen?",
     "parkingArea.delete.message": "Die Parkfläche und alle enthaltenen Konfigurationen werden unwiderruflich gelöscht.",
+    "parkingArea.track.title": "Datenverarbeitung starten/stoppen",
+    "parkingArea.track.message": "Wollen Sie die Konfiguration Speichern und die Verarbeitung der Daten starten/stoppen?",
     "app.baseName": "SmartParkingConfig",
     "home.title": "Willkommen",
     "home.welcome": "Wilkommen zu SmartParkingConfig",
@@ -117,6 +119,6 @@ const translationDeDE = {
     "response.save.success": "Speichern erfolgreich.",
     "response.save.failed": "Speichern fehlgeschlagen!",
     "confirm.dialog.title": "Bestätigen des Dialog Titels",
-    "confirm.dialog.description": "Bestätigen der Dialog Beschreibung"
+    "confirm.dialog.description": "Bestätigen der Dialog Beschreibung",
 };
 export default translationDeDE;

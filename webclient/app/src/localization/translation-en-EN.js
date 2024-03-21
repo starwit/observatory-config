@@ -74,6 +74,8 @@ const translationEnEN = {
     "parkingArea.fileTooLarge": "Maximum Filesize = 4 MB",
     "parkingArea.selectedTestConfig": "selectedTestConfig",
     "parkingArea.selectedProdConfig": "selectedProdConfig",
+    "parkingArea.track.title": "Start/Stop Processing",
+    "parkingArea.track.message": "The configuration will be saved and processing of data will start/stop. Do you want to proceed?",
     "app.baseName": "SmartParkingConfig",
     "home.title": "Welcome",
     "home.welcome": "Welcome to SmartParkingConfig",
@@ -110,6 +112,6 @@ const translationEnEN = {
     "response.save.success": "Saved successfully.",
     "response.save.failed": "Failed to save!",
     "confirm.dialog.title": "Confirm the Dialog Title",
-    "confirm.dialog.description": "Confirm the Dialog Description"
+    "confirm.dialog.description": "Confirm the Dialog Description",
 };
 export default translationEnEN;
