@@ -81,6 +81,10 @@ function ParkingAreaSelect() {
         setOpenDialog(false);
     }
 
+    function toggleTrack() {
+        setStartTrack(!startTrack);
+    }
+
     return (
         <Stack
             direction="row"
@@ -119,10 +123,10 @@ function ParkingAreaSelect() {
                 title={t("parkingArea.track.title")}
                 message={t("parkingArea.track.message")}
                 open={track}
-                onClose={() => {setTrack(false); setStartTrack(true);}}
-                onSubmit={() => {setTrack(false); setStartTrack(false);}}
+                onClose={() => {setTrack(false);}}
+                onSubmit={() => {setTrack(false); toggleTrack();}}
                 confirmTitle={t("button.submit")}
-            />               
+            />           
             </FormControl>
             <ParkingAreaDialog
                 open={openDialog}
