@@ -1,32 +1,25 @@
 
-import {Home} from "@mui/icons-material";
-import AddCircleIcon from "@mui/icons-material/AddCircle";
-import DeleteIcon from "@mui/icons-material/Delete";
+import { Home } from "@mui/icons-material";
 import EditRoundedIcon from "@mui/icons-material/EditRounded";
+import PlayCircleFilledWhiteIcon from '@mui/icons-material/PlayCircleFilledWhite';
+import StopCircleIcon from '@mui/icons-material/StopCircle';
 import {
     IconButton,
-    Stack,
-    Typography
+    Stack
 } from "@mui/material";
 import FormControl from "@mui/material/FormControl";
 import MenuItem from "@mui/material/MenuItem";
 import Select from "@mui/material/Select";
-import React, {useEffect, useMemo} from "react";
-import {useTranslation} from "react-i18next";
-import {useNavigate, useParams} from "react-router-dom";
-import {useImmer} from "use-immer";
+import React, { useEffect, useMemo, useState } from "react";
+import { useTranslation } from "react-i18next";
+import { useNavigate, useParams } from "react-router-dom";
+import { useImmer } from "use-immer";
+import ConfirmationDialog from "../../commons/dialog/ConfirmationDialog";
 import {
     entityDefault
 } from "../../modifiers/ParkingAreaModifier";
 import ParkingAreaRest from "../../services/ParkingAreaRest";
 import ParkingAreaDialog from "./ParkingAreaDialog";
-import { useState } from "react";
-import StopCircleIcon from '@mui/icons-material/StopCircle';
-import PlayCircleFilledWhiteIcon from '@mui/icons-material/PlayCircleFilledWhite';
-import Dialog from '@mui/material/Dialog';
-import DialogContent from '@mui/material/DialogContent';
-import DialogActions from "@mui/material/DialogActions";
-import Button from "@mui/material/Button";
 
 function ParkingAreaSelect() {
     const [selectedArea, setSelectedArea] = useImmer(entityDefault);
@@ -73,16 +66,6 @@ function ParkingAreaSelect() {
         }
     }
 
-    function handleDelete() {
-        if (!!selectedArea) {
-            parkingareaRest.delete(selectedArea.id).then(response => {
-                parkingareaRest.findAll().then(response => {
-                    navigate(`${nav}${response.data[0].id}`);
-                });
-            });
-        }
-    }
-
     const handleChange = event => {
         const newParkingAreaId = event.target.value;
         navigate(`${nav}${newParkingAreaId}`);
@@ -91,11 +74,6 @@ function ParkingAreaSelect() {
     function handleDialogOpen() {
         setOpenDialog(true);
         setIsCreate(false);
-    }
-
-    function handleCreateDialogOpen() {
-        setOpenDialog(true);
-        setIsCreate(true);
     }
 
     function handleDialogClose() {
@@ -124,12 +102,6 @@ function ParkingAreaSelect() {
                             key={entity.id} value={entity.id} >{entity.name}</MenuItem>))}
                 </Select>
             </FormControl >
-            {/* <FormControl>
-                <IconButton sx={{height: "2rem"}}
-                    onClick={handleCreateDialogOpen}>
-                    <AddCircleIcon fontSize="small" />
-                </IconButton>
-            </FormControl> */}
             <FormControl>
                 <IconButton sx={{height: "2rem"}}
                     onClick={handleDialogOpen}>
@@ -143,25 +115,15 @@ function ParkingAreaSelect() {
                 onClick={() => setTrack(!track)}>
                 {startTrack ? <StopCircleIcon fontSize="small" color="error" /> : <PlayCircleFilledWhiteIcon fontSize="small" />} 
             </IconButton>
-            <Dialog open={track} onClose={() => {setTrack(false); setStartTrack(false);}}>
-            <DialogContent>
-            {t("track.diag")}
-            </DialogContent>
-            <DialogActions>
-            <Button onClick={() => {setTrack(false); setStartTrack(true);}}>Start</Button>
-            <Button onClick={() => {setTrack(false); setStartTrack(false);}}>Stop</Button>
-            </DialogActions>
-            </Dialog>                
+            <ConfirmationDialog
+                title={t("parkingArea.track.title")}
+                message={t("parkingArea.track.message")}
+                open={track}
+                onClose={() => {setTrack(false); setStartTrack(true);}}
+                onSubmit={() => {setTrack(false); setStartTrack(false);}}
+                confirmTitle={t("button.submit")}
+            />               
             </FormControl>
-
-
-
-            {/* <FormControl>
-                <IconButton sx={{height: "2rem"}}
-                    onClick={handleDelete}>
-                    <DeleteIcon fontSize="small" />
-                </IconButton>
-            </FormControl> */}
             <ParkingAreaDialog
                 open={openDialog}
                 onClose={handleDialogClose}
