@@ -12,7 +12,6 @@ import de.starwit.persistence.entity.CameraEntity;
 import de.starwit.persistence.entity.ClassificationEntity;
 import de.starwit.persistence.entity.ImageEntity;
 import de.starwit.persistence.entity.ObservationAreaEntity;
-import de.starwit.persistence.entity.ParkingConfigEntity;
 import de.starwit.persistence.entity.PointEntity;
 import de.starwit.persistence.entity.PolygonEntity;
 import de.starwit.service.dto.DatabackendDto;
@@ -163,9 +162,6 @@ public class DatabackendServiceTest {
         ObservationAreaEntity observationArea = new ObservationAreaEntity();
         observationArea.setId(1L);
 
-        ParkingConfigEntity parkingConfig = new ParkingConfigEntity();
-        parkingConfig.setId(1L);
-        parkingConfig.setObservationArea(observationArea);
 
         ImageEntity image = new ImageEntity();
 
@@ -180,7 +176,7 @@ public class DatabackendServiceTest {
         image.setTopleftlongitude(new BigDecimal(10));
         image.setTopleftlatitude(new BigDecimal(52));
         image.setCamera(Arrays.asList(camera));
-        image.setParkingConfig(parkingConfig);
+        image.setObservationArea(observationArea);
 
         return image;
     }

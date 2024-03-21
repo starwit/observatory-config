@@ -20,7 +20,6 @@ import org.springframework.web.client.RestClientResponseException;
 import de.starwit.persistence.entity.ImageEntity;
 import de.starwit.persistence.entity.PolygonEntity;
 import de.starwit.persistence.repository.ImageRepository;
-import de.starwit.persistence.repository.ObservationAreaRepository;
 import de.starwit.service.dto.DatabackendDto;
 import de.starwit.service.dto.GeometryPointsDto;
 import jakarta.transaction.Transactional;
@@ -36,9 +35,6 @@ public class DatabackendService {
 
     @Autowired
     private ImageRepository imageRepository;
-
-    @Autowired
-    private ObservationAreaRepository observationAreaRepository;
 
     public DatabackendService(@Value("${databackend.url}") URI configuredUri) {
         restClient = RestClient.create();
@@ -99,7 +95,7 @@ public class DatabackendService {
         dbeDto.setCameraId(imageEntity.getCamera().get(0).getSaeId());
         dbeDto.setDetectionClassId(2);
         dbeDto.setEnabled(true);
-        dbeDto.setObservationAreaId(imageEntity.getParkingConfig().getObservationArea().getId());
+        dbeDto.setObservationAreaId(imageEntity.getObservationArea().getId());
         dbeDto.setClassification(polygonEntity.getClassification().getName());
         dbeDto.setGeoReferenced(imageEntity.getGeoReferenced());
 

@@ -1,15 +1,12 @@
 package de.starwit.persistence.entity;
 
 import java.math.BigDecimal;
-import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonFilter;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.Max;
@@ -29,19 +26,9 @@ public class ObservationAreaEntity extends AbstractEntity<Long> {
     private String name;
 
     // entity relations
-    @JsonFilter("filterIdNameImageCamera")
-    @OneToMany(mappedBy = "observationArea", cascade = { CascadeType.ALL }, orphanRemoval = true)
-    private List<ParkingConfigEntity> parkingConfig;
-
-    @JsonFilter("filterIdNameImageCamera")
-    @OneToOne(cascade = { CascadeType.ALL })
-    @JoinColumn(name = "testconfig_id", referencedColumnName = "id", unique = true)
-    private ParkingConfigEntity selectedTestConfig;
-
-    @JsonFilter("filterIdNameImageCamera")
-    @OneToOne(cascade = { CascadeType.ALL })
-    @JoinColumn(name = "prodconfig_id", referencedColumnName = "id", unique = true)
-    private ParkingConfigEntity selectedProdConfig;
+    @JsonFilter("filterImage")
+    @OneToOne(mappedBy = "observationArea", cascade = { CascadeType.ALL }, orphanRemoval = true)
+    private ImageEntity image;
   
     @Min(value = -90)
     @Max(value = 90)
@@ -62,29 +49,12 @@ public class ObservationAreaEntity extends AbstractEntity<Long> {
         this.name = name;
     }
 
-    // entity relations getters and setters
-    public List<ParkingConfigEntity> getParkingConfig() {
-        return parkingConfig;
+    public ImageEntity getImage() {
+        return image;
     }
 
-    public void setParkingConfig(List<ParkingConfigEntity> parkingConfig) {
-        this.parkingConfig = parkingConfig;
-    }
-
-    public ParkingConfigEntity getSelectedTestConfig() {
-        return selectedTestConfig;
-    }
-
-    public void setSelectedTestConfig(ParkingConfigEntity selectedTestConfig) {
-        this.selectedTestConfig = selectedTestConfig;
-    }
-
-    public ParkingConfigEntity getSelectedProdConfig() {
-        return selectedProdConfig;
-    }
-
-    public void setSelectedProdConfig(ParkingConfigEntity selectedProdConfig) {
-        this.selectedProdConfig = selectedProdConfig;
+    public void setImage(ImageEntity image) {
+        this.image = image;
     }
 
     public BigDecimal getCenterlatitude() {

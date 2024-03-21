@@ -53,15 +53,15 @@ function ImageAnnotate() {
             observationAreaRest.findById(observationAreaId).then(response => {
                 if (response.data == null) {
                     return;
-                } else if (response.data?.selectedProdConfigId !== undefined) {
-                    reloadImages(response.data?.selectedProdConfigId);
+                } else if (response.data?.id !== undefined) {
+                    reloadImages(response.data?.id);
                 }
             });
         }
     }
 
-    function reloadImages(prodConfigId) {
-        imageRest.findWithPolygons(prodConfigId).then(response => {
+    function reloadImages(observationAreaId) {
+        imageRest.findWithPolygons(observationAreaId).then(response => {
             if (response.data == null) {
                 return;
             }

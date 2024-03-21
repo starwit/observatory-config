@@ -6,14 +6,6 @@ class ImageRest extends CrudRest {
         super(window.location.pathname + "api/image");
     }
 
-    findAllWithoutParkingConfig(selected) {
-        if (isNaN(selected)) {
-            return axios.get(this.baseUrl + "/find-without-parkingConfig");
-        } else {
-            return axios.get(this.baseUrl + "/find-without-other-parkingConfig/" + selected);
-        }
-    }
-
     findWithPolygons(selected) {
         return axios.get(this.baseUrl + "/find-with-polygons/" + selected);
     }

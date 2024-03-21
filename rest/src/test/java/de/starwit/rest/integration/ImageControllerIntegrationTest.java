@@ -9,7 +9,7 @@ import de.starwit.persistence.entity.ImageEntity;
 import de.starwit.rest.controller.ImageController;
 import de.starwit.service.impl.ClassificationService;
 import de.starwit.service.impl.ImageService;
-import de.starwit.service.impl.ParkingConfigService;
+import de.starwit.service.impl.ObservationAreaService;
 import de.starwit.service.impl.PointService;
 import de.starwit.service.impl.PolygonService;
 import de.starwit.service.mapper.ImageMapper;
@@ -32,10 +32,10 @@ public class ImageControllerIntegrationTest extends AbstractControllerIntegratio
     private ClassificationService classificationService;
 
     @MockBean
-    private PolygonService polygonService;
+    private ObservationAreaService observationAreaService;
 
     @MockBean
-    private ParkingConfigService parkingConfigService;
+    private PolygonService polygonService;
 
     @MockBean
     private PointService pointService;
