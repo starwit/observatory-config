@@ -1,5 +1,5 @@
-ALTER TABLE "parkingarea"
-    DROP CONSTRAINT "fk_parkingarea_testconfig";
+ALTER TABLE "observationarea"
+    DROP CONSTRAINT "fk_observationarea_testconfig";
 
-ALTER TABLE "parkingarea"
-    DROP CONSTRAINT "fk_parkingarea_prodconfig";
+ALTER TABLE "observationarea"
+    DROP CONSTRAINT "fk_observationarea_prodconfig";

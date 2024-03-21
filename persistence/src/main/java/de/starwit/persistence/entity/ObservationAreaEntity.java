@@ -17,11 +17,11 @@ import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 
 /**
- * ParkingArea Entity class
+ * ObservationArea Entity class
  */
 @Entity
-@Table(name = "parkingarea")
-public class ParkingAreaEntity extends AbstractEntity<Long> {
+@Table(name = "observationarea")
+public class ObservationAreaEntity extends AbstractEntity<Long> {
 
     // entity fields
     @NotBlank
@@ -30,7 +30,7 @@ public class ParkingAreaEntity extends AbstractEntity<Long> {
 
     // entity relations
     @JsonFilter("filterIdNameImageCamera")
-    @OneToMany(mappedBy = "parkingArea", cascade = { CascadeType.ALL }, orphanRemoval = true)
+    @OneToMany(mappedBy = "observationArea", cascade = { CascadeType.ALL }, orphanRemoval = true)
     private List<ParkingConfigEntity> parkingConfig;
 
     @JsonFilter("filterIdNameImageCamera")

@@ -6,11 +6,11 @@ import {useTranslation} from "react-i18next";
 import ClassificationRest from "../../services/ClassificationRest";
 import {Box, Container, FormControl, Stack, Typography} from "@mui/material";
 import ImageRest from "../../services/ImageRest";
-import ParkingAreaRest from "../../services/ParkingAreaRest";
+import ObservationAreaRest from "../../services/ObservationAreaRest";
 import {setIn} from 'seamless-immutable';
 import {useSnackbar} from 'notistack';
 import {classificationSelectTools} from "../../AppConfig";
-import ParkingAreaSelect from "../parkingArea/ParkingAreaSelect";
+import ObservationAreaSelect from "../observationArea/ObservationAreaSelect";
 import {AppBar} from "../../assets/styles/HeaderStyles";
 
 const userReducer = (state, action) => {
@@ -34,12 +34,12 @@ function ImageAnnotate() {
     const [selectedImage, setSelectedImage] = useState(0);
     const classificationRest = useMemo(() => new ClassificationRest(), []);
     const imageRest = useMemo(() => new ImageRest(), []);
-    const parkingAreaRest = useMemo(() => new ParkingAreaRest(), [])
-    const {parkingAreaId} = useParams();
+    const observationAreaRest = useMemo(() => new ObservationAreaRest(), [])
+    const {observationAreaId} = useParams();
 
     useEffect(() => {
         reloadClassification();
-        reloadParkingAreas();
+        reloadObservationAreas();
     }, []);
 
     function reloadClassification() {
@@ -48,9 +48,9 @@ function ImageAnnotate() {
         });
     }
 
-    function reloadParkingAreas() {
-        if (parkingAreaId !== "undefined") {
-            parkingAreaRest.findById(parkingAreaId).then(response => {
+    function reloadObservationAreas() {
+        if (observationAreaId !== "undefined") {
+            observationAreaRest.findById(observationAreaId).then(response => {
                 if (response.data == null) {
                     return;
                 } else if (response.data?.selectedProdConfigId !== undefined) {
@@ -99,7 +99,7 @@ function ImageAnnotate() {
         
         imageRest.savePolygons(event.images).then(() => {
             handleMessage("success", t("response.save.success"));
-            reloadParkingAreas();
+            reloadObservationAreas();
         });
     }
 
@@ -121,7 +121,7 @@ function ImageAnnotate() {
         return (
             <>
                 <AppBar sx={{bgcolor: "white", color: "black", width: "100%", left: "0rem"}}>
-                    <ParkingAreaSelect />
+                    <ObservationAreaSelect />
                 </AppBar>
                 <Box sx={{padding: "3rem", paddingTop: "5rem"}}>
                     <Typography variant="h5">{t("general.loading")}</Typography>
@@ -134,7 +134,7 @@ function ImageAnnotate() {
         return (
             <>
                 <AppBar sx={{bgcolor: "white", color: "black", width: "100%", left: "0rem"}}>
-                    <ParkingAreaSelect />
+                    <ObservationAreaSelect />
                 </AppBar>
                 <Box sx={{padding: "3rem", paddingTop: "5rem"}}>
                     <Typography variant="h5">{t("parkingConfig.image.empty")}</Typography>
@@ -147,7 +147,7 @@ function ImageAnnotate() {
     return (
         <>
             <AppBar color="transparent" sx={{boxShadow: "none", left: "0rem", right: "8rem", width: "80%"}}>
-                <ParkingAreaSelect />
+                <ObservationAreaSelect />
             </AppBar>
             <ReactImageAnnotate
                 sx={{width: '99%'}}

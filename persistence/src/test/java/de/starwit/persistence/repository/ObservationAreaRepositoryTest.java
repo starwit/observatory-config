@@ -8,20 +8,20 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 
-import de.starwit.persistence.entity.ParkingAreaEntity;
+import de.starwit.persistence.entity.ObservationAreaEntity;
 
 /**
- * Tests for ParkingAreaRepository
+ * Tests for ObservationAreaRepository
  */
 @DataJpaTest
-public class ParkingAreaRepositoryTest {
+public class ObservationAreaRepositoryTest {
 
     @Autowired
-    private ParkingAreaRepository repository;
+    private ObservationAreaRepository repository;
 
     @Test
     public void testFindAll() {
-        List<ParkingAreaEntity> parkingareas = repository.findAll();
-        assertTrue(parkingareas.isEmpty());
+        List<ObservationAreaEntity> observationareas = repository.findAll();
+        assertTrue(observationareas.isEmpty());
     }
 }

@@ -19,67 +19,67 @@ import org.springframework.web.bind.annotation.RestController;
 
 import de.starwit.persistence.exception.NotificationException;
 import de.starwit.rest.exception.NotificationDto;
-import de.starwit.service.dto.ParkingAreaDto;
+import de.starwit.service.dto.ObservationAreaDto;
 import de.starwit.service.impl.DatabackendService;
-import de.starwit.service.impl.ParkingAreaService;
-import de.starwit.service.mapper.ParkingAreaMapper;
+import de.starwit.service.impl.ObservationAreaService;
+import de.starwit.service.mapper.ObservationAreaMapper;
 import io.swagger.v3.oas.annotations.Operation;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.validation.Valid;
 
 /**
- * ParkingArea RestController
+ * ObservationArea RestController
  * Have a look at the RequestMapping!!!!!!
  */
 @RestController
-@RequestMapping(path = "${rest.base-path}/parkingarea")
-public class ParkingAreaController {
+@RequestMapping(path = "${rest.base-path}/observationarea")
+public class ObservationAreaController {
 
-    static final Logger LOG = LoggerFactory.getLogger(ParkingAreaController.class);
+    static final Logger LOG = LoggerFactory.getLogger(ObservationAreaController.class);
 
     @Autowired
-    private ParkingAreaService parkingareaService;
+    private ObservationAreaService observationareaService;
 
     @Autowired
     private DatabackendService databackendService;
 
-    private ParkingAreaMapper mapper = new ParkingAreaMapper();
+    private ObservationAreaMapper mapper = new ObservationAreaMapper();
 
-    @Operation(summary = "Get all parkingarea")
+    @Operation(summary = "Get all observationarea")
     @GetMapping
-    public List<ParkingAreaDto> findAll() {
-        return mapper.convertToDtoList(this.parkingareaService.findAll());
+    public List<ObservationAreaDto> findAll() {
+        return mapper.convertToDtoList(this.observationareaService.findAll());
     }
 
-    @Operation(summary = "Get parkingarea with id")
+    @Operation(summary = "Get observationarea with id")
     @GetMapping(value = "/{id}")
-    public ParkingAreaDto findById(@PathVariable("id") Long id) {
-        return mapper.convertToDto(this.parkingareaService.findById(id));
+    public ObservationAreaDto findById(@PathVariable("id") Long id) {
+        return mapper.convertToDto(this.observationareaService.findById(id));
     }
 
-    @Operation(summary = "Create parkingarea")
+    @Operation(summary = "Create observationarea")
     @PostMapping
-    public ParkingAreaDto save(@Valid @RequestBody ParkingAreaDto dto) {
+    public ObservationAreaDto save(@Valid @RequestBody ObservationAreaDto dto) {
         return update(dto);
     }
 
-    @Operation(summary = "Update parkingarea")
+    @Operation(summary = "Update observationarea")
     @PutMapping
-    public ParkingAreaDto update(@Valid @RequestBody ParkingAreaDto dto) {
-        return parkingareaService.saveOrUpdateDto(dto);
+    public ObservationAreaDto update(@Valid @RequestBody ObservationAreaDto dto) {
+        return observationareaService.saveOrUpdateDto(dto);
     }
 
-    @Operation(summary = "Delete parkingarea")
+    @Operation(summary = "Delete observationarea")
     @DeleteMapping(value = "/{id}")
     public void delete(@PathVariable("id") Long id) throws NotificationException {
-        parkingareaService.delete(id);
+        observationareaService.delete(id);
         databackendService.triggerConfigurationSync();
     }
 
     @ExceptionHandler(value = { EntityNotFoundException.class })
     public ResponseEntity<Object> handleException(EntityNotFoundException ex) {
-        LOG.info("ParkingArea not found. {}", ex.getMessage());
-        NotificationDto output = new NotificationDto("error.parkingarea.notfound", "ParkingArea not found.");
+        LOG.info("ObservationArea not found. {}", ex.getMessage());
+        NotificationDto output = new NotificationDto("error.observationarea.notfound", "ObservationArea not found.");
         return new ResponseEntity<>(output, HttpStatus.NOT_FOUND);
     }
 }

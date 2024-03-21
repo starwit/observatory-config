@@ -13,8 +13,8 @@ ALTER TABLE "camera"
     FOREIGN KEY ("image_id")
     REFERENCES "image" ("id");
 
-ALTER TABLE "parkingarea" ADD "center_latitude" DECIMAL(22,19);
-ALTER TABLE "parkingarea" ADD "center_longitude" DECIMAL(22,19);
+ALTER TABLE "observationarea" ADD "center_latitude" DECIMAL(22,19);
+ALTER TABLE "observationarea" ADD "center_longitude" DECIMAL(22,19);
 
 ALTER TABLE "image" ADD "top_left_latitude" DECIMAL(22,19);
 ALTER TABLE "image" ADD "top_left_longitude" DECIMAL(22,19);

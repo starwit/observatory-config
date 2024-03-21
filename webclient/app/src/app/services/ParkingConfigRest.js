@@ -6,11 +6,11 @@ class ParkingConfigRest extends CrudRest {
         super(window.location.pathname + "api/parkingconfig");
     }
 
-    findAllWithoutParkingArea(selected) {
+    findAllWithoutObservationArea(selected) {
         if (isNaN(selected)) {
-            return axios.get(this.baseUrl + "/find-without-parkingArea");
+            return axios.get(this.baseUrl + "/find-without-observationArea");
         } else {
-            return axios.get(this.baseUrl + "/find-without-other-parkingArea/" + selected);
+            return axios.get(this.baseUrl + "/find-without-other-observationArea/" + selected);
         }
     }
 

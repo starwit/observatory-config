@@ -17,33 +17,33 @@ import { useImmer } from "use-immer";
 import ConfirmationDialog from "../../commons/dialog/ConfirmationDialog";
 import {
     entityDefault
-} from "../../modifiers/ParkingAreaModifier";
-import ParkingAreaRest from "../../services/ParkingAreaRest";
-import ParkingAreaDialog from "./ParkingAreaDialog";
+} from "../../modifiers/ObservationAreaModifier";
+import ObservationAreaRest from "../../services/ObservationAreaRest";
+import ObservationAreaDialog from "./ObservationAreaDialog";
 
-function ParkingAreaSelect() {
+function ObservationAreaSelect() {
     const [selectedArea, setSelectedArea] = useImmer(entityDefault);
-    const parkingareaRest = useMemo(() => new ParkingAreaRest(), [entityDefault]);
-    const [parkingAreaAll, setParkingAreaAll] = useImmer([]);
+    const observationareaRest = useMemo(() => new ObservationAreaRest(), [entityDefault]);
+    const [observationAreaAll, setObservationAreaAll] = useImmer([]);
     const [openDialog, setOpenDialog] = React.useState(false);
     const [isCreate, setIsCreate] = React.useState(false);
     const {t} = useTranslation();
-    const {parkingAreaId} = useParams();
-    const nav = "/parkingarea/";
+    const {observationAreaId} = useParams();
+    const nav = "/observationarea/";
     const navigate = useNavigate();
     const [track, setTrack] = useState(false);
     const [startTrack, setStartTrack] = useState(false);
 
     useEffect(() => {
         reload();
-    }, [parkingAreaId]);
+    }, [observationAreaId]);
 
     function reload() {
-        parkingareaRest.findAll().then(response => {
+        observationareaRest.findAll().then(response => {
             const loadedAreas = response.data;
-            setParkingAreaAll(loadedAreas);
+            setObservationAreaAll(loadedAreas);
 
-            const preselectedArea = loadedAreas.find(entity => entity.id === parseInt(parkingAreaId));
+            const preselectedArea = loadedAreas.find(entity => entity.id === parseInt(observationAreaId));
             if (preselectedArea !== undefined) {
                 setSelectedArea(preselectedArea);
             } else {
@@ -58,7 +58,7 @@ function ParkingAreaSelect() {
 
     function update(modifiedEntity) {
         if (isCreate) {
-            parkingareaRest.findAll().then(response => {
+            observationareaRest.findAll().then(response => {
                 navigate(`${nav}${modifiedEntity.id}`);
             });
         } else {
@@ -67,8 +67,8 @@ function ParkingAreaSelect() {
     }
 
     const handleChange = event => {
-        const newParkingAreaId = event.target.value;
-        navigate(`${nav}${newParkingAreaId}`);
+        const newObservationAreaId = event.target.value;
+        navigate(`${nav}${newObservationAreaId}`);
     };
 
     function handleDialogOpen() {
@@ -101,7 +101,7 @@ function ParkingAreaSelect() {
             <FormControl sx={{boxShadow: "none", width: "20rem"}}>
                 <Select sx={{height: "2rem", margin: "0rem"}}
                     value={selectedArea.id} onChange={handleChange}>
-                    {parkingAreaAll.map(entity => (
+                    {observationAreaAll.map(entity => (
                         <MenuItem sx={{margin: "0rem"}}
                             key={entity.id} value={entity.id} >{entity.name}</MenuItem>))}
                 </Select>
@@ -120,15 +120,15 @@ function ParkingAreaSelect() {
                 {startTrack ? <StopCircleIcon fontSize="small" color="error" /> : <PlayCircleFilledWhiteIcon fontSize="small" />} 
             </IconButton>
             <ConfirmationDialog
-                title={t("parkingArea.track.title")}
-                message={t("parkingArea.track.message")}
+                title={t("observationArea.track.title")}
+                message={t("observationArea.track.message")}
                 open={track}
                 onClose={() => {setTrack(false);}}
                 onSubmit={() => {setTrack(false); toggleTrack();}}
                 confirmTitle={t("button.submit")}
             />           
             </FormControl>
-            <ParkingAreaDialog
+            <ObservationAreaDialog
                 open={openDialog}
                 onClose={handleDialogClose}
                 isCreate={isCreate}
@@ -140,4 +140,4 @@ function ParkingAreaSelect() {
 }
 
 
-export default ParkingAreaSelect;
+export default ObservationAreaSelect;

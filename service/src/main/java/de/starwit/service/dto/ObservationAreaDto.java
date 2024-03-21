@@ -6,7 +6,7 @@ import java.util.List;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
 
-public class ParkingAreaDto {
+public class ObservationAreaDto {
 
     private Long id;
 

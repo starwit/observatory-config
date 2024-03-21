@@ -32,8 +32,8 @@ public class ParkingConfigEntity extends AbstractEntity<Long> {
 
     @JsonFilter("filterId")
     @ManyToOne
-    @JoinColumn(name = "parkingarea_id")
-    private ParkingAreaEntity parkingArea;
+    @JoinColumn(name = "observationarea_id")
+    private ObservationAreaEntity observationArea;
 
     // entity fields getters and setters
     public String getName() {
@@ -53,12 +53,12 @@ public class ParkingConfigEntity extends AbstractEntity<Long> {
         this.image = image;
     }
 
-    public ParkingAreaEntity getParkingArea() {
-        return parkingArea;
+    public ObservationAreaEntity getObservationArea() {
+        return observationArea;
     }
 
-    public void setParkingArea(ParkingAreaEntity parkingArea) {
-        this.parkingArea = parkingArea;
+    public void setObservationArea(ObservationAreaEntity observationArea) {
+        this.observationArea = observationArea;
     }
 
 }
