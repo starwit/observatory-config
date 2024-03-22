@@ -24,15 +24,15 @@ public class CameraEntity extends AbstractEntity<Long> {
     // entity relations
     @JsonFilter("filterId")
     @ManyToOne
-    @JoinColumn(name = "image_id")
-    private ImageEntity image;
+    @JoinColumn(name = "observationarea_id")
+    private ObservationAreaEntity observationArea;
 
     public CameraEntity() {
     }
     
-    public CameraEntity(String saeId, ImageEntity image) {
+    public CameraEntity(String saeId, ObservationAreaEntity observationArea) {
         this.saeId = saeId;
-        this.image = image;
+        this.observationArea = observationArea;
     }
 
     // entity fields getters and setters
@@ -45,11 +45,11 @@ public class CameraEntity extends AbstractEntity<Long> {
     }
 
     // entity relations getters and setters
-    public ImageEntity getImage() {
-        return image;
+    public ObservationAreaEntity getObservationArea() {
+        return observationArea;
     }
 
-    public void setImage(ImageEntity image) {
-        this.image = image;
+    public void setObservationArea(ObservationAreaEntity observationArea) {
+        this.observationArea = observationArea;
     }
 }

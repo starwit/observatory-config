@@ -20,19 +20,16 @@ public class ObservationAreaMapper implements CustomMapper<ObservationAreaEntity
         dto.setName(entity.getName());
         dto.setCenterlatitude(entity.getCenterlatitude());
         dto.setCenterlongitude(entity.getCenterlongitude());
-        if (entity.getImage() != null){
-            ImageEntity image = entity.getImage();
-            List<String> cameras = new ArrayList<>();
-            if(image.getCamera() != null && !image.getCamera().isEmpty()) {
-                image.getCamera().forEach(camera -> {cameras.add(camera.getSaeId());});
-                dto.setSaeIds(cameras);
-            }
-            dto.setDegreeperpixelx(image.getDegreeperpixelx());
-            dto.setDegreeperpixely(image.getDegreeperpixely());
-            dto.setGeoReferenced(image.getGeoReferenced());
-            dto.setTopleftlatitude(image.getTopleftlatitude());
-            dto.setTopleftlongitude(image.getTopleftlongitude());
+        List<String> cameras = new ArrayList<>();
+        if(entity.getCamera() != null && !entity.getCamera().isEmpty()) {
+            entity.getCamera().forEach(camera -> {cameras.add(camera.getSaeId());});
+            dto.setSaeIds(cameras);
         }
+        dto.setDegreeperpixelx(entity.getDegreeperpixelx());
+        dto.setDegreeperpixely(entity.getDegreeperpixely());
+        dto.setGeoReferenced(entity.getGeoReferenced());
+        dto.setTopleftlatitude(entity.getTopleftlatitude());
+        dto.setTopleftlongitude(entity.getTopleftlongitude());
         return dto;
     }
 
@@ -64,13 +61,13 @@ public class ObservationAreaMapper implements CustomMapper<ObservationAreaEntity
         return observationAreaEntity;
     }
 
-    public List<CameraEntity> getDefaultCameras(ObservationAreaDto dto, ImageEntity image) {
+    public List<CameraEntity> getDefaultCameras(ObservationAreaDto dto, ObservationAreaEntity observationAreaEntity) {
         if (dto.getSaeIds() == null) {
             return null;
         }
         List<CameraEntity> cameras = new ArrayList<>();
         dto.getSaeIds().forEach(saeId -> {
-            cameras.add(new CameraEntity(saeId, image));
+            cameras.add(new CameraEntity(saeId, observationAreaEntity));
         });
         return cameras;
     }
@@ -85,11 +82,11 @@ public class ObservationAreaMapper implements CustomMapper<ObservationAreaEntity
     }
 
     public ImageEntity mapImageData(ObservationAreaDto dto, ObservationAreaEntity observationAreaEntity, ImageEntity image) {
-        image.setDegreeperpixelx(dto.getDegreeperpixelx());
-        image.setDegreeperpixely(dto.getDegreeperpixely());
-        image.setTopleftlatitude(dto.getTopleftlatitude());
-        image.setTopleftlongitude(dto.getTopleftlongitude());
-        image.setGeoReferenced(dto.getGeoReferenced());
+        observationAreaEntity.setDegreeperpixelx(dto.getDegreeperpixelx());
+        observationAreaEntity.setDegreeperpixely(dto.getDegreeperpixely());
+        observationAreaEntity.setTopleftlatitude(dto.getTopleftlatitude());
+        observationAreaEntity.setTopleftlongitude(dto.getTopleftlongitude());
+        observationAreaEntity.setGeoReferenced(dto.getGeoReferenced());
         image.setObservationArea(observationAreaEntity);
         image.setName(dto.getName());
         return image;

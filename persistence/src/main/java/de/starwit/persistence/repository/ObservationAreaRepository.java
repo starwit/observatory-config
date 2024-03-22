@@ -2,8 +2,6 @@ package de.starwit.persistence.repository;
 
 import java.util.List;
 
-import org.springframework.data.jpa.repository.Query;
-
 import de.starwit.persistence.entity.ObservationAreaEntity;
 
 /**

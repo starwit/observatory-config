@@ -68,7 +68,7 @@ public class ObservationAreaService implements ServiceInterface<ObservationAreaE
             if (entity.getImage() == null) {
                 ImageEntity image = mapper.getDefaultImage(dto, entity);
                 image = image == null ? null : imageRepository.saveAndFlush(image);
-                List<CameraEntity> cameras = mapper.getDefaultCameras(dto, image);
+                List<CameraEntity> cameras = mapper.getDefaultCameras(dto, entity);
                 cameras = cameras == null ? null : cameraRepository.saveAllAndFlush(cameras);
                 imageRepository.refresh(image);
             } else {
@@ -76,7 +76,7 @@ public class ObservationAreaService implements ServiceInterface<ObservationAreaE
                 ImageEntity image = imageRepository.getReferenceById(imageId);
                 image = mapper.mapImageData(dto, entity, image);
                 image = image == null ? null : imageRepository.saveAndFlush(image);
-                mapAndSaveCameras(dto.getSaeIds(), image);
+                mapAndSaveCameras(dto.getSaeIds(), entity);
                 imageRepository.refresh(image);
             }
             entity = observationareaRepository.saveAndFlush(entity);
@@ -89,27 +89,27 @@ public class ObservationAreaService implements ServiceInterface<ObservationAreaE
         entity = observationareaRepository.saveAndFlush(entity);
         ImageEntity image = mapper.getDefaultImage(dto, entity);
         image = image == null ? null : imageRepository.saveAndFlush(image);
-        List<CameraEntity> cameras = mapper.getDefaultCameras(dto, image);
+        List<CameraEntity> cameras = mapper.getDefaultCameras(dto, entity);
         cameras = cameras == null ? null : cameraRepository.saveAllAndFlush(cameras);
         imageRepository.refresh(image);
         return entity;
     }
 
-    private void mapAndSaveCameras(List<String> addedCameras, ImageEntity image) {
+    private void mapAndSaveCameras(List<String> addedCameras, ObservationAreaEntity entity) {
         List<CameraEntity> newCameraList = new ArrayList<>();
         if (addedCameras != null && !addedCameras.isEmpty()){
             for (String saeId : addedCameras) {
-                List<CameraEntity> existingCamera = cameraRepository.findBySaeIdAndImage(saeId, image);
+                List<CameraEntity> existingCamera = cameraRepository.findBySaeIdAndObservationArea(saeId, entity);
                 if (existingCamera != null && !existingCamera.isEmpty()) {
-                    existingCamera.get(0).setImage(image);
+                    existingCamera.get(0).setObservationArea(entity);
                     newCameraList.addAll(existingCamera);
                 } else {
-                    CameraEntity camera = new CameraEntity(saeId, image);
+                    CameraEntity camera = new CameraEntity(saeId, entity);
                     newCameraList.add(camera);
                 }
             }
         }
-        List<CameraEntity> toBeRemoved = cameraRepository.findByImage(image);
+        List<CameraEntity> toBeRemoved = cameraRepository.findByObservationArea(entity);
         toBeRemoved.removeAll(newCameraList);
         cameraRepository.deleteAll(toBeRemoved);
         cameraRepository.saveAllAndFlush(newCameraList);

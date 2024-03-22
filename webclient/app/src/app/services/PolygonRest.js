@@ -6,11 +6,11 @@ class PolygonRest extends CrudRest {
         super(window.location.pathname + "api/polygon");
     }
 
-    findAllWithoutImage(selected) {
+    findAllWithoutObservationArea(selected) {
         if (isNaN(selected)) {
-            return axios.get(this.baseUrl + "/find-without-image");
+            return axios.get(this.baseUrl + "/find-without-observationarea");
         } else {
-            return axios.get(this.baseUrl + "/find-without-other-image/" + selected);
+            return axios.get(this.baseUrl + "/find-without-other-observationarea/" + selected);
         }
     }
 }

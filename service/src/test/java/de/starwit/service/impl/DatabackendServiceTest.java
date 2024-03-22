@@ -25,7 +25,7 @@ public class DatabackendServiceTest {
         PolygonEntity polygon = createLineWithDefaults();
         
         ImageEntity image = createImageWithDefaults();
-        image.setGeoReferenced(false);
+        image.getObservationArea().setGeoReferenced(false);
         
         DatabackendService testee = new DatabackendService(URI.create("http://localhost"));
 
@@ -49,7 +49,7 @@ public class DatabackendServiceTest {
         PolygonEntity polygon = createLineWithDefaults();
         
         ImageEntity image = createImageWithDefaults();
-        image.setGeoReferenced(true);
+        image.getObservationArea().setGeoReferenced(true);
         
         DatabackendService testee = new DatabackendService(URI.create("http://localhost"));
 
@@ -73,7 +73,7 @@ public class DatabackendServiceTest {
         PolygonEntity polygon = createPolygonWithDefaults();
         
         ImageEntity image = createImageWithDefaults();
-        image.setGeoReferenced(false);
+        image.getObservationArea().setGeoReferenced(false);
         
         DatabackendService testee = new DatabackendService(URI.create("http://localhost"));
 
@@ -97,7 +97,7 @@ public class DatabackendServiceTest {
         PolygonEntity polygon = createPolygonWithDefaults();
         
         ImageEntity image = createImageWithDefaults();
-        image.setGeoReferenced(true);
+        image.getObservationArea().setGeoReferenced(true);
         
         DatabackendService testee = new DatabackendService(URI.create("http://localhost"));
 
@@ -168,16 +168,15 @@ public class DatabackendServiceTest {
         image.setId(1L);
         image.setName("testImage");
         image.setType("testType");
-        image.setImageHeight(1000);
-        image.setImageWidth(1000);
-        image.setDegreeperpixelx(new BigDecimal(0.001));
-        image.setDegreeperpixely(new BigDecimal(0.001));
-        image.setGeoReferenced(false);
-        image.setTopleftlongitude(new BigDecimal(10));
-        image.setTopleftlatitude(new BigDecimal(52));
-        image.setCamera(Arrays.asList(camera));
         image.setObservationArea(observationArea);
-
+        image.getObservationArea().setImageHeight(1000);
+        image.getObservationArea().setImageWidth(1000);
+        image.getObservationArea().setDegreeperpixelx(new BigDecimal(0.001));
+        image.getObservationArea().setDegreeperpixely(new BigDecimal(0.001));
+        image.getObservationArea().setGeoReferenced(false);
+        image.getObservationArea().setTopleftlongitude(new BigDecimal(10));
+        image.getObservationArea().setTopleftlatitude(new BigDecimal(52));
+        image.getObservationArea().setCamera(Arrays.asList(camera));
         return image;
     }
 
