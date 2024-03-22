@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import de.starwit.persistence.entity.CameraEntity;
-import de.starwit.persistence.entity.ImageEntity;
 import de.starwit.persistence.entity.ObservationAreaEntity;
 import de.starwit.service.dto.ObservationAreaDto;
 
@@ -53,12 +52,12 @@ public class ObservationAreaMapper implements CustomMapper<ObservationAreaEntity
         entity.setName(dto.getName());
         entity.setCenterlatitude(dto.getCenterlatitude());
         entity.setCenterlongitude(dto.getCenterlongitude());
+        entity.setDegreeperpixelx(dto.getDegreeperpixelx());
+        entity.setDegreeperpixely(dto.getDegreeperpixely());
+        entity.setTopleftlatitude(dto.getTopleftlatitude());
+        entity.setTopleftlongitude(dto.getTopleftlongitude());
+        entity.setGeoReferenced(dto.getGeoReferenced());
         return entity;
-    }
-
-    public ObservationAreaEntity addDefaultImage(ObservationAreaDto dto, ObservationAreaEntity observationAreaEntity) {
-        observationAreaEntity.setImage(getDefaultImage(dto, observationAreaEntity));
-        return observationAreaEntity;
     }
 
     public List<CameraEntity> getDefaultCameras(ObservationAreaDto dto, ObservationAreaEntity observationAreaEntity) {
@@ -70,25 +69,5 @@ public class ObservationAreaMapper implements CustomMapper<ObservationAreaEntity
             cameras.add(new CameraEntity(saeId, observationAreaEntity));
         });
         return cameras;
-    }
-
-    public ImageEntity getDefaultImage(ObservationAreaDto dto, ObservationAreaEntity observationAreaEntity) {
-        if (observationAreaEntity == null) {
-            return null;
-        }
-        ImageEntity image = new ImageEntity();
-        mapImageData(dto, observationAreaEntity, image);
-        return image;
-    }
-
-    public ImageEntity mapImageData(ObservationAreaDto dto, ObservationAreaEntity observationAreaEntity, ImageEntity image) {
-        observationAreaEntity.setDegreeperpixelx(dto.getDegreeperpixelx());
-        observationAreaEntity.setDegreeperpixely(dto.getDegreeperpixely());
-        observationAreaEntity.setTopleftlatitude(dto.getTopleftlatitude());
-        observationAreaEntity.setTopleftlongitude(dto.getTopleftlongitude());
-        observationAreaEntity.setGeoReferenced(dto.getGeoReferenced());
-        image.setObservationArea(observationAreaEntity);
-        image.setName(dto.getName());
-        return image;
     }
 }

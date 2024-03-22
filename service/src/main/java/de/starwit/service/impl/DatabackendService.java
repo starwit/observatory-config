@@ -17,10 +17,9 @@ import org.springframework.web.client.ResourceAccessException;
 import org.springframework.web.client.RestClient;
 import org.springframework.web.client.RestClientResponseException;
 
-import de.starwit.persistence.entity.ImageEntity;
 import de.starwit.persistence.entity.ObservationAreaEntity;
 import de.starwit.persistence.entity.PolygonEntity;
-import de.starwit.persistence.repository.ImageRepository;
+import de.starwit.persistence.repository.ObservationAreaRepository;
 import de.starwit.service.dto.DatabackendDto;
 import de.starwit.service.dto.GeometryPointsDto;
 import jakarta.transaction.Transactional;
@@ -35,7 +34,7 @@ public class DatabackendService {
     private RestClient restClient;
 
     @Autowired
-    private ImageRepository imageRepository;
+    private ObservationAreaRepository observationAreaRepository;
 
     public DatabackendService(@Value("${databackend.url}") URI configuredUri) {
         restClient = RestClient.create();
@@ -48,7 +47,7 @@ public class DatabackendService {
     @Transactional
     public void triggerConfigurationSync() {
         // Delete all and write all configs again for now, because of robustness
-        List<ImageEntity> allImages = imageRepository.findAll();
+        List<ObservationAreaEntity> allObservationAreas = observationAreaRepository.findAll();
 
         log.info("Syncing configuration.");
         
@@ -63,16 +62,16 @@ public class DatabackendService {
             return;
         }
 
-        for (ImageEntity image : allImages) {
-            sendConfig(image);
+        for (ObservationAreaEntity observationArea : allObservationAreas) {
+            sendConfig(observationArea);
         }
         
     }
 
-    public void sendConfig(ImageEntity image) {
-        for (PolygonEntity polygon : image.getObservationArea().getPolygon()) {
+    public void sendConfig(ObservationAreaEntity observationAreaEntity) {
+        for (PolygonEntity polygon : observationAreaEntity.getPolygon()) {
             try {
-                DatabackendDto dto = toDatabackendDto(image, polygon);
+                DatabackendDto dto = toDatabackendDto(observationAreaEntity, polygon);
 
                 ResponseEntity<Void> postResponse = restClient.post()
                         .uri(databackendUri.resolve("api/analytics-job"))
@@ -89,30 +88,30 @@ public class DatabackendService {
         }
     }
 
-    DatabackendDto toDatabackendDto(ImageEntity imageEntity, PolygonEntity polygonEntity) throws IllegalGeometryException {
+    DatabackendDto toDatabackendDto(ObservationAreaEntity observationAreaEntity, PolygonEntity polygonEntity) throws IllegalGeometryException {
         DatabackendDto dbeDto = new DatabackendDto();
 
         dbeDto.setName(polygonEntity.getName());
-        dbeDto.setCameraId(imageEntity.getObservationArea().getCamera().get(0).getSaeId());
+        dbeDto.setCameraId(observationAreaEntity.getCamera().get(0).getSaeId());
         dbeDto.setDetectionClassId(2);
         dbeDto.setEnabled(true);
-        dbeDto.setObservationAreaId(imageEntity.getObservationArea().getId());
+        dbeDto.setObservationAreaId(observationAreaEntity.getId());
         dbeDto.setClassification(polygonEntity.getClassification().getName());
-        dbeDto.setGeoReferenced(imageEntity.getObservationArea().getGeoReferenced());
+        dbeDto.setGeoReferenced(observationAreaEntity.getGeoReferenced());
 
         List<GeometryPointsDto> geometryPoints = new ArrayList<>();
 
         if (polygonEntity.getPoint().size() == 2) {
 
             dbeDto.setType("LINE_CROSSING");
-            geometryPoints.add(createGeometryPoint(polygonEntity, imageEntity.getObservationArea(), 0));
-            geometryPoints.add(createGeometryPoint(polygonEntity, imageEntity.getObservationArea(), 1));
+            geometryPoints.add(createGeometryPoint(polygonEntity, observationAreaEntity, 0));
+            geometryPoints.add(createGeometryPoint(polygonEntity, observationAreaEntity, 1));
 
         } else if (polygonEntity.getPoint().size() > 2) {
 
             dbeDto.setType("AREA_OCCUPANCY");
             for (int i = 0; i < polygonEntity.getPoint().size(); i++) {
-                geometryPoints.add(createGeometryPoint(polygonEntity, imageEntity.getObservationArea(), i));
+                geometryPoints.add(createGeometryPoint(polygonEntity, observationAreaEntity, i));
             }
 
         } else {
