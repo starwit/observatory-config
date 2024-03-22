@@ -139,8 +139,8 @@ public class ImageController {
                 polygonService.getRepository().flush();
             }
             entity.getObservationArea().getPolygon().removeAll(entity.getObservationArea().getPolygon());
-            entity.setImageHeight(dto.getImageHeight());
-            entity.setImageWidth(dto.getImageWidth());
+            entity.getObservationArea().setImageHeight(dto.getImageHeight());
+            entity.getObservationArea().setImageWidth(dto.getImageWidth());
             entity = imageService.saveAndFlush(entity);
             List<RegionDto> regions = dto.getRegions();
             for (RegionDto regionDto : regions) {

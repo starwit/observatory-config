@@ -75,6 +75,11 @@ public class ObservationAreaEntity extends AbstractEntity<Long> {
     @Column(name = "processing_enabled")
     private Boolean processingEnabled;
 
+    @Column(name = "image_height")
+    private Integer imageHeight;
+
+    @Column(name = "image_width")
+    private Integer imageWidth;
 
     // entity fields getters and setters
     public String getName() {
@@ -181,4 +186,21 @@ public class ObservationAreaEntity extends AbstractEntity<Long> {
     public void setProcessingEnabled(Boolean processingEnabled) {
         this.processingEnabled = processingEnabled;
     }
+
+    public Integer getImageHeight() {
+        return imageHeight;
+    }
+
+    public void setImageHeight(Integer imageHeight) {
+        this.imageHeight = imageHeight;
+    }
+
+    public Integer getImageWidth() {
+        return imageWidth;
+    }
+
+    public void setImageWidth(Integer imageWidth) {
+        this.imageWidth = imageWidth;
+    }
+
 }

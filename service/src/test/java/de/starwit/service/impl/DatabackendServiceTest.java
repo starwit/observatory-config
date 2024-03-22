@@ -168,9 +168,9 @@ public class DatabackendServiceTest {
         image.setId(1L);
         image.setName("testImage");
         image.setType("testType");
-        image.setImageHeight(1000);
-        image.setImageWidth(1000);
         image.setObservationArea(observationArea);
+        image.getObservationArea().setImageHeight(1000);
+        image.getObservationArea().setImageWidth(1000);
         image.getObservationArea().setDegreeperpixelx(new BigDecimal(0.001));
         image.getObservationArea().setDegreeperpixely(new BigDecimal(0.001));
         image.getObservationArea().setGeoReferenced(false);
