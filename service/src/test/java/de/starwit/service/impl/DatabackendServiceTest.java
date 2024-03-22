@@ -24,6 +24,7 @@ public class DatabackendServiceTest {
         PolygonEntity polygon = createLineWithDefaults();
 
         ObservationAreaEntity observationAreaEntity = createObservationAreaWithDefaults();
+        observationAreaEntity.setProcessingEnabled(true);
         observationAreaEntity.setGeoReferenced(false);
         
         DatabackendService testee = new DatabackendService(URI.create("http://localhost"));
@@ -47,9 +48,11 @@ public class DatabackendServiceTest {
         PolygonEntity polygon = createLineWithDefaults();
 
         ObservationAreaEntity observationAreaEntity = createObservationAreaWithDefaults();
+        observationAreaEntity.setProcessingEnabled(true);
         observationAreaEntity.setGeoReferenced(true);
         
         DatabackendService testee = new DatabackendService(URI.create("http://localhost"));
+        observationAreaEntity.setProcessingEnabled(true);
         DatabackendDto dbeDto = testee.toDatabackendDto(observationAreaEntity, polygon);
         
         assertThat(dbeDto.getCameraId()).isEqualTo("stream1");
@@ -70,6 +73,7 @@ public class DatabackendServiceTest {
         PolygonEntity polygon = createPolygonWithDefaults();
         
         ObservationAreaEntity observationAreaEntity = createObservationAreaWithDefaults();
+        observationAreaEntity.setProcessingEnabled(true);
         observationAreaEntity.setGeoReferenced(false);
 
         DatabackendService testee = new DatabackendService(URI.create("http://localhost"));
@@ -93,6 +97,7 @@ public class DatabackendServiceTest {
         PolygonEntity polygon = createPolygonWithDefaults();
         
         ObservationAreaEntity observationAreaEntity = createObservationAreaWithDefaults();
+        observationAreaEntity.setProcessingEnabled(true);
         observationAreaEntity.setGeoReferenced(true);
 
         DatabackendService testee = new DatabackendService(URI.create("http://localhost"));
