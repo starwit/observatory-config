@@ -14,23 +14,23 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockHttpServletResponse;
 
-import de.starwit.persistence.entity.ParkingAreaEntity;
+import de.starwit.persistence.entity.ObservationAreaEntity;
 
 @SpringBootTest
 @EnableAutoConfiguration
 @AutoConfigureMockMvc(addFilters = false)
-public class ParkingAreaControllerAcceptanceTest extends AbstractControllerAcceptanceTest<ParkingAreaEntity> {
+public class ObservationAreaControllerAcceptanceTest extends AbstractControllerAcceptanceTest<ObservationAreaEntity> {
 
 
-    final static Logger LOG = LoggerFactory.getLogger(ParkingAreaControllerAcceptanceTest.class);
-    private static final String data = "testdata/parkingarea/";
-    private static final String restpath = "/api/parkingareas/";
+    final static Logger LOG = LoggerFactory.getLogger(ObservationAreaControllerAcceptanceTest.class);
+    private static final String data = "testdata/observationarea/";
+    private static final String restpath = "/api/observationareas/";
 
-    private JacksonTester<ParkingAreaEntity> jsonTester;
+    private JacksonTester<ObservationAreaEntity> jsonTester;
 
     @Override
-    public Class<ParkingAreaEntity> getEntityClass() {
-        return ParkingAreaEntity.class;
+    public Class<ObservationAreaEntity> getEntityClass() {
+        return ObservationAreaEntity.class;
     }
 
     @Override
@@ -39,28 +39,28 @@ public class ParkingAreaControllerAcceptanceTest extends AbstractControllerAccep
     }
 
     @Override
-    public JacksonTester<ParkingAreaEntity> getJsonTester() {
+    public JacksonTester<ObservationAreaEntity> getJsonTester() {
         return jsonTester;
     }
 
     @Test
     public void canCreate() throws Exception {
         // given
-//        ParkingAreaEntity entity = readFromFile(data + "ParkingArea.json");
+//        ObservationAreaEntity entity = readFromFile(data + "ObservationArea.json");
   
         // when
 //        MockHttpServletResponse response = create(entity);
 
         // then
 //        assertThat(response.getStatus()).isEqualTo(HttpStatus.OK.value());
-//        ParkingAreaEntity entityresult = mapper.readValue(response.getContentAsString(), ParkingAreaEntity.class);
+//        ObservationAreaEntity entityresult = mapper.readValue(response.getContentAsString(), ObservationAreaEntity.class);
 //        assertThat(entityresult.getBranch()).isEqualTo("v2");
     }
 
     @Test
     public void isValidated() throws Exception {
         // given
-//        ParkingAreaEntity entity = readFromFile(data + "ParkingArea-wrong.json");
+//        ObservationAreaEntity entity = readFromFile(data + "ObservationArea-wrong.json");
   
         // when
 //        MockHttpServletResponse response = create(entity);
@@ -83,16 +83,16 @@ public class ParkingAreaControllerAcceptanceTest extends AbstractControllerAccep
     @Test
     public void canRetrieveById() throws Exception {
         // given
-//        ParkingAreaEntity entity = readFromFile(data + "ParkingArea.json");
+//        ObservationAreaEntity entity = readFromFile(data + "ObservationArea.json");
 //        MockHttpServletResponse response = create(entity);
-//        ParkingAreaEntity entity2 = mapper.readValue(response.getContentAsString(), ParkingAreaEntity.class);
+//        ObservationAreaEntity entity2 = mapper.readValue(response.getContentAsString(), ObservationAreaEntity.class);
 
         // when
 //        response = retrieveById(entity2.getId());
 
         // then
 //        assertThat(response.getStatus()).isEqualTo(HttpStatus.OK.value());
-//        ParkingAreaEntity entityresult = mapper.readValue(response.getContentAsString(), ParkingAreaEntity.class);
+//        ObservationAreaEntity entityresult = mapper.readValue(response.getContentAsString(), ObservationAreaEntity.class);
 //        assertThat(dtoresult.getBranch()).isEqualTo("v2");
     }
 
@@ -100,16 +100,16 @@ public class ParkingAreaControllerAcceptanceTest extends AbstractControllerAccep
     public void canUpdate() throws Exception {
 
         // given
-//        ParkingAreaEntity entity = readFromFile(data + "ParkingArea.json");
+//        ObservationAreaEntity entity = readFromFile(data + "ObservationArea.json");
 //        MockHttpServletResponse response = create(entity);
-//        ParkingAreaEntity entity2 = mapper.readValue(response.getContentAsString(), ParkingAreaEntity.class);
+//        ObservationAreaEntity entity2 = mapper.readValue(response.getContentAsString(), ObservationAreaEntity.class);
 
         // when
 //        response = update(entity2);
 
         // then
 //        assertThat(response.getStatus()).isEqualTo(HttpStatus.OK.value());
-//        ParkingAreaEntity entityresult = mapper.readValue(response.getContentAsString(), ParkingAreaEntity.class);
+//        ObservationAreaEntity entityresult = mapper.readValue(response.getContentAsString(), ObservationAreaEntity.class);
 //        assertThat(dtoresult.getBranch()).isEqualTo("v2");
     }
 
@@ -117,9 +117,9 @@ public class ParkingAreaControllerAcceptanceTest extends AbstractControllerAccep
     @Test
     public void canDelete() throws Exception {
         // given
-//        ParkingAreaEntity entity = readFromFile(data + "ParkingArea.json");
+//        ObservationAreaEntity entity = readFromFile(data + "ObservationArea.json");
 //        MockHttpServletResponse response = create(entity);
-//        ParkingAreaEntity entity2 = mapper.readValue(response.getContentAsString(), ParkingAreaEntity.class);
+//        ObservationAreaEntity entity2 = mapper.readValue(response.getContentAsString(), ObservationAreaEntity.class);
 //        response = retrieveById(entity2.getId());
 //        assertThat(response.getStatus()).isEqualTo(HttpStatus.OK.value());
 

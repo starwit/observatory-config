@@ -49,20 +49,20 @@ CREATE SEQUENCE IF NOT EXISTS "parkingconfig_id_seq";
 CREATE TABLE "parkingconfig"
 (
     "name" VARCHAR(255) NOT NULL,
-    "parkingarea_id" BIGINT,
+    "observationarea_id" BIGINT,
     "id" BIGINT NOT NULL DEFAULT nextval('parkingconfig_id_seq'),
     CONSTRAINT "parkingconfig_pkey" PRIMARY KEY ("id")
 );
 
-CREATE SEQUENCE IF NOT EXISTS "parkingarea_id_seq";
+CREATE SEQUENCE IF NOT EXISTS "observationarea_id_seq";
 
-CREATE TABLE "parkingarea"
+CREATE TABLE "observationarea"
 (
     "name" VARCHAR(255) NOT NULL,
     "prodconfig_id" BIGINT UNIQUE,
     "testconfig_id" BIGINT UNIQUE,
-    "id" BIGINT NOT NULL DEFAULT nextval('parkingarea_id_seq'),
-    CONSTRAINT "parkingarea_pkey" PRIMARY KEY ("id")
+    "id" BIGINT NOT NULL DEFAULT nextval('observationarea_id_seq'),
+    CONSTRAINT "observationarea_pkey" PRIMARY KEY ("id")
 );
 
 ALTER TABLE "point"
@@ -86,16 +86,16 @@ ALTER TABLE "image"
     REFERENCES "parkingconfig" ("id");
 
 ALTER TABLE "parkingconfig"
-    ADD CONSTRAINT "fk_parkingconfig_parkingarea"
-    FOREIGN KEY ("parkingarea_id")
-    REFERENCES "parkingarea" ("id");
+    ADD CONSTRAINT "fk_parkingconfig_observationarea"
+    FOREIGN KEY ("observationarea_id")
+    REFERENCES "observationarea" ("id");
 
-ALTER TABLE "parkingarea"
-    ADD CONSTRAINT "fk_parkingarea_testconfig"
+ALTER TABLE "observationarea"
+    ADD CONSTRAINT "fk_observationarea_testconfig"
     FOREIGN KEY ("testconfig_id")
     REFERENCES "parkingconfig" ("id");
 
-ALTER TABLE "parkingarea"
-    ADD CONSTRAINT "fk_parkingarea_prodconfig"
+ALTER TABLE "observationarea"
+    ADD CONSTRAINT "fk_observationarea_prodconfig"
     FOREIGN KEY ("prodconfig_id")
     REFERENCES "parkingconfig" ("id");

@@ -65,12 +65,12 @@ const entityFields = [
     }
 ];
 
-const parkingAreaOverviewFields = [
+const observationAreaOverviewFields = [
     {name: "name", type: "string", regex: null}
 ];
 
 export {
     entityDefault,
     entityFields,
-    parkingAreaOverviewFields
+    observationAreaOverviewFields
 };

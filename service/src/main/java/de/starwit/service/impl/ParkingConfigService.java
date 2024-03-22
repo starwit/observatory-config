@@ -29,12 +29,12 @@ public class ParkingConfigService implements ServiceInterface<ParkingConfigEntit
         return parkingconfigRepository;
     }
 
-    public List<ParkingConfigEntity> findAllWithoutParkingArea() {
-        return parkingconfigRepository.findAllWithoutParkingArea();
+    public List<ParkingConfigEntity> findAllWithoutObservationArea() {
+        return parkingconfigRepository.findAllWithoutObservationArea();
     }
 
-    public List<ParkingConfigEntity> findAllWithoutOtherParkingArea(Long id) {
-        return parkingconfigRepository.findAllWithoutOtherParkingArea(id);
+    public List<ParkingConfigEntity> findAllWithoutOtherObservationArea(Long id) {
+        return parkingconfigRepository.findAllWithoutOtherObservationArea(id);
     }
 
     @Override

@@ -14,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
+import org.springframework.lang.NonNull;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -108,7 +109,6 @@ public class SecurityConfig {
                             LOG.error("claims do not contain 'realm_access' map");
                             return;
                         }
-                        @SuppressWarnings("unchecked")
                         final List<String> roles = (List<String>) realmAccessMap.get("roles");
 
                         mappedAuthorities.addAll(
@@ -174,7 +174,7 @@ final class SpaCsrfTokenRequestHandler extends CsrfTokenRequestAttributeHandler 
 final class CsrfCookieFilter extends OncePerRequestFilter {
 
     @Override
-    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
+    protected void doFilterInternal(@NonNull HttpServletRequest request, @NonNull HttpServletResponse response, @NonNull FilterChain filterChain)
             throws ServletException, IOException {
         CsrfToken csrfToken = (CsrfToken) request.getAttribute("_csrf");
         // Render the token value to a cookie by causing the deferred token to be loaded

@@ -14,11 +14,11 @@ import {
     isValid,
     prepareForSave
 } from "../../modifiers/DefaultModifier";
-import ParkingAreaRest from "../../services/ParkingAreaRest";
+import ObservationAreaRest from "../../services/ObservationAreaRest";
 import {
     entityDefault,
     entityFields
-} from "../../modifiers/ParkingAreaModifier";
+} from "../../modifiers/ObservationAreaModifier";
 import ImageRest from "../../services/ImageRest";
 import {useDropzone} from 'react-dropzone';
 import ImageUploadStyles from "../../assets/styles/ImageUploadStyles";
@@ -26,12 +26,12 @@ import { useSnackbar } from "notistack";
 import CamIDField from "../../commons/CamIDField/CamIDField";
 import UpdateField from "../../commons/form/UpdateField";
 
-function ParkingAreaDialog(props) {
+function ObservationAreaDialog(props) {
     const {open, onClose, selected, isCreate, update} = props;
     const {t} = useTranslation();
     const [entity, setEntity] = useImmer(entityDefault);
     const fields = entityFields;
-    const entityRest = useMemo(() => new ParkingAreaRest(), []);
+    const entityRest = useMemo(() => new ObservationAreaRest(), []);
     const imageRest = useMemo(() => new ImageRest(), []);
     const [hasFormError, setHasFormError] = React.useState(false);
     const [selectedFile, setSelectedFile] = useState(null);
@@ -51,7 +51,7 @@ function ParkingAreaDialog(props) {
     };
 
     const onDropRejected = () => {
-        enqueueSnackbar(t("parkingArea.fileTooLarge"), {variant: "warning"});
+        enqueueSnackbar(t("observationArea.fileTooLarge"), {variant: "warning"});
     };
 
 
@@ -115,9 +115,9 @@ function ParkingAreaDialog(props) {
 
     function getDialogTitle() {
         if (entity?.id) {
-            return "parkingArea.update.title";
+            return "observationArea.update.title";
         }
-        return "parkingArea.create.title";
+        return "observationArea.create.title";
     }
 
     function handleSaeIdsChange(value) {
@@ -138,7 +138,7 @@ function ParkingAreaDialog(props) {
                                     focused
                                     entity={entity}
                                     field={fields[0]}
-                                    prefix="parkingArea"
+                                    prefix="observationArea"
                                     handleChange={e => handleChange(e, setEntity)}
                                 />
                             </FormControl>
@@ -148,7 +148,7 @@ function ParkingAreaDialog(props) {
                                 <UpdateField
                                     entity={entity}
                                     field={fields[1]}
-                                    prefix="parkingArea"
+                                    prefix="observationArea"
                                     handleChange={e => handleChange(e, setEntity)}
                                 />
                             </FormControl>
@@ -165,7 +165,7 @@ function ParkingAreaDialog(props) {
                                                     <UpdateField
                                                         entity={entity}
                                                         field={field}
-                                                        prefix="parkingArea"
+                                                        prefix="observationArea"
                                                         handleChange={e => handleChange(e, setEntity)}
                                                     />
                                                 </FormControl>
@@ -177,11 +177,11 @@ function ParkingAreaDialog(props) {
                         </Grid>
                         <Grid item xs={4}> 
                             <Stack> 
-                            <Typography variant="caption">{t("parkingArea.image.hint")}</Typography>
+                            <Typography variant="caption">{t("observationArea.image.hint")}</Typography>
                             <FormControl {...getRootProps()} sx={ImageUploadStyles.dropzoneStyle}>
                                 <input {...getInputProps()} />
-                                <Typography variant="overline">{t("parkingArea.image")}</Typography>
-                                {previewUrl && <img src={previewUrl} style={ImageUploadStyles.previewStyle} alt={t("parkingArea.image.preview")} />}
+                                <Typography variant="overline">{t("observationArea.image")}</Typography>
+                                {previewUrl && <img src={previewUrl} style={ImageUploadStyles.previewStyle} alt={t("observationArea.image.preview")} />}
                             </FormControl>
                             </Stack> 
                         </Grid>
@@ -204,7 +204,7 @@ function ParkingAreaDialog(props) {
     );
 }
 
-ParkingAreaDialog.propTypes = {
+ObservationAreaDialog.propTypes = {
     open: PropTypes.bool.isRequired,
     onClose: PropTypes.func.isRequired,
     selected: PropTypes.object,
@@ -212,4 +212,4 @@ ParkingAreaDialog.propTypes = {
     update: PropTypes.func.isRequired
 };
 
-export default ParkingAreaDialog;
+export default ObservationAreaDialog;

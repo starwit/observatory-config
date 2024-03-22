@@ -5,18 +5,18 @@ import java.util.List;
 
 import de.starwit.persistence.entity.CameraEntity;
 import de.starwit.persistence.entity.ImageEntity;
-import de.starwit.persistence.entity.ParkingAreaEntity;
+import de.starwit.persistence.entity.ObservationAreaEntity;
 import de.starwit.persistence.entity.ParkingConfigEntity;
-import de.starwit.service.dto.ParkingAreaDto;
+import de.starwit.service.dto.ObservationAreaDto;
 
-public class ParkingAreaMapper implements CustomMapper<ParkingAreaEntity, ParkingAreaDto> {
+public class ObservationAreaMapper implements CustomMapper<ObservationAreaEntity, ObservationAreaDto> {
 
     @Override
-    public ParkingAreaDto convertToDto(ParkingAreaEntity entity) {
+    public ObservationAreaDto convertToDto(ObservationAreaEntity entity) {
         if (entity == null) {
             return null;
         }
-        ParkingAreaDto dto = new ParkingAreaDto();
+        ObservationAreaDto dto = new ObservationAreaDto();
         dto.setId(entity.getId());
         dto.setName(entity.getName());
         dto.setCenterlatitude(entity.getCenterlatitude());
@@ -42,20 +42,20 @@ public class ParkingAreaMapper implements CustomMapper<ParkingAreaEntity, Parkin
     }
 
     @Override
-    public ParkingAreaEntity convertToEntity(ParkingAreaDto dto) {
+    public ObservationAreaEntity convertToEntity(ObservationAreaDto dto) {
         if (dto == null) {
             return null;
         }
-        ParkingAreaEntity entity = new ParkingAreaEntity();
+        ObservationAreaEntity entity = new ObservationAreaEntity();
         return convertToEntity(dto, entity);
     }
 
-    public ParkingAreaEntity convertToEntity(ParkingAreaDto dto, ParkingAreaEntity entity) {
+    public ObservationAreaEntity convertToEntity(ObservationAreaDto dto, ObservationAreaEntity entity) {
         if (dto == null) {
             return null;
         }
         if (entity == null) {
-            entity = new ParkingAreaEntity();
+            entity = new ObservationAreaEntity();
         }
         entity.setId(dto.getId());
         entity.setName(dto.getName());
@@ -64,7 +64,7 @@ public class ParkingAreaMapper implements CustomMapper<ParkingAreaEntity, Parkin
         return entity;
     }
 
-    public ParkingAreaEntity addDefaultParkingConfig(ParkingAreaDto dto, ParkingAreaEntity entity) {
+    public ObservationAreaEntity addDefaultParkingConfig(ObservationAreaDto dto, ObservationAreaEntity entity) {
         if (dto == null) {
             return entity;
         }
@@ -74,21 +74,21 @@ public class ParkingAreaMapper implements CustomMapper<ParkingAreaEntity, Parkin
         return entity;
     }
 
-    public ParkingConfigEntity getDefaultParkingConfig(ParkingAreaDto dto, ParkingAreaEntity entity) {
+    public ParkingConfigEntity getDefaultParkingConfig(ObservationAreaDto dto, ObservationAreaEntity entity) {
         ParkingConfigEntity pc = new ParkingConfigEntity();
         pc.setName(dto.getName());
-        pc.setParkingArea(entity);
+        pc.setObservationArea(entity);
         return pc;
     }
 
-    public ParkingConfigEntity addDefaultImage(ParkingAreaDto dto, ParkingConfigEntity parkingConfigEntity) {
+    public ParkingConfigEntity addDefaultImage(ObservationAreaDto dto, ParkingConfigEntity parkingConfigEntity) {
         List<ImageEntity> images = new ArrayList<>();
         images.add(getDefaultImage(dto, parkingConfigEntity));
         parkingConfigEntity.setImage(images);
         return parkingConfigEntity;
     }
 
-    public List<CameraEntity> getDefaultCameras(ParkingAreaDto dto, ImageEntity image) {
+    public List<CameraEntity> getDefaultCameras(ObservationAreaDto dto, ImageEntity image) {
         if (dto.getSaeIds() == null) {
             return null;
         }
@@ -99,7 +99,7 @@ public class ParkingAreaMapper implements CustomMapper<ParkingAreaEntity, Parkin
         return cameras;
     }
 
-    public ImageEntity getDefaultImage(ParkingAreaDto dto, ParkingConfigEntity parkingConfigEntity) {
+    public ImageEntity getDefaultImage(ObservationAreaDto dto, ParkingConfigEntity parkingConfigEntity) {
         if (parkingConfigEntity == null) {
             return null;
         }
@@ -108,7 +108,7 @@ public class ParkingAreaMapper implements CustomMapper<ParkingAreaEntity, Parkin
         return image;
     }
 
-    public ImageEntity mapImageData(ParkingAreaDto dto, ParkingConfigEntity parkingConfigEntity, ImageEntity image) {
+    public ImageEntity mapImageData(ObservationAreaDto dto, ParkingConfigEntity parkingConfigEntity, ImageEntity image) {
         image.setDegreeperpixelx(dto.getDegreeperpixelx());
         image.setDegreeperpixely(dto.getDegreeperpixely());
         image.setTopleftlatitude(dto.getTopleftlatitude());
