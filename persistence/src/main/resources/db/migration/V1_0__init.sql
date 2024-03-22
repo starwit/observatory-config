@@ -62,6 +62,14 @@ CREATE TABLE "observationarea"
     "name" VARCHAR(255) NOT NULL,
     "center_latitude" DECIMAL(22,19),
     "center_longitude" DECIMAL(22,19),
+    "top_left_latitude" DECIMAL(22,19),
+    "top_left_longitude" DECIMAL(22,19),
+    "degree_per_pixel_x" DECIMAL(22,19),
+    "degree_per_pixel_y" DECIMAL(22,19),
+    "georeferenced" BOOLEAN,
+    "processing_enabled" BOOLEAN,
+    "image_height" INTEGER,
+    "image_width" INTEGER,
     "id" BIGINT NOT NULL DEFAULT nextval('observationarea_id_seq'),
     CONSTRAINT "observationarea_pkey" PRIMARY KEY ("id")
 );
