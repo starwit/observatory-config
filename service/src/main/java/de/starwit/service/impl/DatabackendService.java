@@ -92,12 +92,12 @@ public class DatabackendService {
         DatabackendDto dbeDto = new DatabackendDto();
 
         dbeDto.setName(polygonEntity.getName());
-        dbeDto.setCameraId(imageEntity.getCamera().get(0).getSaeId());
+        dbeDto.setCameraId(imageEntity.getObservationArea().getCamera().get(0).getSaeId());
         dbeDto.setDetectionClassId(2);
         dbeDto.setEnabled(true);
         dbeDto.setObservationAreaId(imageEntity.getObservationArea().getId());
         dbeDto.setClassification(polygonEntity.getClassification().getName());
-        dbeDto.setGeoReferenced(imageEntity.getGeoReferenced());
+        dbeDto.setGeoReferenced(imageEntity.getObservationArea().getGeoReferenced());
 
         List<GeometryPointsDto> geometryPoints = new ArrayList<>();
 
@@ -132,9 +132,9 @@ public class DatabackendService {
         BigDecimal xPixels = xValue.multiply(BigDecimal.valueOf(image.getImageWidth()));
         BigDecimal yPixels = yValue.multiply(BigDecimal.valueOf(image.getImageHeight()));
 
-        if (image.getGeoReferenced()) {
-            point.setLatitude(image.getTopleftlatitude().add(image.getDegreeperpixely().multiply(yPixels)));
-            point.setLongitude(image.getTopleftlongitude().add(image.getDegreeperpixelx().multiply(xPixels)));
+        if (image.getObservationArea().getGeoReferenced()) {
+            point.setLatitude(image.getObservationArea().getTopleftlatitude().add(image.getObservationArea().getDegreeperpixely().multiply(yPixels)));
+            point.setLongitude(image.getObservationArea().getTopleftlongitude().add(image.getObservationArea().getDegreeperpixelx().multiply(xPixels)));
         } else {
             point.setX(xValue.doubleValue());
             point.setY(yValue.doubleValue());

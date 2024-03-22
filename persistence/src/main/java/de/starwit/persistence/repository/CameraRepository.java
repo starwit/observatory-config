@@ -6,7 +6,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import de.starwit.persistence.entity.CameraEntity;
-import de.starwit.persistence.entity.ImageEntity;
+import de.starwit.persistence.entity.ObservationAreaEntity;
 
 /**
  * Camera Repository class
@@ -14,16 +14,16 @@ import de.starwit.persistence.entity.ImageEntity;
 @Repository
 public interface CameraRepository extends CustomRepository<CameraEntity, Long> {
 
-    @Query("SELECT e FROM CameraEntity e WHERE NOT EXISTS (SELECT r FROM e.image r)")
-    public List<CameraEntity> findAllWithoutImage();
+    @Query("SELECT e FROM CameraEntity e WHERE NOT EXISTS (SELECT r FROM e.observationArea r)")
+    public List<CameraEntity> findAllWithoutObservationArea();
 
-    @Query("SELECT e FROM CameraEntity e WHERE NOT EXISTS (SELECT r FROM e.image r WHERE r.id <> ?1)")
-    public List<CameraEntity> findAllWithoutOtherImage(Long id);
+    @Query("SELECT e FROM CameraEntity e WHERE NOT EXISTS (SELECT r FROM e.observationArea r WHERE r.id <> ?1)")
+    public List<CameraEntity> findAllWithoutOtherObservationArea(Long id);
 
-    @Query("SELECT e.id FROM CameraEntity e WHERE e.image is null")
-    public List<Long> findAllWithEmptyImage();
+    @Query("SELECT e.id FROM CameraEntity e WHERE e.observationArea is null")
+    public List<Long> findAllWithEmptyObservationArea();
 
-    public List<CameraEntity> findBySaeIdAndImage(String saeId, ImageEntity image);
+    public List<CameraEntity> findBySaeIdAndObservationArea(String saeId, ObservationAreaEntity observationArea);
 
-    public List<CameraEntity> findByImage(ImageEntity image);
+    public List<CameraEntity> findByObservationArea(ObservationAreaEntity observationArea);
 }

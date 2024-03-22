@@ -50,15 +50,10 @@ CREATE SEQUENCE IF NOT EXISTS "camera_id_seq";
 CREATE TABLE "camera"
 (
     "saeid" VARCHAR(255) NOT NULL,
-    "image_id" BIGINT,
+    "observationarea_id" BIGINT,
     "id" BIGINT NOT NULL DEFAULT nextval('camera_id_seq'),
     CONSTRAINT "camera_pkey" PRIMARY KEY ("id")
 );
-
-ALTER TABLE "camera"
-    ADD CONSTRAINT "fk_camera_image"
-    FOREIGN KEY ("image_id")
-    REFERENCES "image" ("id");
 
 CREATE SEQUENCE IF NOT EXISTS "observationarea_id_seq";
 
@@ -88,5 +83,10 @@ ALTER TABLE "polygon"
 
 ALTER TABLE "image"
     ADD CONSTRAINT "fk_image_observationarea"
+    FOREIGN KEY ("observationarea_id")
+    REFERENCES "observationarea" ("id");
+
+ALTER TABLE "camera"
+    ADD CONSTRAINT "fk_camera_image"
     FOREIGN KEY ("observationarea_id")
     REFERENCES "observationarea" ("id");
