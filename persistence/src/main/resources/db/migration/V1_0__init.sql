@@ -14,12 +14,12 @@ CREATE SEQUENCE IF NOT EXISTS "polygon_id_seq";
 CREATE TABLE "polygon"
 (
     "open" BOOLEAN,
-    "image_id" BIGINT,
+    "observationarea_id" BIGINT,
     "name" VARCHAR(255) NOT NULL,
     "classification_id" BIGINT,
     "id" BIGINT NOT NULL DEFAULT nextval('polygon_id_seq'),
     CONSTRAINT "polygon_pkey" PRIMARY KEY ("id"),
-    CONSTRAINT "polygon_name_image" UNIQUE ("name", "image_id")
+    CONSTRAINT "polygon_name_observationarea" UNIQUE ("name", "observationarea_id")
 );
 
 CREATE SEQUENCE IF NOT EXISTS "image_id_seq";
@@ -72,9 +72,9 @@ ALTER TABLE "point"
     REFERENCES "polygon" ("id");
 
 ALTER TABLE "polygon"
-    ADD CONSTRAINT "fk_polygon_image"
-    FOREIGN KEY ("image_id")
-    REFERENCES "image" ("id");
+    ADD CONSTRAINT "fk_polygon_observationarea"
+    FOREIGN KEY ("observationarea_id")
+    REFERENCES "observationarea" ("id");
 
 ALTER TABLE "polygon"
     ADD CONSTRAINT "fk_polygon_classification"
@@ -87,6 +87,6 @@ ALTER TABLE "image"
     REFERENCES "observationarea" ("id");
 
 ALTER TABLE "camera"
-    ADD CONSTRAINT "fk_camera_image"
+    ADD CONSTRAINT "fk_camera_observationarea"
     FOREIGN KEY ("observationarea_id")
     REFERENCES "observationarea" ("id");

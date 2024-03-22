@@ -1,7 +1,9 @@
 package de.starwit.persistence.entity;
 
 import java.math.BigDecimal;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import com.fasterxml.jackson.annotation.JsonFilter;
 
@@ -28,10 +30,14 @@ public class ObservationAreaEntity extends AbstractEntity<Long> {
     private String name;
 
     // entity relations
+    @JsonFilter("filterId")
+    @OneToMany(mappedBy = "observationArea", orphanRemoval = true)
+    private Set<PolygonEntity> polygon;
+
+    // entity relations
     @JsonFilter("filterImage")
     @OneToOne(mappedBy = "observationArea", cascade = { CascadeType.ALL }, orphanRemoval = true)
     private ImageEntity image;
-
 
     @JsonFilter("filterCamera")
     @OneToMany(mappedBy = "observationArea", cascade = { CascadeType.ALL }, orphanRemoval = true)
@@ -93,6 +99,23 @@ public class ObservationAreaEntity extends AbstractEntity<Long> {
 
     public void setCamera(List<CameraEntity> camera) {
         this.camera = camera;
+    }
+
+    // entity relations getters and setters
+    public Set<PolygonEntity> getPolygon() {
+        return polygon;
+    }
+
+    public void setPolygon(Set<PolygonEntity> polygon) {
+        this.polygon = polygon;
+    }
+
+    public void addToPolygons(PolygonEntity child) {
+        child.setObservationArea(this);
+        if (this.polygon == null) {
+            this.polygon = new HashSet<>();
+        }
+        this.polygon.add(child);
     }
 
     public BigDecimal getCenterlatitude() {

@@ -29,12 +29,12 @@ public class PolygonService implements ServiceInterface<PolygonEntity, PolygonRe
         return polygonRepository;
     }
 
-    public List<PolygonEntity> findAllWithoutImage() {
-        return polygonRepository.findAllWithoutImage();
+    public List<PolygonEntity> findAllWithoutObservationArea() {
+        return polygonRepository.findAllWithoutObservationArea();
     }
 
-    public List<PolygonEntity> findAllWithoutOtherImage(Long id) {
-        return polygonRepository.findAllWithoutOtherImage(id);
+    public List<PolygonEntity> findAllWithoutOtherObservationArea(Long id) {
+        return polygonRepository.findAllWithoutOtherObservationArea(id);
     }
 
     public PolygonEntity saveAndFlush(PolygonEntity polygonEntity) {

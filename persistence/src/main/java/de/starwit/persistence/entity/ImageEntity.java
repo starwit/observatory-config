@@ -30,11 +30,6 @@ public class ImageEntity extends AbstractEntity<Long> {
     @Column(name = "name", nullable = false)
     private String name;
 
-    // entity relations
-    @JsonFilter("filterId")
-    @OneToMany(mappedBy = "image", orphanRemoval = true)
-    private Set<PolygonEntity> polygon;
-
     @JsonFilter("filterId")
     @OneToOne
     @JoinColumn(name = "observationarea_id")
@@ -71,29 +66,12 @@ public class ImageEntity extends AbstractEntity<Long> {
         this.name = name;
     }
 
-    // entity relations getters and setters
-    public Set<PolygonEntity> getPolygon() {
-        return polygon;
-    }
-
-    public void setPolygon(Set<PolygonEntity> polygon) {
-        this.polygon = polygon;
-    }
-
     public ObservationAreaEntity getObservationArea() {
         return observationArea;
     }
 
     public void setObservationArea(ObservationAreaEntity observationArea) {
         this.observationArea = observationArea;
-    }
-
-    public void addToPolygons(PolygonEntity child) {
-        child.setImage(this);
-        if (this.polygon == null) {
-            this.polygon = new HashSet<>();
-        }
-        this.polygon.add(child);
     }
 
     public Integer getImageHeight() {

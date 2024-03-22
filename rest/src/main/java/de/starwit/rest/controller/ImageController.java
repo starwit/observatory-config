@@ -134,20 +134,20 @@ public class ImageController {
         ImageEntity entity = new ImageEntity();
         if (dto.getId() != null) {
             entity = imageService.findById(dto.getId());
-            if (entity.getPolygon() != null) {
-                polygonService.deleteAll(entity.getPolygon());
+            if (entity.getObservationArea().getPolygon() != null) {
+                polygonService.deleteAll(entity.getObservationArea().getPolygon());
                 polygonService.getRepository().flush();
             }
-            entity.getPolygon().removeAll(entity.getPolygon());
+            entity.getObservationArea().getPolygon().removeAll(entity.getObservationArea().getPolygon());
             entity.setImageHeight(dto.getImageHeight());
             entity.setImageWidth(dto.getImageWidth());
             entity = imageService.saveAndFlush(entity);
             List<RegionDto> regions = dto.getRegions();
             for (RegionDto regionDto : regions) {
                 if (regionDto.getType().equals("polygon")) {
-                    entity.addToPolygons(createPolygon(entity, regionDto));
+                    entity.getObservationArea().addToPolygons(createPolygon(entity.getObservationArea(), regionDto));
                 } else if (regionDto.getType().equals("line")) {
-                    entity.addToPolygons(createLine(entity, regionDto));
+                    entity.getObservationArea().addToPolygons(createLine(entity.getObservationArea(), regionDto));
                 }
             }
 
@@ -161,12 +161,12 @@ public class ImageController {
         }
     }
 
-    private PolygonEntity createPolygon(ImageEntity entity, RegionDto regionDto) {
+    private PolygonEntity createPolygon(ObservationAreaEntity entity, RegionDto regionDto) {
         PolygonEntity polygonEntity = new PolygonEntity();
         ClassificationEntity cls = classificationService.findByName(regionDto.getCls());
         polygonEntity.setClassification(cls);
         polygonEntity.setOpen(regionDto.getOpen());
-        polygonEntity.setImage(entity);
+        polygonEntity.setObservationArea(entity);
         polygonEntity.setName(regionDto.getName());
         polygonEntity = polygonService.saveAndFlush(polygonEntity);
         List<List<Double>> points = regionDto.getPoints();
@@ -183,12 +183,12 @@ public class ImageController {
         return polygonEntity;
     }
 
-    private PolygonEntity createLine(ImageEntity entity, RegionDto regionDto) {
+    private PolygonEntity createLine(ObservationAreaEntity entity, RegionDto regionDto) {
         PolygonEntity polygonEntity = new PolygonEntity();
         ClassificationEntity cls = classificationService.findByName(regionDto.getCls());
         polygonEntity.setClassification(cls);
         polygonEntity.setOpen(true);
-        polygonEntity.setImage(entity);
+        polygonEntity.setObservationArea(entity);
         polygonEntity.setName(regionDto.getName());
         polygonEntity = polygonService.saveAndFlush(polygonEntity);
         PointEntity p1 = new PointEntity();

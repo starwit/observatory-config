@@ -69,7 +69,7 @@ public class DatabackendService {
     }
 
     public void sendConfig(ImageEntity image) {
-        for (PolygonEntity polygon : image.getPolygon()) {
+        for (PolygonEntity polygon : image.getObservationArea().getPolygon()) {
             try {
                 DatabackendDto dto = toDatabackendDto(image, polygon);
 

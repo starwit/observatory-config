@@ -45,16 +45,16 @@ public class PolygonController {
         return this.polygonService.findAll();
     }
 
-    @Operation(summary = "Get all polygon without image")
-    @GetMapping(value = "/find-without-image")
-    public List<PolygonEntity> findAllWithoutImage() {
-        return polygonService.findAllWithoutImage();
+    @Operation(summary = "Get all polygon without observationarea")
+    @GetMapping(value = "/find-without-observationarea")
+    public List<PolygonEntity> findAllWithoutObservationArea() {
+        return polygonService.findAllWithoutObservationArea();
     }
 
-    @Operation(summary = "Get all polygon without other image")
-    @GetMapping(value = "/find-without-other-image/{id}")
-    public List<PolygonEntity> findAllWithoutOtherImage(@PathVariable("id") Long id) {
-        return polygonService.findAllWithoutOtherImage(id);
+    @Operation(summary = "Get all polygon without other observationarea")
+    @GetMapping(value = "/find-without-other-observationarea/{id}")
+    public List<PolygonEntity> findAllWithoutOtherObservationArea(@PathVariable("id") Long id) {
+        return polygonService.findAllWithoutOtherObservationArea(id);
     }
 
     @Operation(summary = "Get polygon with id")
