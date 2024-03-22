@@ -13,6 +13,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
+import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
@@ -41,9 +42,9 @@ public class ImageEntity extends AbstractEntity<Long> {
     private Set<PolygonEntity> polygon;
 
     @JsonFilter("filterId")
-    @ManyToOne
-    @JoinColumn(name = "parkingconfig_id")
-    private ParkingConfigEntity parkingConfig;
+    @OneToOne
+    @JoinColumn(name = "observationarea_id")
+    private ObservationAreaEntity observationArea;
 
     @JsonFilter("filterCamera")
     @OneToMany(mappedBy = "image", cascade = { CascadeType.ALL }, orphanRemoval = true)
@@ -108,12 +109,12 @@ public class ImageEntity extends AbstractEntity<Long> {
         this.polygon = polygon;
     }
 
-    public ParkingConfigEntity getParkingConfig() {
-        return parkingConfig;
+    public ObservationAreaEntity getObservationArea() {
+        return observationArea;
     }
 
-    public void setParkingConfig(ParkingConfigEntity parkingConfig) {
-        this.parkingConfig = parkingConfig;
+    public void setObservationArea(ObservationAreaEntity observationArea) {
+        this.observationArea = observationArea;
     }
 
     public void addToPolygons(PolygonEntity child) {

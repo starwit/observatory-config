@@ -29,7 +29,7 @@ CREATE TABLE "image"
     "name" VARCHAR(255) NOT NULL,
     "data" BYTEA,
     "type" VARCHAR(255),
-    "parkingconfig_id" BIGINT,
+    "observationarea_id" BIGINT,
     "id" BIGINT NOT NULL DEFAULT nextval('image_id_seq'),
     CONSTRAINT "image_pkey" PRIMARY KEY ("id")
 );
@@ -44,23 +44,29 @@ CREATE TABLE "classification"
     CONSTRAINT "classification_pkey" PRIMARY KEY ("id")
 );
 
-CREATE SEQUENCE IF NOT EXISTS "parkingconfig_id_seq";
 
-CREATE TABLE "parkingconfig"
+CREATE SEQUENCE IF NOT EXISTS "camera_id_seq";
+
+CREATE TABLE "camera"
 (
-    "name" VARCHAR(255) NOT NULL,
-    "observationarea_id" BIGINT,
-    "id" BIGINT NOT NULL DEFAULT nextval('parkingconfig_id_seq'),
-    CONSTRAINT "parkingconfig_pkey" PRIMARY KEY ("id")
+    "saeid" VARCHAR(255) NOT NULL,
+    "image_id" BIGINT,
+    "id" BIGINT NOT NULL DEFAULT nextval('camera_id_seq'),
+    CONSTRAINT "camera_pkey" PRIMARY KEY ("id")
 );
+
+ALTER TABLE "camera"
+    ADD CONSTRAINT "fk_camera_image"
+    FOREIGN KEY ("image_id")
+    REFERENCES "image" ("id");
 
 CREATE SEQUENCE IF NOT EXISTS "observationarea_id_seq";
 
 CREATE TABLE "observationarea"
 (
     "name" VARCHAR(255) NOT NULL,
-    "prodconfig_id" BIGINT UNIQUE,
-    "testconfig_id" BIGINT UNIQUE,
+    "center_latitude" DECIMAL(22,19),
+    "center_longitude" DECIMAL(22,19),
     "id" BIGINT NOT NULL DEFAULT nextval('observationarea_id_seq'),
     CONSTRAINT "observationarea_pkey" PRIMARY KEY ("id")
 );
@@ -81,21 +87,6 @@ ALTER TABLE "polygon"
     REFERENCES "classification" ("id");
 
 ALTER TABLE "image"
-    ADD CONSTRAINT "fk_image_parkingconfig"
-    FOREIGN KEY ("parkingconfig_id")
-    REFERENCES "parkingconfig" ("id");
-
-ALTER TABLE "parkingconfig"
-    ADD CONSTRAINT "fk_parkingconfig_observationarea"
+    ADD CONSTRAINT "fk_image_observationarea"
     FOREIGN KEY ("observationarea_id")
     REFERENCES "observationarea" ("id");
-
-ALTER TABLE "observationarea"
-    ADD CONSTRAINT "fk_observationarea_testconfig"
-    FOREIGN KEY ("testconfig_id")
-    REFERENCES "parkingconfig" ("id");
-
-ALTER TABLE "observationarea"
-    ADD CONSTRAINT "fk_observationarea_prodconfig"
-    FOREIGN KEY ("prodconfig_id")
-    REFERENCES "parkingconfig" ("id");

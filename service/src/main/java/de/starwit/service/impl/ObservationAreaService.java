@@ -9,12 +9,10 @@ import org.springframework.stereotype.Service;
 import de.starwit.persistence.entity.CameraEntity;
 import de.starwit.persistence.entity.ImageEntity;
 import de.starwit.persistence.entity.ObservationAreaEntity;
-import de.starwit.persistence.entity.ParkingConfigEntity;
 import de.starwit.persistence.exception.NotificationException;
 import de.starwit.persistence.repository.CameraRepository;
 import de.starwit.persistence.repository.ImageRepository;
 import de.starwit.persistence.repository.ObservationAreaRepository;
-import de.starwit.persistence.repository.ParkingConfigRepository;
 import de.starwit.service.dto.ObservationAreaDto;
 import de.starwit.service.mapper.ObservationAreaMapper;
 
@@ -28,9 +26,6 @@ public class ObservationAreaService implements ServiceInterface<ObservationAreaE
 
     @Autowired
     private ObservationAreaRepository observationareaRepository;
-
-    @Autowired
-    private ParkingConfigRepository parkingconfigRepository;
 
     @Autowired
     private ImageRepository imageRepository;
@@ -50,22 +45,6 @@ public class ObservationAreaService implements ServiceInterface<ObservationAreaE
         return this.getRepository().findAllByOrderByNameAsc();
     }
 
-    public List<ObservationAreaEntity> findAllWithoutSelectedTestConfig() {
-        return observationareaRepository.findAllWithoutSelectedTestConfig();
-    }
-
-    public List<ObservationAreaEntity> findAllWithoutOtherSelectedTestConfig(Long id) {
-        return observationareaRepository.findAllWithoutOtherSelectedTestConfig(id);
-    }
-
-    public List<ObservationAreaEntity> findAllWithoutSelectedProdConfig() {
-        return observationareaRepository.findAllWithoutSelectedProdConfig();
-    }
-
-    public List<ObservationAreaEntity> findAllWithoutOtherSelectedProdConfig(Long id) {
-        return observationareaRepository.findAllWithoutOtherSelectedProdConfig(id);
-    }
-
     @Override
     public void delete(Long id) throws NotificationException {
             this.getRepository().deleteById(id);
@@ -79,52 +58,36 @@ public class ObservationAreaService implements ServiceInterface<ObservationAreaE
         if (dto.getId() == null) {
             entity = mapper.convertToEntity(dto);
             if (entity != null) {
+                createDefault(dto, entity);
                 entity = observationareaRepository.saveAndFlush(entity);
-                entity = createDefaultParkingConfig(dto, entity);
             }
         } else {
             entity = this.findById(dto.getId());
             entity = mapper.convertToEntity(dto, entity);
-            if (dto.getSelectedProdConfigId() == null) {
-                entity = createDefaultParkingConfig(dto, entity);
+            entity = observationareaRepository.saveAndFlush(entity);
+            if (entity.getImage() == null) {
+                ImageEntity image = mapper.getDefaultImage(dto, entity);
+                image = image == null ? null : imageRepository.saveAndFlush(image);
+                List<CameraEntity> cameras = mapper.getDefaultCameras(dto, image);
+                cameras = cameras == null ? null : cameraRepository.saveAllAndFlush(cameras);
+                imageRepository.refresh(image);
             } else {
-                long pcId = dto.getSelectedProdConfigId();
-                ParkingConfigEntity pc = parkingconfigRepository.getReferenceById(pcId);
-                pc.setName(dto.getName());
-                pc.setObservationArea(entity);
-                entity.setSelectedProdConfig(pc);
-                entity = observationareaRepository.saveAndFlush(entity);
-                if (pc.getImage() == null 
-                    || pc.getImage().isEmpty() 
-                    || pc.getImage().get(0) == null 
-                    || pc.getImage().get(0).getId() == null) {
-                    ImageEntity image = mapper.getDefaultImage(dto, entity.getSelectedProdConfig());
-                    image = image == null ? null : imageRepository.saveAndFlush(image);
-                    List<CameraEntity> cameras = mapper.getDefaultCameras(dto, image);
-                    cameras = cameras == null ? null : cameraRepository.saveAllAndFlush(cameras);
-                    imageRepository.refresh(image);
-                } else {
-                    long imageId = pc.getImage().get(0).getId();
-                    ImageEntity image = imageRepository.getReferenceById(imageId);
-                    image = mapper.mapImageData(dto, pc, image);
-                    image = image == null ? null : imageRepository.saveAndFlush(image);
-                    mapAndSaveCameras(dto.getSaeIds(), image);
-                    imageRepository.refresh(image);
-                }
-                parkingconfigRepository.refresh(pc);
-                entity.setSelectedTestConfig(null);
-                entity = observationareaRepository.saveAndFlush(entity);
+                long imageId = entity.getImage().getId();
+                ImageEntity image = imageRepository.getReferenceById(imageId);
+                image = mapper.mapImageData(dto, entity, image);
+                image = image == null ? null : imageRepository.saveAndFlush(image);
+                mapAndSaveCameras(dto.getSaeIds(), image);
+                imageRepository.refresh(image);
             }
+            entity = observationareaRepository.saveAndFlush(entity);
         }
         observationareaRepository.refresh(entity);
         return mapper.convertToDto(entity);
     }
 
-    private ObservationAreaEntity createDefaultParkingConfig(ObservationAreaDto dto, ObservationAreaEntity entity) {
-        entity = mapper.addDefaultParkingConfig(dto, entity);
-        entity.setSelectedProdConfig(entity.getParkingConfig().get(0));
+    private ObservationAreaEntity createDefault(ObservationAreaDto dto, ObservationAreaEntity entity) {
         entity = observationareaRepository.saveAndFlush(entity);
-        ImageEntity image = mapper.getDefaultImage(dto, entity.getSelectedProdConfig());
+        ImageEntity image = mapper.getDefaultImage(dto, entity);
         image = image == null ? null : imageRepository.saveAndFlush(image);
         List<CameraEntity> cameras = mapper.getDefaultCameras(dto, image);
         cameras = cameras == null ? null : cameraRepository.saveAllAndFlush(cameras);

@@ -86,17 +86,17 @@ function ObservationAreaDialog(props) {
         if (entity.id) {
             entityRest.update(tmpOrg)
                 .then(response => {
-                    uploadFile(response.data, response.data?.selectedProdConfigId);
+                    uploadFile(response.data, response.data?.id);
                 });
         } else {
             entityRest.create(tmpOrg).then(response => {
-                uploadFile(response.data, response.data?.selectedProdConfigId);
+                uploadFile(response.data, response.data?.id);
             });
         }
         onClose();
     }
 
-    function uploadFile(data, activeParkingConfigId) {
+    function uploadFile(data, observationAreaId) {
         if (!selectedFile) {
             update(data);
             return;
@@ -104,7 +104,7 @@ function ObservationAreaDialog(props) {
         const formData = new FormData();
         formData.append('image', selectedFile);
         try {
-            imageRest.upload(formData, activeParkingConfigId).then(() => {
+            imageRest.upload(formData, observationAreaId).then(() => {
                 update(data);
             });
         } catch (error) {

@@ -8,7 +8,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import de.starwit.persistence.entity.ImageEntity;
-import de.starwit.persistence.entity.ParkingConfigEntity;
+import de.starwit.persistence.entity.ObservationAreaEntity;
 import de.starwit.persistence.repository.ImageRepository;
 
 /**
@@ -31,31 +31,23 @@ public class ImageService implements ServiceInterface<ImageEntity, ImageReposito
         return imageRepository.saveAndFlush(entity);
     }
 
-    public List<ImageEntity> findAllWithoutParkingConfig() {
-        return imageRepository.findAllWithoutParkingConfig();
+    public List<ImageEntity> findByObservationAreaId(Long id) {
+        return imageRepository.findByObservationAreaId(id);
     }
 
-    public List<ImageEntity> findAllWithoutOtherParkingConfig(Long id) {
-        return imageRepository.findAllWithoutOtherParkingConfig(id);
-    }
-
-    public List<ImageEntity> findByParkingConfigId(Long id) {
-        return imageRepository.findByParkingConfigId(id);
-    }
-
-    public ImageEntity uploadImage(MultipartFile imageFile, ParkingConfigEntity parkingConfigEntity)
+    public ImageEntity uploadImage(MultipartFile imageFile, ObservationAreaEntity observationAreaEntity)
             throws IOException {
         ImageEntity imageEntity = new ImageEntity();
-        List<ImageEntity> images = imageRepository.findByParkingConfigId(parkingConfigEntity.getId());
+        List<ImageEntity> images = imageRepository.findByObservationAreaId(observationAreaEntity.getId());
         if (images == null || images.isEmpty()) {
             imageEntity = new ImageEntity();
         } else {
             imageEntity = images.get(0);
         }
-        imageEntity.setName(parkingConfigEntity.getName());
+        imageEntity.setName(observationAreaEntity.getName());
         imageEntity.setType(imageFile.getContentType());
         imageEntity.setData(imageFile.getBytes());
-        imageEntity.setParkingConfig(parkingConfigEntity);
+        imageEntity.setObservationArea(observationAreaEntity);
         return imageRepository.save(imageEntity);
     }
 

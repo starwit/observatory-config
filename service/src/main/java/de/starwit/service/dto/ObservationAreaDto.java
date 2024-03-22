@@ -12,8 +12,6 @@ public class ObservationAreaDto {
 
     private String name;
 
-    private Long selectedProdConfigId;
-
     List<String> saeIds;
 
     @Min(value = -90)
@@ -52,14 +50,6 @@ public class ObservationAreaDto {
 
     public void setName(String name) {
         this.name = name;
-    }
-
-    public Long getSelectedProdConfigId() {
-        return selectedProdConfigId;
-    }
-
-    public void setSelectedProdConfigId(Long selectedProdConfigId) {
-        this.selectedProdConfigId = selectedProdConfigId;
     }
 
     public List<String> getSaeIds() {
