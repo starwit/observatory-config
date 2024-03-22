@@ -6,13 +6,11 @@ import java.util.List;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
 
-public class ParkingAreaDto {
+public class ObservationAreaDto {
 
     private Long id;
 
     private String name;
-
-    private Long selectedProdConfigId;
 
     List<String> saeIds;
 
@@ -52,14 +50,6 @@ public class ParkingAreaDto {
 
     public void setName(String name) {
         this.name = name;
-    }
-
-    public Long getSelectedProdConfigId() {
-        return selectedProdConfigId;
-    }
-
-    public void setSelectedProdConfigId(Long selectedProdConfigId) {
-        this.selectedProdConfigId = selectedProdConfigId;
     }
 
     public List<String> getSaeIds() {

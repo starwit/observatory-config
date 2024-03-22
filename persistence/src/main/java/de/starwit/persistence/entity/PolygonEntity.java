@@ -20,7 +20,7 @@ import jakarta.validation.constraints.NotNull;
  */
 @Entity
 @Table(name = "polygon", uniqueConstraints = {
-        @UniqueConstraint(columnNames = { "name", "image_id" })
+        @UniqueConstraint(columnNames = { "name", "observationarea_id" })
 })
 public class PolygonEntity extends AbstractEntity<Long> {
 
@@ -31,8 +31,8 @@ public class PolygonEntity extends AbstractEntity<Long> {
     // entity relations
     @JsonFilter("filterId")
     @ManyToOne
-    @JoinColumn(name = "image_id")
-    private ImageEntity image;
+    @JoinColumn(name = "observationarea_id")
+    private ObservationAreaEntity observationArea;
 
     @JsonFilter("filterId")
     @ManyToOne
@@ -65,12 +65,12 @@ public class PolygonEntity extends AbstractEntity<Long> {
     }
 
     // entity relations getters and setters
-    public ImageEntity getImage() {
-        return image;
+    public ObservationAreaEntity getObservationArea() {
+        return observationArea;
     }
 
-    public void setImage(ImageEntity image) {
-        this.image = image;
+    public void setObservationArea(ObservationAreaEntity observationArea) {
+        this.observationArea = observationArea;
     }
 
     public ClassificationEntity getClassification() {

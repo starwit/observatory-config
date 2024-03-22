@@ -11,8 +11,7 @@ import org.junit.jupiter.api.Test;
 import de.starwit.persistence.entity.CameraEntity;
 import de.starwit.persistence.entity.ClassificationEntity;
 import de.starwit.persistence.entity.ImageEntity;
-import de.starwit.persistence.entity.ParkingAreaEntity;
-import de.starwit.persistence.entity.ParkingConfigEntity;
+import de.starwit.persistence.entity.ObservationAreaEntity;
 import de.starwit.persistence.entity.PointEntity;
 import de.starwit.persistence.entity.PolygonEntity;
 import de.starwit.service.dto.DatabackendDto;
@@ -26,7 +25,7 @@ public class DatabackendServiceTest {
         PolygonEntity polygon = createLineWithDefaults();
         
         ImageEntity image = createImageWithDefaults();
-        image.setGeoReferenced(false);
+        image.getObservationArea().setGeoReferenced(false);
         
         DatabackendService testee = new DatabackendService(URI.create("http://localhost"));
 
@@ -37,7 +36,7 @@ public class DatabackendServiceTest {
         assertThat(dbeDto.getDetectionClassId()).isEqualTo(2);
         assertThat(dbeDto.getEnabled()).isTrue();
         assertThat(dbeDto.getName()).isEqualTo("lineRegion");
-        assertThat(dbeDto.getParkingAreaId()).isEqualTo(1);
+        assertThat(dbeDto.getObservationAreaId()).isEqualTo(1);
         assertThat(dbeDto.getType()).isEqualTo("LINE_CROSSING");
         assertThat(dbeDto.getGeoReferenced()).isFalse();
         assertThat(dbeDto.getGeometryPoints().get(0).getX()).isEqualTo(0);
@@ -50,7 +49,7 @@ public class DatabackendServiceTest {
         PolygonEntity polygon = createLineWithDefaults();
         
         ImageEntity image = createImageWithDefaults();
-        image.setGeoReferenced(true);
+        image.getObservationArea().setGeoReferenced(true);
         
         DatabackendService testee = new DatabackendService(URI.create("http://localhost"));
 
@@ -61,7 +60,7 @@ public class DatabackendServiceTest {
         assertThat(dbeDto.getDetectionClassId()).isEqualTo(2);
         assertThat(dbeDto.getEnabled()).isTrue();
         assertThat(dbeDto.getName()).isEqualTo("lineRegion");
-        assertThat(dbeDto.getParkingAreaId()).isEqualTo(1);
+        assertThat(dbeDto.getObservationAreaId()).isEqualTo(1);
         assertThat(dbeDto.getType()).isEqualTo("LINE_CROSSING");
         assertThat(dbeDto.getGeoReferenced()).isTrue();  
         assertThat(dbeDto.getGeometryPoints().get(1).getX()).isNull();;
@@ -74,7 +73,7 @@ public class DatabackendServiceTest {
         PolygonEntity polygon = createPolygonWithDefaults();
         
         ImageEntity image = createImageWithDefaults();
-        image.setGeoReferenced(false);
+        image.getObservationArea().setGeoReferenced(false);
         
         DatabackendService testee = new DatabackendService(URI.create("http://localhost"));
 
@@ -85,7 +84,7 @@ public class DatabackendServiceTest {
         assertThat(dbeDto.getDetectionClassId()).isEqualTo(2);
         assertThat(dbeDto.getEnabled()).isTrue();
         assertThat(dbeDto.getName()).isEqualTo("polygonRegion");
-        assertThat(dbeDto.getParkingAreaId()).isEqualTo(1);
+        assertThat(dbeDto.getObservationAreaId()).isEqualTo(1);
         assertThat(dbeDto.getType()).isEqualTo("AREA_OCCUPANCY");
         assertThat(dbeDto.getGeoReferenced()).isFalse();
         assertThat(dbeDto.getGeometryPoints().get(2).getY()).isEqualTo(0.5);
@@ -98,7 +97,7 @@ public class DatabackendServiceTest {
         PolygonEntity polygon = createPolygonWithDefaults();
         
         ImageEntity image = createImageWithDefaults();
-        image.setGeoReferenced(true);
+        image.getObservationArea().setGeoReferenced(true);
         
         DatabackendService testee = new DatabackendService(URI.create("http://localhost"));
 
@@ -109,7 +108,7 @@ public class DatabackendServiceTest {
         assertThat(dbeDto.getDetectionClassId()).isEqualTo(2);
         assertThat(dbeDto.getEnabled()).isTrue();
         assertThat(dbeDto.getName()).isEqualTo("polygonRegion");
-        assertThat(dbeDto.getParkingAreaId()).isEqualTo(1);
+        assertThat(dbeDto.getObservationAreaId()).isEqualTo(1);
         assertThat(dbeDto.getType()).isEqualTo("AREA_OCCUPANCY");
         assertThat(dbeDto.getGeoReferenced()).isTrue();
         assertThat(dbeDto.getGeometryPoints().get(2).getY()).isNull();
@@ -160,28 +159,24 @@ public class DatabackendServiceTest {
         CameraEntity camera = new CameraEntity();
         camera.setSaeId("stream1");
 
-        ParkingAreaEntity parkingArea = new ParkingAreaEntity();
-        parkingArea.setId(1L);
+        ObservationAreaEntity observationArea = new ObservationAreaEntity();
+        observationArea.setId(1L);
 
-        ParkingConfigEntity parkingConfig = new ParkingConfigEntity();
-        parkingConfig.setId(1L);
-        parkingConfig.setParkingArea(parkingArea);
 
         ImageEntity image = new ImageEntity();
 
         image.setId(1L);
         image.setName("testImage");
         image.setType("testType");
-        image.setImageHeight(1000);
-        image.setImageWidth(1000);
-        image.setDegreeperpixelx(new BigDecimal(0.001));
-        image.setDegreeperpixely(new BigDecimal(0.001));
-        image.setGeoReferenced(false);
-        image.setTopleftlongitude(new BigDecimal(10));
-        image.setTopleftlatitude(new BigDecimal(52));
-        image.setCamera(Arrays.asList(camera));
-        image.setParkingConfig(parkingConfig);
-
+        image.setObservationArea(observationArea);
+        image.getObservationArea().setImageHeight(1000);
+        image.getObservationArea().setImageWidth(1000);
+        image.getObservationArea().setDegreeperpixelx(new BigDecimal(0.001));
+        image.getObservationArea().setDegreeperpixely(new BigDecimal(0.001));
+        image.getObservationArea().setGeoReferenced(false);
+        image.getObservationArea().setTopleftlongitude(new BigDecimal(10));
+        image.getObservationArea().setTopleftlatitude(new BigDecimal(52));
+        image.getObservationArea().setCamera(Arrays.asList(camera));
         return image;
     }
 

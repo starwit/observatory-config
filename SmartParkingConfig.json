@@ -229,7 +229,7 @@
         },
         {
             "id": 37,
-            "name": "ParkingArea",
+            "name": "ObservationArea",
             "fields": [
                 {
                     "id": 103,
@@ -280,7 +280,7 @@
                 {
                     "id": 126,
                     "otherEntityName": "ParkingConfig",
-                    "otherEntityRelationshipName": "parkingArea",
+                    "otherEntityRelationshipName": "observationArea",
                     "relationshipName": "parkingConfig",
                     "ownerSide": true,
                     "relationshipType": "one-to-many"

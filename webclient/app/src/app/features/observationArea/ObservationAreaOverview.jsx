@@ -4,47 +4,47 @@ import LoadingSpinner from "../../commons/loadingSpinner/LoadingSpinner";
 import React, {useCallback, useEffect, useMemo, useState} from "react";
 import {useTranslation} from "react-i18next";
 import {useNavigate} from "react-router";
-import ParkingAreaRest from "../../services/ParkingAreaRest";
-import ParkingAreaCard from "./ParkingAreaCard";
-import ParkingAreaDialog from "./ParkingAreaDialog";
+import ObservationAreaRest from "../../services/ObservationAreaRest";
+import ObservationAreaCard from "./ObservationAreaCard";
+import ObservationAreaDialog from "./ObservationAreaDialog";
 
-function ParkingAreaOverview() {
+function ObservationAreaOverview() {
     const {t} = useTranslation();
     const navigate = useNavigate();
-    const parkingAreaRest = useMemo(() => new ParkingAreaRest(), []);
-    const [parkingAreas, setParkingAreas] = useState(null);
+    const observationAreaRest = useMemo(() => new ObservationAreaRest(), []);
+    const [observationAreas, setObservationAreas] = useState(null);
     const [openUpdateDialog, setOpenUpdateDialog] = useState(false);
 
 
-    const loadParkingAreas = useCallback(() => {
-        setParkingAreas(null);
-        parkingAreaRest.findAll().then(response => {
-            setParkingAreas(response.data);
+    const loadObservationAreas = useCallback(() => {
+        setObservationAreas(null);
+        observationAreaRest.findAll().then(response => {
+            setObservationAreas(response.data);
         });
-    }, [parkingAreaRest, setParkingAreas]);
+    }, [observationAreaRest, setObservationAreas]);
 
     useEffect(() => {
-        loadParkingAreas();
-    }, [loadParkingAreas]);
+        loadObservationAreas();
+    }, [loadObservationAreas]);
 
     function update() {
-        loadParkingAreas();
+        loadObservationAreas();
     };
 
     function deleteById(id) {
-        return parkingAreaRest.delete(id)
+        return observationAreaRest.delete(id)
             .then(response => {
-                setParkingAreas(null);
-                loadParkingAreas();
+                setObservationAreas(null);
+                loadObservationAreas();
             });
     }
 
-    function renderParkingAreas() {
-        if (!parkingAreas) {
-            return <LoadingSpinner message={t("parkingAreas.loading")} />;
+    function renderObservationAreas() {
+        if (!observationAreas) {
+            return <LoadingSpinner message={t("observationAreas.loading")} />;
         }
 
-        if (parkingAreas.length === 0) {
+        if (observationAreas.length === 0) {
             return (
                 null
             );
@@ -52,12 +52,12 @@ function ParkingAreaOverview() {
 
         return (
             <Grid container spacing={5}>
-                {parkingAreas?.map(area => (
+                {observationAreas?.map(area => (
                     <Grid item sm={6} xs={12} key={area.id}>
-                        <ParkingAreaCard
+                        <ObservationAreaCard
                             onEditClick={update}
                             onDeleteClick={deleteById}
-                            parkingArea={area} />
+                            observationArea={area} />
                     </Grid>
                 ))}
             </Grid>
@@ -67,10 +67,10 @@ function ParkingAreaOverview() {
     return (
         <Container>
             <Typography variant={"h2"} gutterBottom>
-                {t("parkingAreas.title")}
+                {t("observationAreas.title")}
             </Typography>
-            {renderParkingAreas()}
-            <ParkingAreaDialog
+            {renderObservationAreas()}
+            <ObservationAreaDialog
                 open={openUpdateDialog}
                 onClose={() => setOpenUpdateDialog(false)}
                 isCreate={true}
@@ -82,4 +82,4 @@ function ParkingAreaOverview() {
     );
 }
 
-export default ParkingAreaOverview;
+export default ObservationAreaOverview;

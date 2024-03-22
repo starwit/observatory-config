@@ -5,31 +5,31 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.json.JacksonTester;
 import org.springframework.boot.test.mock.mockito.MockBean;
 
-import de.starwit.persistence.entity.ParkingConfigEntity;
-import de.starwit.rest.controller.ParkingConfigController;
-import de.starwit.service.impl.ParkingConfigService;
+import de.starwit.persistence.entity.ObservationAreaEntity;
+import de.starwit.rest.controller.ObservationAreaController;
+import de.starwit.service.impl.ObservationAreaService;
 
 /**
- * Tests for ParkingConfigController
+ * Tests for ObservationAreaController
  *
  * <pre>
  * @WebMvcTest also auto-configures MockMvc which offers a powerful way of
  * easy testing MVC controllers without starting a full HTTP server.
  * </pre>
  */
-@WebMvcTest(controllers = ParkingConfigController.class)
-public class ParkingConfigControllerIntegrationTest extends AbstractControllerIntegrationTest<ParkingConfigEntity> {
+@WebMvcTest(controllers = ObservationAreaController.class)
+public class ObservationAreaControllerIntegrationTest extends AbstractControllerIntegrationTest<ObservationAreaEntity> {
 
     @MockBean
-    private ParkingConfigService parkingconfigService;
+    private ObservationAreaService observationareaService;
 
-    private JacksonTester<ParkingConfigEntity> jsonParkingConfigEntity;
-    private static final String data = "testdata/parkingconfig/";
-    private static final String restpath = "/api/parkingconfigs/";
+    private JacksonTester<ObservationAreaEntity> jsonObservationAreaEntity;
+    private static final String data = "testdata/observationarea/";
+    private static final String restpath = "/api/observationareas/";
 
     @Override
-    public Class<ParkingConfigEntity> getEntityClass() {
-        return ParkingConfigEntity.class;
+    public Class<ObservationAreaEntity> getEntityClass() {
+        return ObservationAreaEntity.class;
     }
 
     @Override
@@ -41,7 +41,7 @@ public class ParkingConfigControllerIntegrationTest extends AbstractControllerIn
     @Test
     public void canRetrieveById() throws Exception {
 
-        // ParkingConfigEntity entityToTest = readFromFile(data + "parkingconfig.json");
+        // ObservationAreaEntity entityToTest = readFromFile(data + "observationarea.json");
         // when(appService.findById(0L)).thenReturn(entityToTest);
 
         // MockHttpServletResponse response = retrieveById(0L);
