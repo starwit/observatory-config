@@ -97,7 +97,7 @@ function ImageAnnotate() {
             return;
         }
         
-        imageRest.savePolygons(event.images).then(() => {
+        observationAreaRest.savePolygons(observationAreaId, event.images[event.selectedImage].regions).then(() => {
             handleMessage("success", t("response.save.success"));
             reloadObservationAreas();
         });

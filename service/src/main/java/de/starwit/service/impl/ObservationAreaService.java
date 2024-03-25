@@ -35,6 +35,10 @@ public class ObservationAreaService implements ServiceInterface<ObservationAreaE
 
     private ObservationAreaMapper mapper = new ObservationAreaMapper();
 
+    public ObservationAreaEntity saveAndFlush(ObservationAreaEntity entity) {
+        return observationareaRepository.saveAndFlush(entity);
+    }    
+
     @Override
     public ObservationAreaRepository getRepository() {
         return observationareaRepository;
