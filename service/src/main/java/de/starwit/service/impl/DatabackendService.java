@@ -53,7 +53,7 @@ public class DatabackendService {
         
         try {
             ResponseEntity<Void> deleteResponse = restClient.delete()
-                    .uri(databackendUri.resolve("api/analytics-job/all"))
+                    .uri(databackendUri.resolve("api/observation-job/all"))
                     .retrieve().toBodilessEntity();
 
             log.debug("Cleared databackend configuration: HTTP " + deleteResponse.getStatusCode());
@@ -74,7 +74,7 @@ public class DatabackendService {
                 DatabackendDto dto = toDatabackendDto(observationAreaEntity, polygon);
 
                 ResponseEntity<Void> postResponse = restClient.post()
-                        .uri(databackendUri.resolve("api/analytics-job"))
+                        .uri(databackendUri.resolve("api/observation-job"))
                         .contentType(MediaType.APPLICATION_JSON)
                         .body(dto)
                         .retrieve().toBodilessEntity();
