@@ -1,9 +1,9 @@
 INSERT INTO "classification"(
-	"name", "color")
-	VALUES ('Lichtschranke', '#e9d01e');
+	"name", "color", "select_tool")
+	VALUES ('lightbarrier', '#e9d01e', 'create-line');
 INSERT INTO "classification"(
-	"name", "color")
-	VALUES ('Sperrfläche', '#e9881e');
+	"name", "color", "select_tool")
+	VALUES ('restricted', '#e9881e', 'create-polygon');
 INSERT INTO "classification"(
-	"name", "color")
-	VALUES ('Parkbereich', '#1e87e9');
+	"name", "color", "select_tool")
+	VALUES ('observated', '#1e87e9', 'create-polygon');
