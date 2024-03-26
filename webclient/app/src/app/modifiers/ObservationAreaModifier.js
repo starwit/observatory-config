@@ -1,6 +1,8 @@
 const entityDefault = {
+    id: "",
     name: "",
-    id: ""
+    saeIds: [""],
+    geoReferenced: false,
 };
 
 const entityFields = [

@@ -46,11 +46,20 @@ function ObservationAreaDialog(props) {
     }, [selectedArea, mode]);
     
     useEffect(() => {
-        onEntityChange();
+        setHasFormError(!allFieldsValid())
     }, [entity]);
     
-    function onEntityChange() {
-        setHasFormError(!isValid(fields, entity));
+    function allFieldsValid() {
+        if (!isValid(fields, entity)) {
+            return false;
+        }
+        if (entity.saeIds === undefined || 
+                entity.saeIds === null || 
+                entity.saeIds.length === 0 || 
+                entity.saeIds[0] === "") {
+            return false;
+        }
+        return true;
     }
 
     const onDropAccepted = (acceptedFiles) => {
@@ -147,7 +156,7 @@ function ObservationAreaDialog(props) {
                         <Grid item xs={8}>
                             <Grid container spacing={2}>
                                 <Grid item xs={12}>                 
-                                    <CamIDList value={entity?.saeIds} handleChange={handleSaeIdsChange}/>
+                                    <CamIDList values={entity?.saeIds} handleChange={handleSaeIdsChange}/>
                                 </Grid>
                                 {fields?.slice(2).map(field => {
                                         return (

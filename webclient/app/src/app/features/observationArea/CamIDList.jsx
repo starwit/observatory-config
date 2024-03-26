@@ -1,54 +1,39 @@
-import React, {useEffect, useState} from "react";
-import PropTypes from "prop-types";
-import IconButton from '@mui/material/IconButton';
 import AddIcon from '@mui/icons-material/Add';
 import RemoveIcon from '@mui/icons-material/Remove';
-import ValidatedTextField from '../../commons/form/ValidatedTextField';
 import { Stack } from '@mui/material';
-import {useTranslation} from "react-i18next";
+import IconButton from '@mui/material/IconButton';
+import PropTypes from "prop-types";
+import { useTranslation } from "react-i18next";
 import UpdateFieldStyles from '../../commons/form/UpdateFieldStyles';
+import ValidatedTextField from '../../commons/form/ValidatedTextField';
 
 function CamIDList(props) {
-  const {value, handleChange} = props;
+  const {values, handleChange} = props;
   const {t} = useTranslation();
-  const [inputs, setInputs] = useState([""]);
-
-  useEffect(() => {
-    if (value !== null && value !== undefined ) {
-      setInputs(value);
-    } else {
-      setInputs([""])
-    }
-  }, []);
-
-  useEffect(() => {
-    handleChange(inputs)
-  }, [inputs]);
 
   const handleAddTextField = () => {
-    setInputs([...inputs, '']);
+    handleChange([...values, '']);
   };
 
-  const handleRemoveTextField = (index) => {
-    if (index !== 0) {
-      const newInputs = [...inputs];
-      newInputs.splice(index, 1);
-      setInputs(newInputs);
+  const handleRemoveTextField = (removeIdx) => {
+    if (removeIdx !== 0) {
+      const newValues = values.filter((_, idx) => idx !== removeIdx);
+      handleChange(newValues);
     }
   };
 
-  const handleInputChange = (index, value) => {
-    const newInputs = [...inputs];
-    newInputs[index] = value;
-    setInputs(newInputs);
+  const handleInputChange = (index, newValue) => {
+    const newValues = structuredClone(values);
+    newValues[index] = newValue;
+    handleChange(newValues);
   };
 
   return (
     <>
-      {inputs.map((input, index) => (
+      {values?.map((value, index) => (
         <Stack key={index} direction={'row'}>
           <ValidatedTextField
-            value={input !== undefined ? input : ""}
+            value={value !== undefined ? value : ""}
             onChange={(e) => handleInputChange(index, e.target.value)}
             label={t("observationArea.saeIds") + ` ${index + 1}`}
             sx={UpdateFieldStyles.textField}
@@ -62,7 +47,7 @@ function CamIDList(props) {
               <RemoveIcon />
             </IconButton>
           )}
-          {index === inputs.length - 1 && (
+          {index === values.length - 1 && (
             <IconButton onClick={handleAddTextField} aria-label={t("button.create")}>
               <AddIcon />
             </IconButton>
@@ -74,7 +59,8 @@ function CamIDList(props) {
 }
 
 CamIDList.propTypes = {
-  value: PropTypes.array,
+  values: PropTypes.array,
   handleChange: PropTypes.func
 };
+
 export default CamIDList;
