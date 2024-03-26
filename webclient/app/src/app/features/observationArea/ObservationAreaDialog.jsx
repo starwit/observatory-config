@@ -40,7 +40,7 @@ function ObservationAreaDialog(props) {
         } else if (mode === MODE.COPY) {
             let newArea = structuredClone(selectedArea);
             newArea.id = null;
-            newArea.name = `${newArea.name} - Copy`;
+            newArea.name = `${newArea.name} - ${t("observationArea.copy.suffix")}`;
             setEntity(newArea);
         }
     }, [selectedArea, mode]);

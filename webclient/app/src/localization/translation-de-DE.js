@@ -45,6 +45,7 @@ const translationDeDE = {
     "observationArea.create.title": "Parkfläche Anlegen",
     "observationArea.update.title": "Parkfläche Bearbeiten",
     "observationArea.copy.title": "Parkfläche Kopieren",
+    "observationArea.copy.suffix": "Kopie",
     "observationArea.id": "id",
     "observationArea.name": "Name*",
     "observationArea.name.hint": "Der Name ist ein Pflichtfeld und kann bis zu 150 Zeichen lang sein",

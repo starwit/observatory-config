@@ -42,6 +42,7 @@ const translationEnEN = {
     "observationArea.create.title": "Create Observation Area",
     "observationArea.update.title": "Edit Observation Area",
     "observationArea.copy.title": "Copy Observation Area",
+    "observationArea.copy.suffix": "Copy",
     "observationArea.id": "id",
     "observationAreas.title": "Parking Areas",
     "observationAreas.loading": "Loading Parking Areas",
