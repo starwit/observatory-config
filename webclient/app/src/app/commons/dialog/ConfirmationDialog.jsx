@@ -9,19 +9,6 @@ import PropTypes from "prop-types";
 function ConfirmationDialog(props) {
     const {open, onClose, onSubmit, title, message, confirmTitle} = props;
     const {t} = useTranslation();
-    const [isProcessing, setIsProcessing] = useState(false);
-
-    function confirmAction() {
-        setIsProcessing(true);
-        onSubmit()
-            .then(() => {
-                onClose();
-                setIsProcessing(false);
-            })
-            .catch(() => {
-                setIsProcessing(false);
-            });
-    }
 
     return (
         <Dialog
@@ -40,7 +27,7 @@ function ConfirmationDialog(props) {
             </DialogContent>
             <DialogActions>
                 <Button onClick={onClose}>{t("button.cancel")}</Button>
-                <Button onClick={confirmAction} autoFocus>{t("button.submit")}
+                <Button onClick={onSubmit} autoFocus>{t("button.submit")}
                 </Button>
             </DialogActions>
         </Dialog>
