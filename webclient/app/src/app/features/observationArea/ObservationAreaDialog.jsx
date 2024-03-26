@@ -80,7 +80,10 @@ function ObservationAreaDialog(props) {
 
     const {getRootProps, getInputProps} = useDropzone({onDropAccepted, onDropRejected, maxSize: 4194304});
 
-    function onDialogClose() {
+    function onDialogClose(_, reason) {
+        if (["backdropClick", "escapeKeyDown"].includes(reason)) {
+            return;
+        }
         setSelectedFile(null);
         setPreviewUrl('');
         onSubmit();
