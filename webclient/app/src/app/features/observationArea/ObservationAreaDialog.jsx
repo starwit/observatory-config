@@ -1,33 +1,27 @@
-import {
-    Button,
-    Dialog, Typography,
-    DialogActions, DialogContent, FormControl, Stack, TextField, Grid
-} from "@mui/material";
-import PropTypes from "prop-types";
-import React, {useMemo, useEffect, useState} from "react";
-import {useImmer} from "use-immer";
-import {useTranslation} from "react-i18next";
-import DialogHeader from "../../commons/dialog/DialogHeader";
-import ValidatedTextField from "../../commons/form/ValidatedTextField";
-import {
-    handleChange,
-    isValid,
-    prepareForSave
-} from "../../modifiers/DefaultModifier";
-import ObservationAreaRest from "../../services/ObservationAreaRest";
-import {
-    entityDefault,
-    entityFields
-} from "../../modifiers/ObservationAreaModifier";
-import ImageRest from "../../services/ImageRest";
-import {useDropzone} from 'react-dropzone';
-import ImageUploadStyles from "../../assets/styles/ImageUploadStyles";
+import { Button, Dialog, DialogActions, DialogContent, FormControl, Grid, Stack, Typography } from "@mui/material";
 import { useSnackbar } from "notistack";
-import CamIDField from "../../commons/CamIDField/CamIDField";
+import PropTypes from "prop-types";
+import React, { useEffect, useMemo, useState } from "react";
+import { useDropzone } from 'react-dropzone';
+import { useTranslation } from "react-i18next";
+import { useImmer } from "use-immer";
+import ImageUploadStyles from "../../assets/styles/ImageUploadStyles";
+import CamIDList from "./CamIDList";
+import DialogHeader from "../../commons/dialog/DialogHeader";
 import UpdateField from "../../commons/form/UpdateField";
+import { handleChange, isValid, prepareForSave } from "../../modifiers/DefaultModifier";
+import { entityDefault, entityFields } from "../../modifiers/ObservationAreaModifier";
+import ImageRest from "../../services/ImageRest";
+import ObservationAreaRest from "../../services/ObservationAreaRest";
+
+export const MODE = Object.freeze({
+    UPDATE: "update",
+    CREATE: "create",
+    COPY: "copy",
+});
 
 function ObservationAreaDialog(props) {
-    const {open, onClose, selected, isCreate, update} = props;
+    const {open, onSubmit, selectedArea, mode, update} = props;
     const {t} = useTranslation();
     const [entity, setEntity] = useImmer(entityDefault);
     const fields = entityFields;
@@ -36,7 +30,28 @@ function ObservationAreaDialog(props) {
     const [hasFormError, setHasFormError] = React.useState(false);
     const [selectedFile, setSelectedFile] = useState(null);
     const [previewUrl, setPreviewUrl] = useState('');
-    const { enqueueSnackbar } = useSnackbar();
+    const {enqueueSnackbar} = useSnackbar();
+
+    useEffect(() => {
+        if (mode === MODE.CREATE) {
+            setEntity(entityDefault);
+        } else if (mode === MODE.UPDATE) {
+            setEntity(selectedArea);
+        } else if (mode === MODE.COPY) {
+            let newArea = structuredClone(selectedArea);
+            newArea.id = null;
+            newArea.name = `${newArea.name} - Copy`;
+            setEntity(newArea);
+        }
+    }, [selectedArea, mode]);
+    
+    useEffect(() => {
+        onEntityChange();
+    }, [entity]);
+    
+    function onEntityChange() {
+        setHasFormError(!isValid(fields, entity));
+    }
 
     const onDropAccepted = (acceptedFiles) => {
         const file = acceptedFiles[0];
@@ -54,29 +69,12 @@ function ObservationAreaDialog(props) {
         enqueueSnackbar(t("observationArea.fileTooLarge"), {variant: "warning"});
     };
 
-
-    useEffect(() => {
-        if (isCreate) {
-            setEntity(entityDefault);
-        } else {
-            setEntity(selected);
-        }
-    }, [selected, isCreate]);
-
-    useEffect(() => {
-        onEntityChange();
-    }, [entity]);
-
     const {getRootProps, getInputProps} = useDropzone({onDropAccepted, onDropRejected, maxSize: 4194304});
 
     function onDialogClose() {
         setSelectedFile(null);
         setPreviewUrl('');
-        onClose();
-    }
-
-    function onEntityChange() {
-        setHasFormError(!isValid(fields, entity));
+        onSubmit();
     }
 
     function handleSubmit(event) {
@@ -93,42 +91,35 @@ function ObservationAreaDialog(props) {
                 uploadFile(response.data, response.data?.id);
             });
         }
-        onClose();
+        onSubmit();
     }
 
     function uploadFile(data, observationAreaId) {
         if (!selectedFile) {
-            update(data);
+            update();
             return;
         }
         const formData = new FormData();
         formData.append('image', selectedFile);
         try {
             imageRest.upload(formData, observationAreaId).then(() => {
-                update(data);
+                update();
             });
         } catch (error) {
             console.error(error);
-            update(data);
+            update();
         }
     }
 
-    function getDialogTitle() {
-        if (entity?.id) {
-            return "observationArea.update.title";
-        }
-        return "observationArea.create.title";
-    }
-
-    function handleSaeIdsChange(value) {
+    function handleSaeIdsChange(newIds) {
         setEntity(draft => {
-            draft["saeIds"] = value;
+            draft["saeIds"] = newIds;
         });
     }
 
     return (
         <Dialog onClose={onDialogClose} open={open} spacing={2} sx={{zIndex: 10000}} maxWidth="lg">
-            <DialogHeader onClose={onDialogClose} title={t(getDialogTitle())}/>
+            <DialogHeader onClose={onDialogClose} title={t(`observationArea.${mode}.title`)}/>
             <form autoComplete="off">
                 <DialogContent>
                     <Grid container spacing={2}>
@@ -156,7 +147,7 @@ function ObservationAreaDialog(props) {
                         <Grid item xs={8}>
                             <Grid container spacing={2}>
                                 <Grid item xs={12}>                 
-                                    <CamIDField value={entity?.saeIds} handleChange={handleSaeIdsChange}/>
+                                    <CamIDList value={entity?.saeIds} handleChange={handleSaeIdsChange}/>
                                 </Grid>
                                 {fields?.slice(2).map(field => {
                                         return (
@@ -206,9 +197,9 @@ function ObservationAreaDialog(props) {
 
 ObservationAreaDialog.propTypes = {
     open: PropTypes.bool.isRequired,
-    onClose: PropTypes.func.isRequired,
+    onSubmit: PropTypes.func.isRequired,
     selected: PropTypes.object,
-    isCreate: PropTypes.bool.isRequired,
+    mode: PropTypes.string,
     update: PropTypes.func.isRequired
 };
 

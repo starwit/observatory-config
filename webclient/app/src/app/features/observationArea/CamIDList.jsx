@@ -3,12 +3,12 @@ import PropTypes from "prop-types";
 import IconButton from '@mui/material/IconButton';
 import AddIcon from '@mui/icons-material/Add';
 import RemoveIcon from '@mui/icons-material/Remove';
-import ValidatedTextField from '../form/ValidatedTextField';
+import ValidatedTextField from '../../commons/form/ValidatedTextField';
 import { Stack } from '@mui/material';
 import {useTranslation} from "react-i18next";
-import UpdateFieldStyles from '../form/UpdateFieldStyles';
+import UpdateFieldStyles from '../../commons/form/UpdateFieldStyles';
 
-function CamIDField(props) {
+function CamIDList(props) {
   const {value, handleChange} = props;
   const {t} = useTranslation();
   const [inputs, setInputs] = useState([""]);
@@ -73,8 +73,8 @@ function CamIDField(props) {
   );
 }
 
-CamIDField.propTypes = {
+CamIDList.propTypes = {
   value: PropTypes.array,
   handleChange: PropTypes.func
 };
-export default CamIDField;
+export default CamIDList;

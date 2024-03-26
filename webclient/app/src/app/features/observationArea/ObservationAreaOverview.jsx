@@ -1,20 +1,51 @@
-import {Container, Grid, Typography} from "@mui/material";
+import { Container, Grid, Typography } from "@mui/material";
+import React, { useCallback, useEffect, useMemo, useState } from "react";
+import { useTranslation } from "react-i18next";
 import AddFabButton from "../../commons/addFabButton/AddFabButton";
+import ConfirmationDialog from "../../commons/dialog/ConfirmationDialog";
 import LoadingSpinner from "../../commons/loadingSpinner/LoadingSpinner";
-import React, {useCallback, useEffect, useMemo, useState} from "react";
-import {useTranslation} from "react-i18next";
-import {useNavigate} from "react-router";
 import ObservationAreaRest from "../../services/ObservationAreaRest";
 import ObservationAreaCard from "./ObservationAreaCard";
-import ObservationAreaDialog from "./ObservationAreaDialog";
+import ObservationAreaDialog, { MODE as ObservationAreaDialogMode } from "./ObservationAreaDialog";
 
 function ObservationAreaOverview() {
     const {t} = useTranslation();
-    const navigate = useNavigate();
     const observationAreaRest = useMemo(() => new ObservationAreaRest(), []);
     const [observationAreas, setObservationAreas] = useState(null);
-    const [openUpdateDialog, setOpenUpdateDialog] = useState(false);
+    const [selectedArea, setSelectedArea] = useState(null);
 
+    const [openUpdateDialog, setOpenUpdateDialog] = useState(false);
+    const [updateDialogMode, setUpdateDialogMode] = useState(ObservationAreaDialogMode.CREATE);
+    const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
+
+    function openDialogWithMode(mode) {
+        setUpdateDialogMode(mode);
+        setOpenUpdateDialog(true);
+    }
+
+    function editArea(area) {
+        setSelectedArea(area);
+        openDialogWithMode(ObservationAreaDialogMode.UPDATE);
+    }
+
+    function copyArea(area) {
+        setSelectedArea(area);
+        openDialogWithMode(ObservationAreaDialogMode.COPY);
+    }
+
+    function promptDeleteArea(area) {
+        setSelectedArea(area);
+        setOpenDeleteDialog(true);
+    }
+
+    function deleteArea(area) {
+        setOpenDeleteDialog(false);
+        observationAreaRest.delete(area.id)
+            .then(response => {
+                setObservationAreas(null);
+                loadObservationAreas();
+            });
+    }
 
     const loadObservationAreas = useCallback(() => {
         setObservationAreas(null);
@@ -27,17 +58,10 @@ function ObservationAreaOverview() {
         loadObservationAreas();
     }, [loadObservationAreas]);
 
-    function update() {
+    function handleUpdate() {
         loadObservationAreas();
     };
 
-    function deleteById(id) {
-        return observationAreaRest.delete(id)
-            .then(response => {
-                setObservationAreas(null);
-                loadObservationAreas();
-            });
-    }
 
     function renderObservationAreas() {
         if (!observationAreas) {
@@ -45,9 +69,7 @@ function ObservationAreaOverview() {
         }
 
         if (observationAreas.length === 0) {
-            return (
-                null
-            );
+            return <Typography variant="body1">{t("observationAreas.empty")}</Typography>;
         }
 
         return (
@@ -55,8 +77,9 @@ function ObservationAreaOverview() {
                 {observationAreas?.map(area => (
                     <Grid item sm={6} xs={12} key={area.id}>
                         <ObservationAreaCard
-                            onEditClick={update}
-                            onDeleteClick={deleteById}
+                            onEditClick={() => editArea(area)}
+                            onDeleteClick={() => promptDeleteArea(area)}
+                            onCopyClick={() => copyArea(area)}
                             observationArea={area} />
                     </Grid>
                 ))}
@@ -70,14 +93,22 @@ function ObservationAreaOverview() {
                 {t("observationAreas.title")}
             </Typography>
             {renderObservationAreas()}
+            <ConfirmationDialog
+                title={t("observationArea.delete.title")}
+                message={t("observationArea.delete.message")}
+                open={openDeleteDialog}
+                onClose={() => setOpenDeleteDialog(false)}
+                onSubmit={() => deleteArea(selectedArea)}
+                confirmTitle={t("button.delete")}
+            />
             <ObservationAreaDialog
                 open={openUpdateDialog}
-                onClose={() => setOpenUpdateDialog(false)}
-                isCreate={true}
-                selected={null}
-                update={() => update()}
+                onSubmit={() => setOpenUpdateDialog(false)}
+                mode={updateDialogMode}
+                selectedArea={selectedArea}
+                update={handleUpdate}
             />
-            <AddFabButton onClick={() => setOpenUpdateDialog(true)} />
+            <AddFabButton onClick={() => openDialogWithMode(ObservationAreaDialogMode.CREATE)} />
         </Container>
     );
 }
