@@ -29,6 +29,7 @@ public class ObservationAreaMapper implements CustomMapper<ObservationAreaEntity
         dto.setGeoReferenced(entity.getGeoReferenced());
         dto.setTopleftlatitude(entity.getTopleftlatitude());
         dto.setTopleftlongitude(entity.getTopleftlongitude());
+        dto.setProcessingEnabled(entity.getProcessingEnabled());
         return dto;
     }
 
@@ -57,6 +58,7 @@ public class ObservationAreaMapper implements CustomMapper<ObservationAreaEntity
         entity.setTopleftlatitude(dto.getTopleftlatitude());
         entity.setTopleftlongitude(dto.getTopleftlongitude());
         entity.setGeoReferenced(dto.getGeoReferenced());
+        entity.setProcessingEnabled(dto.getProcessingEnabled());
         return entity;
     }
 
