@@ -28,7 +28,6 @@ import de.starwit.service.dto.ObservationAreaDto;
 import de.starwit.service.dto.RegionDto;
 import de.starwit.service.impl.ClassificationService;
 import de.starwit.service.impl.DatabackendService;
-import de.starwit.service.impl.ImageService;
 import de.starwit.service.impl.ObservationAreaService;
 import de.starwit.service.impl.PointService;
 import de.starwit.service.impl.PolygonService;
