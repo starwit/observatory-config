@@ -1,6 +1,6 @@
 import React, {useState} from "react";
-import {Card, CardActionArea, CardActions, CardContent, Divider, Grid, IconButton, Typography} from "@mui/material";
-import {Delete, Edit, MoreHoriz, ContentCopy} from "@mui/icons-material";
+import {Card, CardActionArea, CardContent, CardMedia, Divider, Grid, IconButton, Typography} from "@mui/material";
+import {Delete, Edit, ContentCopy} from "@mui/icons-material";
 import PropTypes from "prop-types";
 import {useTranslation} from "react-i18next";
 import {useNavigate} from "react-router";
@@ -11,6 +11,7 @@ function ObservationAreaCard(props) {
     const {observationArea, onDeleteClick, onEditClick} = props;
     const navigate = useNavigate();
     const {t} = useTranslation();
+    const [imageData, setImageData] = useState('data:' + observationArea.image.type + ';base64,' + observationArea.image.data);
 
     const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
 
@@ -27,7 +28,7 @@ function ObservationAreaCard(props) {
                             </Typography>
                         </Grid>
                         <Grid item xs={5} align="right">
-                        <IconButton onClick={() => setOpenUpdateDialog(true)}>
+                            <IconButton onClick={() => setOpenUpdateDialog(true)}>
                                 <ContentCopy fontSize={"small"} />
                             </IconButton>
                             <IconButton onClick={() => setOpenUpdateDialog(true)}>
@@ -42,13 +43,11 @@ function ObservationAreaCard(props) {
                 </CardContent>
                 <Divider />
                 <CardActionArea onClick={() => navigate("/observationarea/" + observationArea.id)}>
-                    <CardContent>
-                        <Typography variant="body2">
-                        </Typography>
-                        <CardActions>
-                            <MoreHoriz color="primary" />
-                        </CardActions>
-                    </CardContent>
+                    <CardMedia
+                        component="img"
+                        height="300"
+                        image={imageData}
+                    />
                 </CardActionArea>
             </Card>
             <ConfirmationDialog
