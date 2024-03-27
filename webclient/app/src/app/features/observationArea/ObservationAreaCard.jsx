@@ -17,8 +17,6 @@ function ObservationAreaCard(props) {
 
     const [openUpdateDialog, setOpenUpdateDialog] = useState(false);
 
-
-
     return (
         <>
             <Card elevation={5}>
