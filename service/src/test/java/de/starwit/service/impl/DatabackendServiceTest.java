@@ -10,9 +10,7 @@ import org.junit.jupiter.api.Test;
 
 import de.starwit.persistence.entity.CameraEntity;
 import de.starwit.persistence.entity.ClassificationEntity;
-import de.starwit.persistence.entity.ImageEntity;
-import de.starwit.persistence.entity.ParkingAreaEntity;
-import de.starwit.persistence.entity.ParkingConfigEntity;
+import de.starwit.persistence.entity.ObservationAreaEntity;
 import de.starwit.persistence.entity.PointEntity;
 import de.starwit.persistence.entity.PolygonEntity;
 import de.starwit.service.dto.DatabackendDto;
@@ -24,20 +22,20 @@ public class DatabackendServiceTest {
     public void testToDatabackendDtoPixelLine() throws IllegalGeometryException {
 
         PolygonEntity polygon = createLineWithDefaults();
-        
-        ImageEntity image = createImageWithDefaults();
-        image.setGeoReferenced(false);
+
+        ObservationAreaEntity observationAreaEntity = createObservationAreaWithDefaults();
+        observationAreaEntity.setProcessingEnabled(true);
+        observationAreaEntity.setGeoReferenced(false);
         
         DatabackendService testee = new DatabackendService(URI.create("http://localhost"));
-
-        DatabackendDto dbeDto = testee.toDatabackendDto(image, polygon);
+        DatabackendDto dbeDto = testee.toDatabackendDto(observationAreaEntity, polygon);
 
         assertThat(dbeDto.getCameraId()).isEqualTo("stream1");
         assertThat(dbeDto.getClassification()).isEqualTo(polygon.getClassification().getName());
         assertThat(dbeDto.getDetectionClassId()).isEqualTo(2);
         assertThat(dbeDto.getEnabled()).isTrue();
         assertThat(dbeDto.getName()).isEqualTo("lineRegion");
-        assertThat(dbeDto.getParkingAreaId()).isEqualTo(1);
+        assertThat(dbeDto.getObservationAreaId()).isEqualTo(1);
         assertThat(dbeDto.getType()).isEqualTo("LINE_CROSSING");
         assertThat(dbeDto.getGeoReferenced()).isFalse();
         assertThat(dbeDto.getGeometryPoints().get(0).getX()).isEqualTo(0);
@@ -48,20 +46,21 @@ public class DatabackendServiceTest {
     public void testToDatabackendDtoGeoLine() throws IllegalGeometryException {
 
         PolygonEntity polygon = createLineWithDefaults();
-        
-        ImageEntity image = createImageWithDefaults();
-        image.setGeoReferenced(true);
+
+        ObservationAreaEntity observationAreaEntity = createObservationAreaWithDefaults();
+        observationAreaEntity.setProcessingEnabled(true);
+        observationAreaEntity.setGeoReferenced(true);
         
         DatabackendService testee = new DatabackendService(URI.create("http://localhost"));
-
-        DatabackendDto dbeDto = testee.toDatabackendDto(image, polygon);
-
+        observationAreaEntity.setProcessingEnabled(true);
+        DatabackendDto dbeDto = testee.toDatabackendDto(observationAreaEntity, polygon);
+        
         assertThat(dbeDto.getCameraId()).isEqualTo("stream1");
         assertThat(dbeDto.getClassification()).isEqualTo(polygon.getClassification().getName());
         assertThat(dbeDto.getDetectionClassId()).isEqualTo(2);
         assertThat(dbeDto.getEnabled()).isTrue();
         assertThat(dbeDto.getName()).isEqualTo("lineRegion");
-        assertThat(dbeDto.getParkingAreaId()).isEqualTo(1);
+        assertThat(dbeDto.getObservationAreaId()).isEqualTo(1);
         assertThat(dbeDto.getType()).isEqualTo("LINE_CROSSING");
         assertThat(dbeDto.getGeoReferenced()).isTrue();  
         assertThat(dbeDto.getGeometryPoints().get(1).getX()).isNull();;
@@ -73,19 +72,19 @@ public class DatabackendServiceTest {
 
         PolygonEntity polygon = createPolygonWithDefaults();
         
-        ImageEntity image = createImageWithDefaults();
-        image.setGeoReferenced(false);
-        
-        DatabackendService testee = new DatabackendService(URI.create("http://localhost"));
+        ObservationAreaEntity observationAreaEntity = createObservationAreaWithDefaults();
+        observationAreaEntity.setProcessingEnabled(true);
+        observationAreaEntity.setGeoReferenced(false);
 
-        DatabackendDto dbeDto = testee.toDatabackendDto(image, polygon);
+        DatabackendService testee = new DatabackendService(URI.create("http://localhost"));
+        DatabackendDto dbeDto = testee.toDatabackendDto(observationAreaEntity, polygon);
 
         assertThat(dbeDto.getCameraId()).isEqualTo("stream1");
         assertThat(dbeDto.getClassification()).isEqualTo(polygon.getClassification().getName());
         assertThat(dbeDto.getDetectionClassId()).isEqualTo(2);
         assertThat(dbeDto.getEnabled()).isTrue();
         assertThat(dbeDto.getName()).isEqualTo("polygonRegion");
-        assertThat(dbeDto.getParkingAreaId()).isEqualTo(1);
+        assertThat(dbeDto.getObservationAreaId()).isEqualTo(1);
         assertThat(dbeDto.getType()).isEqualTo("AREA_OCCUPANCY");
         assertThat(dbeDto.getGeoReferenced()).isFalse();
         assertThat(dbeDto.getGeometryPoints().get(2).getY()).isEqualTo(0.5);
@@ -97,19 +96,20 @@ public class DatabackendServiceTest {
 
         PolygonEntity polygon = createPolygonWithDefaults();
         
-        ImageEntity image = createImageWithDefaults();
-        image.setGeoReferenced(true);
-        
-        DatabackendService testee = new DatabackendService(URI.create("http://localhost"));
+        ObservationAreaEntity observationAreaEntity = createObservationAreaWithDefaults();
+        observationAreaEntity.setProcessingEnabled(true);
+        observationAreaEntity.setGeoReferenced(true);
 
-        DatabackendDto dbeDto = testee.toDatabackendDto(image, polygon);
+        DatabackendService testee = new DatabackendService(URI.create("http://localhost"));
+        DatabackendDto dbeDto = testee.toDatabackendDto(observationAreaEntity, polygon);
+
 
         assertThat(dbeDto.getCameraId()).isEqualTo("stream1");
         assertThat(dbeDto.getClassification()).isEqualTo(polygon.getClassification().getName());
         assertThat(dbeDto.getDetectionClassId()).isEqualTo(2);
         assertThat(dbeDto.getEnabled()).isTrue();
         assertThat(dbeDto.getName()).isEqualTo("polygonRegion");
-        assertThat(dbeDto.getParkingAreaId()).isEqualTo(1);
+        assertThat(dbeDto.getObservationAreaId()).isEqualTo(1);
         assertThat(dbeDto.getType()).isEqualTo("AREA_OCCUPANCY");
         assertThat(dbeDto.getGeoReferenced()).isTrue();
         assertThat(dbeDto.getGeometryPoints().get(2).getY()).isNull();
@@ -156,33 +156,22 @@ public class DatabackendServiceTest {
         return polygon;
     }
     
-    ImageEntity createImageWithDefaults() {
+    ObservationAreaEntity createObservationAreaWithDefaults() {
         CameraEntity camera = new CameraEntity();
         camera.setSaeId("stream1");
 
-        ParkingAreaEntity parkingArea = new ParkingAreaEntity();
-        parkingArea.setId(1L);
+        ObservationAreaEntity observationArea = new ObservationAreaEntity();
+        observationArea.setId(1L);
 
-        ParkingConfigEntity parkingConfig = new ParkingConfigEntity();
-        parkingConfig.setId(1L);
-        parkingConfig.setParkingArea(parkingArea);
-
-        ImageEntity image = new ImageEntity();
-
-        image.setId(1L);
-        image.setName("testImage");
-        image.setType("testType");
-        image.setImageHeight(1000);
-        image.setImageWidth(1000);
-        image.setDegreeperpixelx(new BigDecimal(0.001));
-        image.setDegreeperpixely(new BigDecimal(0.001));
-        image.setGeoReferenced(false);
-        image.setTopleftlongitude(new BigDecimal(10));
-        image.setTopleftlatitude(new BigDecimal(52));
-        image.setCamera(Arrays.asList(camera));
-        image.setParkingConfig(parkingConfig);
-
-        return image;
+        observationArea.setImageHeight(1000);
+        observationArea.setImageWidth(1000);
+        observationArea.setDegreeperpixelx(new BigDecimal(0.001));
+        observationArea.setDegreeperpixely(new BigDecimal(0.001));
+        observationArea.setGeoReferenced(false);
+        observationArea.setTopleftlongitude(new BigDecimal(10));
+        observationArea.setTopleftlatitude(new BigDecimal(52));
+        observationArea.setCamera(Arrays.asList(camera));
+        return observationArea;
     }
 
     PointEntity createPoint(int id, double x, double y) {

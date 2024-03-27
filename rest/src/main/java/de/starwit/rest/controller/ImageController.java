@@ -25,7 +25,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import de.starwit.persistence.entity.ClassificationEntity;
 import de.starwit.persistence.entity.ImageEntity;
-import de.starwit.persistence.entity.ParkingConfigEntity;
+import de.starwit.persistence.entity.ObservationAreaEntity;
 import de.starwit.persistence.entity.PointEntity;
 import de.starwit.persistence.entity.PolygonEntity;
 import de.starwit.persistence.exception.NotificationException;
@@ -35,7 +35,7 @@ import de.starwit.service.dto.RegionDto;
 import de.starwit.service.impl.ClassificationService;
 import de.starwit.service.impl.DatabackendService;
 import de.starwit.service.impl.ImageService;
-import de.starwit.service.impl.ParkingConfigService;
+import de.starwit.service.impl.ObservationAreaService;
 import de.starwit.service.impl.PointService;
 import de.starwit.service.impl.PolygonService;
 import de.starwit.service.mapper.ImageMapper;
@@ -66,7 +66,7 @@ public class ImageController {
     private PointService pointService;
 
     @Autowired
-    private ParkingConfigService parkingConfigService;
+    private ObservationAreaService observationAreaService;
 
     @Autowired
     private DatabackendService databackendService;
@@ -80,22 +80,10 @@ public class ImageController {
         return this.imageService.findAll();
     }
 
-    @Operation(summary = "Get all image without parkingConfig")
-    @GetMapping(value = "/find-without-parkingConfig")
-    public List<ImageEntity> findAllWithoutParkingConfig() {
-        return imageService.findAllWithoutParkingConfig();
-    }
-
-    @Operation(summary = "Get all image without other parkingConfig")
-    @GetMapping(value = "/find-without-other-parkingConfig/{id}")
-    public List<ImageEntity> findAllWithoutOtherParkingConfig(@PathVariable("id") Long id) {
-        return imageService.findAllWithoutOtherParkingConfig(id);
-    }
-
-    @Operation(summary = "Get all image without other parkingConfig")
+    @Operation(summary = "Get all image without other observationAreas")
     @GetMapping(value = "/find-with-polygons/{id}")
     public List<ImageDto> findFindWithPolygons(@PathVariable("id") Long id) {
-        List<ImageEntity> images = imageService.findByParkingConfigId(id);
+        List<ImageEntity> images = imageService.findByObservationAreaId(id);
         return mapper.convertToDtoList(images);
     }
 
@@ -125,12 +113,12 @@ public class ImageController {
         }
     }
 
-    @PostMapping("/upload/{parkingconfigid}")
+    @PostMapping("/upload/{observationareaid}")
     @CrossOrigin
-    public void uploadImage(@RequestParam("image") MultipartFile file, @PathVariable("parkingconfigid") Long id)
+    public void uploadImage(@RequestParam("image") MultipartFile file, @PathVariable("observationareaid") Long id)
             throws IOException {
-        ParkingConfigEntity prodConfigEntity = parkingConfigService.findById(id);
-        imageService.uploadImage(file, prodConfigEntity);
+        ObservationAreaEntity observationAreaEntity = observationAreaService.findById(id);
+        imageService.uploadImage(file, observationAreaEntity);
     }
 
     @GetMapping("/download/{id}")
@@ -146,20 +134,20 @@ public class ImageController {
         ImageEntity entity = new ImageEntity();
         if (dto.getId() != null) {
             entity = imageService.findById(dto.getId());
-            if (entity.getPolygon() != null) {
-                polygonService.deleteAll(entity.getPolygon());
+            if (entity.getObservationArea().getPolygon() != null) {
+                polygonService.deleteAll(entity.getObservationArea().getPolygon());
                 polygonService.getRepository().flush();
             }
-            entity.getPolygon().removeAll(entity.getPolygon());
-            entity.setImageHeight(dto.getImageHeight());
-            entity.setImageWidth(dto.getImageWidth());
+            entity.getObservationArea().getPolygon().removeAll(entity.getObservationArea().getPolygon());
+            entity.getObservationArea().setImageHeight(dto.getImageHeight());
+            entity.getObservationArea().setImageWidth(dto.getImageWidth());
             entity = imageService.saveAndFlush(entity);
             List<RegionDto> regions = dto.getRegions();
             for (RegionDto regionDto : regions) {
                 if (regionDto.getType().equals("polygon")) {
-                    entity.addToPolygons(createPolygon(entity, regionDto));
+                    entity.getObservationArea().addToPolygons(createPolygon(entity.getObservationArea(), regionDto));
                 } else if (regionDto.getType().equals("line")) {
-                    entity.addToPolygons(createLine(entity, regionDto));
+                    entity.getObservationArea().addToPolygons(createLine(entity.getObservationArea(), regionDto));
                 }
             }
 
@@ -173,12 +161,12 @@ public class ImageController {
         }
     }
 
-    private PolygonEntity createPolygon(ImageEntity entity, RegionDto regionDto) {
+    private PolygonEntity createPolygon(ObservationAreaEntity entity, RegionDto regionDto) {
         PolygonEntity polygonEntity = new PolygonEntity();
         ClassificationEntity cls = classificationService.findByName(regionDto.getCls());
         polygonEntity.setClassification(cls);
         polygonEntity.setOpen(regionDto.getOpen());
-        polygonEntity.setImage(entity);
+        polygonEntity.setObservationArea(entity);
         polygonEntity.setName(regionDto.getName());
         polygonEntity = polygonService.saveAndFlush(polygonEntity);
         List<List<Double>> points = regionDto.getPoints();
@@ -195,12 +183,12 @@ public class ImageController {
         return polygonEntity;
     }
 
-    private PolygonEntity createLine(ImageEntity entity, RegionDto regionDto) {
+    private PolygonEntity createLine(ObservationAreaEntity entity, RegionDto regionDto) {
         PolygonEntity polygonEntity = new PolygonEntity();
         ClassificationEntity cls = classificationService.findByName(regionDto.getCls());
         polygonEntity.setClassification(cls);
         polygonEntity.setOpen(true);
-        polygonEntity.setImage(entity);
+        polygonEntity.setObservationArea(entity);
         polygonEntity.setName(regionDto.getName());
         polygonEntity = polygonService.saveAndFlush(polygonEntity);
         PointEntity p1 = new PointEntity();

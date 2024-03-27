@@ -50,7 +50,7 @@ function CamIDField(props) {
           <ValidatedTextField
             value={input !== undefined ? input : ""}
             onChange={(e) => handleInputChange(index, e.target.value)}
-            label={t("parkingArea.saeIds") + ` ${index + 1}`}
+            label={t("observationArea.saeIds") + ` ${index + 1}`}
             sx={UpdateFieldStyles.textField}
             variant="standard"
             fullWidth

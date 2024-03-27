@@ -14,12 +14,12 @@ CREATE SEQUENCE IF NOT EXISTS "polygon_id_seq";
 CREATE TABLE "polygon"
 (
     "open" BOOLEAN,
-    "image_id" BIGINT,
+    "observationarea_id" BIGINT,
     "name" VARCHAR(255) NOT NULL,
     "classification_id" BIGINT,
     "id" BIGINT NOT NULL DEFAULT nextval('polygon_id_seq'),
     CONSTRAINT "polygon_pkey" PRIMARY KEY ("id"),
-    CONSTRAINT "polygon_name_image" UNIQUE ("name", "image_id")
+    CONSTRAINT "polygon_name_observationarea" UNIQUE ("name", "observationarea_id")
 );
 
 CREATE SEQUENCE IF NOT EXISTS "image_id_seq";
@@ -29,7 +29,7 @@ CREATE TABLE "image"
     "name" VARCHAR(255) NOT NULL,
     "data" BYTEA,
     "type" VARCHAR(255),
-    "parkingconfig_id" BIGINT,
+    "observationarea_id" BIGINT,
     "id" BIGINT NOT NULL DEFAULT nextval('image_id_seq'),
     CONSTRAINT "image_pkey" PRIMARY KEY ("id")
 );
@@ -44,25 +44,34 @@ CREATE TABLE "classification"
     CONSTRAINT "classification_pkey" PRIMARY KEY ("id")
 );
 
-CREATE SEQUENCE IF NOT EXISTS "parkingconfig_id_seq";
 
-CREATE TABLE "parkingconfig"
+CREATE SEQUENCE IF NOT EXISTS "camera_id_seq";
+
+CREATE TABLE "camera"
 (
-    "name" VARCHAR(255) NOT NULL,
-    "parkingarea_id" BIGINT,
-    "id" BIGINT NOT NULL DEFAULT nextval('parkingconfig_id_seq'),
-    CONSTRAINT "parkingconfig_pkey" PRIMARY KEY ("id")
+    "saeid" VARCHAR(255) NOT NULL,
+    "observationarea_id" BIGINT,
+    "id" BIGINT NOT NULL DEFAULT nextval('camera_id_seq'),
+    CONSTRAINT "camera_pkey" PRIMARY KEY ("id")
 );
 
-CREATE SEQUENCE IF NOT EXISTS "parkingarea_id_seq";
+CREATE SEQUENCE IF NOT EXISTS "observationarea_id_seq";
 
-CREATE TABLE "parkingarea"
+CREATE TABLE "observationarea"
 (
     "name" VARCHAR(255) NOT NULL,
-    "prodconfig_id" BIGINT UNIQUE,
-    "testconfig_id" BIGINT UNIQUE,
-    "id" BIGINT NOT NULL DEFAULT nextval('parkingarea_id_seq'),
-    CONSTRAINT "parkingarea_pkey" PRIMARY KEY ("id")
+    "center_latitude" DECIMAL(22,19),
+    "center_longitude" DECIMAL(22,19),
+    "top_left_latitude" DECIMAL(22,19),
+    "top_left_longitude" DECIMAL(22,19),
+    "degree_per_pixel_x" DECIMAL(22,19),
+    "degree_per_pixel_y" DECIMAL(22,19),
+    "georeferenced" BOOLEAN,
+    "processing_enabled" BOOLEAN,
+    "image_height" INTEGER,
+    "image_width" INTEGER,
+    "id" BIGINT NOT NULL DEFAULT nextval('observationarea_id_seq'),
+    CONSTRAINT "observationarea_pkey" PRIMARY KEY ("id")
 );
 
 ALTER TABLE "point"
@@ -71,9 +80,9 @@ ALTER TABLE "point"
     REFERENCES "polygon" ("id");
 
 ALTER TABLE "polygon"
-    ADD CONSTRAINT "fk_polygon_image"
-    FOREIGN KEY ("image_id")
-    REFERENCES "image" ("id");
+    ADD CONSTRAINT "fk_polygon_observationarea"
+    FOREIGN KEY ("observationarea_id")
+    REFERENCES "observationarea" ("id");
 
 ALTER TABLE "polygon"
     ADD CONSTRAINT "fk_polygon_classification"
@@ -81,21 +90,11 @@ ALTER TABLE "polygon"
     REFERENCES "classification" ("id");
 
 ALTER TABLE "image"
-    ADD CONSTRAINT "fk_image_parkingconfig"
-    FOREIGN KEY ("parkingconfig_id")
-    REFERENCES "parkingconfig" ("id");
+    ADD CONSTRAINT "fk_image_observationarea"
+    FOREIGN KEY ("observationarea_id")
+    REFERENCES "observationarea" ("id");
 
-ALTER TABLE "parkingconfig"
-    ADD CONSTRAINT "fk_parkingconfig_parkingarea"
-    FOREIGN KEY ("parkingarea_id")
-    REFERENCES "parkingarea" ("id");
-
-ALTER TABLE "parkingarea"
-    ADD CONSTRAINT "fk_parkingarea_testconfig"
-    FOREIGN KEY ("testconfig_id")
-    REFERENCES "parkingconfig" ("id");
-
-ALTER TABLE "parkingarea"
-    ADD CONSTRAINT "fk_parkingarea_prodconfig"
-    FOREIGN KEY ("prodconfig_id")
-    REFERENCES "parkingconfig" ("id");
+ALTER TABLE "camera"
+    ADD CONSTRAINT "fk_camera_observationarea"
+    FOREIGN KEY ("observationarea_id")
+    REFERENCES "observationarea" ("id");

@@ -1,15 +1,15 @@
 import React, {useState, useMemo, useEffect} from "react";
 import {Card, CardActionArea, CardActions, CardContent, Divider, Grid, IconButton, Typography} from "@mui/material";
-import {Delete, Edit, MoreHoriz} from "@mui/icons-material";
+import {Delete, Edit, MoreHoriz, ContentCopy} from "@mui/icons-material";
 import PropTypes from "prop-types";
 import {useTranslation} from "react-i18next";
 import {useNavigate} from "react-router";
 import ConfirmationDialog from "../../commons/dialog/ConfirmationDialog";
-import ParkingAreaDialog from "./ParkingAreaDialog";
+import ObservationAreaDialog from "./ObservationAreaDialog";
 import ImageRest from "../../services/ImageRest";
 
-function ParkingAreaCard(props) {
-    const {parkingArea, onDeleteClick, onEditClick} = props;
+function ObservationAreaCard(props) {
+    const {observationArea, onDeleteClick, onEditClick} = props;
     const navigate = useNavigate();
     const {t} = useTranslation();
     const [imageData, setImageData] = useState(null);
@@ -41,21 +41,25 @@ function ParkingAreaCard(props) {
                     <Grid container spacing={0}>
                         <Grid item xs={7}>
                             <Typography gutterBottom variant="h5" component="div">
-                                {parkingArea.name}
+                                {observationArea.name}
                             </Typography>
                         </Grid>
                         <Grid item xs={5} align="right">
+                        <IconButton onClick={() => setOpenUpdateDialog(true)}>
+                                <ContentCopy fontSize={"small"} />
+                            </IconButton>
                             <IconButton onClick={() => setOpenUpdateDialog(true)}>
                                 <Edit fontSize={"small"} />
                             </IconButton>
                             <IconButton onClick={() => setOpenDeleteDialog(true)}>
                                 <Delete fontSize={"small"} />
                             </IconButton>
+
                         </Grid>
                     </Grid>
                 </CardContent>
                 <Divider />
-                <CardActionArea onClick={() => navigate("/parkingarea/" + parkingArea.id)}>
+                <CardActionArea onClick={() => navigate("/observationarea/" + observationArea.id)}>
                     <CardContent>
                         <Typography variant="body2">
                         </Typography>
@@ -65,26 +69,26 @@ function ParkingAreaCard(props) {
                 </CardActionArea>
             </Card>
             <ConfirmationDialog
-                title={t("parkingArea.delete.title")}
-                message={t("parkingArea.delete.message")}
+                title={t("observationArea.delete.title")}
+                message={t("observationArea.delete.message")}
                 open={openDeleteDialog}
                 onClose={() => setOpenDeleteDialog(false)}
-                onSubmit={() => onDeleteClick(parkingArea.id)}
+                onSubmit={() => onDeleteClick(observationArea.id)}
                 confirmTitle={t("button.delete")}
             />
-            <ParkingAreaDialog
+            <ObservationAreaDialog
                 open={openUpdateDialog}
                 onClose={() => setOpenUpdateDialog(false)}
                 isCreate={false}
-                selected={parkingArea}
+                selected={observationArea}
                 update={() => onEditClick()}
             />
         </>
     );
 }
 
-ParkingAreaCard.propTypes = {
-    parkingArea: PropTypes.shape({
+ObservationAreaCard.propTypes = {
+    observationArea: PropTypes.shape({
         id: PropTypes.number.isRequired,
         name: PropTypes.string.isRequired
     }),
@@ -92,4 +96,4 @@ ParkingAreaCard.propTypes = {
     onDeleteClick: PropTypes.func.isRequired
 };
 
-export default ParkingAreaCard;
+export default ObservationAreaCard;

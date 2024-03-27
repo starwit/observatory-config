@@ -45,18 +45,6 @@ public class PolygonController {
         return this.polygonService.findAll();
     }
 
-    @Operation(summary = "Get all polygon without image")
-    @GetMapping(value = "/find-without-image")
-    public List<PolygonEntity> findAllWithoutImage() {
-        return polygonService.findAllWithoutImage();
-    }
-
-    @Operation(summary = "Get all polygon without other image")
-    @GetMapping(value = "/find-without-other-image/{id}")
-    public List<PolygonEntity> findAllWithoutOtherImage(@PathVariable("id") Long id) {
-        return polygonService.findAllWithoutOtherImage(id);
-    }
-
     @Operation(summary = "Get polygon with id")
     @GetMapping(value = "/{id}")
     public PolygonEntity findById(@PathVariable("id") Long id) {

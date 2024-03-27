@@ -17,10 +17,9 @@ import org.springframework.web.client.ResourceAccessException;
 import org.springframework.web.client.RestClient;
 import org.springframework.web.client.RestClientResponseException;
 
-import de.starwit.persistence.entity.ImageEntity;
+import de.starwit.persistence.entity.ObservationAreaEntity;
 import de.starwit.persistence.entity.PolygonEntity;
-import de.starwit.persistence.repository.ImageRepository;
-import de.starwit.persistence.repository.ParkingAreaRepository;
+import de.starwit.persistence.repository.ObservationAreaRepository;
 import de.starwit.service.dto.DatabackendDto;
 import de.starwit.service.dto.GeometryPointsDto;
 import jakarta.transaction.Transactional;
@@ -35,10 +34,7 @@ public class DatabackendService {
     private RestClient restClient;
 
     @Autowired
-    private ImageRepository imageRepository;
-
-    @Autowired
-    private ParkingAreaRepository parkingAreaRepository;
+    private ObservationAreaRepository observationAreaRepository;
 
     public DatabackendService(@Value("${databackend.url}") URI configuredUri) {
         restClient = RestClient.create();
@@ -51,13 +47,13 @@ public class DatabackendService {
     @Transactional
     public void triggerConfigurationSync() {
         // Delete all and write all configs again for now, because of robustness
-        List<ImageEntity> allImages = imageRepository.findAll();
+        List<ObservationAreaEntity> allObservationAreas = observationAreaRepository.findAll();
 
         log.info("Syncing configuration.");
         
         try {
             ResponseEntity<Void> deleteResponse = restClient.delete()
-                    .uri(databackendUri.resolve("api/analytics-job/all"))
+                    .uri(databackendUri.resolve("api/observation-job/all"))
                     .retrieve().toBodilessEntity();
 
             log.debug("Cleared databackend configuration: HTTP " + deleteResponse.getStatusCode());
@@ -66,19 +62,19 @@ public class DatabackendService {
             return;
         }
 
-        for (ImageEntity image : allImages) {
-            sendConfig(image);
+        for (ObservationAreaEntity observationArea : allObservationAreas) {
+            sendConfig(observationArea);
         }
         
     }
 
-    public void sendConfig(ImageEntity image) {
-        for (PolygonEntity polygon : image.getPolygon()) {
+    public void sendConfig(ObservationAreaEntity observationAreaEntity) {
+        for (PolygonEntity polygon : observationAreaEntity.getPolygon()) {
             try {
-                DatabackendDto dto = toDatabackendDto(image, polygon);
+                DatabackendDto dto = toDatabackendDto(observationAreaEntity, polygon);
 
                 ResponseEntity<Void> postResponse = restClient.post()
-                        .uri(databackendUri.resolve("api/analytics-job"))
+                        .uri(databackendUri.resolve("api/observation-job"))
                         .contentType(MediaType.APPLICATION_JSON)
                         .body(dto)
                         .retrieve().toBodilessEntity();
@@ -92,30 +88,32 @@ public class DatabackendService {
         }
     }
 
-    DatabackendDto toDatabackendDto(ImageEntity imageEntity, PolygonEntity polygonEntity) throws IllegalGeometryException {
+    DatabackendDto toDatabackendDto(ObservationAreaEntity observationAreaEntity, PolygonEntity polygonEntity) throws IllegalGeometryException {
         DatabackendDto dbeDto = new DatabackendDto();
 
         dbeDto.setName(polygonEntity.getName());
-        dbeDto.setCameraId(imageEntity.getCamera().get(0).getSaeId());
+        dbeDto.setCameraId(observationAreaEntity.getCamera().get(0).getSaeId());
         dbeDto.setDetectionClassId(2);
         dbeDto.setEnabled(true);
-        dbeDto.setParkingAreaId(imageEntity.getParkingConfig().getParkingArea().getId());
+        dbeDto.setObservationAreaId(observationAreaEntity.getId());
         dbeDto.setClassification(polygonEntity.getClassification().getName());
-        dbeDto.setGeoReferenced(imageEntity.getGeoReferenced());
+        dbeDto.setGeoReferenced(observationAreaEntity.getGeoReferenced());
+        dbeDto.setEnabled(observationAreaEntity.getProcessingEnabled());
+
 
         List<GeometryPointsDto> geometryPoints = new ArrayList<>();
 
         if (polygonEntity.getPoint().size() == 2) {
 
             dbeDto.setType("LINE_CROSSING");
-            geometryPoints.add(createGeometryPoint(polygonEntity, imageEntity, 0));
-            geometryPoints.add(createGeometryPoint(polygonEntity, imageEntity, 1));
+            geometryPoints.add(createGeometryPoint(polygonEntity, observationAreaEntity, 0));
+            geometryPoints.add(createGeometryPoint(polygonEntity, observationAreaEntity, 1));
 
         } else if (polygonEntity.getPoint().size() > 2) {
 
             dbeDto.setType("AREA_OCCUPANCY");
             for (int i = 0; i < polygonEntity.getPoint().size(); i++) {
-                geometryPoints.add(createGeometryPoint(polygonEntity, imageEntity, i));
+                geometryPoints.add(createGeometryPoint(polygonEntity, observationAreaEntity, i));
             }
 
         } else {
@@ -127,18 +125,18 @@ public class DatabackendService {
         return dbeDto;
     }
 
-    private static GeometryPointsDto createGeometryPoint(PolygonEntity polygon, ImageEntity image, int orderIdx) {
+    private static GeometryPointsDto createGeometryPoint(PolygonEntity polygon, ObservationAreaEntity observationArea, int orderIdx) {
         GeometryPointsDto point = new GeometryPointsDto();
         point.setOrderIdx(orderIdx);
 
         BigDecimal xValue = polygon.getPoint().get(orderIdx).getXvalue();
         BigDecimal yValue = polygon.getPoint().get(orderIdx).getYvalue();
-        BigDecimal xPixels = xValue.multiply(BigDecimal.valueOf(image.getImageWidth()));
-        BigDecimal yPixels = yValue.multiply(BigDecimal.valueOf(image.getImageHeight()));
+        BigDecimal xPixels = xValue.multiply(BigDecimal.valueOf(observationArea.getImageWidth()));
+        BigDecimal yPixels = yValue.multiply(BigDecimal.valueOf(observationArea.getImageHeight()));
 
-        if (image.getGeoReferenced()) {
-            point.setLatitude(image.getTopleftlatitude().add(image.getDegreeperpixely().multiply(yPixels)));
-            point.setLongitude(image.getTopleftlongitude().add(image.getDegreeperpixelx().multiply(xPixels)));
+        if (observationArea.getGeoReferenced()) {
+            point.setLatitude(observationArea.getTopleftlatitude().add(observationArea.getDegreeperpixely().multiply(yPixels)));
+            point.setLongitude(observationArea.getTopleftlongitude().add(observationArea.getDegreeperpixelx().multiply(xPixels)));
         } else {
             point.setX(xValue.doubleValue());
             point.setY(yValue.doubleValue());

@@ -4,7 +4,7 @@ import java.util.List;
 
 public class DatabackendDto {
     private String name;
-    private Long parkingAreaId;
+    private Long observationAreaId;
     private String type;
     private String cameraId;
     private Integer detectionClassId;
@@ -21,12 +21,12 @@ public class DatabackendDto {
         this.name = name;
     }
 
-    public Long getParkingAreaId() {
-        return parkingAreaId;
+    public Long getObservationAreaId() {
+        return observationAreaId;
     }
 
-    public void setParkingAreaId(Long parkingAreaId) {
-        this.parkingAreaId = parkingAreaId;
+    public void setObservationAreaId(Long observationAreaId) {
+        this.observationAreaId = observationAreaId;
     }
 
     public String getType() {
