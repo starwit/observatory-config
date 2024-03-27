@@ -1,12 +1,12 @@
 import { Container, Grid, Typography } from "@mui/material";
-import React, { useCallback, useEffect, useMemo, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import AddFabButton from "../../commons/addFabButton/AddFabButton";
 import ConfirmationDialog from "../../commons/dialog/ConfirmationDialog";
 import LoadingSpinner from "../../commons/loadingSpinner/LoadingSpinner";
 import ObservationAreaRest from "../../services/ObservationAreaRest";
-import ObservationAreaCard from "./ObservationAreaCard";
 import ObservationAreaEditDialog, { MODE as ObservationAreaDialogMode } from "../areaDialog/ObservationAreaEditDialog";
+import ObservationAreaCard from "./ObservationAreaCard";
 
 function ObservationAreaOverview() {
     const {t} = useTranslation();
