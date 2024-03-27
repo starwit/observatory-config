@@ -1,5 +1,5 @@
 import React, {useState, useMemo, useEffect} from "react";
-import {Card, CardActionArea, CardActions, CardContent, Divider, Grid, IconButton, Typography} from "@mui/material";
+import {Card, CardActionArea, CardActions, CardContent, CardMedia, Divider, Grid, IconButton, Typography} from "@mui/material";
 import {Delete, Edit, MoreHoriz, ContentCopy} from "@mui/icons-material";
 import PropTypes from "prop-types";
 import {useTranslation} from "react-i18next";
@@ -12,27 +12,13 @@ function ObservationAreaCard(props) {
     const {observationArea, onDeleteClick, onEditClick} = props;
     const navigate = useNavigate();
     const {t} = useTranslation();
-    const [imageData, setImageData] = useState(null);
-    const imageRest = useMemo(() => new ImageRest(), []);
+    const [imageData, setImageData] = useState('data:' + observationArea.image.type + ';base64,' + observationArea.image.data);
 
     const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
 
     const [openUpdateDialog, setOpenUpdateDialog] = useState(false);
 
-    useEffect(() => loadImageData());
 
-
-
-    function loadImageData() {
-        let promise = imageRest.findWithPolygons(parkingArea.selectedProdConfigId).then(response => {
-            if (response.data == null) {
-                return;
-            }
-            setImageData('data:image/jpeg;base64,' + response.data[0].data);
-        });
-        return promise.PromiseResult;
-
-    }
 
     return (
         <>
@@ -45,7 +31,7 @@ function ObservationAreaCard(props) {
                             </Typography>
                         </Grid>
                         <Grid item xs={5} align="right">
-                        <IconButton onClick={() => setOpenUpdateDialog(true)}>
+                            <IconButton onClick={() => setOpenUpdateDialog(true)}>
                                 <ContentCopy fontSize={"small"} />
                             </IconButton>
                             <IconButton onClick={() => setOpenUpdateDialog(true)}>
@@ -60,12 +46,11 @@ function ObservationAreaCard(props) {
                 </CardContent>
                 <Divider />
                 <CardActionArea onClick={() => navigate("/observationarea/" + observationArea.id)}>
-                    <CardContent>
-                        <Typography variant="body2">
-                        </Typography>
-                        <img src={imageData} width={520} />
-
-                    </CardContent>
+                    <CardMedia
+                        component="img"
+                        height="300"
+                        image={imageData}
+                    />
                 </CardActionArea>
             </Card>
             <ConfirmationDialog
