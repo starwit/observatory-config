@@ -56,16 +56,6 @@ function ObservationAreaSelect() {
         navigate("/");
     }
 
-    function update(modifiedEntity) {
-        if (isCreate) {
-            observationareaRest.findAll().then(response => {
-                navigate(`${nav}${modifiedEntity.id}`);
-            });
-        } else {
-            navigate(`${nav}${modifiedEntity.id}`);
-        }
-    }
-
     const handleChange = event => {
         const newObservationAreaId = event.target.value;
         navigate(`${nav}${newObservationAreaId}`);
