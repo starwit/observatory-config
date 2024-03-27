@@ -6,7 +6,7 @@ import ConfirmationDialog from "../../commons/dialog/ConfirmationDialog";
 import LoadingSpinner from "../../commons/loadingSpinner/LoadingSpinner";
 import ObservationAreaRest from "../../services/ObservationAreaRest";
 import ObservationAreaCard from "./ObservationAreaCard";
-import ObservationAreaDialog, { MODE as ObservationAreaDialogMode } from "./ObservationAreaDialog";
+import ObservationAreaEditDialog, { MODE as ObservationAreaDialogMode } from "../areaDialog/ObservationAreaEditDialog";
 
 function ObservationAreaOverview() {
     const {t} = useTranslation();
@@ -106,7 +106,7 @@ function ObservationAreaOverview() {
                 onSubmit={() => deleteArea(selectedArea)}
                 confirmTitle={t("button.delete")}
             />
-            <ObservationAreaDialog
+            <ObservationAreaEditDialog
                 open={openUpdateDialog}
                 onSubmit={() => setOpenUpdateDialog(false)}
                 mode={updateDialogMode}

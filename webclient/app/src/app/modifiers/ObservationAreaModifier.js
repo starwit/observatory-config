@@ -3,6 +3,7 @@ const entityDefault = {
     name: "",
     saeIds: [""],
     geoReferenced: false,
+    processingEnabled: false,
 };
 
 const entityFields = [

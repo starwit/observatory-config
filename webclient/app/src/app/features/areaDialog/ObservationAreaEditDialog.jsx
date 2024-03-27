@@ -20,7 +20,7 @@ export const MODE = Object.freeze({
     COPY: "copy",
 });
 
-function ObservationAreaDialog(props) {
+function ObservationAreaEditDialog(props) {
     const {open, onSubmit, selectedArea, mode, update} = props;
     const {t} = useTranslation();
     const [entity, setEntity] = useImmer(entityDefault);
@@ -207,7 +207,7 @@ function ObservationAreaDialog(props) {
     );
 }
 
-ObservationAreaDialog.propTypes = {
+ObservationAreaEditDialog.propTypes = {
     open: PropTypes.bool.isRequired,
     onSubmit: PropTypes.func.isRequired,
     selected: PropTypes.object,
@@ -215,4 +215,4 @@ ObservationAreaDialog.propTypes = {
     update: PropTypes.func.isRequired
 };
 
-export default ObservationAreaDialog;
+export default ObservationAreaEditDialog;

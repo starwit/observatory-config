@@ -17,7 +17,7 @@ import Divider from "@mui/material/Divider";
 import MenuIcon from "@mui/icons-material/Menu";
 import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
 import ChevronRightIcon from "@mui/icons-material/ChevronRight";
-import ObservationAreaSelect from "../../../features/observationArea/ObservationAreaSelect";
+import ObservationAreaMenu from "../../../features/observationArea/ObservationAreaMenu";
 import Fab from "@mui/material/Fab";
 
 function SidebarNavigation(props) {

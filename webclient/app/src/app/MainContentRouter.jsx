@@ -1,17 +1,18 @@
 import React from "react";
 import {Route, Routes, useLocation} from "react-router-dom";
 import Navigation from "./commons/navigation/Navigation";
-import ImageAnnotate from "./features/imageAnnotate/ImageAnnotate";
-import ObservationAreaOverview from "./features/observationArea/ObservationAreaOverview";
+import ImageAnnotate from "./features/observationArea/ImageAnnotate";
+import ObservationAreaOverview from "./features/home/ObservationAreaOverview";
+import ObservationAreaSingle from "./features/observationArea/ObservationAreaSingle";
 
 function MainContentRouter() {
-    // I have absolutely no idea why, but if you remove this, `navigate()` in `ObservationAreaSelect` breaks...
-    useLocation();
+    // This needs to be here, because otherwise manual navigation (through `useNavigate()`) does not work properly
+    useLocation()
 
     return (
         <Navigation>
             <Routes>
-                <Route path={"/observationarea/:observationAreaId"} element={<ImageAnnotate />} />
+                <Route path={"/observationarea/:observationAreaId"} element={<ObservationAreaSingle />} />
                 <Route path="/" element={<ObservationAreaOverview />} />
             </Routes>
         </Navigation>
