@@ -11,6 +11,7 @@ import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotBlank;
 
+
 /**
  * Classification Entity class
  */
@@ -22,6 +23,10 @@ public class ClassificationEntity extends AbstractEntity<Long> {
     @NotBlank
     @Column(name = "name", nullable = false)
     private String name;
+
+    @NotBlank
+    @Column(name = "select_type")
+    private String selectType;
 
     @NotBlank
     @Column(name = "color", nullable = false)
@@ -50,6 +55,14 @@ public class ClassificationEntity extends AbstractEntity<Long> {
         this.polygon = polygon;
     }
 
+    public String getSelectType() {
+        return selectType;
+    }
+
+    public void setSelectType(String selectType) {
+        this.selectType = selectType;
+    }
+
     public String getColor() {
         return color;
     }
@@ -57,5 +70,7 @@ public class ClassificationEntity extends AbstractEntity<Long> {
     public void setColor(String color) {
         this.color = color;
     }
+
+    
 
 }

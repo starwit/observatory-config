@@ -9,21 +9,8 @@ import ImageRest from "../../services/ImageRest";
 import ObservationAreaRest from "../../services/ObservationAreaRest";
 import {setIn} from 'seamless-immutable';
 import {useSnackbar} from 'notistack';
-import {classificationSelectTools} from "../../AppConfig";
 import ObservationAreaSelect from "../observationArea/ObservationAreaSelect";
 import {AppBar} from "../../assets/styles/HeaderStyles";
-
-const userReducer = (state, action) => {
-    if ("SELECT_CLASSIFICATION" == action.type) {
-        const select = classificationSelectTools.find((c) => c.classification == action.cls);
-        if (select !== undefined) {
-
-            return setIn(state, ["selectedTool"], select.selectTool);
-        }
-    }
-    return state;
-};
-
 
 function ImageAnnotate() {
     const {t} = useTranslation();
@@ -51,6 +38,18 @@ function ImageAnnotate() {
             setClassifications(translatedClassifications);
         });
     }
+
+    function userReducer(state, action) {
+        if ("SELECT_CLASSIFICATION" == action.type) {
+            const select = classifications.find((c) => c.name == action.cls);
+            if (select !== undefined) {
+    
+                return setIn(state, ["selectedTool"], select.selectType);
+            }
+        }
+        return state;
+    };
+    
 
     function reloadObservationAreas() {
         if (observationAreaId !== "undefined") {
