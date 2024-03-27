@@ -16,7 +16,7 @@ export default function ObservationAreaSingle() {
     const [editDialogOpen, setEditDialogOpen] = useState(false);
     
     const observationAreaRest = useMemo(() => new ObservationAreaRest(), [])
-
+    
     useEffect(() => {
         reloadObservationAreas();
     }, []);

@@ -138,7 +138,7 @@ function ObservationAreaEditDialog(props) {
                         <Grid item xs={8}>
                             <FormControl key={fields[0].name} fullWidth>
                                 <UpdateField
-                                    focused
+                                    autoFocus
                                     entity={entity}
                                     field={fields[0]}
                                     prefix="observationArea"
