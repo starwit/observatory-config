@@ -41,6 +41,7 @@ const translationDeDE = {
     "observationAreas.title": "Parkflächen",
     "observationAreas.loading": "Parkflächen werden geladen",
     "observationAreas.empty": "Keine Parkflächen vorhanden, bitte legen Sie eine neue an.",
+    "observationAreaCard.noImage": "Kein Bild",
     "observationArea.title": "Parkfläche",
     "observationArea.create.title": "Parkfläche Anlegen",
     "observationArea.update.title": "Parkfläche Bearbeiten",

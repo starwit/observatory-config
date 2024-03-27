@@ -47,6 +47,7 @@ const translationEnEN = {
     "observationAreas.title": "Parking Areas",
     "observationAreas.loading": "Loading Parking Areas",
     "observationAreas.empty": "No Parking Areas exist. Please create a new one.",
+    "observationAreaCard.noImage": "No Image",
     "observationArea.name": "name*",
     "observationArea.name.hint": "Value is required. ",
     "observationArea.saeIds": "Camera ID",

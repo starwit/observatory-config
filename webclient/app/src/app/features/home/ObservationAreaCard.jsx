@@ -1,13 +1,21 @@
-import { ContentCopy, Delete, Edit, MoreHoriz } from "@mui/icons-material";
-import { Card, CardActionArea, CardActions, CardContent, Divider, Grid, IconButton, Typography } from "@mui/material";
+import { ContentCopy, Delete, Edit } from "@mui/icons-material";
+import { Card, CardActionArea, CardContent, CardMedia, Divider, Grid, IconButton, Typography } from "@mui/material";
 import PropTypes from "prop-types";
-import React, { useMemo } from "react";
+import React from "react";
+import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router";
 
 function ObservationAreaCard(props) {
     const {observationArea, onCopyClick, onDeleteClick, onEditClick} = props;
+
     const navigate = useNavigate();
+    const {t} = useTranslation();
+    
     const imageData = 'data:' + observationArea.image.type + ';base64,' + observationArea.image.data;
+
+    function openArea() {
+        navigate("/observationarea/" + observationArea.id)
+    }
 
     return (
         <>
@@ -15,7 +23,7 @@ function ObservationAreaCard(props) {
                 <CardContent>
                     <Grid container spacing={0}>
                         <Grid item xs={7}>
-                            <Typography gutterBottom variant="h5" component="div">
+                            <Typography gutterBottom variant="h5" component="div" onClick={openArea} sx={{cursor: "pointer"}}>
                                 {observationArea.name}
                             </Typography>
                         </Grid>
@@ -33,12 +41,17 @@ function ObservationAreaCard(props) {
                     </Grid>
                 </CardContent>
                 <Divider />
-                <CardActionArea onClick={() => navigate("/observationarea/" + observationArea.id)}>
-                    <CardMedia
-                        component="img"
-                        height="300"
-                        image={imageData}
-                    />
+                <CardActionArea onClick={openArea}>
+                    {observationArea.image.data !== null ?
+                        <CardMedia
+                            component="img"
+                            height="300"
+                            image={imageData}
+                        /> :
+                        <CardContent sx={{height: 300}}>
+                            <Typography textAlign={"center"}>{t("observationAreaCard.noImage")}</Typography>
+                        </CardContent>
+                    }
                 </CardActionArea>
             </Card>
         </>
