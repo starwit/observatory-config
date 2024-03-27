@@ -39,7 +39,7 @@ CREATE SEQUENCE IF NOT EXISTS "classification_id_seq";
 CREATE TABLE "classification"
 (
     "name" VARCHAR(255) NOT NULL,
-    "select_type" VARCHAR(255) DEFAULT 'create-polygon',
+    "select_type" VARCHAR(50) DEFAULT 'create-polygon',
     "color" VARCHAR(7) NOT NULL DEFAULT '#000',
     "id" BIGINT NOT NULL DEFAULT nextval('classification_id_seq'),
     CONSTRAINT "classification_pkey" PRIMARY KEY ("id")
