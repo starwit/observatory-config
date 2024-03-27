@@ -47,26 +47,19 @@ function ObservationAreaOverview() {
         setOpenDeleteDialog(false);
         observationAreaRest.delete(area.id)
             .then(response => {
-                setObservationAreas(null);
-                loadObservationAreas();
+                reloadObservationAreas();
             });
     }
 
-    const loadObservationAreas = useCallback(() => {
-        setObservationAreas(null);
+    useEffect(() => {
+        reloadObservationAreas();
+    }, []);
+
+    function reloadObservationAreas() {
         observationAreaRest.findAll().then(response => {
             setObservationAreas(response.data);
         });
-    }, [observationAreaRest, setObservationAreas]);
-
-    useEffect(() => {
-        loadObservationAreas();
-    }, [loadObservationAreas]);
-
-    function handleUpdate() {
-        loadObservationAreas();
-    };
-
+    }
 
     function renderObservationAreas() {
         if (!observationAreas) {
@@ -111,7 +104,7 @@ function ObservationAreaOverview() {
                 onSubmit={() => setOpenUpdateDialog(false)}
                 mode={updateDialogMode}
                 selectedArea={selectedArea}
-                update={handleUpdate}
+                update={reloadObservationAreas}
             />
             <AddFabButton onClick={createArea} />
         </Container>
