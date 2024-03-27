@@ -1,12 +1,13 @@
 import { ContentCopy, Delete, Edit, MoreHoriz } from "@mui/icons-material";
 import { Card, CardActionArea, CardActions, CardContent, Divider, Grid, IconButton, Typography } from "@mui/material";
 import PropTypes from "prop-types";
-import React from "react";
+import React, { useMemo } from "react";
 import { useNavigate } from "react-router";
 
 function ObservationAreaCard(props) {
     const {observationArea, onCopyClick, onDeleteClick, onEditClick} = props;
     const navigate = useNavigate();
+    const imageData = 'data:' + observationArea.image.type + ';base64,' + observationArea.image.data;
 
     return (
         <>
@@ -33,13 +34,11 @@ function ObservationAreaCard(props) {
                 </CardContent>
                 <Divider />
                 <CardActionArea onClick={() => navigate("/observationarea/" + observationArea.id)}>
-                    <CardContent>
-                        <Typography variant="body2">
-                        </Typography>
-                        <CardActions>
-                            <MoreHoriz color="primary" />
-                        </CardActions>
-                    </CardContent>
+                    <CardMedia
+                        component="img"
+                        height="300"
+                        image={imageData}
+                    />
                 </CardActionArea>
             </Card>
         </>

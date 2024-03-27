@@ -3,6 +3,7 @@ package de.starwit.service.dto;
 import java.math.BigDecimal;
 import java.util.List;
 
+import de.starwit.persistence.entity.ImageEntity;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
 
@@ -13,6 +14,8 @@ public class ObservationAreaDto {
     private String name;
 
     List<String> saeIds;
+
+    ImageEntity Image;
 
     @Min(value = -90)
     @Max(value = 90)
@@ -29,7 +32,7 @@ public class ObservationAreaDto {
     private Boolean geoReferenced;
 
     private Boolean processingEnabled;
-   
+
     @Min(value = -90)
     @Max(value = 90)
     private BigDecimal centerlatitude;
@@ -124,5 +127,13 @@ public class ObservationAreaDto {
 
     public void setProcessingEnabled(Boolean processingEnabled) {
         this.processingEnabled = processingEnabled;
+    }
+
+    public ImageEntity getImage() {
+        return Image;
+    }
+
+    public void setImage(ImageEntity Image) {
+        this.Image = Image;
     }
 }
