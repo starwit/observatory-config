@@ -59,44 +59,29 @@ public class ObservationAreaService implements ServiceInterface<ObservationAreaE
             return null;
         }
         ObservationAreaEntity entity = null;
+        ImageEntity image = new ImageEntity();
         if (dto.getId() == null) {
             entity = mapper.convertToEntity(dto);
             if (entity != null) {
-                createDefault(dto, entity);
                 entity = observationareaRepository.saveAndFlush(entity);
+                List<CameraEntity> cameras = mapper.getDefaultCameras(dto, entity);
+                cameras = cameras == null ? null : cameraRepository.saveAllAndFlush(cameras);
             }
         } else {
             entity = this.findById(dto.getId());
             entity = mapper.convertToEntity(dto, entity);
-            entity = observationareaRepository.saveAndFlush(entity);
-            if (entity.getImage() == null) {
-                ImageEntity image = mapper.getDefaultImage(dto, entity);
-                image = image == null ? null : imageRepository.saveAndFlush(image);
-                List<CameraEntity> cameras = mapper.getDefaultCameras(dto, entity);
-                cameras = cameras == null ? null : cameraRepository.saveAllAndFlush(cameras);
-                imageRepository.refresh(image);
-            } else {
+            mapAndSaveCameras(dto.getSaeIds(), entity);
+            if (entity.getImage() != null) {
                 long imageId = entity.getImage().getId();
-                ImageEntity image = imageRepository.getReferenceById(imageId);
-                image = mapper.mapImageData(dto, entity, image);
-                image = image == null ? null : imageRepository.saveAndFlush(image);
-                mapAndSaveCameras(dto.getSaeIds(), entity);
-                imageRepository.refresh(image);
+                image = imageRepository.getReferenceById(imageId);
             }
-            entity = observationareaRepository.saveAndFlush(entity);
         }
+        image.setObservationArea(entity);
+        image.setName(dto.getName());
+        image = imageRepository.saveAndFlush(image);
+        entity = observationareaRepository.saveAndFlush(entity);
         observationareaRepository.refresh(entity);
         return mapper.convertToDto(entity);
-    }
-
-    private ObservationAreaEntity createDefault(ObservationAreaDto dto, ObservationAreaEntity entity) {
-        entity = observationareaRepository.saveAndFlush(entity);
-        ImageEntity image = mapper.getDefaultImage(dto, entity);
-        image = image == null ? null : imageRepository.saveAndFlush(image);
-        List<CameraEntity> cameras = mapper.getDefaultCameras(dto, entity);
-        cameras = cameras == null ? null : cameraRepository.saveAllAndFlush(cameras);
-        imageRepository.refresh(image);
-        return entity;
     }
 
     private void mapAndSaveCameras(List<String> addedCameras, ObservationAreaEntity entity) {

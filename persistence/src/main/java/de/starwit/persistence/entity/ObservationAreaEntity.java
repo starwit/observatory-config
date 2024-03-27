@@ -35,7 +35,7 @@ public class ObservationAreaEntity extends AbstractEntity<Long> {
     private Set<PolygonEntity> polygon;
 
     // entity relations
-    @JsonFilter("filterImage")
+    @JsonFilter("filterIdName")
     @OneToOne(mappedBy = "observationArea", cascade = { CascadeType.ALL }, orphanRemoval = true)
     private ImageEntity image;
 

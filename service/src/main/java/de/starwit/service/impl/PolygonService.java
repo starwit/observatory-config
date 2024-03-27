@@ -1,6 +1,5 @@
 package de.starwit.service.impl;
 
-import java.util.List;
 import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,14 +26,6 @@ public class PolygonService implements ServiceInterface<PolygonEntity, PolygonRe
     @Override
     public PolygonRepository getRepository() {
         return polygonRepository;
-    }
-
-    public List<PolygonEntity> findAllWithoutObservationArea() {
-        return polygonRepository.findAllWithoutObservationArea();
-    }
-
-    public List<PolygonEntity> findAllWithoutOtherObservationArea(Long id) {
-        return polygonRepository.findAllWithoutOtherObservationArea(id);
     }
 
     public PolygonEntity saveAndFlush(PolygonEntity polygonEntity) {

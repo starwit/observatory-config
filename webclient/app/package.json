@@ -3,9 +3,8 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
-    "@mui/icons-material": "^5.15.13",
-    "@mui/material": "^5.15.13",
-    "@mui/x-date-pickers": "^6.19.7",
+    "@mui/icons-material": "^5.15.14",
+    "@mui/material": "^5.15.14",
     "@starwit/react-image-annotate": "5.0.5",
     "axios": "1.6.8",
     "buffer": "npm:buffer@^6.0.3",
@@ -21,10 +20,10 @@
     "path": "npm:path-browserify@1.0.1",
     "react": "^18.0.0",
     "react-dom": "^18.0.0",
+    "react-dropzone": "14.2.3",
     "react-i18next": "^14.1.0",
     "react-router": "^6.22.3",
     "react-router-dom": "^6.22.3",
-    "react-dropzone": "14.2.3",
     "stream": "npm:stream-browserify@^3.0.0",
     "use-immer": "^0.9.0",
     "util": "npm:util@^0.12.5",
@@ -57,7 +56,7 @@
     "unplugin": "^1.10.0",
     "util": "npm:util@^0.12.5",
     "vfile": "npm:vfile@^6.0.1",
-    "vite": "^5.1.6",
+    "vite": "^5.2.6",
     "zlib": "npm:browserify-zlib@^0.2.0"
   }
 }

@@ -27,6 +27,8 @@ public class ObservationAreaDto {
     private BigDecimal degreeperpixely;
 
     private Boolean geoReferenced;
+
+    private Boolean processingEnabled;
    
     @Min(value = -90)
     @Max(value = 90)
@@ -114,5 +116,13 @@ public class ObservationAreaDto {
 
     public void setCenterlongitude(BigDecimal centerlongitude) {
         this.centerlongitude = centerlongitude;
+    }
+
+    public Boolean getProcessingEnabled() {
+        return processingEnabled;
+    }
+
+    public void setProcessingEnabled(Boolean processingEnabled) {
+        this.processingEnabled = processingEnabled;
     }
 }

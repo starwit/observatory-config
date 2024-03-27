@@ -10,7 +10,6 @@ import org.junit.jupiter.api.Test;
 
 import de.starwit.persistence.entity.CameraEntity;
 import de.starwit.persistence.entity.ClassificationEntity;
-import de.starwit.persistence.entity.ImageEntity;
 import de.starwit.persistence.entity.ObservationAreaEntity;
 import de.starwit.persistence.entity.PointEntity;
 import de.starwit.persistence.entity.PolygonEntity;
@@ -23,13 +22,13 @@ public class DatabackendServiceTest {
     public void testToDatabackendDtoPixelLine() throws IllegalGeometryException {
 
         PolygonEntity polygon = createLineWithDefaults();
-        
-        ImageEntity image = createImageWithDefaults();
-        image.getObservationArea().setGeoReferenced(false);
+
+        ObservationAreaEntity observationAreaEntity = createObservationAreaWithDefaults();
+        observationAreaEntity.setProcessingEnabled(true);
+        observationAreaEntity.setGeoReferenced(false);
         
         DatabackendService testee = new DatabackendService(URI.create("http://localhost"));
-
-        DatabackendDto dbeDto = testee.toDatabackendDto(image, polygon);
+        DatabackendDto dbeDto = testee.toDatabackendDto(observationAreaEntity, polygon);
 
         assertThat(dbeDto.getCameraId()).isEqualTo("stream1");
         assertThat(dbeDto.getClassification()).isEqualTo(polygon.getClassification().getName());
@@ -47,14 +46,15 @@ public class DatabackendServiceTest {
     public void testToDatabackendDtoGeoLine() throws IllegalGeometryException {
 
         PolygonEntity polygon = createLineWithDefaults();
-        
-        ImageEntity image = createImageWithDefaults();
-        image.getObservationArea().setGeoReferenced(true);
+
+        ObservationAreaEntity observationAreaEntity = createObservationAreaWithDefaults();
+        observationAreaEntity.setProcessingEnabled(true);
+        observationAreaEntity.setGeoReferenced(true);
         
         DatabackendService testee = new DatabackendService(URI.create("http://localhost"));
-
-        DatabackendDto dbeDto = testee.toDatabackendDto(image, polygon);
-
+        observationAreaEntity.setProcessingEnabled(true);
+        DatabackendDto dbeDto = testee.toDatabackendDto(observationAreaEntity, polygon);
+        
         assertThat(dbeDto.getCameraId()).isEqualTo("stream1");
         assertThat(dbeDto.getClassification()).isEqualTo(polygon.getClassification().getName());
         assertThat(dbeDto.getDetectionClassId()).isEqualTo(2);
@@ -72,12 +72,12 @@ public class DatabackendServiceTest {
 
         PolygonEntity polygon = createPolygonWithDefaults();
         
-        ImageEntity image = createImageWithDefaults();
-        image.getObservationArea().setGeoReferenced(false);
-        
-        DatabackendService testee = new DatabackendService(URI.create("http://localhost"));
+        ObservationAreaEntity observationAreaEntity = createObservationAreaWithDefaults();
+        observationAreaEntity.setProcessingEnabled(true);
+        observationAreaEntity.setGeoReferenced(false);
 
-        DatabackendDto dbeDto = testee.toDatabackendDto(image, polygon);
+        DatabackendService testee = new DatabackendService(URI.create("http://localhost"));
+        DatabackendDto dbeDto = testee.toDatabackendDto(observationAreaEntity, polygon);
 
         assertThat(dbeDto.getCameraId()).isEqualTo("stream1");
         assertThat(dbeDto.getClassification()).isEqualTo(polygon.getClassification().getName());
@@ -96,12 +96,13 @@ public class DatabackendServiceTest {
 
         PolygonEntity polygon = createPolygonWithDefaults();
         
-        ImageEntity image = createImageWithDefaults();
-        image.getObservationArea().setGeoReferenced(true);
-        
-        DatabackendService testee = new DatabackendService(URI.create("http://localhost"));
+        ObservationAreaEntity observationAreaEntity = createObservationAreaWithDefaults();
+        observationAreaEntity.setProcessingEnabled(true);
+        observationAreaEntity.setGeoReferenced(true);
 
-        DatabackendDto dbeDto = testee.toDatabackendDto(image, polygon);
+        DatabackendService testee = new DatabackendService(URI.create("http://localhost"));
+        DatabackendDto dbeDto = testee.toDatabackendDto(observationAreaEntity, polygon);
+
 
         assertThat(dbeDto.getCameraId()).isEqualTo("stream1");
         assertThat(dbeDto.getClassification()).isEqualTo(polygon.getClassification().getName());
@@ -155,29 +156,22 @@ public class DatabackendServiceTest {
         return polygon;
     }
     
-    ImageEntity createImageWithDefaults() {
+    ObservationAreaEntity createObservationAreaWithDefaults() {
         CameraEntity camera = new CameraEntity();
         camera.setSaeId("stream1");
 
         ObservationAreaEntity observationArea = new ObservationAreaEntity();
         observationArea.setId(1L);
 
-
-        ImageEntity image = new ImageEntity();
-
-        image.setId(1L);
-        image.setName("testImage");
-        image.setType("testType");
-        image.setObservationArea(observationArea);
-        image.getObservationArea().setImageHeight(1000);
-        image.getObservationArea().setImageWidth(1000);
-        image.getObservationArea().setDegreeperpixelx(new BigDecimal(0.001));
-        image.getObservationArea().setDegreeperpixely(new BigDecimal(0.001));
-        image.getObservationArea().setGeoReferenced(false);
-        image.getObservationArea().setTopleftlongitude(new BigDecimal(10));
-        image.getObservationArea().setTopleftlatitude(new BigDecimal(52));
-        image.getObservationArea().setCamera(Arrays.asList(camera));
-        return image;
+        observationArea.setImageHeight(1000);
+        observationArea.setImageWidth(1000);
+        observationArea.setDegreeperpixelx(new BigDecimal(0.001));
+        observationArea.setDegreeperpixely(new BigDecimal(0.001));
+        observationArea.setGeoReferenced(false);
+        observationArea.setTopleftlongitude(new BigDecimal(10));
+        observationArea.setTopleftlatitude(new BigDecimal(52));
+        observationArea.setCamera(Arrays.asList(camera));
+        return observationArea;
     }
 
     PointEntity createPoint(int id, double x, double y) {
