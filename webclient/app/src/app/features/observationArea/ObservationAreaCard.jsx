@@ -1,12 +1,11 @@
-import React, {useState, useMemo, useEffect} from "react";
-import {Card, CardActionArea, CardActions, CardContent, CardMedia, Divider, Grid, IconButton, Typography} from "@mui/material";
-import {Delete, Edit, MoreHoriz, ContentCopy} from "@mui/icons-material";
+import React, {useState} from "react";
+import {Card, CardActionArea, CardContent, CardMedia, Divider, Grid, IconButton, Typography} from "@mui/material";
+import {Delete, Edit, ContentCopy} from "@mui/icons-material";
 import PropTypes from "prop-types";
 import {useTranslation} from "react-i18next";
 import {useNavigate} from "react-router";
 import ConfirmationDialog from "../../commons/dialog/ConfirmationDialog";
 import ObservationAreaDialog from "./ObservationAreaDialog";
-import ImageRest from "../../services/ImageRest";
 
 function ObservationAreaCard(props) {
     const {observationArea, onDeleteClick, onEditClick} = props;
