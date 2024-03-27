@@ -20,8 +20,5 @@ class ImageRest extends CrudRest {
         return axios.post(this.baseUrl + "/upload/" + id, data, config);
     }
 
-    findById(selected){///{id}
-        return axios.get(this.baseUrl + selected);
-    }
 }
 export default ImageRest;
