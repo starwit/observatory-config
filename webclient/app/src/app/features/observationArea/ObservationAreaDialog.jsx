@@ -43,7 +43,7 @@ function ObservationAreaDialog(props) {
             newArea.name = `${newArea.name} - ${t("observationArea.copy.suffix")}`;
             setEntity(newArea);
         }
-    }, [selectedArea, mode]);
+    }, [selectedArea, mode, open]);
     
     useEffect(() => {
         setHasFormError(!allFieldsValid())

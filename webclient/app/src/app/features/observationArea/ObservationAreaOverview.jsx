@@ -23,6 +23,11 @@ function ObservationAreaOverview() {
         setOpenUpdateDialog(true);
     }
 
+    function createArea() {
+        setSelectedArea(null);
+        openDialogWithMode(ObservationAreaDialogMode.CREATE);
+    }
+
     function editArea(area) {
         setSelectedArea(area);
         openDialogWithMode(ObservationAreaDialogMode.UPDATE);
@@ -108,7 +113,7 @@ function ObservationAreaOverview() {
                 selectedArea={selectedArea}
                 update={handleUpdate}
             />
-            <AddFabButton onClick={() => openDialogWithMode(ObservationAreaDialogMode.CREATE)} />
+            <AddFabButton onClick={createArea} />
         </Container>
     );
 }

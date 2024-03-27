@@ -19,7 +19,7 @@ import {
     entityDefault
 } from "../../modifiers/ObservationAreaModifier";
 import ObservationAreaRest from "../../services/ObservationAreaRest";
-import ObservationAreaDialog from "./ObservationAreaDialog";
+import ObservationAreaDialog, { MODE as ObservationAreaDialogMode } from "./ObservationAreaDialog";
 
 function ObservationAreaSelect() {
     const [selectedArea, setSelectedArea] = useImmer(entityDefault);
@@ -130,10 +130,10 @@ function ObservationAreaSelect() {
             </FormControl>
             <ObservationAreaDialog
                 open={openDialog}
-                onClose={handleDialogClose}
-                isCreate={isCreate}
-                selected={selectedArea}
-                update={update}
+                onSubmit={handleDialogClose}
+                mode={ObservationAreaDialogMode.UPDATE}
+                selectedArea={selectedArea}
+                update={reload}
             />
         </Stack >
     );
