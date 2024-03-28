@@ -1,14 +1,11 @@
 package de.starwit.persistence.entity;
 
-import java.util.HashSet;
-import java.util.Set;
-
 import com.fasterxml.jackson.annotation.JsonFilter;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.JoinColumn;
-import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotBlank;
@@ -21,6 +18,7 @@ import jakarta.validation.constraints.NotBlank;
 public class ImageEntity extends AbstractEntity<Long> {
 
     // entity fields
+    @JsonIgnore
     @Column(name = "data", nullable = false)
     private byte[] data;
 

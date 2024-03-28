@@ -35,9 +35,7 @@ public class ImageFileService {
 
         HttpHeaders header = new HttpHeaders();
         header.add(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=" + name);
-        header.add("Cache-Control", "no-cache, no-store, must-revalidate");
-        header.add("Pragma", "no-cache");
-        header.add("Expires", "0");
+        header.add("Cache-Control", "max-age=3600, must-revalidate");
         return ResponseEntity.ok()
                 .headers(header)
                 .contentLength(resource.getFileSize())

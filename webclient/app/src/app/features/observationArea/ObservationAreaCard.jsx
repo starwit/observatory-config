@@ -11,7 +11,7 @@ function ObservationAreaCard(props) {
     const navigate = useNavigate();
     const {t} = useTranslation();
     
-    const imageData = 'data:' + observationArea.image.type + ';base64,' + observationArea.image.data;
+    const imageUrl = `${window.location.pathname}api/imageFile/id/${observationArea.image.id}`;
 
     function openArea() {
         navigate("/observationarea/" + observationArea.id)
@@ -46,7 +46,7 @@ function ObservationAreaCard(props) {
                         <CardMedia
                             component="img"
                             height="300"
-                            image={imageData}
+                            src={imageUrl}
                         /> :
                         <CardContent sx={{height: 300}}>
                             <Typography textAlign={"center"}>{t("observationAreaCard.noImage")}</Typography>
