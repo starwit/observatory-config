@@ -1,13 +1,17 @@
 package de.starwit.rest.integration;
 
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.json.JacksonTester;
 import org.springframework.boot.test.mock.mockito.MockBean;
 
 import de.starwit.persistence.entity.ObservationAreaEntity;
 import de.starwit.rest.controller.ObservationAreaController;
+import de.starwit.service.impl.ClassificationService;
 import de.starwit.service.impl.ObservationAreaService;
+import de.starwit.service.impl.PointService;
+import de.starwit.service.impl.PolygonService;
 
 /**
  * Tests for ObservationAreaController
@@ -22,6 +26,15 @@ public class ObservationAreaControllerIntegrationTest extends AbstractController
 
     @MockBean
     private ObservationAreaService observationareaService;
+
+    @MockBean
+    private ClassificationService classificationService;
+
+    @MockBean
+    private PolygonService polygonService;
+
+    @MockBean
+    private PointService pointService;
 
     private JacksonTester<ObservationAreaEntity> jsonObservationAreaEntity;
     private static final String data = "testdata/observationarea/";

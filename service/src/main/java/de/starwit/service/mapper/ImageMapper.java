@@ -21,7 +21,6 @@ public class ImageMapper implements CustomMapper<ImageEntity, ImageDto> {
         if (entity != null) {
             ImageDto dto = new ImageDto();
             dto.setId(entity.getId());
-            dto.setData(entity.getData());
             dto.setName(entity.getName());
             dto.setType(entity.getType());
             if (entity.getObservationArea().getPolygon() != null) {
@@ -37,7 +36,6 @@ public class ImageMapper implements CustomMapper<ImageEntity, ImageDto> {
         if (dto != null) {
             ImageEntity entity = new ImageEntity();
             entity.setId(dto.getId());
-            entity.setData(dto.getData());
             entity.setName(dto.getName());
             entity.setType(dto.getType());
             entity.getObservationArea().setPolygon(polygonMapper.convertToEntitySet(dto.getRegions()));
