@@ -73,7 +73,7 @@ function ImageAnnotate(props) {
             return;
         }
         
-        classificationRest.savePolygons(observationAreaId, event.images[0].regions).then(() => {
+        observationAreaRest.savePolygons(observationAreaId, event.images[0].regions).then(() => {
             handleMessage("success", t("response.save.success"));
         });
     }
