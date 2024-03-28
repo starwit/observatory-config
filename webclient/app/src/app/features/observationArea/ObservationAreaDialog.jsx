@@ -6,13 +6,13 @@ import { useDropzone } from 'react-dropzone';
 import { useTranslation } from "react-i18next";
 import { useImmer } from "use-immer";
 import ImageUploadStyles from "../../assets/styles/ImageUploadStyles";
-import CamIDList from "./CamIDList";
 import DialogHeader from "../../commons/dialog/DialogHeader";
 import UpdateField from "../../commons/form/UpdateField";
 import { handleChange, isValid, prepareForSave } from "../../modifiers/DefaultModifier";
 import { entityDefault, entityFields } from "../../modifiers/ObservationAreaModifier";
-import ImageRest from "../../services/ImageRest";
+import ImageRest, { imageFileUrlForId } from "../../services/ImageRest";
 import ObservationAreaRest from "../../services/ObservationAreaRest";
+import CamIDList from "./CamIDList";
 
 export const MODE = Object.freeze({
     UPDATE: "update",
@@ -25,25 +25,32 @@ function ObservationAreaDialog(props) {
     const {t} = useTranslation();
     const [entity, setEntity] = useImmer(entityDefault);
     const fields = entityFields;
-    const entityRest = useMemo(() => new ObservationAreaRest(), []);
+    const observationAreaRest = useMemo(() => new ObservationAreaRest(), []);
     const imageRest = useMemo(() => new ImageRest(), []);
     const [hasFormError, setHasFormError] = React.useState(false);
-    const [selectedFile, setSelectedFile] = useState(null);
+    const [selectedImageFile, setSelectedImageFile] = useState(null);
     const [previewUrl, setPreviewUrl] = useState('');
     const {enqueueSnackbar} = useSnackbar();
+    console.log(selectedArea)
 
     useEffect(() => {
         if (mode === MODE.CREATE) {
             setEntity(entityDefault);
         } else if (mode === MODE.UPDATE) {
             setEntity(selectedArea);
+            previewExistingImage();
         } else if (mode === MODE.COPY) {
             let newArea = structuredClone(selectedArea);
             newArea.id = null;
             newArea.name = `${newArea.name} - ${t("observationArea.copy.suffix")}`;
             setEntity(newArea);
+            previewExistingImage();
         }
     }, [selectedArea, mode, open]);
+
+    function previewExistingImage() {
+        setPreviewUrl(imageFileUrlForId(selectedArea.image.id));
+    }
     
     useEffect(() => {
         setHasFormError(!allFieldsValid())
@@ -64,7 +71,7 @@ function ObservationAreaDialog(props) {
 
     const onDropAccepted = (acceptedFiles) => {
         const file = acceptedFiles[0];
-        setSelectedFile(file);
+        setSelectedImageFile(file);
 
         // Vorschaubild erzeugen
         const reader = new FileReader();
@@ -84,7 +91,7 @@ function ObservationAreaDialog(props) {
         if (["backdropClick", "escapeKeyDown"].includes(reason)) {
             return;
         }
-        setSelectedFile(null);
+        setSelectedImageFile(null);
         setPreviewUrl('');
         onSubmit();
     }
@@ -93,26 +100,25 @@ function ObservationAreaDialog(props) {
         // turn off page reload
         event.preventDefault();
         const tmpOrg = prepareForSave(entity, fields);
-        if (entity.id) {
-            entityRest.update(tmpOrg)
-                .then(response => {
-                    uploadFile(response.data, response.data?.id);
-                });
-        } else {
-            entityRest.create(tmpOrg).then(response => {
-                uploadFile(response.data, response.data?.id);
+        if (mode === MODE.UPDATE) {
+            observationAreaRest.update(tmpOrg).then(response => {
+                uploadFile(response.data?.id);
+            });
+        } else if ([MODE.CREATE, MODE.COPY].includes(mode)) {
+            observationAreaRest.create(tmpOrg).then(response => {
+                uploadFile(response.data?.id);
             });
         }
         onSubmit();
     }
 
-    function uploadFile(data, observationAreaId) {
-        if (!selectedFile) {
+    function uploadFile(observationAreaId) {
+        if (!selectedImageFile) {
             update();
             return;
         }
         const formData = new FormData();
-        formData.append('image', selectedFile);
+        formData.append('image', selectedImageFile);
         try {
             imageRest.upload(formData, observationAreaId).then(() => {
                 update();

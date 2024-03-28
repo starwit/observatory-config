@@ -5,7 +5,7 @@ import { useTranslation } from "react-i18next";
 import { setIn } from 'seamless-immutable';
 import { classificationSelectTools } from "../../AppConfig";
 import ClassificationRest from "../../services/ClassificationRest";
-import ImageRest from "../../services/ImageRest";
+import ImageRest, {imageFileUrlForId} from "../../services/ImageRest";
 import ObservationAreaRest from "../../services/ObservationAreaRest";
 
 
@@ -58,7 +58,7 @@ function ImageAnnotate(props) {
     }
 
     function parseImage(image) {
-        image.src = window.location.pathname + "api/imageFile/id/" + image.id;
+        image.src = imageFileUrlForId(image.id);
         image.name = "";
         return image;
     }

@@ -4,6 +4,7 @@ import PropTypes from "prop-types";
 import React from "react";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router";
+import { imageFileUrlForId } from "../../services/ImageRest";
 
 function ObservationAreaCard(props) {
     const {observationArea, onCopyClick, onDeleteClick, onEditClick} = props;
@@ -11,7 +12,7 @@ function ObservationAreaCard(props) {
     const navigate = useNavigate();
     const {t} = useTranslation();
     
-    const imageUrl = `${window.location.pathname}api/imageFile/id/${observationArea.image.id}`;
+    const imageUrl = imageFileUrlForId(observationArea.image.id);
 
     function openArea() {
         navigate("/observationarea/" + observationArea.id)
