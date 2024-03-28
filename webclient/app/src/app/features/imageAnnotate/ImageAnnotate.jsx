@@ -33,7 +33,7 @@ function ImageAnnotate() {
         classificationRest.findAll().then(response => {
             const translatedClassifications = response.data.map(classification => ({
                 ...classification,
-                name: t("classification.name." + classification.name) == "classification.name." + classification.name ?  classification.name : t("classification.name." + classification.name)
+                name: t("classification.name." + classification.name)
             }));
             setClassifications(translatedClassifications);
         });
