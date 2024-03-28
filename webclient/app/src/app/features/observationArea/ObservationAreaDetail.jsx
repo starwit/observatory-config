@@ -2,11 +2,11 @@ import { useEffect, useMemo, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { AppBar } from "../../assets/styles/HeaderStyles";
 import ObservationAreaRest from "../../services/ObservationAreaRest";
-import ImageAnnotate from "./ImageAnnotate";
-import ObservationAreaEditDialog, { MODE as ObservationAreaDialogMode } from "../areaDialog/ObservationAreaEditDialog";
-import ObservationAreaMenu from "./ObservationAreaMenu";
+import ImageAnnotate from "../imageAnnotate/ImageAnnotate";
+import ObservationAreaDialog, { MODE as ObservationAreaDialogMode } from "./ObservationAreaDialog";
+import ObservationAreaSelect from "./ObservationAreaSelect";
 
-export default function ObservationAreaSingle() {
+export default function ObservationAreaDetail() {
 
     const {observationAreaId} = useParams();
     const navigate = useNavigate();
@@ -50,7 +50,7 @@ export default function ObservationAreaSingle() {
     return (
         <>
             <AppBar color="transparent" sx={{boxShadow: "none", left: "0rem", right: "8rem", width: "80%"}}>
-                <ObservationAreaMenu
+                <ObservationAreaSelect
                     observationAreas={observationAreas}
                     selectedArea={selectedArea}
                     onHomeClick={navigateToHome}
@@ -62,7 +62,7 @@ export default function ObservationAreaSingle() {
             <ImageAnnotate 
                 observationAreaId={observationAreaId}
             ></ImageAnnotate>
-            <ObservationAreaEditDialog
+            <ObservationAreaDialog
                 open={editDialogOpen}
                 onSubmit={() => setEditDialogOpen(false)}
                 mode={ObservationAreaDialogMode.UPDATE}

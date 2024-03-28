@@ -10,7 +10,7 @@ import React, { useState } from "react";
 import { useTranslation } from "react-i18next";
 import ConfirmationDialog from "../../commons/dialog/ConfirmationDialog";
 
-function ObservationAreaMenu(props) {
+function ObservationAreaSelect(props) {
     const {
         observationAreas,
         selectedArea,
@@ -88,4 +88,4 @@ function ObservationAreaMenu(props) {
 }
 
 
-export default ObservationAreaMenu;
+export default ObservationAreaSelect;

@@ -1,24 +1,11 @@
-import React from "react";
 import {
     Box,
-    CssBaseline,
-    Drawer,
-    IconButton,
-    List,
-    ListItem,
-    ListItemButton,
-    ListItemText
+    CssBaseline
 } from "@mui/material";
-import {useTheme} from "@mui/material/styles";
-import {DrawerHeader} from "../../../assets/styles/HeaderStyles";
-import {useTranslation} from "react-i18next";
-import {useNavigate} from "react-router-dom";
-import Divider from "@mui/material/Divider";
-import MenuIcon from "@mui/icons-material/Menu";
-import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
-import ChevronRightIcon from "@mui/icons-material/ChevronRight";
-import ObservationAreaMenu from "../../../features/observationArea/ObservationAreaMenu";
-import Fab from "@mui/material/Fab";
+import { useTheme } from "@mui/material/styles";
+import React from "react";
+import { useTranslation } from "react-i18next";
+import { useNavigate } from "react-router-dom";
 
 function SidebarNavigation(props) {
     const drawerWidth = 240;
