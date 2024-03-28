@@ -25,8 +25,8 @@ public class ClassificationEntity extends AbstractEntity<Long> {
     private String name;
 
     @NotBlank
-    @Column(name = "select_type")
-    private String selectType;
+    @Column(name = "tool_type")
+    private String toolType;
 
     @NotBlank
     @Column(name = "color", nullable = false)
@@ -55,12 +55,12 @@ public class ClassificationEntity extends AbstractEntity<Long> {
         this.polygon = polygon;
     }
 
-    public String getSelectType() {
-        return selectType;
+    public String getToolType() {
+        return toolType;
     }
 
-    public void setSelectType(String selectType) {
-        this.selectType = selectType;
+    public void setToolType(String toolType) {
+        this.toolType = toolType;
     }
 
     public String getColor() {

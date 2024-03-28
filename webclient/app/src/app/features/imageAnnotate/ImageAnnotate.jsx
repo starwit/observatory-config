@@ -44,7 +44,7 @@ function ImageAnnotate() {
             const select = classifications.find((c) => c.name == action.cls);
             if (select !== undefined) {
     
-                return setIn(state, ["selectedTool"], select.selectType);
+                return setIn(state, ["selectedTool"], select.toolType);
             }
         }
         return state;
