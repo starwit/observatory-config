@@ -49,7 +49,9 @@ function ObservationAreaDialog(props) {
     }, [selectedArea, mode, open]);
 
     function previewExistingImage() {
-        setPreviewUrl(imageFileUrlForId(selectedArea.image.id));
+        if (selectedArea.image !== null) {
+            setPreviewUrl(imageFileUrlForId(selectedArea.image.id));
+        }
     }
     
     useEffect(() => {
@@ -117,6 +119,7 @@ function ObservationAreaDialog(props) {
             update();
             return;
         }
+        console.log("uploading")
         const formData = new FormData();
         formData.append('image', selectedImageFile);
         try {

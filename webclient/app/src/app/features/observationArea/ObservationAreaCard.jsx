@@ -12,11 +12,12 @@ function ObservationAreaCard(props) {
     const navigate = useNavigate();
     const {t} = useTranslation();
     
-    const imageUrl = imageFileUrlForId(observationArea.image.id);
+    const imageUrl = observationArea.image !== null ? imageFileUrlForId(observationArea.image.id) : undefined;
 
     function openArea() {
         navigate("/observationarea/" + observationArea.id)
     }
+    console.log(observationArea)
 
     return (
         <>
@@ -43,7 +44,7 @@ function ObservationAreaCard(props) {
                 </CardContent>
                 <Divider />
                 <CardActionArea onClick={openArea}>
-                    {observationArea.image.data !== null ?
+                    {observationArea.image !== null ?
                         <CardMedia
                             component="img"
                             height="300"

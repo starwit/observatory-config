@@ -59,7 +59,6 @@ public class ObservationAreaService implements ServiceInterface<ObservationAreaE
             return null;
         }
         ObservationAreaEntity entity = null;
-        ImageEntity image = new ImageEntity();
         if (dto.getId() == null) {
             entity = mapper.convertToEntity(dto);
             if (entity != null) {
@@ -73,12 +72,12 @@ public class ObservationAreaService implements ServiceInterface<ObservationAreaE
             mapAndSaveCameras(dto.getSaeIds(), entity);
             if (entity.getImage() != null) {
                 long imageId = entity.getImage().getId();
-                image = imageRepository.getReferenceById(imageId);
+                ImageEntity image = imageRepository.getReferenceById(imageId);
+                image.setObservationArea(entity);
+                image.setName(dto.getName());
+                imageRepository.saveAndFlush(image);
             }
         }
-        image.setObservationArea(entity);
-        image.setName(dto.getName());
-        image = imageRepository.saveAndFlush(image);
         entity = observationareaRepository.saveAndFlush(entity);
         observationareaRepository.refresh(entity);
         return mapper.convertToDto(entity);

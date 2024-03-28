@@ -58,7 +58,7 @@ function ImageAnnotate(props) {
     }
 
     function parseImage(image) {
-        image.src = imageFileUrlForId(image.id);
+        image.src = image !== null ? imageFileUrlForId(image.id) : "";
         image.name = "";
         return image;
     }
