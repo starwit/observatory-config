@@ -6,6 +6,7 @@ import { setIn } from 'seamless-immutable';
 import { classificationSelectTools } from "../../AppConfig";
 import ClassificationRest from "../../services/ClassificationRest";
 import ImageRest from "../../services/ImageRest";
+import ObservationAreaRest from "../../services/ObservationAreaRest";
 
 
 const userReducer = (state, action) => {
@@ -27,6 +28,7 @@ function ImageAnnotate(props) {
     const {enqueueSnackbar} = useSnackbar();
 
     const classificationRest = useMemo(() => new ClassificationRest(), []);
+    const observationAreaRest = useMemo(() => new ObservationAreaRest(), []);
     const imageRest = useMemo(() => new ImageRest(), []);
 
     const [classifications, setClassifications] = useState();
@@ -71,7 +73,7 @@ function ImageAnnotate(props) {
             return;
         }
         
-        imageRest.savePolygons(event.images).then(() => {
+        classificationRest.savePolygons(observationAreaId, event.images[0].regions).then(() => {
             handleMessage("success", t("response.save.success"));
         });
     }

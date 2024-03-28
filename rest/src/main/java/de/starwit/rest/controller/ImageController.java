@@ -105,14 +105,6 @@ public class ImageController {
         return imageService.saveMetadata(entity);
     }
 
-    @Operation(summary = "Save polygon to image")
-    @PostMapping(value = "/save-polygons")
-    public void savePolygons(@Valid @RequestBody List<ImageDto> dtos) {
-        for (ImageDto dto : dtos) {
-            savePolygonsPerImage(dto);
-        }
-    }
-
     @PostMapping("/upload/{observationareaid}")
     @CrossOrigin
     public void uploadImage(@RequestParam("image") MultipartFile file, @PathVariable("observationareaid") Long id)
@@ -128,83 +120,6 @@ public class ImageController {
         return ResponseEntity.status(HttpStatus.OK)
                 .contentType(MediaType.valueOf("image/png"))
                 .body(image);
-    }
-
-    private ImageDto savePolygonsPerImage(ImageDto dto) throws EntityNotFoundException {
-        ImageEntity entity = new ImageEntity();
-        if (dto.getId() != null) {
-            entity = imageService.findById(dto.getId());
-            if (entity.getObservationArea().getPolygon() != null) {
-                polygonService.deleteAll(entity.getObservationArea().getPolygon());
-                polygonService.getRepository().flush();
-            }
-            entity.getObservationArea().getPolygon().removeAll(entity.getObservationArea().getPolygon());
-            entity.getObservationArea().setImageHeight(dto.getImageHeight());
-            entity.getObservationArea().setImageWidth(dto.getImageWidth());
-            entity = imageService.saveAndFlush(entity);
-            List<RegionDto> regions = dto.getRegions();
-            for (RegionDto regionDto : regions) {
-                if (regionDto.getType().equals("polygon")) {
-                    entity.getObservationArea().addToPolygons(createPolygon(entity.getObservationArea(), regionDto));
-                } else if (regionDto.getType().equals("line")) {
-                    entity.getObservationArea().addToPolygons(createLine(entity.getObservationArea(), regionDto));
-                }
-            }
-
-            entity = imageService.saveOrUpdate(entity);
-            databackendService.triggerConfigurationSync();
-
-            return mapper.convertToDto(entity);
-
-        } else {
-            throw new EntityNotFoundException();
-        }
-    }
-
-    private PolygonEntity createPolygon(ObservationAreaEntity entity, RegionDto regionDto) {
-        PolygonEntity polygonEntity = new PolygonEntity();
-        ClassificationEntity cls = classificationService.findByName(regionDto.getCls());
-        polygonEntity.setClassification(cls);
-        polygonEntity.setOpen(regionDto.getOpen());
-        polygonEntity.setObservationArea(entity);
-        polygonEntity.setName(regionDto.getName());
-        polygonEntity = polygonService.saveAndFlush(polygonEntity);
-        List<List<Double>> points = regionDto.getPoints();
-        if (points != null && !points.isEmpty()) {
-            for (List<Double> point : regionDto.getPoints()) {
-                PointEntity pointEntity = new PointEntity();
-                pointEntity.setXvalue(BigDecimal.valueOf(Math.max(0, Math.min(1, point.get(0)))));
-                pointEntity.setYvalue(BigDecimal.valueOf(Math.max(0, Math.min(1, point.get(1)))));
-                pointEntity.setPolygon(polygonEntity);
-                pointEntity = pointService.saveAndFlush(pointEntity);
-                polygonEntity.addToPoints(pointEntity);
-            }
-        }
-        return polygonEntity;
-    }
-
-    private PolygonEntity createLine(ObservationAreaEntity entity, RegionDto regionDto) {
-        PolygonEntity polygonEntity = new PolygonEntity();
-        ClassificationEntity cls = classificationService.findByName(regionDto.getCls());
-        polygonEntity.setClassification(cls);
-        polygonEntity.setOpen(true);
-        polygonEntity.setObservationArea(entity);
-        polygonEntity.setName(regionDto.getName());
-        polygonEntity = polygonService.saveAndFlush(polygonEntity);
-        PointEntity p1 = new PointEntity();
-        p1.setXvalue(BigDecimal.valueOf(Math.max(0, Math.min(1, regionDto.getX1()))));
-        p1.setYvalue(BigDecimal.valueOf(Math.max(0, Math.min(1, regionDto.getY1()))));
-        p1.setPolygon(polygonEntity);
-        p1 = pointService.saveAndFlush(p1);
-        polygonEntity.addToPoints(p1);
-
-        PointEntity p2 = new PointEntity();
-        p2.setXvalue(BigDecimal.valueOf(Math.max(0, Math.min(1, regionDto.getX2()))));
-        p2.setYvalue(BigDecimal.valueOf(Math.max(0, Math.min(1, regionDto.getY2()))));
-        p2.setPolygon(polygonEntity);
-        p2 = pointService.saveAndFlush(p2);
-        polygonEntity.addToPoints(p2);
-        return polygonEntity;
     }
 
     @Operation(summary = "Delete image")
