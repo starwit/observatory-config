@@ -157,7 +157,13 @@ public class ObservationAreaController {
         p2 = pointService.saveAndFlush(p2);
         polygonEntity.addToPoints(p2);
         return polygonEntity;
-    }    
+    }
+
+    @PostMapping(value = "/copy-polygons/src/{srcId}/target/{targetId}")
+    public ResponseEntity<Object> copyPolygons(@PathVariable("srcId") Long srcId, @PathVariable("targetId") Long targetId) {
+        observationareaService.copyPolygons(targetId, srcId);
+        return new ResponseEntity<Object>(null, HttpStatus.NO_CONTENT);
+    }
 
     @ExceptionHandler(value = { EntityNotFoundException.class })
     public ResponseEntity<Object> handleException(EntityNotFoundException ex) {

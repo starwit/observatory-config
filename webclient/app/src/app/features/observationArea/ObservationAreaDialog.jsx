@@ -101,12 +101,17 @@ function ObservationAreaDialog(props) {
         event.preventDefault();
         const preparedEntity = prepareForSave(entity, fields);
         if (mode === MODE.UPDATE) {
-            observationAreaRest.update(preparedEntity).then(response => {
-                uploadFile(response.data?.id);
+            observationAreaRest.update(preparedEntity).then(({data: newArea}) => {
+                uploadFile(newArea.id);
             });
-        } else if ([MODE.CREATE, MODE.COPY].includes(mode)) {
-            observationAreaRest.create(preparedEntity).then(response => {
-                uploadFile(response.data?.id);
+        } else if (mode === MODE.CREATE) {
+            observationAreaRest.create(preparedEntity).then(({data: newArea}) => {
+                uploadFile(newArea.id);
+            });
+        } else if (mode === MODE.COPY) {
+            observationAreaRest.create(preparedEntity).then(({data: newArea}) => {
+                uploadFile(newArea.id);
+                observationAreaRest.copyPolygons(newArea.id, selectedArea.id);
             });
         }
         onSubmit();

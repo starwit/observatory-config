@@ -9,6 +9,8 @@ import org.springframework.stereotype.Service;
 import de.starwit.persistence.entity.CameraEntity;
 import de.starwit.persistence.entity.ImageEntity;
 import de.starwit.persistence.entity.ObservationAreaEntity;
+import de.starwit.persistence.entity.PointEntity;
+import de.starwit.persistence.entity.PolygonEntity;
 import de.starwit.persistence.exception.NotificationException;
 import de.starwit.persistence.repository.CameraRepository;
 import de.starwit.persistence.repository.ImageRepository;
@@ -101,5 +103,28 @@ public class ObservationAreaService implements ServiceInterface<ObservationAreaE
         toBeRemoved.removeAll(newCameraList);
         cameraRepository.deleteAll(toBeRemoved);
         cameraRepository.saveAllAndFlush(newCameraList);
+    }
+
+    public void copyPolygons(Long copyTargetId, Long copySrcId) {
+        ObservationAreaEntity targetEntity = observationareaRepository.findById(copyTargetId).get();
+        ObservationAreaEntity srcEntity = observationareaRepository.findById(copySrcId).get();
+        
+        for (PolygonEntity srcPoly : srcEntity.getPolygon()) {
+            PolygonEntity copiedPoly = new PolygonEntity();
+
+            for (PointEntity srcPoint : srcPoly.getPoint()) {
+                PointEntity copiedPoint = new PointEntity();
+                copiedPoint.setXvalue(srcPoint.getXvalue());
+                copiedPoint.setYvalue(srcPoint.getYvalue());
+                copiedPoly.addToPoints(copiedPoint);
+            }
+
+            copiedPoly.setClassification(srcPoly.getClassification());
+            copiedPoly.setName(srcPoly.getName());
+            copiedPoly.setOpen(srcPoly.getOpen());
+            targetEntity.addToPolygons(copiedPoly);
+        }
+
+        observationareaRepository.save(targetEntity);
     }
 }
