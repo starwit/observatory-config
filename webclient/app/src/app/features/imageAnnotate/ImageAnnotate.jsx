@@ -28,7 +28,8 @@ function ImageAnnotate(props) {
         classificationRest.findAll().then(response => {
             const translatedClassifications = response.data.map(classification => ({
                 ...classification,
-                name: t("classification.name." + classification.name)
+                name: t("classification.name." + classification.name),
+                dbKey: classification.name,
             }));
             setClassifications(translatedClassifications);
         });
@@ -71,14 +72,28 @@ function ImageAnnotate(props) {
     }
     
     function savePolygons(event) {
-        if (!validateRegionNames(event.images[event.selectedImage].regions)) {
+        let regions = event.images[0].regions;
+        regions = regions.map(r => mapDisplayTextToClsKey(r));
+
+        if (!validateRegionNames(regions)) {
             handleMessage("error", t("error.image.notunique"))
             return;
         }
         
-        observationAreaRest.savePolygons(observationAreaId, event.images[0].regions).then(() => {
+        observationAreaRest.savePolygons(observationAreaId, regions).then(() => {
             handleMessage("success", t("response.save.success"));
         });
+    }
+
+    function mapDisplayTextToClsKey(immutableRegion) {
+        const region = structuredClone(immutableRegion);
+        const matchingClassification = classifications.find(c => region.cls === c.name);
+        if (matchingClassification !== undefined) {
+            region.cls = matchingClassification.dbKey;
+        } else {
+            console.log(`Could not find matching classification for ${region.cls}. Something is seriously wrong!`);
+        }
+        return region;
     }
 
     function validateRegionNames(regions) {
