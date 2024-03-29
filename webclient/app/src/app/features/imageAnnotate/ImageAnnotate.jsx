@@ -3,23 +3,9 @@ import { useSnackbar } from 'notistack';
 import React, { useEffect, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { setIn } from 'seamless-immutable';
-import { classificationSelectTools } from "../../AppConfig";
 import ClassificationRest from "../../services/ClassificationRest";
-import ImageRest, {imageFileUrlForId} from "../../services/ImageRest";
+import ImageRest, { imageFileUrlForId } from "../../services/ImageRest";
 import ObservationAreaRest from "../../services/ObservationAreaRest";
-
-
-const userReducer = (state, action) => {
-    if ("SELECT_CLASSIFICATION" == action.type) {
-        const select = classificationSelectTools.find((c) => c.classification == action.cls);
-        if (select !== undefined) {
-
-            return setIn(state, ["selectedTool"], select.selectTool);
-        }
-    }
-    return state;
-};
-
 
 function ImageAnnotate(props) {
     const {observationAreaId} = props;
@@ -40,13 +26,28 @@ function ImageAnnotate(props) {
 
     function reloadClassifications() {
         classificationRest.findAll().then(response => {
-            setClassifications(response.data);
+            const translatedClassifications = response.data.map(classification => ({
+                ...classification,
+                name: t("classification.name." + classification.name)
+            }));
+            setClassifications(translatedClassifications);
         });
     }
 
     useEffect(() => {
         reloadImage();
     }, [observationAreaId]);
+
+    function userReducer(state, action) {
+        if ("SELECT_CLASSIFICATION" == action.type) {
+            const select = classifications.find((c) => c.name == action.cls);
+            if (select !== undefined) {
+    
+                return setIn(state, ["selectedTool"], select.toolType);
+            }
+        }
+        return state;
+    };
 
     function reloadImage() {
         imageRest.findWithPolygons(observationAreaId).then(response => {
