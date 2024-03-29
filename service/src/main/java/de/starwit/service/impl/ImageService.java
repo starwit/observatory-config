@@ -42,13 +42,8 @@ public class ImageService implements ServiceInterface<ImageEntity, ImageReposito
 
     public ImageEntity uploadImage(MultipartFile imageFile, ObservationAreaEntity observationAreaEntity)
             throws IOException {
+
         ImageEntity imageEntity = new ImageEntity();
-        List<ImageEntity> images = imageRepository.findByObservationAreaId(observationAreaEntity.getId());
-        if (images == null || images.isEmpty()) {
-            imageEntity = new ImageEntity();
-        } else {
-            imageEntity = images.get(0);
-        }
         imageEntity.setName(observationAreaEntity.getName());
         imageEntity.setType(imageFile.getContentType());
         imageEntity.setData(imageFile.getBytes());
@@ -58,6 +53,7 @@ public class ImageService implements ServiceInterface<ImageEntity, ImageReposito
         observationAreaEntity.setImageHeight(bImage.getHeight());
         observationAreaEntity.setImageWidth(bImage.getWidth());
         imageEntity.setObservationArea(observationAreaEntity);
+        observationAreaEntity.setImage(imageEntity);
 
         return imageRepository.save(imageEntity);
     }

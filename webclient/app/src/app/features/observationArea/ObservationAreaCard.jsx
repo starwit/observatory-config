@@ -12,12 +12,11 @@ function ObservationAreaCard(props) {
     const navigate = useNavigate();
     const {t} = useTranslation();
     
-    const imageUrl = observationArea.image !== null ? imageFileUrlForId(observationArea.image.id) : undefined;
+    const imageUrl = observationArea.image !== null ? imageFileUrlForId(observationArea.image.id) : null;
 
     function openArea() {
         navigate("/observationarea/" + observationArea.id)
     }
-    console.log(observationArea)
 
     return (
         <>

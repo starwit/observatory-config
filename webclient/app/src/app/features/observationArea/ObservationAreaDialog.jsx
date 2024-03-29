@@ -27,31 +27,44 @@ function ObservationAreaDialog(props) {
     const fields = entityFields;
     const observationAreaRest = useMemo(() => new ObservationAreaRest(), []);
     const imageRest = useMemo(() => new ImageRest(), []);
-    const [hasFormError, setHasFormError] = React.useState(false);
-    const [selectedImageFile, setSelectedImageFile] = useState(null);
+    const [hasFormError, setHasFormError] = useState(false);
+    const [imageChanged, setImageChanged] = useState(false);
+    const [imageBlob, setImageBlob] = useState(null);
     const [previewUrl, setPreviewUrl] = useState('');
     const {enqueueSnackbar} = useSnackbar();
-    console.log(selectedArea)
 
     useEffect(() => {
-        if (mode === MODE.CREATE) {
-            setEntity(entityDefault);
-        } else if (mode === MODE.UPDATE) {
-            setEntity(selectedArea);
-            previewExistingImage();
-        } else if (mode === MODE.COPY) {
-            let newArea = structuredClone(selectedArea);
-            newArea.id = null;
-            newArea.name = `${newArea.name} - ${t("observationArea.copy.suffix")}`;
-            setEntity(newArea);
-            previewExistingImage();
+        if (open === true) {
+            if (mode === MODE.CREATE) {
+                setEntity(entityDefault);
+            } else if (mode === MODE.UPDATE) {
+                setEntity(selectedArea);
+                loadExistingImage();
+            } else if (mode === MODE.COPY) {
+                let newArea = structuredClone(selectedArea);
+                newArea.id = null;
+                newArea.name = `${newArea.name} - ${t("observationArea.copy.suffix")}`;
+                setEntity(newArea);
+                loadExistingImage();
+                setImageChanged(true);
+            }
+        } else {
+            setImageBlob(null);
+            setPreviewUrl('');
+            setImageChanged(false);
         }
     }, [selectedArea, mode, open]);
 
-    function previewExistingImage() {
+    async function loadExistingImage() {
         if (selectedArea.image !== null) {
-            setPreviewUrl(imageFileUrlForId(selectedArea.image.id));
+            const imageBlob = await (await fetch(imageFileUrlForId(selectedArea.image.id))).blob();
+            updateImage(imageBlob);
         }
+    }
+
+    function updateImage(imageBlob) {
+        setImageBlob(imageBlob);
+        setPreviewUrl(URL.createObjectURL(imageBlob));
     }
     
     useEffect(() => {
@@ -73,14 +86,8 @@ function ObservationAreaDialog(props) {
 
     const onDropAccepted = (acceptedFiles) => {
         const file = acceptedFiles[0];
-        setSelectedImageFile(file);
-
-        // Vorschaubild erzeugen
-        const reader = new FileReader();
-        reader.onloadend = () => {
-            setPreviewUrl(reader.result);
-        };
-        reader.readAsDataURL(file);
+        updateImage(file);
+        setImageChanged(true);
     };
 
     const onDropRejected = () => {
@@ -93,21 +100,19 @@ function ObservationAreaDialog(props) {
         if (["backdropClick", "escapeKeyDown"].includes(reason)) {
             return;
         }
-        setSelectedImageFile(null);
-        setPreviewUrl('');
         onSubmit();
     }
 
     function handleSubmit(event) {
         // turn off page reload
         event.preventDefault();
-        const tmpOrg = prepareForSave(entity, fields);
+        const preparedEntity = prepareForSave(entity, fields);
         if (mode === MODE.UPDATE) {
-            observationAreaRest.update(tmpOrg).then(response => {
+            observationAreaRest.update(preparedEntity).then(response => {
                 uploadFile(response.data?.id);
             });
         } else if ([MODE.CREATE, MODE.COPY].includes(mode)) {
-            observationAreaRest.create(tmpOrg).then(response => {
+            observationAreaRest.create(preparedEntity).then(response => {
                 uploadFile(response.data?.id);
             });
         }
@@ -115,13 +120,12 @@ function ObservationAreaDialog(props) {
     }
 
     function uploadFile(observationAreaId) {
-        if (!selectedImageFile) {
+        if (!imageChanged || imageBlob === null) {
             update();
             return;
         }
-        console.log("uploading")
         const formData = new FormData();
-        formData.append('image', selectedImageFile);
+        formData.append('image', imageBlob);
         try {
             imageRest.upload(formData, observationAreaId).then(() => {
                 update();

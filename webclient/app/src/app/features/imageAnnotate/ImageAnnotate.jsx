@@ -58,8 +58,10 @@ function ImageAnnotate(props) {
     }
 
     function parseImage(image) {
-        image.src = image !== null ? imageFileUrlForId(image.id) : "";
-        image.name = "";
+        if (image !== undefined) {
+            image.src = image !== undefined ? imageFileUrlForId(image.id) : "";
+            image.name = "";
+        }
         return image;
     }
 
