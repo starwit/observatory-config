@@ -30,7 +30,6 @@ function ObservationAreaDialog(props) {
     const [hasFormError, setHasFormError] = useState(false);
     const [imageChanged, setImageChanged] = useState(false);
     const [imageBlob, setImageBlob] = useState(null);
-    const [previewUrl, setPreviewUrl] = useState('');
     const {enqueueSnackbar} = useSnackbar();
 
     useEffect(() => {
@@ -50,7 +49,6 @@ function ObservationAreaDialog(props) {
             }
         } else {
             setImageBlob(null);
-            setPreviewUrl('');
             setImageChanged(false);
         }
     }, [selectedArea, mode, open]);
@@ -58,15 +56,10 @@ function ObservationAreaDialog(props) {
     async function loadExistingImage() {
         if (selectedArea.image !== null) {
             const imageBlob = await (await fetch(imageFileUrlForId(selectedArea.image.id))).blob();
-            updateImage(imageBlob);
+            setImageBlob(imageBlob);
         }
     }
 
-    function updateImage(imageBlob) {
-        setImageBlob(imageBlob);
-        setPreviewUrl(URL.createObjectURL(imageBlob));
-    }
-    
     useEffect(() => {
         setHasFormError(!allFieldsValid())
     }, [entity]);
@@ -86,7 +79,7 @@ function ObservationAreaDialog(props) {
 
     const onDropAccepted = (acceptedFiles) => {
         const file = acceptedFiles[0];
-        updateImage(file);
+        setImageBlob(file);
         setImageChanged(true);
     };
 
@@ -197,7 +190,7 @@ function ObservationAreaDialog(props) {
                             <FormControl {...getRootProps()} sx={ImageUploadStyles.dropzoneStyle}>
                                 <input {...getInputProps()} />
                                 <Typography variant="overline">{t("observationArea.image")}</Typography>
-                                {previewUrl && <img src={previewUrl} style={ImageUploadStyles.previewStyle} alt={t("observationArea.image.preview")} />}
+                                {imageBlob && <img src={URL.createObjectURL(imageBlob)} style={ImageUploadStyles.previewStyle} alt={t("observationArea.image.preview")} />}
                             </FormControl>
                             </Stack> 
                         </Grid>
