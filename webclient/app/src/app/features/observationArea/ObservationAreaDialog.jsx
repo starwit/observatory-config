@@ -62,7 +62,7 @@ function ObservationAreaDialog(props) {
 
     useEffect(() => {
         setHasFormError(!allFieldsValid())
-    }, [entity]);
+    }, [entity, imageBlob]);
     
     function allFieldsValid() {
         if (!isValid(fields, entity)) {
@@ -72,6 +72,9 @@ function ObservationAreaDialog(props) {
                 entity.saeIds === null || 
                 entity.saeIds.length === 0 || 
                 entity.saeIds[0] === "") {
+            return false;
+        }
+        if (imageBlob === null) {
             return false;
         }
         return true;
@@ -191,12 +194,14 @@ function ObservationAreaDialog(props) {
                         </Grid>
                         <Grid item xs={4}> 
                             <Stack> 
-                            <Typography variant="caption">{t("observationArea.image.hint")}</Typography>
-                            <FormControl {...getRootProps()} sx={ImageUploadStyles.dropzoneStyle}>
-                                <input {...getInputProps()} />
-                                <Typography variant="overline">{t("observationArea.image")}</Typography>
-                                {imageBlob && <img src={URL.createObjectURL(imageBlob)} style={ImageUploadStyles.previewStyle} alt={t("observationArea.image.preview")} />}
-                            </FormControl>
+                                <FormControl {...getRootProps()} sx={ImageUploadStyles.dropzoneStyle}>
+                                    <input {...getInputProps()} />
+                                    <Typography variant="overline">{t("observationArea.image")}</Typography>
+                                    {imageBlob && <img src={URL.createObjectURL(imageBlob)} style={ImageUploadStyles.previewStyle} alt={t("observationArea.image.preview")} />}
+                                </FormControl>
+                                {imageBlob === null ? 
+                                    <Typography variant="caption" color="#d32f2f">{t("observationArea.image.hint")}</Typography> : null
+                                }
                             </Stack> 
                         </Grid>
                     </Grid>
