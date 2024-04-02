@@ -1,21 +1,23 @@
 package de.starwit.service.impl;
 
+import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.util.List;
 
 import javax.imageio.ImageIO;
-import java.awt.image.BufferedImage;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.ByteArrayResource;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import de.starwit.persistence.entity.ImageEntity;
 import de.starwit.persistence.entity.ObservationAreaEntity;
 import de.starwit.persistence.repository.ImageRepository;
+import de.starwit.service.dto.FileDto;
 
 @Service
 public class ImageService implements ServiceInterface<ImageEntity, ImageRepository> {
@@ -40,13 +42,8 @@ public class ImageService implements ServiceInterface<ImageEntity, ImageReposito
 
     public ImageEntity uploadImage(MultipartFile imageFile, ObservationAreaEntity observationAreaEntity)
             throws IOException {
+
         ImageEntity imageEntity = new ImageEntity();
-        List<ImageEntity> images = imageRepository.findByObservationAreaId(observationAreaEntity.getId());
-        if (images == null || images.isEmpty()) {
-            imageEntity = new ImageEntity();
-        } else {
-            imageEntity = images.get(0);
-        }
         imageEntity.setName(observationAreaEntity.getName());
         imageEntity.setType(imageFile.getContentType());
         imageEntity.setData(imageFile.getBytes());
@@ -56,6 +53,7 @@ public class ImageService implements ServiceInterface<ImageEntity, ImageReposito
         observationAreaEntity.setImageHeight(bImage.getHeight());
         observationAreaEntity.setImageWidth(bImage.getWidth());
         imageEntity.setObservationArea(observationAreaEntity);
+        observationAreaEntity.setImage(imageEntity);
 
         return imageRepository.save(imageEntity);
     }
@@ -73,4 +71,14 @@ public class ImageService implements ServiceInterface<ImageEntity, ImageReposito
         }
         return null;
     }
+
+    public FileDto getImageAsFile(Long id) {
+        ImageEntity image = imageRepository.getReferenceById(id);
+        FileDto fileDto = new FileDto();
+        fileDto.setByteArrayResource(new ByteArrayResource(image.getData()));
+        fileDto.setFileSize(Long.valueOf(image.getData().length));
+        fileDto.setName(image.getName());
+        return fileDto;
+    }
+
 }

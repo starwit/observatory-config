@@ -31,7 +31,7 @@ public class ObservationAreaEntity extends AbstractEntity<Long> {
 
     // entity relations
     @JsonFilter("filterId")
-    @OneToMany(mappedBy = "observationArea", orphanRemoval = true)
+    @OneToMany(mappedBy = "observationArea", cascade = {CascadeType.ALL}, orphanRemoval = true)
     private Set<PolygonEntity> polygon;
 
     // entity relations

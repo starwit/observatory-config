@@ -1,12 +1,13 @@
 package de.starwit.rest.controller;
 
 import java.io.IOException;
-import java.math.BigDecimal;
 import java.util.List;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.Resource;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -23,21 +24,14 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
-import de.starwit.persistence.entity.ClassificationEntity;
 import de.starwit.persistence.entity.ImageEntity;
 import de.starwit.persistence.entity.ObservationAreaEntity;
-import de.starwit.persistence.entity.PointEntity;
-import de.starwit.persistence.entity.PolygonEntity;
 import de.starwit.persistence.exception.NotificationException;
 import de.starwit.rest.exception.NotificationDto;
+import de.starwit.service.dto.FileDto;
 import de.starwit.service.dto.ImageDto;
-import de.starwit.service.dto.RegionDto;
-import de.starwit.service.impl.ClassificationService;
-import de.starwit.service.impl.DatabackendService;
 import de.starwit.service.impl.ImageService;
 import de.starwit.service.impl.ObservationAreaService;
-import de.starwit.service.impl.PointService;
-import de.starwit.service.impl.PolygonService;
 import de.starwit.service.mapper.ImageMapper;
 import io.swagger.v3.oas.annotations.Operation;
 import jakarta.persistence.EntityNotFoundException;
@@ -57,19 +51,7 @@ public class ImageController {
     private ImageService imageService;
 
     @Autowired
-    private ClassificationService classificationService;
-
-    @Autowired
-    private PolygonService polygonService;
-
-    @Autowired
-    private PointService pointService;
-
-    @Autowired
     private ObservationAreaService observationAreaService;
-
-    @Autowired
-    private DatabackendService databackendService;
 
     @Autowired
     private ImageMapper mapper;
@@ -113,13 +95,18 @@ public class ImageController {
         imageService.uploadImage(file, observationAreaEntity);
     }
 
-    @GetMapping("/download/{id}")
-    public ResponseEntity<?> getImageByName(@PathVariable("id") Long id) {
-        byte[] image = imageService.findById(id).getData();
+    @GetMapping(value = "/as-file/{id}")
+    public ResponseEntity<Resource> getImageWithIdAsFile(@PathVariable("id") Long id) {
+        FileDto file = imageService.getImageAsFile(id);
 
-        return ResponseEntity.status(HttpStatus.OK)
-                .contentType(MediaType.valueOf("image/png"))
-                .body(image);
+        HttpHeaders header = new HttpHeaders();
+        header.add(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=" + file.getName());
+        header.add("Cache-Control", "max-age=3600, must-revalidate");
+        return ResponseEntity.ok()
+                .headers(header)
+                .contentLength(file.getFileSize())
+                .contentType(MediaType.APPLICATION_OCTET_STREAM)
+                .body(file.getByteArrayResource());
     }
 
     @Operation(summary = "Delete image")

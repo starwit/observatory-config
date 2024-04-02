@@ -1,6 +1,10 @@
 import CrudRest from "./CrudRest";
 import axios from "axios";
 
+export function imageFileUrlForId(imageId) {
+    return `${window.location.pathname}api/image/as-file/${imageId}`;
+}
+
 class ImageRest extends CrudRest {
     constructor() {
         super(window.location.pathname + "api/image");

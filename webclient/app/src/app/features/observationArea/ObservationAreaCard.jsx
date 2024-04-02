@@ -1,21 +1,22 @@
-import React, {useState} from "react";
-import {Card, CardActionArea, CardContent, CardMedia, Divider, Grid, IconButton, Typography} from "@mui/material";
-import {Delete, Edit, ContentCopy} from "@mui/icons-material";
+import { ContentCopy, Delete, Edit } from "@mui/icons-material";
+import { Card, CardActionArea, CardContent, CardMedia, Divider, Grid, IconButton, Typography } from "@mui/material";
 import PropTypes from "prop-types";
-import {useTranslation} from "react-i18next";
-import {useNavigate} from "react-router";
-import ConfirmationDialog from "../../commons/dialog/ConfirmationDialog";
-import ObservationAreaDialog from "./ObservationAreaDialog";
+import React from "react";
+import { useTranslation } from "react-i18next";
+import { useNavigate } from "react-router";
+import { imageFileUrlForId } from "../../services/ImageRest";
 
 function ObservationAreaCard(props) {
-    const {observationArea, onDeleteClick, onEditClick} = props;
+    const {observationArea, onCopyClick, onDeleteClick, onEditClick} = props;
+
     const navigate = useNavigate();
     const {t} = useTranslation();
-    const [imageData, setImageData] = useState('data:' + observationArea.image.type + ';base64,' + observationArea.image.data);
+    
+    const imageUrl = observationArea.image !== null ? imageFileUrlForId(observationArea.image.id) : null;
 
-    const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
-
-    const [openUpdateDialog, setOpenUpdateDialog] = useState(false);
+    function openArea() {
+        navigate("/observationarea/" + observationArea.id)
+    }
 
     return (
         <>
@@ -23,48 +24,37 @@ function ObservationAreaCard(props) {
                 <CardContent>
                     <Grid container spacing={0}>
                         <Grid item xs={7}>
-                            <Typography gutterBottom variant="h5" component="div">
+                            <Typography gutterBottom variant="h5" component="div" onClick={openArea} sx={{cursor: "pointer"}}>
                                 {observationArea.name}
                             </Typography>
                         </Grid>
                         <Grid item xs={5} align="right">
-                            <IconButton onClick={() => setOpenUpdateDialog(true)}>
+                            <IconButton onClick={onCopyClick}>
                                 <ContentCopy fontSize={"small"} />
                             </IconButton>
-                            <IconButton onClick={() => setOpenUpdateDialog(true)}>
+                            <IconButton onClick={onEditClick}>
                                 <Edit fontSize={"small"} />
                             </IconButton>
-                            <IconButton onClick={() => setOpenDeleteDialog(true)}>
+                            <IconButton onClick={onDeleteClick}>
                                 <Delete fontSize={"small"} />
                             </IconButton>
-
                         </Grid>
                     </Grid>
                 </CardContent>
                 <Divider />
-                <CardActionArea onClick={() => navigate("/observationarea/" + observationArea.id)}>
-                    <CardMedia
-                        component="img"
-                        height="300"
-                        image={imageData}
-                    />
+                <CardActionArea onClick={openArea}>
+                    {observationArea.image !== null ?
+                        <CardMedia
+                            component="img"
+                            height="300"
+                            src={imageUrl}
+                        /> :
+                        <CardContent sx={{height: 300}}>
+                            <Typography textAlign={"center"}>{t("observationAreaCard.noImage")}</Typography>
+                        </CardContent>
+                    }
                 </CardActionArea>
             </Card>
-            <ConfirmationDialog
-                title={t("observationArea.delete.title")}
-                message={t("observationArea.delete.message")}
-                open={openDeleteDialog}
-                onClose={() => setOpenDeleteDialog(false)}
-                onSubmit={() => onDeleteClick(observationArea.id)}
-                confirmTitle={t("button.delete")}
-            />
-            <ObservationAreaDialog
-                open={openUpdateDialog}
-                onClose={() => setOpenUpdateDialog(false)}
-                isCreate={false}
-                selected={observationArea}
-                update={() => onEditClick()}
-            />
         </>
     );
 }
@@ -75,7 +65,8 @@ ObservationAreaCard.propTypes = {
         name: PropTypes.string.isRequired
     }),
     onEditClick: PropTypes.func.isRequired,
-    onDeleteClick: PropTypes.func.isRequired
+    onDeleteClick: PropTypes.func.isRequired,
+    onCopyClick: PropTypes.func.isRequired,
 };
 
 export default ObservationAreaCard;

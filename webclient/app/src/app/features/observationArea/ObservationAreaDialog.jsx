@@ -1,141 +1,173 @@
-import {
-    Button,
-    Dialog, Typography,
-    DialogActions, DialogContent, FormControl, Stack, TextField, Grid
-} from "@mui/material";
-import PropTypes from "prop-types";
-import React, {useMemo, useEffect, useState} from "react";
-import {useImmer} from "use-immer";
-import {useTranslation} from "react-i18next";
-import DialogHeader from "../../commons/dialog/DialogHeader";
-import ValidatedTextField from "../../commons/form/ValidatedTextField";
-import {
-    handleChange,
-    isValid,
-    prepareForSave
-} from "../../modifiers/DefaultModifier";
-import ObservationAreaRest from "../../services/ObservationAreaRest";
-import {
-    entityDefault,
-    entityFields
-} from "../../modifiers/ObservationAreaModifier";
-import ImageRest from "../../services/ImageRest";
-import {useDropzone} from 'react-dropzone';
-import ImageUploadStyles from "../../assets/styles/ImageUploadStyles";
+import { Button, Dialog, DialogActions, DialogContent, FormControl, Grid, Stack, Typography } from "@mui/material";
 import { useSnackbar } from "notistack";
-import CamIDField from "../../commons/CamIDField/CamIDField";
+import PropTypes from "prop-types";
+import React, { useEffect, useMemo, useState } from "react";
+import { useDropzone } from 'react-dropzone';
+import { useTranslation } from "react-i18next";
+import { useImmer } from "use-immer";
+import ImageUploadStyles from "../../assets/styles/ImageUploadStyles";
+import DialogHeader from "../../commons/dialog/DialogHeader";
 import UpdateField from "../../commons/form/UpdateField";
+import { handleChange, isValid, prepareForSave } from "../../modifiers/DefaultModifier";
+import { entityDefault, entityFields } from "../../modifiers/ObservationAreaModifier";
+import ImageRest, { imageFileUrlForId } from "../../services/ImageRest";
+import ObservationAreaRest from "../../services/ObservationAreaRest";
+import CamIDList from "./CamIDList";
+
+export const MODE = Object.freeze({
+    UPDATE: "update",
+    CREATE: "create",
+    COPY: "copy",
+});
 
 function ObservationAreaDialog(props) {
-    const {open, onClose, selected, isCreate, update} = props;
+    const {open, onSubmit, selectedArea, mode, update} = props;
     const {t} = useTranslation();
     const [entity, setEntity] = useImmer(entityDefault);
     const fields = entityFields;
-    const entityRest = useMemo(() => new ObservationAreaRest(), []);
+    const observationAreaRest = useMemo(() => new ObservationAreaRest(), []);
     const imageRest = useMemo(() => new ImageRest(), []);
-    const [hasFormError, setHasFormError] = React.useState(false);
-    const [selectedFile, setSelectedFile] = useState(null);
-    const [previewUrl, setPreviewUrl] = useState('');
-    const { enqueueSnackbar } = useSnackbar();
+    const [hasFormError, setHasFormError] = useState(false);
+    const [imageChanged, setImageChanged] = useState(false);
+    const [imageBlob, setImageBlob] = useState(null);
+    const {enqueueSnackbar} = useSnackbar();
+
+    useEffect(() => {
+        if (open === true) {
+            if (mode === MODE.CREATE) {
+                setEntity(entityDefault);
+            } else if (mode === MODE.UPDATE) {
+                setEntity(selectedArea);
+                loadExistingImage();
+            } else if (mode === MODE.COPY) {
+                let newArea = structuredClone(selectedArea);
+                newArea.id = null;
+                newArea.name = `${newArea.name} - ${t("observationArea.copy.suffix")}`;
+                setEntity(newArea);
+                loadExistingImage();
+                setImageChanged(true);
+            }
+        } else {
+            setImageBlob(null);
+            setImageChanged(false);
+        }
+    }, [selectedArea, mode, open]);
+
+    async function loadExistingImage() {
+        if (selectedArea.image !== null) {
+            const imageBlob = await (await fetch(imageFileUrlForId(selectedArea.image.id))).blob();
+            setImageBlob(imageBlob);
+        }
+    }
+
+    useEffect(() => {
+        setHasFormError(!allFieldsValid())
+    }, [entity, imageBlob]);
+    
+    function allFieldsValid() {
+        if (!isValid(fields, entity)) {
+            return false;
+        }
+        if (entity.saeIds === undefined || 
+                entity.saeIds === null || 
+                entity.saeIds.length === 0 || 
+                entity.saeIds[0] === "") {
+            return false;
+        }
+        if (imageBlob === null) {
+            return false;
+        }
+        return true;
+    }
 
     const onDropAccepted = (acceptedFiles) => {
         const file = acceptedFiles[0];
-        setSelectedFile(file);
-
-        // Vorschaubild erzeugen
-        const reader = new FileReader();
-        reader.onloadend = () => {
-            setPreviewUrl(reader.result);
-        };
-        reader.readAsDataURL(file);
+        setImageBlob(file);
+        setImageChanged(true);
     };
 
-    const onDropRejected = () => {
-        enqueueSnackbar(t("observationArea.fileTooLarge"), {variant: "warning"});
-    };
-
-
-    useEffect(() => {
-        if (isCreate) {
-            setEntity(entityDefault);
+    const onDropRejected = event => {
+        if (event[0].errors.map(e => e.code).includes("file-invalid-type")) {
+            enqueueSnackbar(t("observationArea.image.invalidType"), {variant: "warning"});
+        } else if (event[0].errors.map(e => e.code).includes("file-too-large")) {
+            enqueueSnackbar(t("observationArea.image.tooLarge"), {variant: "warning"});
         } else {
-            setEntity(selected);
+            enqueueSnackbar(t("observationArea.image.unknownError"), {variant: "error"});
         }
-    }, [selected, isCreate]);
+    };
 
-    useEffect(() => {
-        onEntityChange();
-    }, [entity]);
+    const {getRootProps, getInputProps} = useDropzone({
+        onDropAccepted, 
+        onDropRejected, 
+        maxSize: 4194304,
+        multiple: false,
+        accept: {
+            "image/png": [".png", ".PNG"],
+            "image/jpg": [".jpg", ".JPG", ".jpeg", ".JPEG"],
+        },
+    });
 
-    const {getRootProps, getInputProps} = useDropzone({onDropAccepted, onDropRejected, maxSize: 4194304});
-
-    function onDialogClose() {
-        setSelectedFile(null);
-        setPreviewUrl('');
-        onClose();
-    }
-
-    function onEntityChange() {
-        setHasFormError(!isValid(fields, entity));
+    function onDialogClose(_, reason) {
+        if (["backdropClick", "escapeKeyDown"].includes(reason)) {
+            return;
+        }
+        onSubmit();
     }
 
     function handleSubmit(event) {
         // turn off page reload
         event.preventDefault();
-        const tmpOrg = prepareForSave(entity, fields);
-        if (entity.id) {
-            entityRest.update(tmpOrg)
-                .then(response => {
-                    uploadFile(response.data, response.data?.id);
-                });
-        } else {
-            entityRest.create(tmpOrg).then(response => {
-                uploadFile(response.data, response.data?.id);
+        const preparedEntity = prepareForSave(entity, fields);
+        if (mode === MODE.UPDATE) {
+            observationAreaRest.update(preparedEntity).then(({data: newArea}) => {
+                uploadFile(newArea.id);
+            });
+        } else if (mode === MODE.CREATE) {
+            observationAreaRest.create(preparedEntity).then(({data: newArea}) => {
+                uploadFile(newArea.id);
+            });
+        } else if (mode === MODE.COPY) {
+            observationAreaRest.create(preparedEntity).then(({data: newArea}) => {
+                uploadFile(newArea.id);
+                observationAreaRest.copyPolygons(newArea.id, selectedArea.id);
             });
         }
-        onClose();
+        onSubmit();
     }
 
-    function uploadFile(data, observationAreaId) {
-        if (!selectedFile) {
-            update(data);
+    function uploadFile(observationAreaId) {
+        if (!imageChanged || imageBlob === null) {
+            update();
             return;
         }
         const formData = new FormData();
-        formData.append('image', selectedFile);
+        formData.append('image', imageBlob);
         try {
             imageRest.upload(formData, observationAreaId).then(() => {
-                update(data);
+                update();
             });
         } catch (error) {
             console.error(error);
-            update(data);
+            update();
         }
     }
 
-    function getDialogTitle() {
-        if (entity?.id) {
-            return "observationArea.update.title";
-        }
-        return "observationArea.create.title";
-    }
-
-    function handleSaeIdsChange(value) {
+    function handleSaeIdsChange(newIds) {
         setEntity(draft => {
-            draft["saeIds"] = value;
+            draft["saeIds"] = newIds;
         });
     }
 
     return (
         <Dialog onClose={onDialogClose} open={open} spacing={2} sx={{zIndex: 10000}} maxWidth="lg">
-            <DialogHeader onClose={onDialogClose} title={t(getDialogTitle())}/>
+            <DialogHeader onClose={onDialogClose} title={t(`observationArea.${mode}.title`)}/>
             <form autoComplete="off">
                 <DialogContent>
                     <Grid container spacing={2}>
                         <Grid item xs={8}>
                             <FormControl key={fields[0].name} fullWidth>
                                 <UpdateField
-                                    focused
+                                    autoFocus
                                     entity={entity}
                                     field={fields[0]}
                                     prefix="observationArea"
@@ -156,7 +188,7 @@ function ObservationAreaDialog(props) {
                         <Grid item xs={8}>
                             <Grid container spacing={2}>
                                 <Grid item xs={12}>                 
-                                    <CamIDField value={entity?.saeIds} handleChange={handleSaeIdsChange}/>
+                                    <CamIDList values={entity?.saeIds} handleChange={handleSaeIdsChange}/>
                                 </Grid>
                                 {fields?.slice(2).map(field => {
                                         return (
@@ -177,12 +209,14 @@ function ObservationAreaDialog(props) {
                         </Grid>
                         <Grid item xs={4}> 
                             <Stack> 
-                            <Typography variant="caption">{t("observationArea.image.hint")}</Typography>
-                            <FormControl {...getRootProps()} sx={ImageUploadStyles.dropzoneStyle}>
-                                <input {...getInputProps()} />
-                                <Typography variant="overline">{t("observationArea.image")}</Typography>
-                                {previewUrl && <img src={previewUrl} style={ImageUploadStyles.previewStyle} alt={t("observationArea.image.preview")} />}
-                            </FormControl>
+                                <FormControl {...getRootProps()} sx={ImageUploadStyles.dropzoneStyle}>
+                                    <input {...getInputProps()} />
+                                    <Typography variant="overline">{t("observationArea.image")}</Typography>
+                                    {imageBlob && <img src={URL.createObjectURL(imageBlob)} style={ImageUploadStyles.previewStyle} alt={t("observationArea.image.preview")} />}
+                                </FormControl>
+                                {imageBlob === null ? 
+                                    <Typography variant="caption" color="#d32f2f">{t("observationArea.image.hint")}</Typography> : null
+                                }
                             </Stack> 
                         </Grid>
                     </Grid>
@@ -206,9 +240,9 @@ function ObservationAreaDialog(props) {
 
 ObservationAreaDialog.propTypes = {
     open: PropTypes.bool.isRequired,
-    onClose: PropTypes.func.isRequired,
+    onSubmit: PropTypes.func.isRequired,
     selected: PropTypes.object,
-    isCreate: PropTypes.bool.isRequired,
+    mode: PropTypes.string,
     update: PropTypes.func.isRequired
 };
 

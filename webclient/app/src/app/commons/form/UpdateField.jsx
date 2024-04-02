@@ -37,7 +37,6 @@ function UpdateField(props) {
 
     return (
         <ValidatedTextField
-            autoFocus
             inputProps={field.inputProps}
             key={field.name}
             id={"input-" + field.name}

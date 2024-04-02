@@ -1,43 +1,43 @@
-import React from "react";
 import ReactImageAnnotate from "@starwit/react-image-annotate";
-import {useEffect, useMemo, useState} from "react";
-import {useParams} from "react-router-dom";
-import {useTranslation} from "react-i18next";
+import { useSnackbar } from 'notistack';
+import React, { useEffect, useMemo, useState } from "react";
+import { useTranslation } from "react-i18next";
+import { setIn } from 'seamless-immutable';
 import ClassificationRest from "../../services/ClassificationRest";
-import {Box, Container, FormControl, Stack, Typography} from "@mui/material";
-import ImageRest from "../../services/ImageRest";
+import ImageRest, { imageFileUrlForId } from "../../services/ImageRest";
 import ObservationAreaRest from "../../services/ObservationAreaRest";
-import {setIn} from 'seamless-immutable';
-import {useSnackbar} from 'notistack';
-import ObservationAreaSelect from "../observationArea/ObservationAreaSelect";
-import {AppBar} from "../../assets/styles/HeaderStyles";
 
-function ImageAnnotate() {
+function ImageAnnotate(props) {
+    const {observationAreaId} = props;
+
     const {t} = useTranslation();
+    const {enqueueSnackbar} = useSnackbar();
+
+    const classificationRest = useMemo(() => new ClassificationRest(), []);
+    const observationAreaRest = useMemo(() => new ObservationAreaRest(), []);
+    const imageRest = useMemo(() => new ImageRest(), []);
 
     const [classifications, setClassifications] = useState();
-    const [images, setImages] = useState(null);
-    const {enqueueSnackbar} = useSnackbar();
-    const [selectedImage, setSelectedImage] = useState(0);
-    const classificationRest = useMemo(() => new ClassificationRest(), []);
-    const imageRest = useMemo(() => new ImageRest(), []);
-    const observationAreaRest = useMemo(() => new ObservationAreaRest(), [])
-    const {observationAreaId} = useParams();
+    const [image, setImage] = useState();
 
     useEffect(() => {
-        reloadClassification();
-        reloadObservationAreas();
+        reloadClassifications();
     }, []);
 
-    function reloadClassification() {
+    function reloadClassifications() {
         classificationRest.findAll().then(response => {
             const translatedClassifications = response.data.map(classification => ({
                 ...classification,
-                name: t("classification.name." + classification.name)
+                name: t("classification.name." + classification.name),
+                dbKey: classification.name,
             }));
             setClassifications(translatedClassifications);
         });
     }
+
+    useEffect(() => {
+        reloadImage();
+    }, [observationAreaId]);
 
     function userReducer(state, action) {
         if ("SELECT_CLASSIFICATION" == action.type) {
@@ -49,45 +49,22 @@ function ImageAnnotate() {
         }
         return state;
     };
-    
 
-    function reloadObservationAreas() {
-        if (observationAreaId !== "undefined") {
-            observationAreaRest.findById(observationAreaId).then(response => {
-                if (response.data == null) {
-                    return;
-                } else if (response.data?.id !== undefined) {
-                    reloadImages(response.data?.id);
-                }
-            });
-        }
-    }
-
-    function reloadImages(observationAreaId) {
+    function reloadImage() {
         imageRest.findWithPolygons(observationAreaId).then(response => {
             if (response.data == null) {
                 return;
             }
-            setImages(response.data.map(image => parseImage(image)));
+            setImage(parseImage(response.data[0]));
         });
     }
 
     function parseImage(image) {
-        image.src = window.location.pathname + "api/imageFile/id/" + image.id;
-        image.name = "";
+        if (image !== undefined) {
+            image.src = image !== undefined ? imageFileUrlForId(image.id) : "";
+            image.name = "";
+        }
         return image;
-    }
-
-    function wrapAround(newNumber) {
-        return ((newNumber % images?.length) + images?.length) % images?.length;
-    }
-
-    function onNextImage() {
-        setSelectedImage(wrapAround(selectedImage));
-    }
-
-    function onPrevImage() {
-        setSelectedImage(wrapAround(selectedImage - 1));
     }
 
     function handleMessage(severity, message) {
@@ -95,15 +72,28 @@ function ImageAnnotate() {
     }
     
     function savePolygons(event) {
-        if (!validateRegionNames(event.images[event.selectedImage].regions)) {
+        let regions = event.images[0].regions;
+        regions = regions.map(r => mapDisplayTextToClsKey(r));
+
+        if (!validateRegionNames(regions)) {
             handleMessage("error", t("error.image.notunique"))
             return;
         }
         
-        observationAreaRest.savePolygons(observationAreaId, event.images[event.selectedImage].regions).then(() => {
+        observationAreaRest.savePolygons(observationAreaId, regions).then(() => {
             handleMessage("success", t("response.save.success"));
-            reloadObservationAreas();
         });
+    }
+
+    function mapDisplayTextToClsKey(immutableRegion) {
+        const region = structuredClone(immutableRegion);
+        const matchingClassification = classifications.find(c => region.cls === c.name);
+        if (matchingClassification !== undefined) {
+            region.cls = matchingClassification.dbKey;
+        } else {
+            console.log(`Could not find matching classification for ${region.cls}. Something is seriously wrong!`);
+        }
+        return region;
     }
 
     function validateRegionNames(regions) {
@@ -120,51 +110,22 @@ function ImageAnnotate() {
         return uniqueNames.size === entries.length;
     }
 
-    if (!classifications || !images) {
-        return (
-            <>
-                <AppBar sx={{bgcolor: "white", color: "black", width: "100%", left: "0rem"}}>
-                    <ObservationAreaSelect />
-                </AppBar>
-                <Box sx={{padding: "3rem", paddingTop: "5rem"}}>
-                    <Typography variant="h5">{t("general.loading")}</Typography>
-                </Box>
-            </>
-        );
-    }
-
-    if (images.length === 0) {
-        return (
-            <>
-                <AppBar sx={{bgcolor: "white", color: "black", width: "100%", left: "0rem"}}>
-                    <ObservationAreaSelect />
-                </AppBar>
-                <Box sx={{padding: "3rem", paddingTop: "5rem"}}>
-                    <Typography variant="h5">{t("parkingConfig.image.empty")}</Typography>
-                </Box>
-            </>
-
-        );
+    if (image === undefined || classifications === undefined) {
+        return;
     }
 
     return (
         <>
-            <AppBar color="transparent" sx={{boxShadow: "none", left: "0rem", right: "8rem", width: "80%"}}>
-                <ObservationAreaSelect />
-            </AppBar>
             <ReactImageAnnotate
-                sx={{width: '99%'}}
                 labelImages
                 regionClsList={classifications.map(classification => classification.name)}
                 regionColorList={classifications.map(classification => classification.color)}
                 onExit={savePolygons}
-                images={images}
+                images={[image]}
                 hideHeaderText
-                selectedImage={selectedImage}
-                onNextImage={onNextImage}
-                onPrevImage={onPrevImage}
-                hideNext={images.length === 1}
-                hidePrev={images.length === 1}
+                selectedImage={0}
+                hideNext={true}
+                hidePrev={true}
                 hideSettings={true}
                 hideClone
                 enabledRegionProps={["name"]}

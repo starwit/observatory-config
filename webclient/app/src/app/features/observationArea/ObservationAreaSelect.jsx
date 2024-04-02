@@ -1,88 +1,45 @@
-
 import { Home } from "@mui/icons-material";
 import EditRoundedIcon from "@mui/icons-material/EditRounded";
 import PlayCircleFilledWhiteIcon from '@mui/icons-material/PlayCircleFilledWhite';
 import StopCircleIcon from '@mui/icons-material/StopCircle';
-import {
-    IconButton,
-    Stack
-} from "@mui/material";
+import { IconButton, Stack } from "@mui/material";
 import FormControl from "@mui/material/FormControl";
 import MenuItem from "@mui/material/MenuItem";
 import Select from "@mui/material/Select";
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useState } from "react";
 import { useTranslation } from "react-i18next";
-import { useNavigate, useParams } from "react-router-dom";
-import { useImmer } from "use-immer";
 import ConfirmationDialog from "../../commons/dialog/ConfirmationDialog";
-import {
-    entityDefault
-} from "../../modifiers/ObservationAreaModifier";
-import ObservationAreaRest from "../../services/ObservationAreaRest";
-import ObservationAreaDialog from "./ObservationAreaDialog";
 
-function ObservationAreaSelect() {
-    const [selectedArea, setSelectedArea] = useImmer(entityDefault);
-    const observationareaRest = useMemo(() => new ObservationAreaRest(), [entityDefault]);
-    const [observationAreaAll, setObservationAreaAll] = useImmer([]);
-    const [openDialog, setOpenDialog] = React.useState(false);
-    const [isCreate, setIsCreate] = React.useState(false);
+function ObservationAreaSelect(props) {
+    const {
+        observationAreas,
+        selectedArea,
+        onHomeClick, 
+        onEditClick, 
+        onAreaChange, 
+        onProcessingChange
+    } = props
+    
     const {t} = useTranslation();
-    const {observationAreaId} = useParams();
-    const nav = "/observationarea/";
-    const navigate = useNavigate();
-    const [track, setTrack] = useState(false);
-    const [startTrack, setStartTrack] = useState(false);
 
-    useEffect(() => {
-        reload();
-    }, [observationAreaId]);
-
-    function reload() {
-        observationareaRest.findAll().then(response => {
-            const loadedAreas = response.data;
-            setObservationAreaAll(loadedAreas);
-
-            const preselectedArea = loadedAreas.find(entity => entity.id === parseInt(observationAreaId));
-            if (preselectedArea !== undefined) {
-                setSelectedArea(preselectedArea);
-            } else {
-                navigate(`${nav}${loadedAreas[0].id}`);
-            }
-        });
-    }
-
-    function home() {
-        navigate("/");
-    }
-
-    function update(modifiedEntity) {
-        if (isCreate) {
-            observationareaRest.findAll().then(response => {
-                navigate(`${nav}${modifiedEntity.id}`);
-            });
-        } else {
-            navigate(`${nav}${modifiedEntity.id}`);
-        }
-    }
+    const [processingPromptOpen, setProcessingPromptOpen] = useState(false);
 
     const handleChange = event => {
         const newObservationAreaId = event.target.value;
-        navigate(`${nav}${newObservationAreaId}`);
+        onAreaChange(newObservationAreaId);
     };
 
-    function handleDialogOpen() {
-        setOpenDialog(true);
-        setIsCreate(false);
+    function openProcessingPrompt() {
+        setProcessingPromptOpen(true);
     }
 
-    function handleDialogClose() {
-        reload();
-        setOpenDialog(false);
+    function closeProcessingPrompt() {
+        setProcessingPromptOpen(false);
     }
 
-    function toggleTrack() {
-        setStartTrack(!startTrack);
+    function toggleProcessing() {
+        closeProcessingPrompt();
+        onProcessingChange();
     }
 
     return (
@@ -94,47 +51,38 @@ function ObservationAreaSelect() {
         >
             <FormControl sx={{paddingLeft: "0.5rem"}}>
                 <IconButton sx={{height: "2rem"}}
-                    onClick={home}>
+                    onClick={onHomeClick}>
                     <Home fontSize="small" />
                 </IconButton>
             </FormControl>
             <FormControl sx={{boxShadow: "none", width: "20rem"}}>
                 <Select sx={{height: "2rem", margin: "0rem"}}
                     value={selectedArea.id} onChange={handleChange}>
-                    {observationAreaAll.map(entity => (
+                    {observationAreas.map(entity => (
                         <MenuItem sx={{margin: "0rem"}}
                             key={entity.id} value={entity.id} >{entity.name}</MenuItem>))}
                 </Select>
             </FormControl >
             <FormControl>
-                <IconButton sx={{height: "2rem"}}
-                    onClick={handleDialogOpen}>
+                <IconButton sx={{height: "2rem"}} onClick={onEditClick}>
                     <EditRoundedIcon fontSize="small" />
                 </IconButton>
             </FormControl>
 
-            {/* TRACKING BUTTON */}
             <FormControl>
-            <IconButton sx={{height: "2rem"}}
-                onClick={() => setTrack(!track)}>
-                {startTrack ? <StopCircleIcon fontSize="small" color="error" /> : <PlayCircleFilledWhiteIcon fontSize="small" />} 
-            </IconButton>
-            <ConfirmationDialog
-                title={t("observationArea.track.title")}
-                message={t("observationArea.track.message")}
-                open={track}
-                onClose={() => {setTrack(false);}}
-                onSubmit={() => {setTrack(false); toggleTrack();}}
-                confirmTitle={t("button.submit")}
-            />           
+                <IconButton sx={{height: "2rem"}}
+                    onClick={openProcessingPrompt}>
+                    {selectedArea.processingEnabled ? <StopCircleIcon fontSize="small" color="error" /> : <PlayCircleFilledWhiteIcon fontSize="small" />} 
+                </IconButton>
+                <ConfirmationDialog
+                    title={t("observationArea.track.title")}
+                    message={t("observationArea.track.message")}
+                    open={processingPromptOpen}
+                    onClose={closeProcessingPrompt}
+                    onSubmit={toggleProcessing}
+                    confirmTitle={t("button.submit")}
+                />           
             </FormControl>
-            <ObservationAreaDialog
-                open={openDialog}
-                onClose={handleDialogClose}
-                isCreate={isCreate}
-                selected={selectedArea}
-                update={update}
-            />
         </Stack >
     );
 }

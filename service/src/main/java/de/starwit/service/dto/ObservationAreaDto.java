@@ -15,7 +15,7 @@ public class ObservationAreaDto {
 
     List<String> saeIds;
 
-    ImageEntity Image;
+    ImageEntity image;
 
     @Min(value = -90)
     @Max(value = 90)
@@ -130,10 +130,10 @@ public class ObservationAreaDto {
     }
 
     public ImageEntity getImage() {
-        return Image;
+        return image;
     }
 
-    public void setImage(ImageEntity Image) {
-        this.Image = Image;
+    public void setImage(ImageEntity image) {
+        this.image = image;
     }
 }
