@@ -86,11 +86,26 @@ function ObservationAreaDialog(props) {
         setImageChanged(true);
     };
 
-    const onDropRejected = () => {
-        enqueueSnackbar(t("observationArea.fileTooLarge"), {variant: "warning"});
+    const onDropRejected = event => {
+        if (event[0].errors.map(e => e.code).includes("file-invalid-type")) {
+            enqueueSnackbar(t("observationArea.image.invalidType"), {variant: "warning"});
+        } else if (event[0].errors.map(e => e.code).includes("file-too-large")) {
+            enqueueSnackbar(t("observationArea.image.tooLarge"), {variant: "warning"});
+        } else {
+            enqueueSnackbar(t("observationArea.image.unknownError"), {variant: "error"});
+        }
     };
 
-    const {getRootProps, getInputProps} = useDropzone({onDropAccepted, onDropRejected, maxSize: 4194304});
+    const {getRootProps, getInputProps} = useDropzone({
+        onDropAccepted, 
+        onDropRejected, 
+        maxSize: 4194304,
+        multiple: false,
+        accept: {
+            "image/png": [".png", ".PNG"],
+            "image/jpg": [".jpg", ".JPG", ".jpeg", ".JPEG"],
+        },
+    });
 
     function onDialogClose(_, reason) {
         if (["backdropClick", "escapeKeyDown"].includes(reason)) {
