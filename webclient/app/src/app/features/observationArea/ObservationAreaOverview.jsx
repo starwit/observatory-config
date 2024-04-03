@@ -1,12 +1,14 @@
-import { Container, Grid, Typography } from "@mui/material";
-import React, { useEffect, useMemo, useState } from "react";
-import { useTranslation } from "react-i18next";
+import {Container, Grid, Typography, Box} from "@mui/material";
+import React, {useEffect, useMemo, useState, useCallback} from "react";
+import {useTranslation} from "react-i18next";
 import AddFabButton from "../../commons/addFabButton/AddFabButton";
 import ConfirmationDialog from "../../commons/dialog/ConfirmationDialog";
 import LoadingSpinner from "../../commons/loadingSpinner/LoadingSpinner";
 import ObservationAreaRest from "../../services/ObservationAreaRest";
-import ObservationAreaDialog, { MODE as ObservationAreaDialogMode } from "./ObservationAreaDialog";
+import ObservationAreaDialog, {MODE as ObservationAreaDialogMode} from "./ObservationAreaDialog";
 import ObservationAreaCard from "./ObservationAreaCard";
+import ObservationAreaMap from "./ObservationAreaMap";
+import {PickingInfo} from '@deck.gl/core';
 
 function ObservationAreaOverview() {
     const {t} = useTranslation();
@@ -17,6 +19,15 @@ function ObservationAreaOverview() {
     const [openUpdateDialog, setOpenUpdateDialog] = useState(false);
     const [updateDialogMode, setUpdateDialogMode] = useState(ObservationAreaDialogMode.CREATE);
     const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
+    const [selected, setSelected] = useState(undefined);
+    const [viewState, setViewState] = useState({
+        longitude: 0,
+        latitude: 36.7,
+        zoom: 2.1,
+        maxZoom: 20,
+        pitch: 0,
+        bearing: 0
+    });
 
     function openDialogWithMode(mode) {
         setUpdateDialogMode(mode);
@@ -57,8 +68,28 @@ function ObservationAreaOverview() {
 
     function reloadObservationAreas() {
         observationAreaRest.findAll().then(response => {
+            response.data.map(area => {area.coordinates = [area.centerlongitude, area.centerlatitude]});
             setObservationAreas(response.data);
+            console.log(response.data);
+
+            setViewState({
+                longitude: response.data[0].centerlongitude,
+                latitude: response.data[0].centerlatitude,
+                zoom: 15,
+                pitch: 0,
+                bearing: 0
+            });
         });
+    }
+
+    function onSelect(area) {
+        setSelected(area.object);
+    }
+
+    function renderMap() {
+        return (
+            <ObservationAreaMap data={observationAreas} viewState={viewState} onLoad={reloadObservationAreas} onSelect={onSelect} />
+        );
     }
 
     function renderObservationAreas() {
@@ -107,6 +138,9 @@ function ObservationAreaOverview() {
                 update={reloadObservationAreas}
             />
             <AddFabButton onClick={createArea} />
+            <Box sx={{height: '50vh', position: 'relative', top: 40, boxShadow: 10}}>
+                {renderMap()}
+            </Box>
         </Container>
     );
 }
