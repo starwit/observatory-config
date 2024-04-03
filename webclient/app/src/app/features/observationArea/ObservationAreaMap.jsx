@@ -46,10 +46,23 @@ function ObservationAreaMap(props) {
             getPosition: d => d.coordinates,
             getSize: d => 5,
             getColor: d => [Math.sqrt(d.exits), 140, 0]
-        })];
+        })
+    ];
 
+    function getTooltip({object}) {
+        return (
+            object && {
+                html: `\
+                <div><b>${object.name}</b></div>
+                <div>
+                    <img src='${window.location.pathname}api/image/as-file/${object.image.id}' width="auto" height="200rem" />
+                </div>
+                `
+            }
+        );
+    }
 
-
+   
     return (
         <>
             <DeckGL
@@ -59,6 +72,7 @@ function ObservationAreaMap(props) {
                 controller={{dragRotate: false}}
                 onLoad={onLoad}
                 onClick={onSelect}
+                getTooltip={getTooltip}
             >
             </DeckGL>
         </>

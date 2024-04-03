@@ -1,5 +1,5 @@
-import {Container, Grid, Typography, Box} from "@mui/material";
-import React, {useEffect, useMemo, useState, useCallback} from "react";
+import {Container, Grid, Typography, Box, Stack, Button} from "@mui/material";
+import React, {useEffect, useMemo, useState} from "react";
 import {useTranslation} from "react-i18next";
 import AddFabButton from "../../commons/addFabButton/AddFabButton";
 import ConfirmationDialog from "../../commons/dialog/ConfirmationDialog";
@@ -8,9 +8,11 @@ import ObservationAreaRest from "../../services/ObservationAreaRest";
 import ObservationAreaDialog, {MODE as ObservationAreaDialogMode} from "./ObservationAreaDialog";
 import ObservationAreaCard from "./ObservationAreaCard";
 import ObservationAreaMap from "./ObservationAreaMap";
-import {PickingInfo} from '@deck.gl/core';
+import {ViewList, Map} from "@mui/icons-material";
+
 
 function ObservationAreaOverview() {
+    const [map, setMap] = useState(false);
     const {t} = useTranslation();
     const observationAreaRest = useMemo(() => new ObservationAreaRest(), []);
     const [observationAreas, setObservationAreas] = useState(null);
@@ -19,7 +21,6 @@ function ObservationAreaOverview() {
     const [openUpdateDialog, setOpenUpdateDialog] = useState(false);
     const [updateDialogMode, setUpdateDialogMode] = useState(ObservationAreaDialogMode.CREATE);
     const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
-    const [selected, setSelected] = useState(undefined);
     const [viewState, setViewState] = useState({
         longitude: 0,
         latitude: 36.7,
@@ -28,6 +29,12 @@ function ObservationAreaOverview() {
         pitch: 0,
         bearing: 0
     });
+    const [hoverInfo, setHoverInfo] = useState(null);
+
+    function toggleView() {
+        setMap(!map);
+        setSelectedArea(null);
+    }
 
     function openDialogWithMode(mode) {
         setUpdateDialogMode(mode);
@@ -83,44 +90,65 @@ function ObservationAreaOverview() {
     }
 
     function onSelect(area) {
-        setSelected(area.object);
+        setSelectedArea(area.object);
     }
 
     function renderMap() {
-        return (
-            <ObservationAreaMap data={observationAreas} viewState={viewState} onLoad={reloadObservationAreas} onSelect={onSelect} />
-        );
+        if (map) {
+            return (
+                <ObservationAreaMap data={observationAreas} viewState={viewState} onLoad={reloadObservationAreas} onSelect={onSelect} />
+            );
+        }
+        return null;
     }
 
     function renderObservationAreas() {
-        if (!observationAreas) {
-            return <LoadingSpinner message={t("observationAreas.loading")} />;
-        }
+        if (!map) {
+            if (!observationAreas) {
+                return <LoadingSpinner message={t("observationAreas.loading")} />;
+            }
 
-        if (observationAreas.length === 0) {
-            return <Typography variant="body1">{t("observationAreas.empty")}</Typography>;
-        }
+            if (observationAreas.length === 0) {
+                return <Typography variant="body1">{t("observationAreas.empty")}</Typography>;
+            }
 
+            return (
+                <Grid container spacing={5}>
+                    {observationAreas?.map(area => (
+                        <Grid item sm={6} xs={12} key={area.id}>
+                            <ObservationAreaCard
+                                onEditClick={() => editArea(area)}
+                                onDeleteClick={() => promptDeleteArea(area)}
+                                onCopyClick={() => copyArea(area)}
+                                observationArea={area} />
+                        </Grid>
+                    ))}
+                </Grid>
+            );
+        }
+        return null;
+    }
+
+    function renderToggleButton() {
+        if (map) {
+            return (
+                <Button onClick={toggleView} variant="contained" color="primary"><ViewList /></Button>
+            );
+        }
         return (
-            <Grid container spacing={5}>
-                {observationAreas?.map(area => (
-                    <Grid item sm={6} xs={12} key={area.id}>
-                        <ObservationAreaCard
-                            onEditClick={() => editArea(area)}
-                            onDeleteClick={() => promptDeleteArea(area)}
-                            onCopyClick={() => copyArea(area)}
-                            observationArea={area} />
-                    </Grid>
-                ))}
-            </Grid>
+            <Button onClick={toggleView} variant="contained" color="primary"><Map /></Button>
         );
     }
 
     return (
         <Container>
-            <Typography variant={"h2"} gutterBottom>
-                {t("observationAreas.title")}
-            </Typography>
+            {renderMap()}
+            <Stack direction="row" justifyContent="space-between">
+                <Typography zIndex={2} variant={"h2"} gutterBottom>
+                    {t("observationAreas.title")}
+                </Typography>
+                {renderToggleButton()}
+            </Stack>
             {renderObservationAreas()}
             <ConfirmationDialog
                 title={t("observationArea.delete.title")}
@@ -138,9 +166,6 @@ function ObservationAreaOverview() {
                 update={reloadObservationAreas}
             />
             <AddFabButton onClick={createArea} />
-            <Box sx={{height: '50vh', position: 'relative', top: 40, boxShadow: 10}}>
-                {renderMap()}
-            </Box>
         </Container>
     );
 }
