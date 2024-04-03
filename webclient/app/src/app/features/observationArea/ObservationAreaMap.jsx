@@ -1,4 +1,4 @@
-import {MapView} from "@deck.gl/core";
+import {MapView} from '@deck.gl/core';
 import {TileLayer} from "@deck.gl/geo-layers";
 import {BitmapLayer, IconLayer} from "@deck.gl/layers";
 import DeckGL from "@deck.gl/react";
@@ -35,9 +35,6 @@ function ObservationAreaMap(props) {
             id: "icon-layer",
             data,
             pickable: true,
-            // iconAtlas and iconMapping are required
-            // getIcon: return a string
-            // iconAtlas: "camera.png",
             iconAtlas: cameraicon,
             iconMapping: ICON_MAPPING,
             getIcon: d => "marker",
@@ -62,7 +59,6 @@ function ObservationAreaMap(props) {
         );
     }
 
-   
     return (
         <>
             <DeckGL

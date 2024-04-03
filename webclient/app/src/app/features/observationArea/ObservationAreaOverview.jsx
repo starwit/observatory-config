@@ -113,7 +113,7 @@ function ObservationAreaOverview() {
             }
 
             return (
-                <Grid container spacing={5}>
+                <Grid container spacing={5} marginTop={0}>
                     {observationAreas?.map(area => (
                         <Grid item sm={6} xs={12} key={area.id}>
                             <ObservationAreaCard
