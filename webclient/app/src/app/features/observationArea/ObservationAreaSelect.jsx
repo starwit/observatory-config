@@ -6,9 +6,10 @@ import { IconButton, Stack } from "@mui/material";
 import FormControl from "@mui/material/FormControl";
 import MenuItem from "@mui/material/MenuItem";
 import Select from "@mui/material/Select";
-import React, { useState } from "react";
+import React, { useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import ConfirmationDialog from "../../commons/dialog/ConfirmationDialog";
+import ObservationAreaRest from "../../services/ObservationAreaRest";
 
 function ObservationAreaSelect(props) {
     const {
@@ -23,6 +24,8 @@ function ObservationAreaSelect(props) {
     const {t} = useTranslation();
 
     const [processingPromptOpen, setProcessingPromptOpen] = useState(false);
+    const observationAreaRest = useMemo(() => new ObservationAreaRest(), []);
+    const [startTrack, setTrack] = useState(false);
 
     const handleChange = event => {
         const newObservationAreaId = event.target.value;
@@ -37,9 +40,14 @@ function ObservationAreaSelect(props) {
         setProcessingPromptOpen(false);
     }
 
+    function stopCircleButtonActive() {
+    }
+
     function toggleProcessing() {
+        observationAreaRest.updateProcessingStatus(selectedArea.id, !selectedArea.processingEnabled);
         closeProcessingPrompt();
-        onProcessingChange();
+        stopCircleButtonActive(true);
+        // onProcessingChange();
     }
 
     return (
@@ -70,10 +78,19 @@ function ObservationAreaSelect(props) {
             </FormControl>
 
             <FormControl>
-                <IconButton sx={{height: "2rem"}}
-                    onClick={openProcessingPrompt}>
-                    {selectedArea.processingEnabled ? <StopCircleIcon fontSize="small" color="error" /> : <PlayCircleFilledWhiteIcon fontSize="small" />} 
-                </IconButton>
+
+            <div style={{ display: 'flex', alignItems: 'center' }}>
+            <IconButton sx={{height: "2rem"}}
+                onClick={() => {
+                setTrack(!startTrack);
+                openProcessingPrompt();
+            }}
+            >
+            {startTrack || selectedArea.processingEnabled ? <StopCircleIcon fontSize="small" color="error" /> : <PlayCircleFilledWhiteIcon fontSize="small"/>} 
+            </IconButton>
+            {startTrack || selectedArea.processingEnabled ? <span style={{ fontSize: '0.8rem' }}>{t('button.tracking')}</span> : null}
+            </div>
+ 
                 <ConfirmationDialog
                     title={t("observationArea.track.title")}
                     message={t("observationArea.track.message")}
