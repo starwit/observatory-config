@@ -29,7 +29,6 @@ function ObservationAreaOverview() {
         pitch: 0,
         bearing: 0
     });
-    const [hoverInfo, setHoverInfo] = useState(null);
 
     function toggleView() {
         setMap(!map);
@@ -76,15 +75,13 @@ function ObservationAreaOverview() {
     function reloadObservationAreas() {
         observationAreaRest.findAll().then(response => {
             setObservationAreas(response.data);
-            if (response.data.length>0) {
-                setViewState({
-                    longitude: response.data[0].centerlongitude,
-                    latitude: response.data[0].centerlatitude,
-                    zoom: 15,
-                    pitch: 0,
-                    bearing: 0
-                });
-            } 
+            setViewState({
+                longitude: response.data[0]?.centerlongitude ?? 10.786965,
+                latitude: response.data[0]?.centerlatitude ?? 52.424249,
+                zoom: 13,
+                pitch: 0,
+                bearing: 0
+            });
         });
     }
 
