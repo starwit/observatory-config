@@ -56,7 +56,6 @@ export default function ObservationAreaDetail() {
                     onHomeClick={navigateToHome}
                     onEditClick={editArea}
                     onAreaChange={navigateToArea}
-                    onProcessingChange={null}
                 />
             </AppBar>
             <ImageAnnotate 

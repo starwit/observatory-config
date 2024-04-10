@@ -13,5 +13,9 @@ class ObservationAreaRest extends CrudRest {
     copyPolygons(targetAreaId, srcAreaId) {
         return axios.post(this.baseUrl + "/copy-polygons/src/" + srcAreaId + "/target/" + targetAreaId);
     }
+
+    updateProcessingStatus(id, processingEnabledStatus) {
+        return axios.post(this.baseUrl + "/update-processing-status/" + id + "/" +processingEnabledStatus);
+    }
 }
 export default ObservationAreaRest;

@@ -91,6 +91,7 @@ const translationDeDE = {
     "button.save": "Speichern",
     "button.cancel": "Abbrechen",
     "button.close": "Schließen",
+    "button.tracking": "Erfassung läuft",
     "select.none": "keine Auswahl",
     "error.inUse": "Es wurde mehr als eine Zeile mit dem angegebenen Bezeichner gefunden",
     "error.sqlIntegrityConstaint": "Die angegebenen Daten haben nicht das richtige Format, um gespeichert zu werden. Bitte prüfen Sie die zugehörigen Einträge.",

@@ -171,4 +171,12 @@ public class ObservationAreaController {
         NotificationDto output = new NotificationDto("error.observationarea.notfound", "ObservationArea not found.");
         return new ResponseEntity<>(output, HttpStatus.NOT_FOUND);
     }
+
+    @PostMapping(value = "/update-processing-status/{id}/{processingEnabled}")
+    public boolean updateProcessingEnabledStatus(@PathVariable("id") Long id, @PathVariable("processingEnabled") boolean processingEnabled) {
+        ObservationAreaEntity observationArea = observationareaService.findById(id);
+        observationArea.setProcessingEnabled(processingEnabled);
+        ObservationAreaEntity entity = observationareaService.saveOrUpdate(observationArea);
+        return entity.getProcessingEnabled();
+    }
 }
