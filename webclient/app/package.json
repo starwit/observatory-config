@@ -5,10 +5,11 @@
   "dependencies": {
     "@mui/icons-material": "^5.15.14",
     "@mui/material": "^5.15.14",
-    "@starwit/react-image-annotate": "5.0.5",
+    "@starwit/react-image-annotate": "5.0.6",
     "axios": "1.6.8",
     "buffer": "npm:buffer@^6.0.3",
     "crypto": "npm:crypto-browserify@^3.12.0",
+    "deck.gl": "^9.0.4",
     "http": "npm:stream-http@^3.2.0",
     "https": "npm:https-browserify@^1.0.0",
     "i": "^0.3.7",
