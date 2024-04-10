@@ -89,6 +89,22 @@ jobs:
       env:
          CI: false
 
+    - name: Login to Docker Hub
+      uses: docker/login-action@v3
+      with:
+        username: ${{ env.DOCKERHUB_USERNAME }}
+        password: ${{ secrets.DOCKERHUB_TOKEN }}
+      
+    - name: Set up Docker Buildx
+      uses: docker/setup-buildx-action@v3
+    - name: Build and push
+      uses: docker/build-push-action@v5
+      with:
+        context: .
+        file: ./dockerfile
+        push: true
+        tags: ${{ env.DOCKERHUB_ORG }}/${{ env.IMAGE_NAME }}:${{ env.VERSION }}
+
     - name: Log in to the Container registry
       uses: docker/login-action@f054a8b539a109f9f41c372932f1ae047eff08c9
       with:
@@ -112,11 +128,11 @@ jobs:
     steps:
       - name: checkout
         uses: actions/checkout@v2
-
       - name: get helm
         uses: azure/setup-helm@v3  
-      - name: add internal Helm registry
-        run: helm repo add starwit-internal ${{ vars.CHARTMUSEUM_URL }} --username=${{ secrets.CHARTMUSEUM_USER }} --password=${{ secrets.CHARTMUSEUM_PASSWORD }}
+
+      - name: login to Helm registry
+        run: helm registry login registry-1.docker.io -u starwit -p ${{ secrets.DOCKERHUB_TOKEN }}
       - name: run helm update
         working-directory: deployment/helm/smartparkingconfig
         run: helm dep update
@@ -129,4 +145,4 @@ jobs:
           echo "HELM_VERSION=$(grep version: Chart.yaml | head -1 | awk '{print $2}')" >> $GITHUB_ENV
       - name: run helm push
         working-directory: deployment/helm
-        run: helm cm-push -f smartparkingconfig-${{ env.HELM_VERSION }}.tgz starwit-internal   
+        run: helm push smartparkingconfig-chart-${{ env.HELM_VERSION }}.tgz oci://registry-1.docker.io/starwitorg
