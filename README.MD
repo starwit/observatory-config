@@ -1,5 +1,5 @@
 # Introduction
-This repository contains code for SmartParkingConfig. 
+This repository contains an application that allows you to define areas to observe present objects and thresholds to count objects moving across. It is called SmartParkingConfig because its first use case is the management of parking spaces. It is open source under the AGPL license and other usages are recommended. For more details on licensing see section [License](#license).
 
 ## What does it do?
 This software provides graphical tools to manage parking spaces. Users can define various area types that creates a configuration for a parking space which will then converted into AI based counting and monitoring jobs.
@@ -136,3 +136,7 @@ docker-compose -f postgreslocal-docker-compose.yml up
 ## Changelog
 
 During development, you can add commits to change log by using this syntax: https://www.conventionalcommits.org/en/v1.0.0/#examples
+
+# License
+
+Code in this repository is property of [Starwit Technologies GmbH](https://starwit-technologies.de/) and is published under AGPL. So if you want to adapt it, any change needs to be published under AGPL as well. Please let us know, which changes you made. Same goes for errors and bugs. License can be found at [here](License).
