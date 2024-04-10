@@ -86,6 +86,7 @@ const translationEnEN = {
     "button.update": "Edit",
     "button.delete": "Delete",
     "button.close": "Close",
+    "button.tracking": "Recording in progress",
     "select.none": "None",
     "error.inUse": "More than one row with the given identifier was found",
     "error.sqlIntegrityConstaint": "Given data is not in the right format to be saved. Please check related entries.",

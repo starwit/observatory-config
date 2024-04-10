@@ -2,13 +2,14 @@ import { Home } from "@mui/icons-material";
 import EditRoundedIcon from "@mui/icons-material/EditRounded";
 import PlayCircleFilledWhiteIcon from '@mui/icons-material/PlayCircleFilledWhite';
 import StopCircleIcon from '@mui/icons-material/StopCircle';
-import { IconButton, Stack } from "@mui/material";
+import { IconButton, Stack, Typography } from "@mui/material";
 import FormControl from "@mui/material/FormControl";
 import MenuItem from "@mui/material/MenuItem";
 import Select from "@mui/material/Select";
-import React, { useState } from "react";
+import React, { useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import ConfirmationDialog from "../../commons/dialog/ConfirmationDialog";
+import ObservationAreaRest from "../../services/ObservationAreaRest";
 
 function ObservationAreaSelect(props) {
     const {
@@ -17,12 +18,14 @@ function ObservationAreaSelect(props) {
         onHomeClick, 
         onEditClick, 
         onAreaChange, 
-        onProcessingChange
     } = props
     
     const {t} = useTranslation();
 
     const [processingPromptOpen, setProcessingPromptOpen] = useState(false);
+    const [processingEnabled, setProcessingEnabled] = useState(selectedArea.processingEnabled);
+    const observationAreaRest = useMemo(() => new ObservationAreaRest(), []);
+    const [startTrack, setTrack] = useState(false);
 
     const handleChange = event => {
         const newObservationAreaId = event.target.value;
@@ -37,9 +40,39 @@ function ObservationAreaSelect(props) {
         setProcessingPromptOpen(false);
     }
 
+    function stopCircleButtonActive() {
+    }
+
     function toggleProcessing() {
+        let tempProcessingEnabled = !processingEnabled;
+        observationAreaRest.updateProcessingStatus(selectedArea.id, tempProcessingEnabled).then(response => {
+            if (response.data == null) {
+                return;
+            }
+            setProcessingEnabled(response.data);
+        });
         closeProcessingPrompt();
-        onProcessingChange();
+        stopCircleButtonActive(true);
+    }
+
+    function renderProcessingIcon() {
+        if (processingEnabled) {
+            return (
+                <StopCircleIcon fontSize="small" color="error" />  
+            )
+        }
+        return (
+            <PlayCircleFilledWhiteIcon fontSize="small"/>
+        )
+    }
+
+    function renderProcessingText() {
+        if (processingEnabled) {
+            return (
+                <Typography variant="body2" component="span" noWrap sx={{marginTop: "0.2rem"}}>{t('button.tracking')}</Typography>
+            )
+        }
+        return;
     }
 
     return (
@@ -62,7 +95,7 @@ function ObservationAreaSelect(props) {
                         <MenuItem sx={{margin: "0rem"}}
                             key={entity.id} value={entity.id} >{entity.name}</MenuItem>))}
                 </Select>
-            </FormControl >
+            </FormControl>
             <FormControl>
                 <IconButton sx={{height: "2rem"}} onClick={onEditClick}>
                     <EditRoundedIcon fontSize="small" />
@@ -70,10 +103,16 @@ function ObservationAreaSelect(props) {
             </FormControl>
 
             <FormControl>
-                <IconButton sx={{height: "2rem"}}
-                    onClick={openProcessingPrompt}>
-                    {selectedArea.processingEnabled ? <StopCircleIcon fontSize="small" color="error" /> : <PlayCircleFilledWhiteIcon fontSize="small" />} 
-                </IconButton>
+            <IconButton sx={{height: "2rem"}}
+                onClick={() => {
+                openProcessingPrompt();
+            }}
+            >
+                {renderProcessingIcon()}
+            </IconButton>
+            </FormControl>
+                {renderProcessingText()}
+            <FormControl>
                 <ConfirmationDialog
                     title={t("observationArea.track.title")}
                     message={t("observationArea.track.message")}
