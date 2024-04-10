@@ -2,7 +2,7 @@ import { Home } from "@mui/icons-material";
 import EditRoundedIcon from "@mui/icons-material/EditRounded";
 import PlayCircleFilledWhiteIcon from '@mui/icons-material/PlayCircleFilledWhite';
 import StopCircleIcon from '@mui/icons-material/StopCircle';
-import { IconButton, Stack } from "@mui/material";
+import { IconButton, Stack, Typography } from "@mui/material";
 import FormControl from "@mui/material/FormControl";
 import MenuItem from "@mui/material/MenuItem";
 import Select from "@mui/material/Select";
@@ -47,7 +47,26 @@ function ObservationAreaSelect(props) {
         observationAreaRest.updateProcessingStatus(selectedArea.id, !selectedArea.processingEnabled);
         closeProcessingPrompt();
         stopCircleButtonActive(true);
-        // onProcessingChange();
+    }
+
+    function renderProcessingIcon() {
+        if (startTrack || selectedArea.processingEnabled) {
+            return (
+                <StopCircleIcon fontSize="small" color="error" />  
+            )
+        }
+        return (
+            <PlayCircleFilledWhiteIcon fontSize="small"/>
+        )
+    }
+
+    function renderProcessingText() {
+        if (startTrack || selectedArea.processingEnabled) {
+            return (
+                <Typography variant="body2" component="span" noWrap sx={{marginTop: "0.2rem"}}>{t('button.tracking')}</Typography>
+            )
+        }
+        return;
     }
 
     return (
@@ -70,7 +89,7 @@ function ObservationAreaSelect(props) {
                         <MenuItem sx={{margin: "0rem"}}
                             key={entity.id} value={entity.id} >{entity.name}</MenuItem>))}
                 </Select>
-            </FormControl >
+            </FormControl>
             <FormControl>
                 <IconButton sx={{height: "2rem"}} onClick={onEditClick}>
                     <EditRoundedIcon fontSize="small" />
@@ -78,19 +97,17 @@ function ObservationAreaSelect(props) {
             </FormControl>
 
             <FormControl>
-
-            <div style={{ display: 'flex', alignItems: 'center' }}>
             <IconButton sx={{height: "2rem"}}
                 onClick={() => {
                 setTrack(!startTrack);
                 openProcessingPrompt();
             }}
             >
-            {startTrack || selectedArea.processingEnabled ? <StopCircleIcon fontSize="small" color="error" /> : <PlayCircleFilledWhiteIcon fontSize="small"/>} 
+                {renderProcessingIcon()}
             </IconButton>
-            {startTrack || selectedArea.processingEnabled ? <span style={{ fontSize: '0.8rem' }}>{t('button.tracking')}</span> : null}
-            </div>
- 
+            </FormControl>
+                {renderProcessingText()}
+            <FormControl>
                 <ConfirmationDialog
                     title={t("observationArea.track.title")}
                     message={t("observationArea.track.message")}
