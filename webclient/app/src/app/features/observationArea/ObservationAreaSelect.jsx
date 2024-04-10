@@ -18,12 +18,12 @@ function ObservationAreaSelect(props) {
         onHomeClick, 
         onEditClick, 
         onAreaChange, 
-        onProcessingChange
     } = props
     
     const {t} = useTranslation();
 
     const [processingPromptOpen, setProcessingPromptOpen] = useState(false);
+    const [processingEnabled, setProcessingEnabled] = useState(selectedArea.processingEnabled);
     const observationAreaRest = useMemo(() => new ObservationAreaRest(), []);
     const [startTrack, setTrack] = useState(false);
 
@@ -44,13 +44,19 @@ function ObservationAreaSelect(props) {
     }
 
     function toggleProcessing() {
-        observationAreaRest.updateProcessingStatus(selectedArea.id, !selectedArea.processingEnabled);
+        let tempProcessingEnabled = !processingEnabled;
+        observationAreaRest.updateProcessingStatus(selectedArea.id, tempProcessingEnabled).then(response => {
+            if (response.data == null) {
+                return;
+            }
+            setProcessingEnabled(response.data);
+        });
         closeProcessingPrompt();
         stopCircleButtonActive(true);
     }
 
     function renderProcessingIcon() {
-        if (startTrack || selectedArea.processingEnabled) {
+        if (processingEnabled) {
             return (
                 <StopCircleIcon fontSize="small" color="error" />  
             )
@@ -61,7 +67,7 @@ function ObservationAreaSelect(props) {
     }
 
     function renderProcessingText() {
-        if (startTrack || selectedArea.processingEnabled) {
+        if (processingEnabled) {
             return (
                 <Typography variant="body2" component="span" noWrap sx={{marginTop: "0.2rem"}}>{t('button.tracking')}</Typography>
             )
@@ -99,7 +105,6 @@ function ObservationAreaSelect(props) {
             <FormControl>
             <IconButton sx={{height: "2rem"}}
                 onClick={() => {
-                setTrack(!startTrack);
                 openProcessingPrompt();
             }}
             >

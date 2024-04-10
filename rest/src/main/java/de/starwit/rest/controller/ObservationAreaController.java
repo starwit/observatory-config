@@ -8,7 +8,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -24,7 +23,6 @@ import de.starwit.persistence.entity.ObservationAreaEntity;
 import de.starwit.persistence.entity.PointEntity;
 import de.starwit.persistence.entity.PolygonEntity;
 import de.starwit.persistence.exception.NotificationException;
-import de.starwit.persistence.repository.ObservationAreaRepository;
 import de.starwit.rest.exception.NotificationDto;
 import de.starwit.service.dto.ObservationAreaDto;
 import de.starwit.service.dto.RegionDto;
@@ -175,9 +173,10 @@ public class ObservationAreaController {
     }
 
     @PostMapping(value = "/update-processing-status/{id}/{processingEnabled}")
-    public void updateProcessingEnabledStatus(@PathVariable("id") Long id, @PathVariable("processingEnabled") boolean processingEnabled) {
+    public boolean updateProcessingEnabledStatus(@PathVariable("id") Long id, @PathVariable("processingEnabled") boolean processingEnabled) {
         ObservationAreaEntity observationArea = observationareaService.findById(id);
         observationArea.setProcessingEnabled(processingEnabled);
-        observationareaService.saveOrUpdate(observationArea);
+        ObservationAreaEntity entity = observationareaService.saveOrUpdate(observationArea);
+        return entity.getProcessingEnabled();
     }
 }
