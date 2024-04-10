@@ -75,17 +75,16 @@ function ObservationAreaOverview() {
 
     function reloadObservationAreas() {
         observationAreaRest.findAll().then(response => {
-            response.data.map(area => {area.coordinates = [area.centerlongitude, area.centerlatitude]});
             setObservationAreas(response.data);
-            console.log(response.data);
-
-            setViewState({
-                longitude: response.data[0].centerlongitude,
-                latitude: response.data[0].centerlatitude,
-                zoom: 15,
-                pitch: 0,
-                bearing: 0
-            });
+            if (response.data.length>0) {
+                setViewState({
+                    longitude: response.data[0].centerlongitude,
+                    latitude: response.data[0].centerlatitude,
+                    zoom: 15,
+                    pitch: 0,
+                    bearing: 0
+                });
+            } 
         });
     }
 

@@ -40,7 +40,7 @@ function ObservationAreaMap(props) {
             getIcon: d => "marker",
 
             sizeScale: 10,
-            getPosition: d => d.coordinates,
+            getPosition: d => {const c =[2]; c[0]=d.centerlongitude; c[1]=d.centerlatitude; return c;},
             getSize: d => 5,
             getColor: d => [Math.sqrt(d.exits), 140, 0]
         })
