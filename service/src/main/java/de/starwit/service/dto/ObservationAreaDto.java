@@ -3,13 +3,10 @@ package de.starwit.service.dto;
 import java.math.BigDecimal;
 import java.util.List;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-
 import de.starwit.persistence.entity.ImageEntity;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
 
-@JsonIgnoreProperties(ignoreUnknown = true)
 public class ObservationAreaDto {
 
     private Long id;
