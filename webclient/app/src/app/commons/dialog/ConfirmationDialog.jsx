@@ -11,7 +11,7 @@ function ConfirmationDialog(props) {
     const {t} = useTranslation();
 
     return (
-        <Dialog
+        <Dialog sx={{zIndex: 10000}}
             open={open}
             onClose={onClose}
             aria-labelledby={t("confirm.dialog.title")}

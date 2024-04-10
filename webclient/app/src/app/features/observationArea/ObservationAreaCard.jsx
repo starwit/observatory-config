@@ -5,6 +5,7 @@ import React from "react";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router";
 import { imageFileUrlForId } from "../../services/ImageRest";
+import StopCircleIcon from '@mui/icons-material/StopCircle';
 
 function ObservationAreaCard(props) {
     const {observationArea, onCopyClick, onDeleteClick, onEditClick} = props;

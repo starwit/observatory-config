@@ -25,7 +25,6 @@ function ObservationAreaSelect(props) {
     const [processingPromptOpen, setProcessingPromptOpen] = useState(false);
     const [processingEnabled, setProcessingEnabled] = useState(selectedArea.processingEnabled);
     const observationAreaRest = useMemo(() => new ObservationAreaRest(), []);
-    const [startTrack, setTrack] = useState(false);
 
     const handleChange = event => {
         const newObservationAreaId = event.target.value;
@@ -58,7 +57,7 @@ function ObservationAreaSelect(props) {
     function renderProcessingIcon() {
         if (processingEnabled) {
             return (
-                <StopCircleIcon fontSize="small" color="error" />  
+            <StopCircleIcon fontSize="small" color="error" />  
             )
         }
         return (
@@ -113,6 +112,7 @@ function ObservationAreaSelect(props) {
             </FormControl>
                 {renderProcessingText()}
             <FormControl>
+
                 <ConfirmationDialog
                     title={t("observationArea.track.title")}
                     message={t("observationArea.track.message")}
