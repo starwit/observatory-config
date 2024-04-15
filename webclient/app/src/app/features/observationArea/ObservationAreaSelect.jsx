@@ -11,6 +11,16 @@ import { useTranslation } from "react-i18next";
 import ConfirmationDialog from "../../commons/dialog/ConfirmationDialog";
 import ObservationAreaRest from "../../services/ObservationAreaRest";
 
+export let processingEnabled = false;
+
+export function stopCircleButtonActive() {
+    if (processingEnabled) {
+        return true;
+    }
+    return false;
+    }
+
+
 function ObservationAreaSelect(props) {
     const {
         observationAreas,
@@ -39,8 +49,7 @@ function ObservationAreaSelect(props) {
         setProcessingPromptOpen(false);
     }
 
-    function stopCircleButtonActive() {
-    }
+
 
     function toggleProcessing() {
         let tempProcessingEnabled = !processingEnabled;
