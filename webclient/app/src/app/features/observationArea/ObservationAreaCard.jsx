@@ -1,5 +1,5 @@
 import { ContentCopy, Delete, Edit } from "@mui/icons-material";
-import { Card, CardActionArea, CardContent, CardMedia, Divider, CardHeader, Grid, IconButton, Typography, ImageListItemBar } from "@mui/material";
+import { Card, CardActionArea, CardContent, CardMedia, Divider, Grid, IconButton, Typography, ImageListItemBar } from "@mui/material";
 import PropTypes from "prop-types";
 import React from "react";
 import { useTranslation } from "react-i18next";
@@ -21,14 +21,19 @@ function ObservationAreaCard(props) {
      function renderProcessingIcon(processingEnabled) {
          if (processingEnabled) {
              return (
-                <CardMedia>
-                    <Box display='flex' alignItems="center">
-             <StopCircleIcon sx={{ color: 'white', margin: '0.5rem'}} fontSize="large"></StopCircleIcon>  
-             <Typography variant="h6" component="div" color="white">
-                    {t("button.tracking")}
-                    </Typography>
-                    </Box>
-             </CardMedia>
+                <ImageListItemBar
+                    sx={{background: "#ff0000"}}
+                    actionPosition="left"
+                    position="top"
+                    actionIcon={
+                        <Box display='flex' alignItems="center">
+                            <StopCircleIcon sx={{ color: 'white', margin: '0.5rem'}} fontSize="large"></StopCircleIcon>  
+                            <Typography variant="h6" component="div" color="white">
+                                    {t("button.tracking")}
+                            </Typography>
+                        </Box>
+                    }
+                ></ImageListItemBar>
              )
          }}
 
@@ -68,19 +73,7 @@ function ObservationAreaCard(props) {
                             height="300"
                             src={imageUrl}>
                         </CardMedia>
-                        <ImageListItemBar
-                            sx={{
-                            background:
-                                'linear-gradient(to bottom, rgba(255,0,0,1) 0%, ' +
-                                'rgba(255,0,0,1) 0%, rgba(255,0,0,1) 0%)',
-                            }}
-                            actionPosition="left"
-                                      position="top"
-                                      
-                                      actionIcon={
-                                        renderProcessingIcon(observationArea.processingEnabled)
-                                      }
-                        ></ImageListItemBar>
+                        {renderProcessingIcon(observationArea.processingEnabled)}
                         </> :
                         <CardContent sx={{height: 300}}>
                             <Typography textAlign={"center"}>{t("observationAreaCard.noImage")}</Typography>
