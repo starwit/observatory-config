@@ -9,7 +9,7 @@ import {useNavigate} from "react-router";
 export default function MapSidebar(props) {
     const {selected, observationAreas, editArea, copyArea, deleteArea} = props;
     const navigate = useNavigate();
-    const [expanded, setExpanded] = React.useState(null);
+    const [expanded, setExpanded] = React.useState(selected.id);
 
     function openArea(area) {
         navigate("/observationarea/" + area.id)
@@ -19,10 +19,10 @@ export default function MapSidebar(props) {
         setExpanded(newExpanded ? panel : false);
     };
 
-    function isNearby(area1,area2) {
+    function isNearby(area1, area2) {
 
-        if (area1.centerlongitude<area2.centerlongitude+0.0005 && area1.centerlongitude>area2.centerlongitude-0.0005) {
-            if (area1.centerlatitude<area2.centerlatitude+0.0005 && area1.centerlatitude>area2.centerlatitude-0.0005) {
+        if (area1.centerlongitude < area2.centerlongitude + 0.0005 && area1.centerlongitude > area2.centerlongitude - 0.0005) {
+            if (area1.centerlatitude < area2.centerlatitude + 0.0005 && area1.centerlatitude > area2.centerlatitude - 0.0005) {
                 return true;
             }
         }
@@ -36,17 +36,20 @@ export default function MapSidebar(props) {
                 {
                     observationAreas?.map(area => {
                         if (isNearby(area, selected)) {
+                            if (expanded == null) {
+                                handleChange(area.id);
+                            }
+
                             const imageUrl = area.image !== null ? imageFileUrlForId(area.image.id) : null;
                             return (
                                 <Accordion
                                     disableGutters
                                     sx={{boxShadow: 0}}
-                                    onChange={handleChange(area.name)}
-                                    expanded={expanded === area.name}
+                                    onChange={handleChange(area.id)}
+                                    expanded={expanded === area.id}
                                 >
                                     <AccordionSummary
                                         expandIcon={<ExpandMoreIcon />}
-                                        justifyContent="space-between"
                                     >
                                         <Typography sx={{margin: "auto", width: '124px', flexShrink: 0}}>
                                             {area.name}
@@ -69,7 +72,7 @@ export default function MapSidebar(props) {
                                             {area.image !== null ?
                                                 <CardMedia
                                                     component="img"
-                                                    height="150"
+                                                    height="200"
                                                     src={imageUrl}
                                                     sx={{borderRadius: "10px"}}
                                                 /> :
