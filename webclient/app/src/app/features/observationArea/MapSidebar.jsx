@@ -19,13 +19,23 @@ export default function MapSidebar(props) {
         setExpanded(newExpanded ? panel : false);
     };
 
+    function isNearby(area1,area2) {
+
+        if (area1.centerlongitude<area2.centerlongitude+0.0005 && area1.centerlongitude>area2.centerlongitude-0.0005) {
+            if (area1.centerlatitude<area2.centerlatitude+0.0005 && area1.centerlatitude>area2.centerlatitude-0.0005) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     return (
         <Box position={"absolute"} height={"100%"} sx={{zIndex: 3}}>
 
-            <Box sx={{bgcolor: '#FFFFFF', width: 350, marginLeft: 5, marginTop: 20, boxShadow: 2, borderRadius: "10%", padding: 2}}>
+            <Box sx={{bgcolor: '#FFFFFF', width: 350, marginLeft: 5, marginTop: 20, boxShadow: 2, borderRadius: "20px", padding: 2}}>
                 {
                     observationAreas?.map(area => {
-                        if (area.centerlongitude == selected.centerlongitude) {
+                        if (isNearby(area, selected)) {
                             const imageUrl = area.image !== null ? imageFileUrlForId(area.image.id) : null;
                             return (
                                 <Accordion
@@ -61,7 +71,7 @@ export default function MapSidebar(props) {
                                                     component="img"
                                                     height="150"
                                                     src={imageUrl}
-                                                    sx={{borderRadius: "5%"}}
+                                                    sx={{borderRadius: "10px"}}
                                                 /> :
                                                 <CardContent sx={{height: 150}}>
                                                     <Typography textAlign={"center"}>{t("observationAreaCard.noImage")}</Typography>
