@@ -1,4 +1,4 @@
-import {Container, Grid, Typography, Box, Stack, Button} from "@mui/material";
+import {Container, Grid, Typography, Stack, Button} from "@mui/material";
 import React, {useEffect, useMemo, useState} from "react";
 import {useTranslation} from "react-i18next";
 import AddFabButton from "../../commons/addFabButton/AddFabButton";
@@ -9,6 +9,7 @@ import ObservationAreaDialog, {MODE as ObservationAreaDialogMode} from "./Observ
 import ObservationAreaCard from "./ObservationAreaCard";
 import ObservationAreaMap from "./ObservationAreaMap";
 import {ViewList, Map} from "@mui/icons-material";
+import MapSidebar from "./MapSidebar";
 
 
 function ObservationAreaOverview() {
@@ -136,33 +137,43 @@ function ObservationAreaOverview() {
         );
     }
 
+    function renderSidebar() {
+        if (map && selectedArea != null) {
+            return (<MapSidebar selected={selectedArea} observationAreas={observationAreas} editArea={editArea} copyArea={copyArea} deleteArea={deleteArea} ></MapSidebar>);
+        }
+        return null;
+    }
+
     return (
-        <Container>
-            {renderMap()}
-            <Stack direction="row" justifyContent="space-between">
-                <Typography zIndex={2} variant={"h2"} gutterBottom>
-                    {t("observationAreas.title")}
-                </Typography>
-                {renderToggleButton()}
-            </Stack>
-            {renderObservationAreas()}
-            <ConfirmationDialog
-                title={t("observationArea.delete.title")}
-                message={t("observationArea.delete.message")}
-                open={openDeleteDialog}
-                onClose={() => setOpenDeleteDialog(false)}
-                onSubmit={() => deleteArea(selectedArea)}
-                confirmTitle={t("button.delete")}
-            />
-            <ObservationAreaDialog
-                open={openUpdateDialog}
-                onSubmit={() => setOpenUpdateDialog(false)}
-                mode={updateDialogMode}
-                selectedArea={selectedArea}
-                update={reloadObservationAreas}
-            />
-            <AddFabButton onClick={createArea} />
-        </Container>
+        <>
+            {renderSidebar()}
+            <Container>
+                {renderMap()}
+                <Stack direction="row" justifyContent="space-between">
+                    <Typography zIndex={2} variant={"h2"} gutterBottom>
+                        {t("observationAreas.title")}
+                    </Typography>
+                    {renderToggleButton()}
+                </Stack>
+                {renderObservationAreas()}
+                <ConfirmationDialog
+                    title={t("observationArea.delete.title")}
+                    message={t("observationArea.delete.message")}
+                    open={openDeleteDialog}
+                    onClose={() => setOpenDeleteDialog(false)}
+                    onSubmit={() => deleteArea(selectedArea)}
+                    confirmTitle={t("button.delete")}
+                />
+                <ObservationAreaDialog
+                    open={openUpdateDialog}
+                    onSubmit={() => setOpenUpdateDialog(false)}
+                    mode={updateDialogMode}
+                    selectedArea={selectedArea}
+                    update={reloadObservationAreas}
+                />
+                <AddFabButton onClick={createArea} />
+            </Container>
+        </>
     );
 }
 
