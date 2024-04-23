@@ -3,28 +3,24 @@
 # Declare variables to be passed into your templates.
 
 image:
-  repository: docker.internal.starwit-infra.de/smartparkingconfig
-  pullPolicy: Always
+  repository: starwitorg/smartparkingconfig
+  pullPolicy: IfNotPresent
   # Overrides the image tag whose default is the chart appVersion.
   tag: ""
 
-imagePullSecrets:
-  - name: docker-starwit-internal
 nameOverride: ""
 fullnameOverride: ""
 
-pullSecret:
-  user: "user"
-  password: "password"
-
 app:
   context_path: ""
+  databackend_url: ""
 
 auth:
   enabled: true
-  keycloak_url: https://hostname/realms/smartparkingconfig
-  client_id: smartparkingconfig
-  client_secret: smartparkingconfig # TODO get from secret
+  keycloakRealmUrlInternal: http://internal-hostname/realms/smartparkingconfig
+  keycloakRealmUrlExternal: https://external-hostname/realms/smartparkingconfig
+  clientId: smartparkingconfig
+  clientSecret: smartparkingconfig # TODO get from secret
 
 postgresql:
   auth:

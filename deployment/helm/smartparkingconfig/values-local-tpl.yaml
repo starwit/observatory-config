@@ -1,17 +1,14 @@
-
 app:
   context_path: "/"
+  databackend_url: "http://internal-hostname/databackend"
 
-##see bitwarden for docker registry
-pullSecret:
-  user: "docker"
-  password: "<<bitwarden>>"
 
 auth:
   enabled: true
-  keycloak_url: http://<<hostname>>/realms/smartparkingconfig # will be used for readyness probe
-  client_id: smartparkingconfig
-  client_secret: smartparkingconfig # TODO get from secret
+  keycloakRealmUrlInternal: http://internal-hostname/realms/smartparkingconfig
+  keycloakRealmUrlExternal: https://external-hostname/realms/smartparkingconfig # will be used for readyness probe
+  clientId: smartparkingconfig
+  clientSecret: smartparkingconfig # TODO get from secret
 
 postgresql:
   auth:

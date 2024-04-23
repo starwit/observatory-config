@@ -52,13 +52,31 @@ spec:
                   key: password
             - name: SERVER_SERVLET_CONTEXT_PATH
               value: {{ .Values.app.context_path | quote }}
+            - name: DATABACKEND_URL
+              value: http://databackend-databackend-chart.{{ .Values.namespace }}.svc.cluster.local/databackend
             {{- if .Values.auth.enabled }}
-            - name: SPRING_SECURITY_OAUTH2_CLIENT_PROVIDER_KEYCLOAK_ISSUER-URI
-              value: {{ .Values.auth.keycloak_url }}
+            - name: SPRING_PROFILES_ACTIVE
+              value: auth
+            - name: SPRING_SECURITY_OAUTH2_CLIENT_PROVIDER_KEYCLOAK_AUTHORIZATION-URI
+              value: https://auth.{{ .Values.auth.keycloakRealmUrlExternal }}/protocol/openid-connect/auth
+            - name: SPRING_SECURITY_OAUTH2_CLIENT_PROVIDER_KEYCLOAK_TOKEN-URI
+              value: http://{{ .Values.auth.keycloakRealmUrlInternal }}/protocol/openid-connect/token
+            - name: SPRING_SECURITY_OAUTH2_CLIENT_PROVIDER_KEYCLOAK_USER-INFO-URI
+              value: http://{{ .Values.auth.keycloakRealmUrlInternal }}/protocol/openid-connect/userinfo
+            - name: SPRING_SECURITY_OAUTH2_CLIENT_PROVIDER_KEYCLOAK_JWK-SET-URI
+              value: http://{{ .Values.auth.keycloakRealmUrlInternal }}/protocol/openid-connect/certs
+            - name: SPRING_SECURITY_OAUTH2_CLIENT_PROVIDER_KEYCLOAK_USERNAMEATTRIBUTE
+              value: preferred_username
+            - name: SPRING_SECURITY_OAUTH2_CLIENT_REGISTRATION_KEYCLOAK_AUTHORIZATION-GRANT-TYPE
+              value: authorization_code
+            - name: SPRING_SECURITY_OAUTH2_CLIENT_REGISTRATION_KEYCLOAK_SCOPE
+              value: openid
+            - name: SPRING_SECURITY_OAUTH2_CLIENT_REGISTRATION_KEYCLOAK_REDIRECT-URI
+              value: "{baseUrl}/login/oauth2/code/{registrationId}"
             - name: SPRING_SECURITY_OAUTH2_CLIENT_REGISTRATION_KEYCLOAK_CLIENT-ID
-              value: {{ .Values.auth.client_id }}
+              value: {{ .Values.auth.clientId }}
             - name: SPRING_SECURITY_OAUTH2_CLIENT_REGISTRATION_KEYCLOAK_CLIENT-SECRET
-              value: {{ .Values.auth.client_secret }}
+              value: {{ .Values.auth.clientSecret }}
             {{- else }}
             - name: SPRING_PROFILES_ACTIVE
               value: default
