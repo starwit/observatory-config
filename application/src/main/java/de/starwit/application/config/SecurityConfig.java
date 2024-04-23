@@ -43,7 +43,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 
-@Profile("auth")
+@Profile({"auth", "auth-dev"})
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig {
