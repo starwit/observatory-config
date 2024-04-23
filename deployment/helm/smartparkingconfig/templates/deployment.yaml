@@ -58,13 +58,13 @@ spec:
             - name: SPRING_PROFILES_ACTIVE
               value: auth
             - name: SPRING_SECURITY_OAUTH2_CLIENT_PROVIDER_KEYCLOAK_AUTHORIZATION-URI
-              value: https://auth.{{ .Values.auth.keycloakRealmUrlExternal }}/protocol/openid-connect/auth
+              value: {{ .Values.auth.keycloakRealmUrlExternal }}/protocol/openid-connect/auth
             - name: SPRING_SECURITY_OAUTH2_CLIENT_PROVIDER_KEYCLOAK_TOKEN-URI
-              value: http://{{ .Values.auth.keycloakRealmUrlInternal }}/protocol/openid-connect/token
+              value: {{ .Values.auth.keycloakRealmUrlInternal }}/protocol/openid-connect/token
             - name: SPRING_SECURITY_OAUTH2_CLIENT_PROVIDER_KEYCLOAK_USER-INFO-URI
-              value: http://{{ .Values.auth.keycloakRealmUrlInternal }}/protocol/openid-connect/userinfo
+              value: {{ .Values.auth.keycloakRealmUrlInternal }}/protocol/openid-connect/userinfo
             - name: SPRING_SECURITY_OAUTH2_CLIENT_PROVIDER_KEYCLOAK_JWK-SET-URI
-              value: http://{{ .Values.auth.keycloakRealmUrlInternal }}/protocol/openid-connect/certs
+              value: {{ .Values.auth.keycloakRealmUrlInternal }}/protocol/openid-connect/certs
             - name: SPRING_SECURITY_OAUTH2_CLIENT_PROVIDER_KEYCLOAK_USERNAMEATTRIBUTE
               value: preferred_username
             - name: SPRING_SECURITY_OAUTH2_CLIENT_REGISTRATION_KEYCLOAK_AUTHORIZATION-GRANT-TYPE
@@ -74,7 +74,7 @@ spec:
             - name: SPRING_SECURITY_OAUTH2_CLIENT_REGISTRATION_KEYCLOAK_REDIRECT-URI
               value: "{baseUrl}/login/oauth2/code/{registrationId}"
             - name: KEYCLOAK-LOGOUT-URI
-              value: https://auth.{{ .Values.auth.keycloakRealmUrlExternal }}/protocol/openid-connect/logout
+              value: {{ .Values.auth.keycloakRealmUrlExternal }}/protocol/openid-connect/logout
             - name: SPRING_SECURITY_OAUTH2_CLIENT_REGISTRATION_KEYCLOAK_CLIENT-ID
               value: {{ .Values.auth.clientId }}
             - name: SPRING_SECURITY_OAUTH2_CLIENT_REGISTRATION_KEYCLOAK_CLIENT-SECRET
