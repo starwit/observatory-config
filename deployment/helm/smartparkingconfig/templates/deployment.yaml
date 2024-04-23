@@ -73,6 +73,8 @@ spec:
               value: openid
             - name: SPRING_SECURITY_OAUTH2_CLIENT_REGISTRATION_KEYCLOAK_REDIRECT-URI
               value: "{baseUrl}/login/oauth2/code/{registrationId}"
+            - name: KEYCLOAK-LOGOUT-URI
+              value: https://auth.{{ .Values.auth.keycloakRealmUrlExternal }}/protocol/openid-connect/logout
             - name: SPRING_SECURITY_OAUTH2_CLIENT_REGISTRATION_KEYCLOAK_CLIENT-ID
               value: {{ .Values.auth.clientId }}
             - name: SPRING_SECURITY_OAUTH2_CLIENT_REGISTRATION_KEYCLOAK_CLIENT-SECRET
