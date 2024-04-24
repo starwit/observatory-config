@@ -11,7 +11,6 @@ import java.util.function.Supplier;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
@@ -51,9 +50,6 @@ public class SecurityConfig {
 
     static final Logger LOG = LoggerFactory.getLogger(SecurityConfig.class);
 
-    @Value("${keycloak-logout-uri:#{null}}")
-    private String keycloakLogoutUri;
-
     @Autowired
     private ClientRegistrationRepository clientRegistrationRepository;
 
@@ -63,9 +59,7 @@ public class SecurityConfig {
 
         // Sets the location that the End-User's User Agent will be redirected to
         // after the logout has been performed at the Provider
-        if (keycloakLogoutUri != null) {
-            oidcLogoutSuccessHandler.setPostLogoutRedirectUri(keycloakLogoutUri);
-        }
+        oidcLogoutSuccessHandler.setPostLogoutRedirectUri("{baseUrl}");
 
         return oidcLogoutSuccessHandler;
     }
@@ -89,6 +83,8 @@ public class SecurityConfig {
                 .oauth2Login(Customizer.withDefaults());
         return http.build();
     }
+
+
 
     // Taken from
     // https://stackoverflow.com/questions/74939220/classnotfoundexception-org-springframework-security-oauth2-server-resource-web
