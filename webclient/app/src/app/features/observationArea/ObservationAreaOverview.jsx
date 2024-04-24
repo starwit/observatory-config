@@ -139,7 +139,7 @@ function ObservationAreaOverview() {
 
     function renderSidebar() {
         if (map && selectedArea != null) {
-            return (<MapSidebar selected={selectedArea} observationAreas={observationAreas} editArea={editArea} copyArea={copyArea} deleteArea={deleteArea} ></MapSidebar>);
+            return (<MapSidebar selected={selectedArea} observationAreas={observationAreas} editArea={editArea} copyArea={copyArea} deleteArea={promptDeleteArea} ></MapSidebar>);
         }
         return null;
     }
