@@ -16,17 +16,35 @@ export default function MapSidebar(props) {
     }
 
     const handleChange = (panel) => (event, newExpanded) => {
-        setExpanded(newExpanded ? panel : false);
+        if (expanded == null) {
+            setExpanded(newExpanded ? panel : false);
+        }
     };
 
     function isNearby(area1, area2) {
-
-        if (area1.centerlongitude < area2.centerlongitude + 0.0005 && area1.centerlongitude > area2.centerlongitude - 0.0005) {
-            if (area1.centerlatitude < area2.centerlatitude + 0.0005 && area1.centerlatitude > area2.centerlatitude - 0.0005) {
-                return true;
-            }
+        var distance = 0.0005;
+        if (area1 < area2 + distance && area1 > area2 - distance) {
+            return true;
         }
         return false;
+    }
+
+    function renderImage() {
+        if (area.image !== null) {
+            return (
+                <CardMedia
+                    component="img"
+                    height="200"
+                    src={imageUrl}
+                    sx={{borderRadius: "10px"}}
+                />);
+        }
+        return (
+            <CardContent sx={{height: 150}}>
+                <Typography textAlign={"center"}>{t("observationAreaCard.noImage")}</Typography>
+            </CardContent>
+        );
+
     }
 
     return (
@@ -35,11 +53,8 @@ export default function MapSidebar(props) {
             <Box sx={{bgcolor: '#FFFFFF', width: 350, marginLeft: 5, marginTop: 20, boxShadow: 2, borderRadius: "20px", padding: 2}}>
                 {
                     observationAreas?.map(area => {
-                        if (isNearby(area, selected)) {
-                            if (expanded == null) {
-                                handleChange(area.id);
-                            }
-
+                        if (isNearby(area.centerlongitude, selected.centerlongitude) && isNearby(area.centerlatitude, selected.centerlatitude)) {
+                            handleChange(area.id);
                             const imageUrl = area.image !== null ? imageFileUrlForId(area.image.id) : null;
                             return (
                                 <Accordion
@@ -69,22 +84,11 @@ export default function MapSidebar(props) {
                                     </AccordionSummary>
                                     <AccordionDetails sx={{padding: 0}}>
                                         <CardActionArea onClick={() => openArea(area)}>
-                                            {area.image !== null ?
-                                                <CardMedia
-                                                    component="img"
-                                                    height="200"
-                                                    src={imageUrl}
-                                                    sx={{borderRadius: "10px"}}
-                                                /> :
-                                                <CardContent sx={{height: 150}}>
-                                                    <Typography textAlign={"center"}>{t("observationAreaCard.noImage")}</Typography>
-                                                </CardContent>
-                                            }
+                                            {renderImage()}
                                         </CardActionArea>
                                     </AccordionDetails>
                                 </Accordion>);
                         }
-                        return (<></>);
                     })
                 }
             </Box>
