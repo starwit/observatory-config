@@ -1,6 +1,6 @@
 app:
-  context_path: "/"
-  databackend_url: "http://internal-hostname/databackend"
+  contextPath: "/"
+  databackendUrl: "http://internal-hostname/databackend"
 
 
 auth:

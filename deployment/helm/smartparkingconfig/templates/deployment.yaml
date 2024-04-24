@@ -51,33 +51,31 @@ spec:
                   name: {{ include "postgresql.secretname" . }}
                   key: password
             - name: SERVER_SERVLET_CONTEXT_PATH
-              value: {{ .Values.app.context_path | quote }}
+              value: {{ .Values.app.contextPath | quote }}
             - name: DATABACKEND_URL
-              value: http://databackend-databackend-chart.{{ .Values.namespace }}.svc.cluster.local/databackend
+              value: {{ .Values.app.databackendUrl }}
             {{- if .Values.auth.enabled }}
             - name: SPRING_PROFILES_ACTIVE
               value: auth
-            - name: SPRING_SECURITY_OAUTH2_CLIENT_PROVIDER_KEYCLOAK_AUTHORIZATION-URI
+            - name: OIDC-CLIENT-REGISTRATION_AUTHORIZATION-URI
               value: {{ .Values.auth.keycloakRealmUrlExternal }}/protocol/openid-connect/auth
-            - name: SPRING_SECURITY_OAUTH2_CLIENT_PROVIDER_KEYCLOAK_TOKEN-URI
+            - name: OIDC-CLIENT-REGISTRATION_TOKEN-URI
               value: {{ .Values.auth.keycloakRealmUrlInternal }}/protocol/openid-connect/token
-            - name: SPRING_SECURITY_OAUTH2_CLIENT_PROVIDER_KEYCLOAK_USER-INFO-URI
+            - name: OIDC-CLIENT-REGISTRATION_USER-INFO-URI
               value: {{ .Values.auth.keycloakRealmUrlInternal }}/protocol/openid-connect/userinfo
-            - name: SPRING_SECURITY_OAUTH2_CLIENT_PROVIDER_KEYCLOAK_JWK-SET-URI
+            - name: OIDC-CLIENT-REGISTRATION_JWK-SET-URI
               value: {{ .Values.auth.keycloakRealmUrlInternal }}/protocol/openid-connect/certs
-            - name: SPRING_SECURITY_OAUTH2_CLIENT_PROVIDER_KEYCLOAK_USERNAMEATTRIBUTE
-              value: preferred_username
-            - name: SPRING_SECURITY_OAUTH2_CLIENT_REGISTRATION_KEYCLOAK_AUTHORIZATION-GRANT-TYPE
-              value: authorization_code
-            - name: SPRING_SECURITY_OAUTH2_CLIENT_REGISTRATION_KEYCLOAK_SCOPE
-              value: openid
-            - name: SPRING_SECURITY_OAUTH2_CLIENT_REGISTRATION_KEYCLOAK_REDIRECT-URI
-              value: "{baseUrl}/login/oauth2/code/{registrationId}"
-            - name: KEYCLOAK-LOGOUT-URI
+            - name: OIDC-CLIENT-REGISTRATION_END-SESSION-ENDPOINT
               value: {{ .Values.auth.keycloakRealmUrlExternal }}/protocol/openid-connect/logout
-            - name: SPRING_SECURITY_OAUTH2_CLIENT_REGISTRATION_KEYCLOAK_CLIENT-ID
+            - name: OIDC-CLIENT-REGISTRATION_USERNAMEATTRIBUTE
+              value: preferred_username
+            - name: OIDC-CLIENT-REGISTRATION_SCOPE
+              value: openid
+            - name: OIDC-CLIENT-REGISTRATION_REDIRECT-URI
+              value: "{baseUrl}/login/oauth2/code/{registrationId}"
+            - name: OIDC-CLIENT-REGISTRATION_CLIENT-ID
               value: {{ .Values.auth.clientId }}
-            - name: SPRING_SECURITY_OAUTH2_CLIENT_REGISTRATION_KEYCLOAK_CLIENT-SECRET
+            - name: OIDC-CLIENT-REGISTRATION_CLIENT-SECRET
               value: {{ .Values.auth.clientSecret }}
             {{- else }}
             - name: SPRING_PROFILES_ACTIVE
@@ -92,12 +90,12 @@ spec:
               protocol: TCP
           livenessProbe:
             httpGet:
-              path: {{ .Values.app.context_path }}/monitoring/health
+              path: {{ .Values.app.contextPath }}/monitoring/health
               port: http
             initialDelaySeconds: 180
           readinessProbe:
             httpGet:
-              path: {{ .Values.app.context_path }}/monitoring/health
+              path: {{ .Values.app.contextPath }}/monitoring/health
               port: http
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
