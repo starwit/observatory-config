@@ -11,6 +11,7 @@ import { useTranslation } from "react-i18next";
 import ConfirmationDialog from "../../commons/dialog/ConfirmationDialog";
 import ObservationAreaRest from "../../services/ObservationAreaRest";
 
+
 function ObservationAreaSelect(props) {
     const {
         observationAreas,
@@ -39,8 +40,7 @@ function ObservationAreaSelect(props) {
         setProcessingPromptOpen(false);
     }
 
-    function stopCircleButtonActive() {
-    }
+
 
     function toggleProcessing() {
         let tempProcessingEnabled = !processingEnabled;
@@ -51,7 +51,6 @@ function ObservationAreaSelect(props) {
             setProcessingEnabled(response.data);
         });
         closeProcessingPrompt();
-        stopCircleButtonActive(true);
     }
 
     function renderProcessingIcon() {
@@ -115,7 +114,7 @@ function ObservationAreaSelect(props) {
 
                 <ConfirmationDialog
                     title={t("observationArea.track.title")}
-                    message={t("observationArea.track.message")}
+                    message={processingEnabled ? t("observationArea.track.stop") : t("observationArea.track.start")}
                     open={processingPromptOpen}
                     onClose={closeProcessingPrompt}
                     onSubmit={toggleProcessing}
