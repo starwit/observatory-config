@@ -22,7 +22,7 @@ function ObservationAreaCard(props) {
          if (processingEnabled) {
              return (
                 <ImageListItemBar
-                    sx={{background: "#ff0000"}}
+                    sx={{background: "rgba(215, 93, 42, 0.7)"}}
                     actionPosition="left"
                     position="top"
                     actionIcon={
