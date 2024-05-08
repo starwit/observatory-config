@@ -57,6 +57,7 @@ export default function MapSidebar(props) {
                     if (isNearby(area.centerlongitude, selected.centerlongitude) && isNearby(area.centerlatitude, selected.centerlatitude)) {
                         return (
                             <Accordion
+                                key={area.id}
                                 disableGutters
                                 sx={{boxShadow: 0}}
                                 onChange={handleChange(area.id)}
