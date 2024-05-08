@@ -55,7 +55,6 @@ function ObservationAreaMap(props) {
         return (
             object && {
                 html: `\
-                <div><b>${object.name}</b></div>
                 <div>
                     <img src='${window.location.pathname}api/image/as-file/${object.image.id}' width="auto" height="200rem" />
                 </div>
