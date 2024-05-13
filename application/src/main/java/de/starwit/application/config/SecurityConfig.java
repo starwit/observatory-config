@@ -43,7 +43,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 
-@Profile("auth")
+@Profile({"auth", "auth-dev"})
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig {
@@ -59,7 +59,7 @@ public class SecurityConfig {
 
         // Sets the location that the End-User's User Agent will be redirected to
         // after the logout has been performed at the Provider
-        // oidcLogoutSuccessHandler.setPostLogoutRedirectUri(contextPath+"/");
+        oidcLogoutSuccessHandler.setPostLogoutRedirectUri("{baseUrl}");
 
         return oidcLogoutSuccessHandler;
     }
@@ -83,6 +83,8 @@ public class SecurityConfig {
                 .oauth2Login(Customizer.withDefaults());
         return http.build();
     }
+
+
 
     // Taken from
     // https://stackoverflow.com/questions/74939220/classnotfoundexception-org-springframework-security-oauth2-server-resource-web

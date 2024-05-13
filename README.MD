@@ -47,41 +47,49 @@ https://docs.github.com/en/actions/hosting-your-own-runners/managing-self-hosted
 * Postgres (available for development via docker-compose scripts)
 * using Keycloak is optional
 
-## Installation Steps
+## Setup / Running
 
 Each step is executed from the project home directory.
 
-1) go to the deployment folder and start the environment (database and keycloak) via docker compose:
-
-    ```bash
-    cd deployment
-    docker compose -f localenv-docker-compose.yml up
-    ```
-
-2) go to `webclient/app` and install the frontend applications dependencies
+1) Go to `webclient/app` and install the frontend applications dependencies
 
     ```bash
     cd webclient/app
     npm install
     ```
 
-3) go to Main Folder and build the project
+2) Go to Main Folder and build the project
 
     ```bash
     mvn clean install -P frontend
     ```
 
-4) start project
+3) Go to the deployment folder and start the local dev environment docker compose:
 
+    A. Without authentication
     ```bash
-    java -jar application/target/application-0.0.1-SNAPSHOT.jar
+    cd deployment
+    docker compose -f noauth-docker-compose.yml up
     ```
-   You can also run the main-class via Visual Studio Code.
+    B. With authentication (through Keycloak)
+    ```bash
+    cd deployment
+    docker compose -f auth-docker-compose.yml up
+    ```
 
-* **The Application can be reached under http://localhost:8081/smartparkingconfig/**
-* **If you are using keycloak:**
-    * **default user/password is admin/admin**
-    * **keycloak can be reached under http://localhost:8080/auth**
+
+4) Start application
+
+    A. Without authentication: `java -jar aplication/target/application-0.0.1-SNAPSHOT.jar`\
+    B. With authentication: `SPRING_PROFILES_ACTIVE=auth-dev java -jar aplication/target/application-0.0.1-SNAPSHOT.jar`
+    
+    (you can also use the spring boot maven plugin `mvn spring-boot:run` or run the main class `Application.java` through VSCode)
+
+**The Application can be reached under http://localhost:8081/smartparkingconfig/**
+
+**If you are using keycloak:**
+- **default user/password is admin/admin**
+- **keycloak can be reached under http://localhost:8080/auth**
 
 ## Debugging
 
@@ -104,35 +112,8 @@ You can start the spring boot application in debug mode. See Spring Boot documen
 
 ## Postgres Client
 
-The database is available under smartparkingconfig-db:5432 (using pgadmin of docker compose script)
+PGadmin for GUI-based database access is available at `http://localhost:5050` (database connection is preconfigured)
 
-```
-Username:smartparkingconfig
-Database:smartparkingconfig
-Password:smartparkingconfig
-```
-PGAdmin is recommended to access database for development purpose. It can be deployed via docker-compose file.
-
-## Starting without keycloak
-
-If you want to start your application without keycloak, you need to change spring boot profile to dev in application\src\main\resources\application.properties.
-
-```properties
-spring.profiles.active=dev
-```
-
-or define env-variable
-
-```bash
-SPRING_PROFILES_ACTIVE=dev
-```
-
-Start the database without keycloak:
-
-```bash
-cd deployment
-docker-compose -f postgreslocal-docker-compose.yml up
-```
 ## Changelog
 
 During development, you can add commits to change log by using this syntax: https://www.conventionalcommits.org/en/v1.0.0/#examples
