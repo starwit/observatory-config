@@ -17,7 +17,11 @@ public class ObservationAreaMapper implements CustomMapper<ObservationAreaEntity
         ObservationAreaDto dto = new ObservationAreaDto();
         dto.setId(entity.getId());
         dto.setName(entity.getName());
-        dto.setImage(entity.getImage());
+        if (entity.getImage() == null || entity.getImage().getData() == null) {
+            dto.setImage(null);
+        }else{
+            dto.setImage(entity.getImage());
+        }        
         dto.setCenterlatitude(entity.getCenterlatitude());
         dto.setCenterlongitude(entity.getCenterlongitude());
         List<String> cameras = new ArrayList<>();

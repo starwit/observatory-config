@@ -19,7 +19,7 @@ public class ImageEntity extends AbstractEntity<Long> {
 
     // entity fields
     @JsonIgnore
-    @Column(name = "data", nullable = false)
+    @Column(name = "data")
     private byte[] data;
 
     private String type;
