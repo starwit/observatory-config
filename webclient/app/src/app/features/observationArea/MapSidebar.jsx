@@ -20,12 +20,14 @@ export default function MapSidebar(props) {
         navigate("/observationarea/" + area.id)
     }
 
-    const handleChange = (panel) => (event, newExpanded) => {
-        setExpanded(newExpanded ? panel : false);
-    };
+    function handleChange(panel) { 
+        return function change(event, newExpanded) {
+            setExpanded(newExpanded ? panel : false);
+        }
+    }
 
     function isNearby(area1, area2) {
-        var distance = 0.0005;
+        const distance = 0.0005;
         if (area1 < area2 + distance && area1 > area2 - distance) {
             return true;
         }
@@ -33,7 +35,7 @@ export default function MapSidebar(props) {
     }
 
     function renderImage(area) {
-        var imageUrl = area.image !== null ? imageFileUrlForId(area.image.id) : null;
+        const imageUrl = area.image !== null ? imageFileUrlForId(area.image.id) : null;
         if (area.image !== null) {
             return (
                 <CardMedia
