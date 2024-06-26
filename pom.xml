@@ -20,7 +20,6 @@
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <spring-boot-version>3.3.1</spring-boot-version>
         <openapi-version>2.5.0</openapi-version>
-        <jackson-2-version>2.7.4</jackson-2-version>
     </properties>
 
     <modules>
