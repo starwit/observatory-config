@@ -158,54 +158,36 @@ function ObservationAreaDialog(props) {
         });
     }
 
+    function makeEntityUpdateField(field, {width = 12, autofocus = false}) {
+        return (
+            <Grid key={field.name} item xs={width}>
+                <FormControl key={field.name} fullWidth>
+                    <UpdateField
+                        autoFocus={autofocus}
+                        entity={entity}
+                        field={field}
+                        prefix="observationArea"
+                        handleChange={e => handleChange(e, setEntity)}
+                    />
+                </FormControl>
+            </Grid>
+        );
+    }
+
     return (
-        <Dialog onClose={onDialogClose} open={open} spacing={2} sx={{zIndex: 10000}} maxWidth="lg">
+        <Dialog onClose={onDialogClose} open={open} spacing={2} sx={{zIndex: 10000, "& .MuiDialog-container": {alignItems: "flex-start", mt: "10vh"}}} maxWidth="lg">
             <DialogHeader onClose={onDialogClose} title={t(`observationArea.${mode}.title`)}/>
             <form autoComplete="off">
                 <DialogContent>
                     <Grid container spacing={2}>
-                        <Grid item xs={8}>
-                            <FormControl key={fields[0].name} fullWidth>
-                                <UpdateField
-                                    autoFocus
-                                    entity={entity}
-                                    field={fields[0]}
-                                    prefix="observationArea"
-                                    handleChange={e => handleChange(e, setEntity)}
-                                />
-                            </FormControl>
-                        </Grid>
-                        <Grid item xs={4}>
-                            <FormControl key={fields[1].name} fullWidth>
-                                <UpdateField
-                                    entity={entity}
-                                    field={fields[1]}
-                                    prefix="observationArea"
-                                    handleChange={e => handleChange(e, setEntity)}
-                                />
-                            </FormControl>
-                        </Grid>
-                        <Grid item xs={8}>
-                            <Grid container spacing={2}>
-                                <Grid item xs={12}>                 
-                                    <CamIDList values={entity?.saeIds} handleChange={handleSaeIdsChange}/>
-                                </Grid>
-                                {fields?.slice(2).map(field => {
-                                        return (
-                                            <Grid key={field.name} item xs={6}>
-                                                <FormControl key={field.name} fullWidth>
-                                                    <UpdateField
-                                                        entity={entity}
-                                                        field={field}
-                                                        prefix="observationArea"
-                                                        handleChange={e => handleChange(e, setEntity)}
-                                                    />
-                                                </FormControl>
-                                            </Grid>
-                                        );
-                                    })
-                                }
+                        <Grid item container spacing={2} xs={8}>
+                            {makeEntityUpdateField(fields[0], {width: 12, autofocus: true})}
+                            {fields?.slice(2,4).map(field => makeEntityUpdateField(field, {width: 6}))}
+                            <Grid item xs={12}>                 
+                                <CamIDList values={entity?.saeIds} handleChange={handleSaeIdsChange}/>
                             </Grid>
+                            {makeEntityUpdateField(fields[1], {width: 12})}
+                            {entity.geoReferenced && fields?.slice(4).map(field => makeEntityUpdateField(field, {width: 6}))}
                         </Grid>
                         <Grid item xs={4}> 
                             <Stack> 
