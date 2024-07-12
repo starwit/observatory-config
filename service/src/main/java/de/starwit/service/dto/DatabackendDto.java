@@ -1,5 +1,6 @@
 package de.starwit.service.dto;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 public class DatabackendDto {
@@ -12,6 +13,8 @@ public class DatabackendDto {
     private List<GeometryPointsDto> geometryPoints;
     private String classification;
     private Boolean geoReferenced;
+    private BigDecimal centerLatitude;
+    private BigDecimal centerLongitude;
 
     public String getName() {
         return name;
@@ -84,4 +87,21 @@ public class DatabackendDto {
     public void setGeoReferenced(Boolean geoReferenced) {
         this.geoReferenced = geoReferenced;
     }
+
+    public BigDecimal getCenterLatitude() {
+        return centerLatitude;
+    }
+
+    public void setCenterLatitude(BigDecimal centerLatitude) {
+        this.centerLatitude = centerLatitude;
+    }
+
+    public BigDecimal getCenterLongitude() {
+        return centerLongitude;
+    }
+
+    public void setCenterLongitude(BigDecimal centerLongitude) {
+        this.centerLongitude = centerLongitude;
+    }
+    
 }

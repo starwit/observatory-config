@@ -99,7 +99,8 @@ public class DatabackendService {
         dbeDto.setClassification(polygonEntity.getClassification().getName());
         dbeDto.setGeoReferenced(observationAreaEntity.getGeoReferenced());
         dbeDto.setEnabled(observationAreaEntity.getProcessingEnabled());
-
+        dbeDto.setCenterLongitude(observationAreaEntity.getCenterlongitude());
+        dbeDto.setCenterLatitude(observationAreaEntity.getCenterlatitude());
 
         List<GeometryPointsDto> geometryPoints = new ArrayList<>();
 
