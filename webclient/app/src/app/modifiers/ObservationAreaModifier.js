@@ -53,19 +53,21 @@ const entityFields = [
         notNull: false
     },
     {
-        name: "degreeperpixelx",
-        type: "bigdecimal",
-        regex: null,
-        min: 0,
-        notNull: false
-    },
-    {
         name: "degreeperpixely",
         type: "bigdecimal",
         regex: null,
-        min: 0,
+        min: -1,
+        max: 1,
         notNull: false
-    }
+    },
+    {
+        name: "degreeperpixelx",
+        type: "bigdecimal",
+        regex: null,
+        min: -1,
+        max: 1,
+        notNull: false
+    },
 ];
 
 const observationAreaOverviewFields = [
