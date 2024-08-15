@@ -56,14 +56,16 @@ const entityFields = [
         name: "degreeperpixely",
         type: "bigdecimal",
         regex: null,
-        min: 0,
+        min: -999,
+        max: 999,
         notNull: false
     },
     {
         name: "degreeperpixelx",
         type: "bigdecimal",
         regex: null,
-        min: 0,
+        min: -999,
+        max: 999,
         notNull: false
     },
 ];
