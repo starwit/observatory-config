@@ -1,6 +1,6 @@
 const addFabButtonStyles = {
     fabWrapper: theme => ({
-        position: "absolute",
+        position: "fixed",
         bottom: "5%",
         right: "2%"
     })
