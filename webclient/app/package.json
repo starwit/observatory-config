@@ -21,7 +21,7 @@
     "path": "npm:path-browserify@1.0.1",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
-    "react-dropzone": "14.2.3",
+    "react-dropzone": "14.2.9",
     "react-i18next": "^15.0.2",
     "react-router": "^6.26.2",
     "react-router-dom": "^6.26.2",
