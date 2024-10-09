@@ -77,7 +77,8 @@ const translationDeDE = {
     "observationArea.image.unknownError": "Bild konnte nicht geladen werden",
     "observationArea.delete.title": "Parkfläche Löschen?",
     "observationArea.delete.message": "Die Parkfläche und alle enthaltenen Konfigurationen werden unwiderruflich gelöscht.",
-    "observationArea.track.title": "Datenverarbeitung starten/stoppen",
+    "observationArea.track.start.title": "Datenverarbeitung starten",
+    "observationArea.track.stop.title": "Datenverarbeitung stoppen",
     "observationArea.track.start": "Wollen Sie die Verarbeitung starten?",
     "observationArea.track.stop": "Wollen Sie die Konfiguration Speichern und die Verarbeitung der Daten stoppen?",
     "app.baseName": "SmartParkingConfig",
@@ -87,11 +88,14 @@ const translationDeDE = {
     "button.submit": "OK",
     "button.upload.image": "Bild hochladen",
     "button.create": "Hinzufügen",
-    "button.update": "Editieren",
+    "button.update": "Bearbeiten",
+    "button.copy": "Kopieren",
     "button.delete": "Löschen",
     "button.save": "Speichern",
     "button.cancel": "Abbrechen",
     "button.close": "Schließen",
+    "button.viewlist": "Vorschaubilder anzeigen",
+    "button.map": "Auf Karte anzeigen",
     "button.tracking": "Verarbeitung läuft",
     "select.none": "keine Auswahl",
     "error.inUse": "Es wurde mehr als eine Zeile mit dem angegebenen Bezeichner gefunden",
@@ -119,6 +123,6 @@ const translationDeDE = {
     "response.save.success": "Speichern erfolgreich.",
     "response.save.failed": "Speichern fehlgeschlagen!",
     "confirm.dialog.title": "Bestätigen des Dialog Titels",
-    "confirm.dialog.description": "Bestätigen der Dialog Beschreibung",
+    "confirm.dialog.description": "Bestätigen der Dialog Beschreibung"
 };
 export default translationDeDE;

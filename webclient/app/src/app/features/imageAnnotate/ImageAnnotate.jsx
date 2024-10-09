@@ -1,10 +1,10 @@
 import ReactImageAnnotate from "@starwit/react-image-annotate";
-import { useSnackbar } from 'notistack';
-import React, { useEffect, useMemo, useState } from "react";
-import { useTranslation } from "react-i18next";
-import { setIn } from 'seamless-immutable';
+import {useSnackbar} from 'notistack';
+import React, {useEffect, useMemo, useState} from "react";
+import {useTranslation} from "react-i18next";
+import {setIn} from 'seamless-immutable';
 import ClassificationRest from "../../services/ClassificationRest";
-import ImageRest, { imageFileUrlForId } from "../../services/ImageRest";
+import ImageRest, {imageFileUrlForId} from "../../services/ImageRest";
 import ObservationAreaRest from "../../services/ObservationAreaRest";
 
 function ImageAnnotate(props) {
@@ -43,7 +43,7 @@ function ImageAnnotate(props) {
         if ("SELECT_CLASSIFICATION" == action.type) {
             const select = classifications.find((c) => c.name == action.cls);
             if (select !== undefined) {
-    
+
                 return setIn(state, ["selectedTool"], select.toolType);
             }
         }
@@ -70,7 +70,7 @@ function ImageAnnotate(props) {
     function handleMessage(severity, message) {
         enqueueSnackbar(message, {variant: severity});
     }
-    
+
     function savePolygons(event) {
         let regions = event.images[0].regions;
         regions = regions.map(r => mapDisplayTextToClsKey(r));
@@ -79,7 +79,7 @@ function ImageAnnotate(props) {
             handleMessage("error", t("error.image.notunique"))
             return;
         }
-        
+
         observationAreaRest.savePolygons(observationAreaId, regions).then(() => {
             handleMessage("success", t("response.save.success"));
         });
@@ -104,7 +104,7 @@ function ImageAnnotate(props) {
     function validateNonEmpty(entries) {
         return entries.every(n => n !== undefined && n !== "");
     }
-    
+
     function validateUnique(entries) {
         const uniqueNames = new Set(entries);
         return uniqueNames.size === entries.length;
@@ -115,23 +115,21 @@ function ImageAnnotate(props) {
     }
 
     return (
-        <>
-            <ReactImageAnnotate
-                labelImages
-                regionClsList={classifications.map(classification => classification.name)}
-                regionColorList={classifications.map(classification => classification.color)}
-                onExit={savePolygons}
-                images={[image]}
-                hideHeaderText
-                selectedImage={0}
-                hideNext={true}
-                hidePrev={true}
-                hideSettings={true}
-                hideClone
-                enabledRegionProps={["name"]}
-                userReducer={userReducer}
-            />
-        </>
+        <ReactImageAnnotate
+            labelImages
+            regionClsList={classifications.map(classification => classification.name)}
+            regionColorList={classifications.map(classification => classification.color)}
+            onExit={savePolygons}
+            images={[image]}
+            hideHeaderText
+            selectedImage={0}
+            hideNext={true}
+            hidePrev={true}
+            hideSettings={true}
+            hideClone
+            enabledRegionProps={["name"]}
+            userReducer={userReducer}
+        />
     );
 }
 export default ImageAnnotate;

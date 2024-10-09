@@ -1,5 +1,5 @@
 import React from "react";
-import {Fab} from "@mui/material";
+import {Fab, Tooltip} from "@mui/material";
 import {styled} from "@mui/material/styles";
 import {Add} from "@mui/icons-material";
 import AddFabButtonStyles from "./AddFabButtonStyles";
@@ -10,13 +10,15 @@ function AddFabButton(props) {
     const {t} = useTranslation();
     const {onClick} = props;
 
-    const FabWrapper = styled('div')(({theme}) => AddFabButtonStyles.fabWrapper(theme));
+    const FabWrapper = styled("div")(({theme}) => AddFabButtonStyles.fabWrapper(theme));
 
     return (
         <FabWrapper>
-            <Fab aria-label={t("button.create")} onClick={onClick}>
-                <Add/>
-            </Fab>
+            <Tooltip title={t("button.create")}>
+                <Fab aria-label={t("button.create")} onClick={onClick}>
+                    <Add />
+                </Fab>
+            </Tooltip>
         </FabWrapper>
     );
 }

@@ -1,9 +1,9 @@
-import { useEffect, useMemo, useState } from "react";
-import { useNavigate, useParams } from "react-router-dom";
-import { AppBar } from "../../assets/styles/HeaderStyles";
+import {useEffect, useMemo, useState} from "react";
+import {useNavigate, useParams} from "react-router-dom";
+import {AppBar} from "../../assets/styles/HeaderStyles";
 import ObservationAreaRest from "../../services/ObservationAreaRest";
 import ImageAnnotate from "../imageAnnotate/ImageAnnotate";
-import ObservationAreaDialog, { MODE as ObservationAreaDialogMode } from "./ObservationAreaDialog";
+import ObservationAreaDialog, {MODE as ObservationAreaDialogMode} from "./ObservationAreaDialog";
 import ObservationAreaSelect from "./ObservationAreaSelect";
 
 export default function ObservationAreaDetail() {
@@ -14,9 +14,9 @@ export default function ObservationAreaDetail() {
     const [observationAreas, setObservationAreas] = useState();
     const selectedArea = observationAreas?.find(a => String(a.id) === observationAreaId);
     const [editDialogOpen, setEditDialogOpen] = useState(false);
-    
+
     const observationAreaRest = useMemo(() => new ObservationAreaRest(), [])
-    
+
     useEffect(() => {
         reloadObservationAreas();
     }, []);
@@ -58,7 +58,7 @@ export default function ObservationAreaDetail() {
                     onAreaChange={navigateToArea}
                 />
             </AppBar>
-            <ImageAnnotate 
+            <ImageAnnotate
                 observationAreaId={observationAreaId}
             ></ImageAnnotate>
             <ObservationAreaDialog

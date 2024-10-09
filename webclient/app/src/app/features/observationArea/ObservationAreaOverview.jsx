@@ -1,4 +1,4 @@
-import {Container, Grid, Typography, Stack, Button} from "@mui/material";
+import {Container, Grid, Typography, Stack, Button, Tooltip} from "@mui/material";
 import React, {useEffect, useMemo, useState} from "react";
 import {useTranslation} from "react-i18next";
 import AddFabButton from "../../commons/addFabButton/AddFabButton";
@@ -129,11 +129,15 @@ function ObservationAreaOverview() {
     function renderToggleButton() {
         if (map) {
             return (
-                <Button onClick={toggleView} variant="contained" color="primary"><ViewList /></Button>
+                <Tooltip title={t("button.viewlist")}>
+                    <Button onClick={toggleView} variant="contained" color="primary"><ViewList /></Button>
+                </Tooltip>
             );
         }
         return (
-            <Button onClick={toggleView} variant="contained" color="primary"><Map /></Button>
+            <Tooltip title={t("button.map")}>
+                <Button onClick={toggleView} variant="contained" color="primary"><Map /></Button>
+            </Tooltip>
         );
     }
 
