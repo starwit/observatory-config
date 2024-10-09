@@ -8,11 +8,11 @@ function LoadingSpinner(props) {
     const {message} = props;
     const [showMessage, setShowMessage] = useState(false);
 
-    const RootDiv = styled('div')(({theme}) => LoadingSpinnerStyles.root(theme));
-    const ContentWrapperDiv = styled('div')(({theme}) => LoadingSpinnerStyles.contentWrapper(theme));
+    const RootDiv = styled("div")(({theme}) => LoadingSpinnerStyles.root(theme));
+    const ContentWrapperDiv = styled("div")(({theme}) => LoadingSpinnerStyles.contentWrapper(theme));
 
     useEffect(() => {
-        const messageTimer = setTimeout(function() {
+        const messageTimer = setTimeout(function () {
             setShowMessage(true);
         }, 1000);
 
@@ -24,7 +24,7 @@ function LoadingSpinner(props) {
     return (
         <RootDiv>
             <ContentWrapperDiv>
-                <CircularProgress color={"secondary"} sx={LoadingSpinnerStyles.loadingSpinner}/>
+                <CircularProgress color={"secondary"} sx={LoadingSpinnerStyles.loadingSpinner} />
                 <Fade in={showMessage}>
                     <Typography variant={"body1"} sx={LoadingSpinnerStyles.message}>{message}</Typography>
                 </Fade>
@@ -32,10 +32,6 @@ function LoadingSpinner(props) {
         </RootDiv>
     );
 }
-
-LoadingSpinner.defaultProps = {
-    message: "Loading..."
-};
 
 LoadingSpinner.propTypes = {
     message: PropTypes.string

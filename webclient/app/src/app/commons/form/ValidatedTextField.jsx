@@ -32,18 +32,13 @@ function ValidatedTextField(props) {
     return (
         <TextField
             error={(!isCreate || changed) && error}
-            value={value}
+            value={value ? value : ""}
             onBlur={() => setChanged(true)}
             type={type}
             {...newProps}
         />
     );
 }
-
-ValidatedTextField.defaultProps = {
-    value: "",
-    isCreate: false
-};
 
 ValidatedTextField.propTypes = {
     helperText: PropTypes.string.isRequired,
