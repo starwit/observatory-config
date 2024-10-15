@@ -7,6 +7,7 @@ env:
   IMAGE_NAME: smartparkingconfig
   DOCKERHUB_USERNAME: starwit
   DOCKERHUB_ORG: starwitorg  
+  VERSION_BUILD: 0.0.0
 
 jobs:
   build:
@@ -49,6 +50,10 @@ jobs:
       env:
          CI: false
 
+    - name: get version from pom.xml
+      run: |      
+        echo "VERSION_BUILD=$( mvn help:evaluate -Dexpression=project.version -q -DforceStdout )" >> $GITHUB_ENV
+
   publish_docker:
     name: "Build and publish docker"
     needs: build
@@ -59,11 +64,6 @@ jobs:
       uses: stCarolas/setup-maven@v4.5
       with:
         maven-version: 3.9.2
-
-    - name: get version from pom.xml
-      run: |      
-        echo "VERSION_BUILD=$( mvn help:evaluate -Dexpression=project.version -q -DforceStdout )" >> $GITHUB_ENV
-        echo "VERSION_JAR=$( mvn help:evaluate -Dexpression=project.version -q -DforceStdout )" >> $GITHUB_ENV
 
     - name: Login to Docker Hub
       uses: docker/login-action@v3
