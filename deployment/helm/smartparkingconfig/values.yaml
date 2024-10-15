@@ -6,7 +6,7 @@ image:
   repository: starwitorg/smartparkingconfig
   pullPolicy: IfNotPresent
   # Overrides the image tag whose default is the chart appVersion.
-  tag: ""
+  tag: ${project.version}
 
 nameOverride: ""
 fullnameOverride: ""

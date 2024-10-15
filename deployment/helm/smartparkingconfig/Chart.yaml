@@ -4,9 +4,9 @@ description: Smart Parking Config App
 
 type: application
 
-version: 0.9.0
+version: ${project.version}
 
-appVersion: "0.8.0"
+appVersion: "${project.version}"
 
 dependencies:
   - name: postgresql
