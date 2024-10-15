@@ -55,9 +55,14 @@ jobs:
     runs-on: [self-hosted, linux, X64]
   
     steps:
+    - name: Set up Maven
+      uses: stCarolas/setup-maven@v4.5
+      with:
+        maven-version: 3.9.2
+
     - name: get version from pom.xml
       run: |      
-        echo "VERSION_BUILD=$( mvn help:evaluate -Dexpression=project.version -q -DforceStdout )-${{ github.run_number }}" >> $GITHUB_ENV
+        echo "VERSION_BUILD=$( mvn help:evaluate -Dexpression=project.version -q -DforceStdout )" >> $GITHUB_ENV
         echo "VERSION_JAR=$( mvn help:evaluate -Dexpression=project.version -q -DforceStdout )" >> $GITHUB_ENV
 
     - name: Login to Docker Hub
@@ -75,4 +80,4 @@ jobs:
         context: .
         file: ./dockerfile
         push: true
-        tags: ${{ env.DOCKERHUB_ORG }}/${{ env.IMAGE_NAME }}:${{ env.VERSION_BUILD }}
+        tags: ${{ env.DOCKERHUB_ORG }}/${{ env.IMAGE_NAME }}:${{ env.VERSION_BUILD }}-${{ github.run_number }}
