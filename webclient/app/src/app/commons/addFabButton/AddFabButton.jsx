@@ -26,5 +26,4 @@ function AddFabButton(props) {
 AddFabButton.propTypes = {
     onClick: PropTypes.func.isRequired
 };
-
 export default AddFabButton;
