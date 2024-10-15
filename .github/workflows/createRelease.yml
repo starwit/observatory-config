@@ -132,6 +132,7 @@ jobs:
 
   publish_helm:
     name: "Publish helm chart"
+    needs: build
     runs-on: [self-hosted, linux, X64]
 
     steps:
