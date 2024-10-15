@@ -7,12 +7,13 @@ env:
   IMAGE_NAME: smartparkingconfig
   DOCKERHUB_USERNAME: starwit
   DOCKERHUB_ORG: starwitorg  
-  VERSION_BUILD: 0.0.0
 
 jobs:
   build:
     name: "Build and publish with build number"
     runs-on: [self-hosted, linux, X64]
+    outputs:
+      VERSION_BUILD: ${{ steps.get-version.outputs.VERSION_BUILD }}
 
     steps:
     - name: checkout
@@ -51,13 +52,16 @@ jobs:
          CI: false
 
     - name: get version from pom.xml
+      id: get-version
       run: |      
-        echo "VERSION_BUILD=$( mvn help:evaluate -Dexpression=project.version -q -DforceStdout )" >> $GITHUB_ENV
+        echo "VERSION_BUILD=$( mvn help:evaluate -Dexpression=project.version -q -DforceStdout )"  >> "$GITHUB_OUTPUT"
 
   publish_docker:
     name: "Build and publish docker"
     needs: build
     runs-on: [self-hosted, linux, X64]
+    env:
+      VERSION_BUILD: ${{ needs.build.outputs.VERSION_BUILD }}
 
     steps:
     - name: Login to Docker Hub
