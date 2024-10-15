@@ -17,7 +17,7 @@
 
     <scm>
         <connection>scm:git:https://github.com/starwit/SmartParkingConfig.git</connection>
-        <tag>0.0.10</tag>
+        <tag>0.8.1</tag>
     </scm>
 
     <properties>
