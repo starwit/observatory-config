@@ -86,7 +86,7 @@ const translationEnEN = {
     "button.upload.image": "upload image",
     "button.create": "Add",
     "button.update": "Edit",
-    "button.copy": "copy",
+    "button.copy": "Copy",
     "button.delete": "Delete",
     "button.close": "Close",
     "button.viewlist": "Preview",
