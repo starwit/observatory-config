@@ -52,8 +52,8 @@ spec:
                   key: password
             - name: SERVER_SERVLET_CONTEXT_PATH
               value: {{ .Values.app.contextPath | quote }}
-            - name: DATABACKEND_URL
-              value: {{ .Values.app.databackendUrl }}
+            - name: OBSERVATORY_URL
+              value: {{ .Values.app.observatoryUrl }}
             {{- if .Values.auth.enabled }}
             - name: SPRING_PROFILES_ACTIVE
               value: auth

@@ -24,7 +24,7 @@ import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 
 import de.starwit.persistence.entity.AbstractEntity;
-import de.starwit.service.impl.DatabackendService;
+import de.starwit.service.impl.ObservatoryService;
 
 @WithMockUser(username = "admin", roles = { "ADMIN", "PBUSER" })
 @WebMvcTest()
@@ -40,7 +40,7 @@ public abstract class AbstractControllerIntegrationTest<ENTITY extends AbstractE
     protected ObjectMapper mapper;
 
     @MockBean
-    private DatabackendService databackendService;
+    private ObservatoryService observatoryService;
 
     @BeforeEach
     public void setup() {
@@ -71,10 +71,10 @@ public abstract class AbstractControllerIntegrationTest<ENTITY extends AbstractE
     protected MockHttpServletResponse retrieveById(Long id) throws Exception {
         // when
         MockHttpServletResponse response = mvc.perform(
-        get(getRestPath() + id)
-            .contentType(MediaType.APPLICATION_JSON))
-            .andExpect(status().isOk())
-            .andReturn().getResponse();
+                get(getRestPath() + id)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andReturn().getResponse();
 
         LOG.info(response.getContentAsString());
         return response;

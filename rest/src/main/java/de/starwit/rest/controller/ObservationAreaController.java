@@ -27,7 +27,7 @@ import de.starwit.rest.exception.NotificationDto;
 import de.starwit.service.dto.ObservationAreaDto;
 import de.starwit.service.dto.RegionDto;
 import de.starwit.service.impl.ClassificationService;
-import de.starwit.service.impl.DatabackendService;
+import de.starwit.service.impl.ObservatoryService;
 import de.starwit.service.impl.ObservationAreaService;
 import de.starwit.service.impl.PointService;
 import de.starwit.service.impl.PolygonService;
@@ -46,7 +46,7 @@ public class ObservationAreaController {
     private ObservationAreaService observationareaService;
 
     @Autowired
-    private DatabackendService databackendService;
+    private ObservatoryService observatoryService;
 
     @Autowired
     private ClassificationService classificationService;
@@ -87,21 +87,21 @@ public class ObservationAreaController {
     @DeleteMapping(value = "/{id}")
     public void delete(@PathVariable("id") Long id) throws NotificationException {
         observationareaService.delete(id);
-        databackendService.triggerConfigurationSync();
+        observatoryService.triggerConfigurationSync();
     }
 
     @Operation(summary = "Save polygon to ObservationArea")
     @PostMapping(value = "/save-polygons/{id}")
     public void savePolygons(@PathVariable Long id, @Valid @RequestBody List<RegionDto> polygons) {
         ObservationAreaEntity oae = observationareaService.findById(id);
-        if(oae.getPolygon() != null) {
+        if (oae.getPolygon() != null) {
             polygonService.deleteAll(oae.getPolygon());
             polygonService.getRepository().flush();
         }
 
         oae.getPolygon().removeAll(oae.getPolygon());
         oae = observationareaService.saveAndFlush(oae);
-        
+
         for (RegionDto regionDto : polygons) {
             if ("polygon".equals(regionDto.getType())) {
                 createPolygon(oae, regionDto);
@@ -110,9 +110,9 @@ public class ObservationAreaController {
                 createLine(oae, regionDto);
             }
         }
-        databackendService.triggerConfigurationSync();
-    }       
- 
+        observatoryService.triggerConfigurationSync();
+    }
+
     private PolygonEntity createPolygon(ObservationAreaEntity entity, RegionDto regionDto) {
         PolygonEntity polygonEntity = new PolygonEntity();
         ClassificationEntity cls = classificationService.findByName(regionDto.getCls());
@@ -160,7 +160,8 @@ public class ObservationAreaController {
     }
 
     @PostMapping(value = "/copy-polygons/src/{srcId}/target/{targetId}")
-    public ResponseEntity<Object> copyPolygons(@PathVariable("srcId") Long srcId, @PathVariable("targetId") Long targetId) {
+    public ResponseEntity<Object> copyPolygons(@PathVariable("srcId") Long srcId,
+            @PathVariable("targetId") Long targetId) {
         observationareaService.copyPolygons(targetId, srcId);
         return new ResponseEntity<Object>(null, HttpStatus.NO_CONTENT);
     }
@@ -173,7 +174,8 @@ public class ObservationAreaController {
     }
 
     @PostMapping(value = "/update-processing-status/{id}/{processingEnabled}")
-    public boolean updateProcessingEnabledStatus(@PathVariable("id") Long id, @PathVariable("processingEnabled") boolean processingEnabled) {
+    public boolean updateProcessingEnabledStatus(@PathVariable("id") Long id,
+            @PathVariable("processingEnabled") boolean processingEnabled) {
         ObservationAreaEntity observationArea = observationareaService.findById(id);
         observationArea.setProcessingEnabled(processingEnabled);
         ObservationAreaEntity entity = observationareaService.saveOrUpdate(observationArea);

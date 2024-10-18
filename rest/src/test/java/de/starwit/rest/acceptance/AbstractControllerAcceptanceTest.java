@@ -28,7 +28,7 @@ import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilde
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 import de.starwit.persistence.entity.AbstractEntity;
-import de.starwit.service.impl.DatabackendService;
+import de.starwit.service.impl.ObservatoryService;
 
 public abstract class AbstractControllerAcceptanceTest<ENTITY extends AbstractEntity<Long>> {
 
@@ -41,7 +41,7 @@ public abstract class AbstractControllerAcceptanceTest<ENTITY extends AbstractEn
     protected ObjectMapper mapper;
 
     @MockBean
-    private DatabackendService databackendService;
+    private ObservatoryService observatoryService;
 
     @BeforeEach
     public void setup() {

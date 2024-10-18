@@ -20,27 +20,27 @@ import org.springframework.web.client.RestClientResponseException;
 import de.starwit.persistence.entity.ObservationAreaEntity;
 import de.starwit.persistence.entity.PolygonEntity;
 import de.starwit.persistence.repository.ObservationAreaRepository;
-import de.starwit.service.dto.DatabackendDto;
+import de.starwit.service.dto.ObservatoryDto;
 import de.starwit.service.dto.GeometryPointsDto;
 import jakarta.transaction.Transactional;
 
 @Service
-public class DatabackendService {
+public class ObservatoryService {
 
     private Logger log = LoggerFactory.getLogger(this.getClass());
 
-    private URI databackendUri;
+    private URI observatoryUri;
 
     private RestClient restClient;
 
     @Autowired
     private ObservationAreaRepository observationAreaRepository;
 
-    public DatabackendService(@Value("${databackend.url}") URI configuredUri) {
+    public ObservatoryService(@Value("${observatory.url}") URI configuredUri) {
         restClient = RestClient.create();
         // This is a workaround to make sure the URI ends in a "/", s.t. resolve() works
         // properly further down
-        this.databackendUri = URI.create(configuredUri.toString() + "/").resolve("");
+        this.observatoryUri = URI.create(configuredUri.toString() + "/").resolve("");
     }
 
     @Async
@@ -50,46 +50,47 @@ public class DatabackendService {
         List<ObservationAreaEntity> allObservationAreas = observationAreaRepository.findAll();
 
         log.info("Syncing configuration.");
-        
+
         try {
             ResponseEntity<Void> deleteResponse = restClient.delete()
-                    .uri(databackendUri.resolve("api/observation-job/all"))
+                    .uri(observatoryUri.resolve("api/observation-job/all"))
                     .retrieve().toBodilessEntity();
 
-            log.debug("Cleared databackend configuration: HTTP " + deleteResponse.getStatusCode());
+            log.debug("Cleared observatory configuration: HTTP " + deleteResponse.getStatusCode());
         } catch (RestClientResponseException | ResourceAccessException ex) {
-            log.error("Could not clear existing jobs on databackend", ex);
+            log.error("Could not clear existing jobs on observatory", ex);
             return;
         }
 
         for (ObservationAreaEntity observationArea : allObservationAreas) {
             sendConfig(observationArea);
         }
-        
+
     }
 
     public void sendConfig(ObservationAreaEntity observationAreaEntity) {
         for (PolygonEntity polygon : observationAreaEntity.getPolygon()) {
             try {
-                DatabackendDto dto = toDatabackendDto(observationAreaEntity, polygon);
+                ObservatoryDto dto = toObservatoryDto(observationAreaEntity, polygon);
 
                 ResponseEntity<Void> postResponse = restClient.post()
-                        .uri(databackendUri.resolve("api/observation-job"))
+                        .uri(observatoryUri.resolve("api/observation-job"))
                         .contentType(MediaType.APPLICATION_JSON)
                         .body(dto)
                         .retrieve().toBodilessEntity();
 
-                log.debug("Successfully sent configuration to databackend: HTTP " + postResponse.getStatusCode());
+                log.debug("Successfully sent configuration to observatory: HTTP " + postResponse.getStatusCode());
             } catch (IllegalGeometryException e) {
                 log.error("Illegal geometry (needs to have either exactly 2 or more than 2 points)");
             } catch (RestClientResponseException | ResourceAccessException ex) {
-                log.error("Could not send configuration to databackend", ex);
+                log.error("Could not send configuration to observatory", ex);
             }
         }
     }
 
-    DatabackendDto toDatabackendDto(ObservationAreaEntity observationAreaEntity, PolygonEntity polygonEntity) throws IllegalGeometryException {
-        DatabackendDto dbeDto = new DatabackendDto();
+    ObservatoryDto toObservatoryDto(ObservationAreaEntity observationAreaEntity, PolygonEntity polygonEntity)
+            throws IllegalGeometryException {
+        ObservatoryDto dbeDto = new ObservatoryDto();
 
         dbeDto.setName(polygonEntity.getName());
         dbeDto.setCameraId(observationAreaEntity.getCamera().get(0).getSaeId());
@@ -126,7 +127,8 @@ public class DatabackendService {
         return dbeDto;
     }
 
-    private static GeometryPointsDto createGeometryPoint(PolygonEntity polygon, ObservationAreaEntity observationArea, int orderIdx) {
+    private static GeometryPointsDto createGeometryPoint(PolygonEntity polygon, ObservationAreaEntity observationArea,
+            int orderIdx) {
         GeometryPointsDto point = new GeometryPointsDto();
         point.setOrderIdx(orderIdx);
 
@@ -136,13 +138,15 @@ public class DatabackendService {
         BigDecimal yPixels = yValue.multiply(BigDecimal.valueOf(observationArea.getImageHeight()));
 
         if (observationArea.getGeoReferenced()) {
-            point.setLatitude(observationArea.getTopleftlatitude().add(observationArea.getDegreeperpixely().multiply(yPixels)));
-            point.setLongitude(observationArea.getTopleftlongitude().add(observationArea.getDegreeperpixelx().multiply(xPixels)));
+            point.setLatitude(
+                    observationArea.getTopleftlatitude().add(observationArea.getDegreeperpixely().multiply(yPixels)));
+            point.setLongitude(
+                    observationArea.getTopleftlongitude().add(observationArea.getDegreeperpixelx().multiply(xPixels)));
         } else {
             point.setX(xValue.doubleValue());
             point.setY(yValue.doubleValue());
         }
-        
+
         return point;
     }
 

@@ -2,6 +2,12 @@
 
 Changelog of SmartParkingConfig.
 
+## Current Version ()
+
+### Features
+
+-  adjust code for renaming of databackend to observatory ([48f27](https://github.com/starwit/SmartParkingConfig/commit/48f27ca84824eb2) Anett Hübner)  
+
 ## refs/tags/0.4.0 (2024-02-10)
 
 ### Features

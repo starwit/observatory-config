@@ -3,7 +3,7 @@ package de.starwit.service.dto;
 import java.math.BigDecimal;
 import java.util.List;
 
-public class DatabackendDto {
+public class ObservatoryDto {
     private String name;
     private Long observationAreaId;
     private String type;
@@ -103,5 +103,5 @@ public class DatabackendDto {
     public void setCenterLongitude(BigDecimal centerLongitude) {
         this.centerLongitude = centerLongitude;
     }
-    
+
 }

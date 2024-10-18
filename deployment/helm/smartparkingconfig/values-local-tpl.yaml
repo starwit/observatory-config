@@ -1,6 +1,6 @@
 app:
   contextPath: "/"
-  databackendUrl: "http://internal-hostname/databackend"
+  observatoryUrl: "http://internal-hostname/observatory"
 
 
 auth:
