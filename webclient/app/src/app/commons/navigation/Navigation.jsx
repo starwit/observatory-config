@@ -4,13 +4,13 @@ import NavigationStyles from "./NavigationStyles";
 import {styled} from "@mui/material/styles";
 
 function Navigation(props) {
-    const {menuItems, title, logo, removeContentSpacer} = props;
+    const {logo, removeContentSpacer} = props;
 
-    const MainDiv = styled('div')(({theme}) => removeContentSpacer ? {} : NavigationStyles.contentSpacer(theme))
+    const MainDiv = styled("div")(({theme}) => removeContentSpacer ? {} : NavigationStyles.contentSpacer(theme));
 
     function renderCorrectNavigation() {
         return (
-            <SidebarNavigation menuItems={menuItems} title={title} logo={logo} focusMode={removeContentSpacer}>
+            <SidebarNavigation switchLength="4" logo={logo} focusMode={removeContentSpacer}>
                 {props.children}
             </SidebarNavigation>
         );
@@ -22,12 +22,5 @@ function Navigation(props) {
         </MainDiv>
     );
 }
-
-Navigation.defaultProps = {
-    switchLength: 4,
-    title: "New App",
-    menuItems: []
-
-};
 
 export default Navigation;

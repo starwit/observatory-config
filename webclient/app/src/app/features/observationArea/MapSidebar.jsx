@@ -1,16 +1,18 @@
 import React, {useEffect} from 'react'
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import {ContentCopy, Delete, Edit} from "@mui/icons-material";
-import {CardMedia, CardActionArea, CardContent, Typography, Grid, IconButton, Box, Button, Accordion, AccordionActions, AccordionSummary, AccordionDetails} from "@mui/material";
+import {ContentCopy, Delete, Edit, QueryStats} from "@mui/icons-material";
+import {CardMedia, CardActionArea, CardContent, Typography, Grid, IconButton, Box, Button, Accordion, AccordionActions, AccordionSummary, AccordionDetails, Tooltip, ImageListItemBar} from "@mui/material";
 import {imageFileUrlForId} from "../../services/ImageRest";
 import {useNavigate} from "react-router";
 import MapStyles from "../../assets/styles/MapStyles";
+import {useTranslation} from "react-i18next";
 
 
 export default function MapSidebar(props) {
     const {selected, observationAreas, editArea, copyArea, deleteArea} = props;
     const navigate = useNavigate();
     const [expanded, setExpanded] = React.useState(selected.id);
+    const {t} = useTranslation();
 
     useEffect(() => {
         setExpanded(selected.id);
@@ -20,7 +22,7 @@ export default function MapSidebar(props) {
         navigate("/observationarea/" + area.id)
     }
 
-    function handleChange(panel) { 
+    function handleChange(panel) {
         return function change(event, newExpanded) {
             setExpanded(newExpanded ? panel : false);
         }
@@ -32,6 +34,26 @@ export default function MapSidebar(props) {
             return true;
         }
         return false;
+    }
+
+    function renderProcessingIcon(processingEnabled) {
+        if (processingEnabled) {
+            return (
+                <ImageListItemBar
+                    sx={{background: "rgba(215, 93, 42, 0.7)"}}
+                    actionPosition="left"
+                    position="top"
+                    actionIcon={
+                        <Box display='flex' alignItems="center">
+                            <QueryStats sx={{color: "white", margin: "0.5rem", scale: "90%", opacity: "90%"}} fontSize="large"></QueryStats>
+                            <Typography variant="h6" component="div" color="white">
+                                {t("button.tracking")}
+                            </Typography>
+                        </Box>
+                    }
+                ></ImageListItemBar>
+            );
+        }
     }
 
     function renderImage(area) {
@@ -73,20 +95,27 @@ export default function MapSidebar(props) {
                                     </Typography>
 
                                     <Grid item xs={5} align-items="center">
-                                        <IconButton onClick={() => copyArea(area)}>
-                                            <ContentCopy fontSize={"small"} />
-                                        </IconButton>
-                                        <IconButton onClick={() => editArea(area)}>
-                                            <Edit fontSize={"small"} />
-                                        </IconButton>
-                                        <IconButton onClick={() => deleteArea(area)}>
-                                            <Delete fontSize={"small"} />
-                                        </IconButton>
+                                        <Tooltip title={t("button.copy")}>
+                                            <IconButton onClick={() => copyArea(area)}>
+                                                <ContentCopy fontSize={"small"} />
+                                            </IconButton>
+                                        </Tooltip>
+                                        <Tooltip title={t("button.update")}>
+                                            <IconButton onClick={() => editArea(area)}>
+                                                <Edit fontSize={"small"} />
+                                            </IconButton>
+                                        </Tooltip>
+                                        <Tooltip title={t("button.delete")}>
+                                            <IconButton onClick={() => deleteArea(area)}>
+                                                <Delete fontSize={"small"} />
+                                            </IconButton>
+                                        </Tooltip>
                                     </Grid>
                                 </AccordionSummary>
                                 <AccordionDetails sx={{padding: 0}}>
                                     <CardActionArea onClick={() => openArea(area)}>
                                         {renderImage(area)}
+                                        {renderProcessingIcon(area.processingEnabled)}
                                     </CardActionArea>
                                 </AccordionDetails>
                             </Accordion>);

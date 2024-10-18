@@ -1,26 +1,25 @@
-import { Home } from "@mui/icons-material";
+import {Home} from "@mui/icons-material";
 import EditRoundedIcon from "@mui/icons-material/EditRounded";
-import PlayCircleFilledWhiteIcon from '@mui/icons-material/PlayCircleFilledWhite';
-import StopCircleIcon from '@mui/icons-material/StopCircle';
-import { IconButton, Stack, Typography } from "@mui/material";
+import PlayCircleFilledWhiteIcon from "@mui/icons-material/PlayCircleFilledWhite";
+import StopCircleIcon from "@mui/icons-material/StopCircle";
+import {IconButton, Stack, Tooltip, Typography} from "@mui/material";
 import FormControl from "@mui/material/FormControl";
 import MenuItem from "@mui/material/MenuItem";
 import Select from "@mui/material/Select";
-import React, { useMemo, useState } from "react";
-import { useTranslation } from "react-i18next";
+import React, {useMemo, useState} from "react";
+import {useTranslation} from "react-i18next";
 import ConfirmationDialog from "../../commons/dialog/ConfirmationDialog";
 import ObservationAreaRest from "../../services/ObservationAreaRest";
-
 
 function ObservationAreaSelect(props) {
     const {
         observationAreas,
         selectedArea,
-        onHomeClick, 
-        onEditClick, 
-        onAreaChange, 
-    } = props
-    
+        onHomeClick,
+        onEditClick,
+        onAreaChange
+    } = props;
+
     const {t} = useTranslation();
 
     const [processingPromptOpen, setProcessingPromptOpen] = useState(false);
@@ -40,10 +39,8 @@ function ObservationAreaSelect(props) {
         setProcessingPromptOpen(false);
     }
 
-
-
     function toggleProcessing() {
-        let tempProcessingEnabled = !processingEnabled;
+        const tempProcessingEnabled = !processingEnabled;
         observationAreaRest.updateProcessingStatus(selectedArea.id, tempProcessingEnabled).then(response => {
             if (response.data == null) {
                 return;
@@ -56,19 +53,19 @@ function ObservationAreaSelect(props) {
     function renderProcessingIcon() {
         if (processingEnabled) {
             return (
-            <StopCircleIcon fontSize="small" color="error" />  
-            )
+                <StopCircleIcon fontSize="small" color="error" />
+            );
         }
         return (
-            <PlayCircleFilledWhiteIcon fontSize="small"/>
-        )
+            <PlayCircleFilledWhiteIcon fontSize="small" />
+        );
     }
 
     function renderProcessingText() {
         if (processingEnabled) {
             return (
-                <Typography variant="body2" component="span" noWrap sx={{marginTop: "0.2rem"}}>{t('button.tracking')}</Typography>
-            )
+                <Typography variant="body2" component="span" noWrap sx={{marginTop: "0.2rem"}}>{t("button.tracking")}</Typography>
+            );
         }
         return;
     }
@@ -95,35 +92,37 @@ function ObservationAreaSelect(props) {
                 </Select>
             </FormControl>
             <FormControl>
-                <IconButton sx={{height: "2rem"}} onClick={onEditClick}>
-                    <EditRoundedIcon fontSize="small" />
-                </IconButton>
+                <Tooltip title={t("button.update")}>
+                    <IconButton sx={{height: "2rem"}} onClick={onEditClick}>
+                        <EditRoundedIcon fontSize="small" />
+                    </IconButton>
+                </Tooltip>
             </FormControl>
 
             <FormControl>
-            <IconButton sx={{height: "2rem"}}
-                onClick={() => {
-                openProcessingPrompt();
-            }}
-            >
-                {renderProcessingIcon()}
-            </IconButton>
+                <Tooltip title={processingEnabled ? t("observationArea.track.stop.title") : t("observationArea.track.start.title")}>
+                    <IconButton sx={{height: "2rem"}}
+                        onClick={() => {
+                            openProcessingPrompt();
+                        }}
+                    >
+                        {renderProcessingIcon()}
+                    </IconButton>
+                </Tooltip>
             </FormControl>
-                {renderProcessingText()}
+            {renderProcessingText()}
             <FormControl>
-
                 <ConfirmationDialog
-                    title={t("observationArea.track.title")}
+                    title={processingEnabled ? t("observationArea.track.stop.title") : t("observationArea.track.start.title")}
                     message={processingEnabled ? t("observationArea.track.stop") : t("observationArea.track.start")}
                     open={processingPromptOpen}
                     onClose={closeProcessingPrompt}
                     onSubmit={toggleProcessing}
                     confirmTitle={t("button.submit")}
-                />           
+                />
             </FormControl>
         </Stack >
     );
 }
-
 
 export default ObservationAreaSelect;

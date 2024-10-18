@@ -3,7 +3,7 @@ import {TextField} from "@mui/material";
 import PropTypes from "prop-types";
 
 function ValidatedTextField(props) {
-    const {value, regex, isCreate, notNull, min, max, type, ...newProps} = props;
+    const {value = "", regex, isCreate = false, notNull, min, max, type, ...newProps} = props;
     const [error, setError] = useState(false);
     const [changed, setChanged] = useState(false);
 
@@ -39,11 +39,6 @@ function ValidatedTextField(props) {
         />
     );
 }
-
-ValidatedTextField.defaultProps = {
-    value: "",
-    isCreate: false
-};
 
 ValidatedTextField.propTypes = {
     helperText: PropTypes.string.isRequired,
