@@ -13,22 +13,22 @@ import de.starwit.persistence.entity.ClassificationEntity;
 import de.starwit.persistence.entity.ObservationAreaEntity;
 import de.starwit.persistence.entity.PointEntity;
 import de.starwit.persistence.entity.PolygonEntity;
-import de.starwit.service.dto.DatabackendDto;
-import de.starwit.service.impl.DatabackendService.IllegalGeometryException;
+import de.starwit.service.dto.ObservatoryDto;
+import de.starwit.service.impl.ObservatoryService.IllegalGeometryException;
 
-public class DatabackendServiceTest {
-    
+public class ObservatoryServiceTest {
+
     @Test
-    public void testToDatabackendDtoPixelLine() throws IllegalGeometryException {
+    public void testToObservatoryDtoPixelLine() throws IllegalGeometryException {
 
         PolygonEntity polygon = createLineWithDefaults();
 
         ObservationAreaEntity observationAreaEntity = createObservationAreaWithDefaults();
         observationAreaEntity.setProcessingEnabled(true);
         observationAreaEntity.setGeoReferenced(false);
-        
-        DatabackendService testee = new DatabackendService(URI.create("http://localhost"));
-        DatabackendDto dbeDto = testee.toDatabackendDto(observationAreaEntity, polygon);
+
+        ObservatoryService testee = new ObservatoryService(URI.create("http://localhost"));
+        ObservatoryDto dbeDto = testee.toObservatoryDto(observationAreaEntity, polygon);
 
         assertThat(dbeDto.getCameraId()).isEqualTo("stream1");
         assertThat(dbeDto.getClassification()).isEqualTo(polygon.getClassification().getName());
@@ -43,18 +43,18 @@ public class DatabackendServiceTest {
     }
 
     @Test
-    public void testToDatabackendDtoGeoLine() throws IllegalGeometryException {
+    public void testToObservatoryDtoGeoLine() throws IllegalGeometryException {
 
         PolygonEntity polygon = createLineWithDefaults();
 
         ObservationAreaEntity observationAreaEntity = createObservationAreaWithDefaults();
         observationAreaEntity.setProcessingEnabled(true);
         observationAreaEntity.setGeoReferenced(true);
-        
-        DatabackendService testee = new DatabackendService(URI.create("http://localhost"));
+
+        ObservatoryService testee = new ObservatoryService(URI.create("http://localhost"));
         observationAreaEntity.setProcessingEnabled(true);
-        DatabackendDto dbeDto = testee.toDatabackendDto(observationAreaEntity, polygon);
-        
+        ObservatoryDto dbeDto = testee.toObservatoryDto(observationAreaEntity, polygon);
+
         assertThat(dbeDto.getCameraId()).isEqualTo("stream1");
         assertThat(dbeDto.getClassification()).isEqualTo(polygon.getClassification().getName());
         assertThat(dbeDto.getDetectionClassId()).isEqualTo(2);
@@ -62,22 +62,23 @@ public class DatabackendServiceTest {
         assertThat(dbeDto.getName()).isEqualTo("lineRegion");
         assertThat(dbeDto.getObservationAreaId()).isEqualTo(1);
         assertThat(dbeDto.getType()).isEqualTo("LINE_CROSSING");
-        assertThat(dbeDto.getGeoReferenced()).isTrue();  
-        assertThat(dbeDto.getGeometryPoints().get(1).getX()).isNull();;
+        assertThat(dbeDto.getGeoReferenced()).isTrue();
+        assertThat(dbeDto.getGeometryPoints().get(1).getX()).isNull();
+        ;
         assertThat(dbeDto.getGeometryPoints().get(1).getLatitude().doubleValue()).isEqualTo(52.5);
     }
 
     @Test
-    public void testToDatabackendDtoPixelPolygon() throws IllegalGeometryException {
+    public void testToObservatoryDtoPixelPolygon() throws IllegalGeometryException {
 
         PolygonEntity polygon = createPolygonWithDefaults();
-        
+
         ObservationAreaEntity observationAreaEntity = createObservationAreaWithDefaults();
         observationAreaEntity.setProcessingEnabled(true);
         observationAreaEntity.setGeoReferenced(false);
 
-        DatabackendService testee = new DatabackendService(URI.create("http://localhost"));
-        DatabackendDto dbeDto = testee.toDatabackendDto(observationAreaEntity, polygon);
+        ObservatoryService testee = new ObservatoryService(URI.create("http://localhost"));
+        ObservatoryDto dbeDto = testee.toObservatoryDto(observationAreaEntity, polygon);
 
         assertThat(dbeDto.getCameraId()).isEqualTo("stream1");
         assertThat(dbeDto.getClassification()).isEqualTo(polygon.getClassification().getName());
@@ -92,17 +93,16 @@ public class DatabackendServiceTest {
     }
 
     @Test
-    public void testToDatabackendDtoGeoPolygon() throws IllegalGeometryException {
+    public void testToObservatoryDtoGeoPolygon() throws IllegalGeometryException {
 
         PolygonEntity polygon = createPolygonWithDefaults();
-        
+
         ObservationAreaEntity observationAreaEntity = createObservationAreaWithDefaults();
         observationAreaEntity.setProcessingEnabled(true);
         observationAreaEntity.setGeoReferenced(true);
 
-        DatabackendService testee = new DatabackendService(URI.create("http://localhost"));
-        DatabackendDto dbeDto = testee.toDatabackendDto(observationAreaEntity, polygon);
-
+        ObservatoryService testee = new ObservatoryService(URI.create("http://localhost"));
+        ObservatoryDto dbeDto = testee.toObservatoryDto(observationAreaEntity, polygon);
 
         assertThat(dbeDto.getCameraId()).isEqualTo("stream1");
         assertThat(dbeDto.getClassification()).isEqualTo(polygon.getClassification().getName());
@@ -127,11 +127,10 @@ public class DatabackendServiceTest {
         polygon.setName("lineRegion");
         polygon.setOpen(true);
         polygon.setClassification(cls);
-    
+
         polygon.setPoint(Arrays.asList(
-            createPoint(1, 0, 0),
-            createPoint(2, 0.5, 0.5)
-        )); 
+                createPoint(1, 0, 0),
+                createPoint(2, 0.5, 0.5)));
 
         return polygon;
     }
@@ -139,7 +138,7 @@ public class DatabackendServiceTest {
     PolygonEntity createPolygonWithDefaults() {
         ClassificationEntity cls = new ClassificationEntity();
         cls.setName("testClassification");
-        
+
         PolygonEntity polygon = new PolygonEntity();
 
         polygon.setId(2L);
@@ -148,14 +147,13 @@ public class DatabackendServiceTest {
         polygon.setClassification(cls);
 
         polygon.setPoint(Arrays.asList(
-            createPoint(1, 0, 0),
-            createPoint(2, 0.5, 0),
-            createPoint(3, 0, 0.5)
-        ));
+                createPoint(1, 0, 0),
+                createPoint(2, 0.5, 0),
+                createPoint(3, 0, 0.5)));
 
         return polygon;
     }
-    
+
     ObservationAreaEntity createObservationAreaWithDefaults() {
         CameraEntity camera = new CameraEntity();
         camera.setSaeId("stream1");

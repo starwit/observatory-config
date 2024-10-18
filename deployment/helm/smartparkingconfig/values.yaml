@@ -13,7 +13,7 @@ fullnameOverride: ""
 
 app:
   context_path: ""
-  databackend_url: ""
+  observatory_url: ""
 
 auth:
   enabled: true

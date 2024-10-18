@@ -1,6 +1,6 @@
 {
     "Servers": {
-        "databackend": {
+        "observatory": {
             "Name": "SmartParkingConfig",
             "Group": "Servers",
             "Port": 5432,
