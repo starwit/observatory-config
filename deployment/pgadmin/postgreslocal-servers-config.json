@@ -1,14 +1,14 @@
 {
     "Servers": {
         "observatory": {
-            "Name": "SmartParkingConfig",
+            "Name": "observatory-config",
             "Group": "Servers",
             "Port": 5432,
-            "Username": "smartparkingconfig",
+            "Username": "observatory-config",
             "Host": "postgres",
             "SSLMode": "prefer",
             "MaintenanceDB": "postgres",
-            "PasswordExecCommand": "echo 'smartparkingconfig'"
+            "PasswordExecCommand": "echo 'observatory-config'"
         }
     }
 }

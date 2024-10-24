@@ -4,7 +4,7 @@ on:
   workflow_dispatch:
 
 env:
-  IMAGE_NAME: smartparkingconfig
+  IMAGE_NAME: observatory-config
   DOCKERHUB_USERNAME: starwit
   DOCKERHUB_ORG: starwitorg  
 

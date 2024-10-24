@@ -1,14 +1,14 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ include "smartparkingconfig.fullname" . }}
+  name: {{ include "observatory-config.fullname" . }}
   labels:
-    {{- include "smartparkingconfig.labels" . | nindent 4 }}
+    {{- include "observatory-config.labels" . | nindent 4 }}
 spec:
   replicas: 1
   selector:
     matchLabels:
-      {{- include "smartparkingconfig.selectorLabels" . | nindent 6 }}
+      {{- include "observatory-config.selectorLabels" . | nindent 6 }}
   template:
     metadata:
       {{- with .Values.podAnnotations }}
@@ -16,7 +16,7 @@ spec:
         {{- toYaml . | nindent 8 }}
       {{- end }}
       labels:
-        {{- include "smartparkingconfig.selectorLabels" . | nindent 8 }}
+        {{- include "observatory-config.selectorLabels" . | nindent 8 }}
     spec:
       {{- with .Values.imagePullSecrets }}
       imagePullSecrets:

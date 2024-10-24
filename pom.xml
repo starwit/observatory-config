@@ -10,13 +10,13 @@
     </parent>
 
     <groupId>de.starwit</groupId>
-    <artifactId>SmartParkingConfig</artifactId>
+    <artifactId>observatory-config</artifactId>
     <version>0.8.2-SNAPSHOT</version>
     <description>Observer Configuration</description>
     <packaging>pom</packaging>
 
     <scm>
-        <connection>scm:git:https://github.com/starwit/SmartParkingConfig.git</connection>
+        <connection>scm:git:https://github.com/starwit/observatory-config.git</connection>
         <tag>0.8.1</tag>
     </scm>
 

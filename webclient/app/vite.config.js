@@ -1,6 +1,6 @@
 import {defineConfig} from "vite";
 import react from "@vitejs/plugin-react";
-import { createUnplugin } from 'unplugin'
+import {createUnplugin} from 'unplugin'
 
 export default defineConfig(({command}) => {
   if (command === "serve") {
@@ -8,10 +8,10 @@ export default defineConfig(({command}) => {
       plugins: [
         react(),
       ],
-      base: "/smartparkingconfig/",
+      base: "/observatory-config/",
       server: {
         proxy: {
-          "/smartparkingconfig/api": "http://localhost:8081"
+          "/observatory-config/api": "http://localhost:8081"
         }
       },
     };

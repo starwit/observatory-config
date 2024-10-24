@@ -20,7 +20,7 @@ services:
     volumes:
       - keycloak-db:/var/lib/postgresql/data
 
-  smartparkingconfig-keycloak:
+  observatory-config-keycloak:
     image: quay.io/keycloak/keycloak
     volumes:
       - ./keycloak/imports:/opt/keycloak/data/import

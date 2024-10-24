@@ -1,9 +1,9 @@
-# Default values for smartparkingconfig.
+# Default values for observatory-config.
 # This is a YAML-formatted file.
 # Declare variables to be passed into your templates.
 
 image:
-  repository: starwitorg/smartparkingconfig
+  repository: starwitorg/observatory-config
   pullPolicy: IfNotPresent
   # Overrides the image tag whose default is the chart appVersion.
   tag: ${project.version}
@@ -17,16 +17,16 @@ app:
 
 auth:
   enabled: true
-  keycloakRealmUrlInternal: http://internal-hostname/realms/smartparkingconfig
-  keycloakRealmUrlExternal: https://external-hostname/realms/smartparkingconfig
-  clientId: smartparkingconfig
-  clientSecret: smartparkingconfig # TODO get from secret
+  keycloakRealmUrlInternal: http://internal-hostname/realms/observatory-config
+  keycloakRealmUrlExternal: https://external-hostname/realms/observatory-config
+  clientId: observatory-config
+  clientSecret: observatory-config # TODO get from secret
 
 postgresql:
   auth:
-    database: smartparkingconfig
-    username: smartparkingconfig
-    password: smartparkingconfig
+    database: observatory-config
+    username: observatory-config
+    password: observatory-config
 
 # extraEnv: |
 #   - name: JAVA_TOOL_OPTIONS

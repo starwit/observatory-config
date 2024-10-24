@@ -1,6 +1,6 @@
 {
     "id": 16,
-    "baseName": "SmartParkingConfig",
+    "baseName": "observatory-config",
     "packageName": "starwit",
     "targetPath": null,
     "template": {

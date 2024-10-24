@@ -62,10 +62,10 @@ jobs:
       uses: azure/setup-helm@v4
 
     - name: run helm dependency update
-      working-directory: application/target/helm/smartparkingconfig
+      working-directory: application/target/helm/observatory-config
       run: helm dep update
 
     - name: run helm template
       working-directory: application/target/helm
-      run: helm template smartparkingconfig
+      run: helm template observatory-config
 
