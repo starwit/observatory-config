@@ -1,5 +1,5 @@
 
-Installed SmartParkingConfig to your cluster.
+Installed observatory-config to your cluster.
 
  ____                       _     ____            _    _                ____             __ _       
 / ___| _ __ ___   __ _ _ __| |_  |  _ \ __ _ _ __| | _(_)_ __   __ _   / ___|___  _ __  / _(_) __ _ 
@@ -23,7 +23,7 @@ POSTGRES_PW=$(kubectl -n {{ .Release.Namespace }} get secrets {{ .Release.Name }
 echo $POSTGRES_PW
 
 3. Get application directly from pod with following commands
-export POD_NAME=$(kubectl get pods --namespace {{ .Release.Namespace }} -l "app.kubernetes.io/name={{ include "smartparkingconfig.name" . }},app.kubernetes.io/instance={{ .Release.Name }}" -o jsonpath="{.items[0].metadata.name}")
+export POD_NAME=$(kubectl get pods --namespace {{ .Release.Namespace }} -l "app.kubernetes.io/name={{ include "observatory-config.name" . }},app.kubernetes.io/instance={{ .Release.Name }}" -o jsonpath="{.items[0].metadata.name}")
 export CONTAINER_PORT=$(kubectl get pod --namespace {{ .Release.Namespace }} $POD_NAME -o jsonpath="{.spec.containers[0].ports[0].containerPort}")
 kubectl --namespace {{ .Release.Namespace }} port-forward $POD_NAME 8081:$CONTAINER_PORT
 echo "Visit http://127.0.0.1:8081 to use your application"

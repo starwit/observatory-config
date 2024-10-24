@@ -1,0 +1,25 @@
+app:
+  contextPath: "/"
+  observatoryUrl: "http://internal-hostname/observatory"
+
+
+auth:
+  enabled: true
+  keycloakRealmUrlInternal: http://internal-hostname/realms/observatory-config
+  keycloakRealmUrlExternal: https://external-hostname/realms/observatory-config # will be used for readyness probe
+  clientId: observatory-config
+  clientSecret: observatory-config # TODO get from secret
+
+postgresql:
+  auth:
+    database: observatory-config
+    username: observatory-config
+    password: observatory-config
+
+ingress:
+  enabled: true
+  hosts:
+    - host: <<hostname>>
+      paths:
+        - path: /observatory-config
+          pathType: ImplementationSpecific

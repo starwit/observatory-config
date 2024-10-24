@@ -1,5 +1,5 @@
 {
-  "realm": "smartparkingconfig",
+  "realm": "observatory-config",
   "notBefore": 0,
   "defaultSignatureAlgorithm": "RS256",
   "revokeRefreshToken": false,
@@ -59,7 +59,7 @@
         "attributes": {}
       },
       {
-        "name": "default-roles-smartparkingconfig",
+        "name": "default-roles-observatory-config",
         "description": "${role_default-roles}",
         "composite": true,
         "composites": {
@@ -355,12 +355,12 @@
           "attributes": {}
         }
       ],
-      "smartparkingconfig": []
+      "observatory-config": []
     }
   },
   "groups": [],
   "defaultRole": {
-    "name": "default-roles-smartparkingconfig",
+    "name": "default-roles-observatory-config",
     "description": "${role_default-roles}",
     "composite": true,
     "clientRole": false
@@ -427,13 +427,13 @@
       "clientId": "account",
       "name": "${client_account}",
       "rootUrl": "${authBaseUrl}",
-      "baseUrl": "/realms/smartparkingconfig/account/",
+      "baseUrl": "/realms/observatory-config/account/",
       "surrogateAuthRequired": false,
       "enabled": true,
       "alwaysDisplayInConsole": false,
       "clientAuthenticatorType": "client-secret",
       "redirectUris": [
-        "/realms/smartparkingconfig/account/*"
+        "/realms/observatory-config/account/*"
       ],
       "webOrigins": [],
       "notBefore": 0,
@@ -471,13 +471,13 @@
       "clientId": "account-console",
       "name": "${client_account-console}",
       "rootUrl": "${authBaseUrl}",
-      "baseUrl": "/realms/smartparkingconfig/account/",
+      "baseUrl": "/realms/observatory-config/account/",
       "surrogateAuthRequired": false,
       "enabled": true,
       "alwaysDisplayInConsole": false,
       "clientAuthenticatorType": "client-secret",
       "redirectUris": [
-        "/realms/smartparkingconfig/account/*"
+        "/realms/observatory-config/account/*"
       ],
       "webOrigins": [],
       "notBefore": 0,
@@ -600,8 +600,8 @@
       "rootUrl": null
     },
     {
-      "clientId": "smartparkingconfig",
-      "name": "smartparkingconfig",
+      "clientId": "observatory-config",
+      "name": "observatory-config",
       "description": "",
       "adminUrl": "",
       "baseUrl": "",
@@ -609,7 +609,7 @@
       "enabled": true,
       "alwaysDisplayInConsole": false,
       "clientAuthenticatorType": "client-secret",
-      "secret": "smartparkingconfig",
+      "secret": "observatory-config",
       "redirectUris": [
         "*"
       ],
@@ -724,13 +724,13 @@
       "clientId": "security-admin-console",
       "name": "${client_security-admin-console}",
       "rootUrl": "${authAdminUrl}",
-      "baseUrl": "/admin/smartparkingconfig/console/",
+      "baseUrl": "/admin/observatory-config/console/",
       "surrogateAuthRequired": false,
       "enabled": true,
       "alwaysDisplayInConsole": false,
       "clientAuthenticatorType": "client-secret",
       "redirectUris": [
-        "/admin/smartparkingconfig/console/*"
+        "/admin/observatory-config/console/*"
       ],
       "webOrigins": [
         "+"
@@ -2112,7 +2112,7 @@
       "disableableCredentialTypes": [],
       "requiredActions": [],
       "realmRoles": [
-        "default-roles-smartparkingconfig",
+        "default-roles-observatory-config",
         "admin"
       ],
       "notBefore": 0
@@ -2134,7 +2134,7 @@
       "disableableCredentialTypes": [],
       "requiredActions": [],
       "realmRoles": [
-        "default-roles-smartparkingconfig",
+        "default-roles-observatory-config",
         "reader"
       ],
       "notBefore": 0
@@ -2156,7 +2156,7 @@
       "disableableCredentialTypes": [],
       "requiredActions": [],
       "realmRoles": [
-        "default-roles-smartparkingconfig",
+        "default-roles-observatory-config",
         "user"
       ],
       "notBefore": 0
