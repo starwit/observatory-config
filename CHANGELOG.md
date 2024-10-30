@@ -2,7 +2,7 @@
 
 Changelog of observatory-config.
 
-## Current Version ()
+## refs/tags/0.8.2 (2024-10-24)
 
 ### Features
 
