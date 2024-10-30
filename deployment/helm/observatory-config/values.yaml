@@ -9,7 +9,7 @@ image:
   tag: ${project.version}
 
 nameOverride: ""
-fullnameOverride: ""
+fullnameOverride: "observatory-config"
 
 app:
   context_path: ""
