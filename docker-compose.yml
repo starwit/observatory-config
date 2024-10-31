@@ -1,2 +1,2 @@
 include: 
-  - ./deployment/noauth-docker-compose.yml
+  - ./deployment/auth-docker-compose.yml
