@@ -58,3 +58,4 @@ test.log
 
 application.properties
 docker-compose.yml
+!deployment/docker-compose.yml
