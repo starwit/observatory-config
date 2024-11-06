@@ -21,7 +21,7 @@ services:
       - keycloak-db:/var/lib/postgresql/data
 
   observatory-config-keycloak:
-    image: docker.io/bitnami/keycloak:latest
+    image: docker.io/bitnami/keycloak:26
     volumes:
       - ./keycloak/imports:/opt/keycloak/data/import
     depends_on:
