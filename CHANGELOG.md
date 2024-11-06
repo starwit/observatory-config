@@ -2,6 +2,12 @@
 
 Changelog of observatory-config.
 
+## Current Version ()
+
+### Features
+
+-  updated keycloak in docker compose script ([85de4](https://github.com/starwit/observatory-config/commit/85de43f80b410ef) Anett Hübner)  
+
 ## refs/tags/0.8.2 (2024-10-24)
 
 ### Features
