@@ -1,2 +1,0 @@
-include: 
-  - ./deployment/noauth-docker-compose.yml
