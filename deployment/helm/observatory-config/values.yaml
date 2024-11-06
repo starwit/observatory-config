@@ -12,8 +12,8 @@ nameOverride: ""
 fullnameOverride: "observatory-config"
 
 app:
-  context_path: ""
-  observatory_url: ""
+  contextPath: ""
+  observatoryUrl: ""
 
 auth:
   enabled: true

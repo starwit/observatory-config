@@ -33,7 +33,7 @@ spec:
       - name: wait-for-keycloak
         image: curlimages/curl:latest
         command: ["/bin/sh","-c"]
-        args: ["while [ $(curl -sw '%{http_code}' {{ .Values.auth.keycloak_url }} -o /dev/null) -ne 200 ]; do sleep 5; echo 'Waiting for keycloak at {{ .Values.auth.keycloak_url }}'; done"]
+        args: ["while [ $(curl -sw '%{http_code}' {{ .Values.auth.keycloakRealmUrlInternal }} -o /dev/null) -ne 200 ]; do sleep 5; echo 'Waiting for keycloak at {{ .Values.auth.keycloakRealmUrlInternal }}'; done"]
       containers:
         - name: {{ .Chart.Name }}
           securityContext:
