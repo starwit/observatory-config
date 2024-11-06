@@ -9,7 +9,7 @@
 
     <groupId>de.starwit</groupId>
     <artifactId>observatory-config</artifactId>
-    <version>0.8.7-SNAPSHOT</version>
+    <version>0.8.7-1-SNAPSHOT</version>
     <description>Observer Configuration</description>
     <packaging>pom</packaging>
 
