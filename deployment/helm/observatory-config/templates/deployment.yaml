@@ -1,3 +1,18 @@
+{{- $appDbUrl := "" }}
+{{- $appDbHost := "" }}
+{{- $appDbPort := "" }}
+{{- with .Values.database }}
+  {{- if .internal }}
+  {{- $appDbHost = (include "postgresql.servicename" $) }}
+  {{- $appDbPort = 5432 }}
+  {{- $appDbUrl = print $appDbHost ":" $appDbPort "/" .name }}
+  {{- else }}
+  {{- $appDbHost = .host }}
+  {{- $appDbPort = .port }}
+  {{- $appDbUrl = print .host ":" .port "/" .name }}
+  {{- end }}
+{{- end }}
+
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -25,15 +40,15 @@ spec:
       securityContext:
         {{- toYaml .Values.podSecurityContext | nindent 8 }}
       initContainers:
-      - name: check-db-ready
-        image: postgres:15.4
-        command: ['sh', '-c', 
-          'until pg_isready -h {{ include "postgresql.servicename" . }} -p 5432; 
-          do echo waiting for database; sleep 2; done;']
-      - name: wait-for-keycloak
-        image: curlimages/curl:latest
-        command: ["/bin/sh","-c"]
-        args: ["while [ $(curl -sw '%{http_code}' {{ .Values.auth.keycloakRealmUrlInternal }} -o /dev/null) -ne 200 ]; do sleep 5; echo 'Waiting for keycloak at {{ .Values.auth.keycloakRealmUrlInternal }}'; done"]
+        - name: wait-for-app-db
+          image: postgres:16-alpine
+          command: ['sh', '-c', 
+            'until pg_isready -h {{ $appDbHost }} -p {{ $appDbPort }}; 
+            do echo waiting for database; sleep 2; done;']
+        - name: wait-for-keycloak
+          image: curlimages/curl:latest
+          command: ["/bin/sh","-c"]
+          args: ["while [ $(curl -sw '%{http_code}' {{ .Values.auth.keycloakRealmUrlInternal }} -o /dev/null) -ne 200 ]; do sleep 5; echo 'Waiting for keycloak at {{ .Values.auth.keycloakRealmUrlInternal }}'; done"]
       containers:
         - name: {{ .Chart.Name }}
           securityContext:
@@ -42,14 +57,11 @@ spec:
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           env:
             - name: SPRING_DATASOURCE_URL
-              value: jdbc:postgresql://{{ include "postgresql.servicename" . }}:5432/{{ .Values.postgresql.auth.database }}
+              value: jdbc:postgresql://{{ $appDbUrl }}
             - name: SPRING_DATASOURCE_USERNAME
-              value: {{ .Values.postgresql.auth.username }}
+              value: {{ .Values.database.username }}
             - name: SPRING_DATASOURCE_PASSWORD
-              valueFrom:
-                secretKeyRef:
-                  name: {{ include "postgresql.secretname" . }}
-                  key: password
+              value: {{ .Values.database.password }}
             - name: SERVER_SERVLET_CONTEXT_PATH
               value: {{ .Values.app.contextPath | quote }}
             - name: OBSERVATORY_URL

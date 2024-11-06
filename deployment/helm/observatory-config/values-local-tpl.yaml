@@ -10,11 +10,11 @@ auth:
   clientId: observatory-config
   clientSecret: observatory-config # TODO get from secret
 
-postgresql:
-  auth:
-    database: observatory-config
-    username: observatory-config
-    password: observatory-config
+database:
+  internal: true
+  name: observatory-config
+  username: observatory-config
+  password: observatory-config
 
 ingress:
   enabled: true
