@@ -9,13 +9,13 @@
 
     <groupId>de.starwit</groupId>
     <artifactId>observatory-config</artifactId>
-    <version>0.8.8-SNAPSHOT</version>
+    <version>0.8.8</version>
     <description>Observer Configuration</description>
     <packaging>pom</packaging>
 
     <scm>
         <connection>scm:git:https://github.com/starwit/observatory-config.git</connection>
-        <tag>0.8.1</tag>
+        <tag>0.8.8</tag>
     </scm>
 
     <properties>
