@@ -1,17 +1,16 @@
 import ReactImageAnnotate from "@starwit/react-image-annotate";
-import {useSnackbar} from 'notistack';
 import React, {useEffect, useMemo, useState} from "react";
 import {useTranslation} from "react-i18next";
 import {setIn} from 'seamless-immutable';
 import ClassificationRest from "../../services/ClassificationRest";
 import ImageRest, {imageFileUrlForId} from "../../services/ImageRest";
 import ObservationAreaRest from "../../services/ObservationAreaRest";
+import {toast} from "react-toastify";
 
 function ImageAnnotate(props) {
     const {observationAreaId} = props;
 
     const {t} = useTranslation();
-    const {enqueueSnackbar} = useSnackbar();
 
     const classificationRest = useMemo(() => new ClassificationRest(), []);
     const observationAreaRest = useMemo(() => new ObservationAreaRest(), []);
@@ -67,21 +66,17 @@ function ImageAnnotate(props) {
         return image;
     }
 
-    function handleMessage(severity, message) {
-        enqueueSnackbar(message, {variant: severity});
-    }
-
     function savePolygons(event) {
         let regions = event.images[0].regions;
         regions = regions.map(r => mapDisplayTextToClsKey(r));
 
         if (!validateRegionNames(regions)) {
-            handleMessage("error", t("error.image.notunique"))
+            toast.error(t("error.image.notunique"))
             return;
         }
 
         observationAreaRest.savePolygons(observationAreaId, regions).then(() => {
-            handleMessage("success", t("response.save.success"));
+            toast.success(t("response.save.success"));
         });
     }
 

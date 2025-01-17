@@ -1,16 +1,17 @@
-import { Button, Dialog, DialogActions, DialogContent, FormControl, Grid, Stack, Typography } from "@mui/material";
-import { useSnackbar } from "notistack";
+import {Button, Dialog, DialogActions, DialogContent, FormControl, Stack, Typography} from "@mui/material";
+import Grid from "@mui/material/Grid2";
+import {toast} from "react-toastify";
 import PropTypes from "prop-types";
-import React, { useEffect, useMemo, useState } from "react";
-import { useDropzone } from 'react-dropzone';
-import { useTranslation } from "react-i18next";
-import { useImmer } from "use-immer";
+import React, {useEffect, useMemo, useState} from "react";
+import {useDropzone} from 'react-dropzone';
+import {useTranslation} from "react-i18next";
+import {useImmer} from "use-immer";
 import ImageUploadStyles from "../../assets/styles/ImageUploadStyles";
 import DialogHeader from "../../commons/dialog/DialogHeader";
 import UpdateField from "../../commons/form/UpdateField";
-import { handleChange, isValid, prepareForSave } from "../../modifiers/DefaultModifier";
-import { entityDefault, entityFields } from "../../modifiers/ObservationAreaModifier";
-import ImageRest, { imageFileUrlForId } from "../../services/ImageRest";
+import {handleChange, isValid, prepareForSave} from "../../modifiers/DefaultModifier";
+import {entityDefault, entityFields} from "../../modifiers/ObservationAreaModifier";
+import ImageRest, {imageFileUrlForId} from "../../services/ImageRest";
 import ObservationAreaRest from "../../services/ObservationAreaRest";
 import CamIDList from "./CamIDList";
 
@@ -30,7 +31,6 @@ function ObservationAreaDialog(props) {
     const [hasFormError, setHasFormError] = useState(false);
     const [imageChanged, setImageChanged] = useState(false);
     const [imageBlob, setImageBlob] = useState(null);
-    const {enqueueSnackbar} = useSnackbar();
 
     useEffect(() => {
         if (open === true) {
@@ -63,15 +63,15 @@ function ObservationAreaDialog(props) {
     useEffect(() => {
         setHasFormError(!allFieldsValid())
     }, [entity, imageBlob]);
-    
+
     function allFieldsValid() {
         if (!isValid(fields, entity)) {
             return false;
         }
-        if (entity.saeIds === undefined || 
-                entity.saeIds === null || 
-                entity.saeIds.length === 0 || 
-                entity.saeIds[0] === "") {
+        if (entity.saeIds === undefined ||
+            entity.saeIds === null ||
+            entity.saeIds.length === 0 ||
+            entity.saeIds[0] === "") {
             return false;
         }
         if (imageBlob === null) {
@@ -88,17 +88,17 @@ function ObservationAreaDialog(props) {
 
     const onDropRejected = event => {
         if (event[0].errors.map(e => e.code).includes("file-invalid-type")) {
-            enqueueSnackbar(t("observationArea.image.invalidType"), {variant: "warning"});
+            toast.warn(t("observationArea.image.invalidType"));
         } else if (event[0].errors.map(e => e.code).includes("file-too-large")) {
-            enqueueSnackbar(t("observationArea.image.tooLarge"), {variant: "warning"});
+            toast.warn(t("observationArea.image.tooLarge"));
         } else {
-            enqueueSnackbar(t("observationArea.image.unknownError"), {variant: "error"});
+            toast.error(t("observationArea.image.unknownError"));
         }
     };
 
     const {getRootProps, getInputProps} = useDropzone({
-        onDropAccepted, 
-        onDropRejected, 
+        onDropAccepted,
+        onDropRejected,
         maxSize: 4194304,
         multiple: false,
         accept: {
@@ -176,30 +176,30 @@ function ObservationAreaDialog(props) {
 
     return (
         <Dialog onClose={onDialogClose} open={open} spacing={2} sx={{zIndex: 10000, "& .MuiDialog-container": {alignItems: "flex-start", mt: "10vh"}}} maxWidth="lg">
-            <DialogHeader onClose={onDialogClose} title={t(`observationArea.${mode}.title`)}/>
+            <DialogHeader onClose={onDialogClose} title={t(`observationArea.${mode}.title`)} />
             <form autoComplete="off">
                 <DialogContent>
                     <Grid container spacing={2}>
                         <Grid item container spacing={2} xs={8}>
                             {makeEntityUpdateField(fields[0], {width: 12, autofocus: true})}
-                            {fields?.slice(2,4).map(field => makeEntityUpdateField(field, {width: 6}))}
-                            <Grid item xs={12}>                 
-                                <CamIDList values={entity?.saeIds} handleChange={handleSaeIdsChange}/>
+                            {fields?.slice(2, 4).map(field => makeEntityUpdateField(field, {width: 6}))}
+                            <Grid item xs={12}>
+                                <CamIDList values={entity?.saeIds} handleChange={handleSaeIdsChange} />
                             </Grid>
                             {makeEntityUpdateField(fields[1], {width: 12})}
                             {entity.geoReferenced && fields?.slice(4).map(field => makeEntityUpdateField(field, {width: 6}))}
                         </Grid>
-                        <Grid item xs={4}> 
-                            <Stack> 
+                        <Grid item xs={4}>
+                            <Stack>
                                 <FormControl {...getRootProps()} sx={ImageUploadStyles.dropzoneStyle}>
                                     <input {...getInputProps()} />
                                     <Typography variant="overline">{t("observationArea.image")}</Typography>
                                     {imageBlob && <img src={URL.createObjectURL(imageBlob)} style={ImageUploadStyles.previewStyle} alt={t("observationArea.image.preview")} />}
                                 </FormControl>
-                                {imageBlob === null ? 
+                                {imageBlob === null ?
                                     <Typography variant="caption" color="#d32f2f">{t("observationArea.image.hint")}</Typography> : null
                                 }
-                            </Stack> 
+                            </Stack>
                         </Grid>
                     </Grid>
                 </DialogContent>
