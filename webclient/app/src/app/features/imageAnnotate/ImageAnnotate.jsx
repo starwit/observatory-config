@@ -1,7 +1,7 @@
 import ReactImageAnnotate from "@starwit/react-image-annotate";
 import React, {useEffect, useMemo, useState} from "react";
 import {useTranslation} from "react-i18next";
-import {setIn} from 'seamless-immutable';
+import {produce} from 'immer';
 import ClassificationRest from "../../services/ClassificationRest";
 import ImageRest, {imageFileUrlForId} from "../../services/ImageRest";
 import ObservationAreaRest from "../../services/ObservationAreaRest";
@@ -43,7 +43,7 @@ function ImageAnnotate(props) {
             const select = classifications.find((c) => c.name == action.cls);
             if (select !== undefined) {
 
-                return setIn(state, ["selectedTool"], select.toolType);
+                return produce(state, s => {s.selectedTool = select.toolType});
             }
         }
         return state;

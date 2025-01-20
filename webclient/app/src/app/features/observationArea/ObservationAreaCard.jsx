@@ -1,6 +1,6 @@
 import {ContentCopy, Delete, Edit} from "@mui/icons-material";
-import {Card, CardActionArea, CardContent, CardMedia, Divider, Grid, IconButton, ImageListItemBar, Tooltip, Typography} from "@mui/material";
-import Box from "@mui/material/Box";
+import {Card, CardActionArea, CardContent, CardMedia, Divider, Box, IconButton, ImageListItemBar, Tooltip, Typography} from "@mui/material";
+import Grid from "@mui/material/Grid2";
 import PropTypes from "prop-types";
 import React from "react";
 import {useTranslation} from "react-i18next";
@@ -45,12 +45,12 @@ function ObservationAreaCard(props) {
             <Card elevation={5}>
                 <CardContent>
                     <Grid container spacing={0}>
-                        <Grid item xs={7}>
+                        <Grid size={7}>
                             <Typography gutterBottom variant="h5" component="div" onClick={openArea} sx={{cursor: "pointer"}}>
                                 {observationArea.name}
                             </Typography>
                         </Grid>
-                        <Grid item xs={5} align="right">
+                        <Grid size={5} align="right">
                             <Tooltip title={t("button.copy")}>
                                 <IconButton onClick={onCopyClick}>
                                     <ContentCopy fontSize={"small"} />

@@ -5,7 +5,7 @@
   "dependencies": {
     "@mui/icons-material": "^6.3.1",
     "@mui/material": "^6.1.1",
-    "@starwit/react-image-annotate": "5.1.1",
+    "@starwit/react-image-annotate": "^6.1.0",
     "axios": "1.7.9",
     "buffer": "npm:buffer@^6.0.3",
     "crypto": "npm:crypto-browserify@^3.12.0",
@@ -28,6 +28,7 @@
     "react-i18next": "^15.4.0",
     "react-router": "^7.1.1",
     "react-router-dom": "^7.1.1",
+    "react-toastify": "^11.0.3",
     "stream": "npm:stream-browserify@^3.0.0",
     "use-immer": "^0.11.0",
     "util": "npm:util@^0.12.5",

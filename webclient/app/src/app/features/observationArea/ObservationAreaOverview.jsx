@@ -1,5 +1,6 @@
-import {Container, Grid, Typography, Stack, Button, Tooltip} from "@mui/material";
+import {Container, Typography, Stack, Button, Tooltip} from "@mui/material";
 import React, {useEffect, useMemo, useState} from "react";
+import Grid from "@mui/material/Grid2";
 import {useTranslation} from "react-i18next";
 import AddFabButton from "../../commons/addFabButton/AddFabButton";
 import ConfirmationDialog from "../../commons/dialog/ConfirmationDialog";
@@ -110,9 +111,9 @@ function ObservationAreaOverview() {
             }
 
             return (
-                <Grid container spacing={5} marginTop={0}>
+                <Grid container spacing={5} marginTop={3}>
                     {observationAreas?.map(area => (
-                        <Grid item sm={6} xs={12} key={area.id}>
+                        <Grid size={{sm: 6, xs: 12}} key={area.id}>
                             <ObservationAreaCard
                                 onEditClick={() => editArea(area)}
                                 onDeleteClick={() => promptDeleteArea(area)}

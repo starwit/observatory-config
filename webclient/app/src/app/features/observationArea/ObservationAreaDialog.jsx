@@ -160,7 +160,7 @@ function ObservationAreaDialog(props) {
 
     function makeEntityUpdateField(field, {width = 12, autofocus = false}) {
         return (
-            <Grid key={field.name} item xs={width}>
+            <Grid key={field.name} size={width}>
                 <FormControl key={field.name} fullWidth>
                     <UpdateField
                         autoFocus={autofocus}
@@ -179,17 +179,17 @@ function ObservationAreaDialog(props) {
             <DialogHeader onClose={onDialogClose} title={t(`observationArea.${mode}.title`)} />
             <form autoComplete="off">
                 <DialogContent>
-                    <Grid container spacing={2}>
-                        <Grid item container spacing={2} xs={8}>
+                    <Grid container spacing={2} size={{xs: 12}}>
+                        <Grid container spacing={2} size={{xs: 8}}>
                             {makeEntityUpdateField(fields[0], {width: 12, autofocus: true})}
                             {fields?.slice(2, 4).map(field => makeEntityUpdateField(field, {width: 6}))}
-                            <Grid item xs={12}>
+                            <Grid size={{xs: 12}}>
                                 <CamIDList values={entity?.saeIds} handleChange={handleSaeIdsChange} />
                             </Grid>
                             {makeEntityUpdateField(fields[1], {width: 12})}
                             {entity.geoReferenced && fields?.slice(4).map(field => makeEntityUpdateField(field, {width: 6}))}
                         </Grid>
-                        <Grid item xs={4}>
+                        <Grid size={{xs: 4}}>
                             <Stack>
                                 <FormControl {...getRootProps()} sx={ImageUploadStyles.dropzoneStyle}>
                                     <input {...getInputProps()} />
