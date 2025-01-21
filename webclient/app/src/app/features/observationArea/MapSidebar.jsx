@@ -1,7 +1,8 @@
 import React, {useEffect} from 'react'
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import {ContentCopy, Delete, Edit, QueryStats} from "@mui/icons-material";
-import {CardMedia, CardActionArea, CardContent, Typography, Grid, IconButton, Box, Button, Accordion, AccordionActions, AccordionSummary, AccordionDetails, Tooltip, ImageListItemBar} from "@mui/material";
+import {CardMedia, CardActionArea, CardContent, Typography, IconButton, Box, Accordion, AccordionSummary, AccordionDetails, Tooltip, ImageListItemBar} from "@mui/material";
+import Grid from '@mui/material/Grid2';
 import {imageFileUrlForId} from "../../services/ImageRest";
 import {useNavigate} from "react-router";
 import MapStyles from "../../assets/styles/MapStyles";
@@ -94,7 +95,7 @@ export default function MapSidebar(props) {
                                         {area.name}
                                     </Typography>
 
-                                    <Grid item xs={5} align-items="center">
+                                    <Grid size={{xs: 5}} align-items="center">
                                         <Tooltip title={t("button.copy")}>
                                             <IconButton onClick={() => copyArea(area)}>
                                                 <ContentCopy fontSize={"small"} />
