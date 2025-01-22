@@ -99,6 +99,7 @@ Each step is executed from the project home directory.
 **The Application can be reached under <http://localhost:8081/observatory-config/>**
 
 **If you are using keycloak:**
+
 * **default user/password is admin/admin**
 * **keycloak can be reached under <http://localhost:8080/auth>**
 
