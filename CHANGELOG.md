@@ -2,6 +2,12 @@
 
 Changelog of observatory-config.
 
+## Current Version ()
+
+### Bug Fixes
+
+-  update Java and Javascript libraries (react 19, Spring Boot a.o.) ([c2388](https://github.com/starwit/observatory-config/commit/c23888a9227819c) Anett Hübner)  
+
 ## refs/tags/0.8.6 (2024-11-06)
 
 ### Features
