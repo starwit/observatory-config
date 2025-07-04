@@ -23,7 +23,7 @@ services:
   observatory-config-keycloak:
     image: docker.io/bitnami/keycloak:26
     volumes:
-      - ./keycloak/imports:/opt/keycloak/data/import
+      - ./keycloak/imports/realm.json:/opt/bitnami/keycloak/data/import/keycloak.obs.realm.json
     depends_on:
       db-keycloak:
         condition: service_healthy
@@ -37,7 +37,7 @@ services:
       KEYCLOAK_ADMIN: admin
       KEYCLOAK_ADMIN_PASSWORD: admin
       KEYCLOAK_HTTP_RELATIVE_PATH: /auth/
-      KEYCLOAK_EXTRA_ARGS: "-Dkeycloak.import=/opt/keycloak/data/import/"
+      KEYCLOAK_EXTRA_ARGS: "--import-realm"
     ports:
       - '8080:8080'
 
