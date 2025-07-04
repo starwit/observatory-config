@@ -1,5 +1,5 @@
 import {Button, Dialog, DialogActions, DialogContent, FormControl, Stack, Typography} from "@mui/material";
-import Grid from "@mui/material/Grid2";
+import { Grid } from '@mui/material';
 import {toast} from "react-toastify";
 import PropTypes from "prop-types";
 import React, {useEffect, useMemo, useState} from "react";

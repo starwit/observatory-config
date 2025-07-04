@@ -1,6 +1,6 @@
 import {Container, Typography, Stack, Button, Tooltip} from "@mui/material";
 import React, {useEffect, useMemo, useState} from "react";
-import Grid from "@mui/material/Grid2";
+import { Grid } from '@mui/material';
 import {useTranslation} from "react-i18next";
 import AddFabButton from "../../commons/addFabButton/AddFabButton";
 import ConfirmationDialog from "../../commons/dialog/ConfirmationDialog";
