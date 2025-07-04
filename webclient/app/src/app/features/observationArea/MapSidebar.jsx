@@ -2,7 +2,7 @@ import React, {useEffect} from 'react'
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import {ContentCopy, Delete, Edit, QueryStats} from "@mui/icons-material";
 import {CardMedia, CardActionArea, CardContent, Typography, IconButton, Box, Accordion, AccordionSummary, AccordionDetails, Tooltip, ImageListItemBar} from "@mui/material";
-import Grid from '@mui/material/Grid2';
+import { Grid } from '@mui/material';
 import {imageFileUrlForId} from "../../services/ImageRest";
 import {useNavigate} from "react-router";
 import MapStyles from "../../assets/styles/MapStyles";

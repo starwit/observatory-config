@@ -1,6 +1,6 @@
 import {ContentCopy, Delete, Edit} from "@mui/icons-material";
 import {Card, CardActionArea, CardContent, CardMedia, Divider, Box, IconButton, ImageListItemBar, Tooltip, Typography} from "@mui/material";
-import Grid from "@mui/material/Grid2";
+import { Grid } from '@mui/material';
 import PropTypes from "prop-types";
 import React from "react";
 import {useTranslation} from "react-i18next";
