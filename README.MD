@@ -6,6 +6,14 @@ This repository contains an application that allows you to define areas to obser
 
 This software provides graphical tools to manage parking spaces. Users can define various area types that creates a configuration for a parking space which will then converted into AI based counting and monitoring jobs.
 
+Following screenshot shows an example instances with four running configurations:
+<img src="docs/Observatory-Overview.jpg" width="800" />
+
+An individual configuration can contain many items, to count objects or collect movement data. Next screenshot shows an example configuration:
+
+<img src="docs/Observatory-Edit.jpg" width="800" />
+
+
 # Installation
 
 This application runs on Kubernetes and standard installation tool is Helm. See section [Development](#development-setup) for other ways to run software in an dev environment.
