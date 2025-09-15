@@ -4,17 +4,18 @@ services:
   postgres:
     image: postgres:latest
     environment:
-      POSTGRES_DB: observatory-config
-      POSTGRES_USER: observatory-config
-      POSTGRES_PASSWORD: observatory-config
+      POSTGRES_DB: observatoryconfig
+      POSTGRES_USER: observatoryconfig
+      POSTGRES_PASSWORD: observatoryconfig
       PGDATA: /var/lib/postgresql/data
     healthcheck:
-      test: ['CMD-SHELL', 'pg_isready -U observatory-config']
+      test: ['CMD-SHELL', 'pg_isready -U observatoryconfig']
       interval: 5s
       timeout: 60s
       retries: 30
     volumes:
       - db:/var/lib/postgresql/data
+      - ./sample_data/observatoryconfig.sql:/docker-entrypoint-initdb.d/observatoryconfig.sql
     ports:
       - "5433:5432"
   
