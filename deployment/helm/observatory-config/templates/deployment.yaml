@@ -45,10 +45,12 @@ spec:
           command: ['sh', '-c', 
             'until pg_isready -h {{ $appDbHost }} -p {{ $appDbPort }}; 
             do echo waiting for database; sleep 2; done;']
+        {{- if .Values.auth.enabled }}
         - name: wait-for-keycloak
           image: curlimages/curl:latest
           command: ["/bin/sh","-c"]
           args: ["while [ $(curl -sw '%{http_code}' {{ .Values.auth.keycloakRealmUrlInternal }} -o /dev/null) -ne 200 ]; do sleep 5; echo 'Waiting for keycloak at {{ .Values.auth.keycloakRealmUrlInternal }}'; done"]
+        {{- end }}
       containers:
         - name: {{ .Chart.Name }}
           securityContext:
