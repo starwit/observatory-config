@@ -39,6 +39,7 @@ const translationEnEN = {
     "classification.name.lightbarrier": "Light Barrier",
     "classification.name.block": "Restricted Area",
     "classification.name.observe": "Observation Area",
+    "classification.name.flow": "Flow Calculation",
     "observationArea": "Observation Area",
     "observationArea.title": "Observation Area",
     "observationArea.create.title": "Create Observation Area",
