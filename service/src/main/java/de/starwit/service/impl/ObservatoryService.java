@@ -107,7 +107,11 @@ public class ObservatoryService {
 
         if (polygonEntity.getPoint().size() == 2) {
 
-            dbeDto.setType("LINE_CROSSING");
+            if (polygonEntity.getClassification().getName().equalsIgnoreCase("flow")) {
+                dbeDto.setType("FLOW");
+            } else {
+                dbeDto.setType("LINE_CROSSING");
+            }
             geometryPoints.add(createGeometryPoint(polygonEntity, observationAreaEntity, 0));
             geometryPoints.add(createGeometryPoint(polygonEntity, observationAreaEntity, 1));
 
