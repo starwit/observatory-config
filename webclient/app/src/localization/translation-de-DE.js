@@ -39,6 +39,7 @@ const translationDeDE = {
     "classification.name.lightbarrier": "Lichtschranke",
     "classification.name.block": "Sperrfläche",
     "classification.name.observe": "Parkbereich",
+    "classification.name.flow": "Flussberechnung",
     "observationArea.image.empty": "Bitte fügen Sie ein Kamerabild oder einen Kartenausschnitt als Bild hinzu",
     "observationArea": "Parkfläche",
     "observationAreas.title": "Parkflächen",
