@@ -30,7 +30,7 @@ public class ObservatoryServiceTest {
         ObservatoryService testee = new ObservatoryService(URI.create("http://localhost"));
         ObservatoryDto dbeDto = testee.toObservatoryDto(observationAreaEntity, polygon);
 
-        assertThat(dbeDto.getCameraId()).isEqualTo("stream1");
+        assertThat(dbeDto.getStreamKey()).isEqualTo("stream1");
         assertThat(dbeDto.getClassification()).isEqualTo(polygon.getClassification().getName());
         assertThat(dbeDto.getDetectionClassId()).isEqualTo(2);
         assertThat(dbeDto.getEnabled()).isTrue();
@@ -55,7 +55,7 @@ public class ObservatoryServiceTest {
         observationAreaEntity.setProcessingEnabled(true);
         ObservatoryDto dbeDto = testee.toObservatoryDto(observationAreaEntity, polygon);
 
-        assertThat(dbeDto.getCameraId()).isEqualTo("stream1");
+        assertThat(dbeDto.getStreamKey()).isEqualTo("stream1");
         assertThat(dbeDto.getClassification()).isEqualTo(polygon.getClassification().getName());
         assertThat(dbeDto.getDetectionClassId()).isEqualTo(2);
         assertThat(dbeDto.getEnabled()).isTrue();
@@ -80,7 +80,7 @@ public class ObservatoryServiceTest {
         ObservatoryService testee = new ObservatoryService(URI.create("http://localhost"));
         ObservatoryDto dbeDto = testee.toObservatoryDto(observationAreaEntity, polygon);
 
-        assertThat(dbeDto.getCameraId()).isEqualTo("stream1");
+        assertThat(dbeDto.getStreamKey()).isEqualTo("stream1");
         assertThat(dbeDto.getClassification()).isEqualTo(polygon.getClassification().getName());
         assertThat(dbeDto.getDetectionClassId()).isEqualTo(2);
         assertThat(dbeDto.getEnabled()).isTrue();
@@ -104,7 +104,7 @@ public class ObservatoryServiceTest {
         ObservatoryService testee = new ObservatoryService(URI.create("http://localhost"));
         ObservatoryDto dbeDto = testee.toObservatoryDto(observationAreaEntity, polygon);
 
-        assertThat(dbeDto.getCameraId()).isEqualTo("stream1");
+        assertThat(dbeDto.getStreamKey()).isEqualTo("stream1");
         assertThat(dbeDto.getClassification()).isEqualTo(polygon.getClassification().getName());
         assertThat(dbeDto.getDetectionClassId()).isEqualTo(2);
         assertThat(dbeDto.getEnabled()).isTrue();
@@ -156,7 +156,7 @@ public class ObservatoryServiceTest {
 
     ObservationAreaEntity createObservationAreaWithDefaults() {
         CameraEntity camera = new CameraEntity();
-        camera.setSaeId("stream1");
+        camera.setSaeStreamKey("stream1");
 
         ObservationAreaEntity observationArea = new ObservationAreaEntity();
         observationArea.setId(1L);

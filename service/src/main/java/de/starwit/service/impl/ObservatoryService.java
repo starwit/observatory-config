@@ -93,7 +93,7 @@ public class ObservatoryService {
         ObservatoryDto dbeDto = new ObservatoryDto();
 
         dbeDto.setName(polygonEntity.getName());
-        dbeDto.setCameraId(observationAreaEntity.getCamera().get(0).getSaeId());
+        dbeDto.setStreamKey(observationAreaEntity.getCamera().get(0).getSaeStreamKey());
         dbeDto.setDetectionClassId(2);
         dbeDto.setEnabled(true);
         dbeDto.setObservationAreaId(observationAreaEntity.getId());

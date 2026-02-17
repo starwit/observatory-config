@@ -26,8 +26,8 @@ public class ObservationAreaMapper implements CustomMapper<ObservationAreaEntity
         dto.setCenterlongitude(entity.getCenterlongitude());
         List<String> cameras = new ArrayList<>();
         if(entity.getCamera() != null && !entity.getCamera().isEmpty()) {
-            entity.getCamera().forEach(camera -> {cameras.add(camera.getSaeId());});
-            dto.setSaeIds(cameras);
+            entity.getCamera().forEach(camera -> {cameras.add(camera.getSaeStreamKey());});
+            dto.setSaeStreamKeys(cameras);
         }
         dto.setDegreeperpixelx(entity.getDegreeperpixelx());
         dto.setDegreeperpixely(entity.getDegreeperpixely());
@@ -68,12 +68,12 @@ public class ObservationAreaMapper implements CustomMapper<ObservationAreaEntity
     }
 
     public List<CameraEntity> getDefaultCameras(ObservationAreaDto dto, ObservationAreaEntity observationAreaEntity) {
-        if (dto.getSaeIds() == null) {
+        if (dto.getSaeStreamKeys() == null) {
             return null;
         }
         List<CameraEntity> cameras = new ArrayList<>();
-        dto.getSaeIds().forEach(saeId -> {
-            cameras.add(new CameraEntity(saeId, observationAreaEntity));
+        dto.getSaeStreamKeys().forEach(saeStreamKey -> {
+            cameras.add(new CameraEntity(saeStreamKey, observationAreaEntity));
         });
         return cameras;
     }

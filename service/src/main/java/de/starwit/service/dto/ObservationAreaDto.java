@@ -13,7 +13,7 @@ public class ObservationAreaDto {
 
     private String name;
 
-    List<String> saeIds;
+    List<String> saeStreamKeys;
 
     ImageEntity image;
 
@@ -57,12 +57,12 @@ public class ObservationAreaDto {
         this.name = name;
     }
 
-    public List<String> getSaeIds() {
-        return saeIds;
+    public List<String> getSaeStreamKeys() {
+        return saeStreamKeys;
     }
 
-    public void setSaeIds(List<String> saeIds) {
-        this.saeIds = saeIds;
+    public void setSaeStreamKeys(List<String> saeStreamKeys) {
+        this.saeStreamKeys = saeStreamKeys;
     }
 
     public BigDecimal getTopleftlatitude() {

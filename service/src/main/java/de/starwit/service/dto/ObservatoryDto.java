@@ -7,7 +7,7 @@ public class ObservatoryDto {
     private String name;
     private Long observationAreaId;
     private String type;
-    private String cameraId;
+    private String streamKey;
     private Integer detectionClassId;
     private Boolean enabled;
     private List<GeometryPointsDto> geometryPoints;
@@ -40,12 +40,12 @@ public class ObservatoryDto {
         this.type = type;
     }
 
-    public String getCameraId() {
-        return cameraId;
+    public String getStreamKey() {
+        return streamKey;
     }
 
-    public void setCameraId(String cameraId) {
-        this.cameraId = cameraId;
+    public void setStreamKey(String cameraId) {
+        this.streamKey = cameraId;
     }
 
     public Integer getDetectionClassId() {

@@ -18,8 +18,8 @@ public class CameraEntity extends AbstractEntity<Long> {
 
     // entity fields
     @NotBlank
-    @Column(name = "saeid", nullable = false)
-    private String saeId;
+    @Column(name = "saestreamkey", nullable = false)
+    private String saeStreamKey;
 
     // entity relations
     @JsonFilter("filterId")
@@ -30,18 +30,18 @@ public class CameraEntity extends AbstractEntity<Long> {
     public CameraEntity() {
     }
     
-    public CameraEntity(String saeId, ObservationAreaEntity observationArea) {
-        this.saeId = saeId;
+    public CameraEntity(String saeStreamKey, ObservationAreaEntity observationArea) {
+        this.saeStreamKey = saeStreamKey;
         this.observationArea = observationArea;
     }
 
     // entity fields getters and setters
-    public String getSaeId() {
-        return saeId;
+    public String getSaeStreamKey() {
+        return saeStreamKey;
     }
 
-    public void setSaeId(String saeId) {
-        this.saeId = saeId;
+    public void setSaeStreamKey(String saeStreamKey) {
+        this.saeStreamKey = saeStreamKey;
     }
 
     // entity relations getters and setters
