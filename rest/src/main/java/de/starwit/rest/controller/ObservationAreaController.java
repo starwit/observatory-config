@@ -22,6 +22,7 @@ import de.starwit.persistence.entity.ClassificationEntity;
 import de.starwit.persistence.entity.ObservationAreaEntity;
 import de.starwit.persistence.entity.PointEntity;
 import de.starwit.persistence.entity.PolygonEntity;
+import de.starwit.persistence.enums.DirectionEnum;
 import de.starwit.persistence.exception.NotificationException;
 import de.starwit.rest.exception.NotificationDto;
 import de.starwit.service.dto.ObservationAreaDto;
@@ -142,6 +143,9 @@ public class ObservationAreaController {
         polygonEntity.setOpen(true);
         polygonEntity.setObservationArea(entity);
         polygonEntity.setName(regionDto.getName());
+        if (regionDto.getDirection() != null) {
+            polygonEntity.setDirection(DirectionEnum.valueOf(regionDto.getDirection()));
+        }
         polygonEntity = polygonService.saveAndFlush(polygonEntity);
         PointEntity p1 = new PointEntity();
         p1.setXvalue(BigDecimal.valueOf(Math.max(0, Math.min(1, regionDto.getX1()))));

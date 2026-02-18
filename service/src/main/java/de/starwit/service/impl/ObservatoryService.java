@@ -102,6 +102,7 @@ public class ObservatoryService {
         dbeDto.setEnabled(observationAreaEntity.getProcessingEnabled());
         dbeDto.setCenterLongitude(observationAreaEntity.getCenterlongitude());
         dbeDto.setCenterLatitude(observationAreaEntity.getCenterlatitude());
+        dbeDto.setDirection(polygonEntity.getDirection().toString());
 
         List<GeometryPointsDto> geometryPoints = new ArrayList<>();
 

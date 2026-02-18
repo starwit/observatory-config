@@ -15,6 +15,7 @@ public class ObservatoryDto {
     private Boolean geoReferenced;
     private BigDecimal centerLatitude;
     private BigDecimal centerLongitude;
+    private String direction;
 
     public String getName() {
         return name;
@@ -104,4 +105,11 @@ public class ObservatoryDto {
         this.centerLongitude = centerLongitude;
     }
 
+    public String getDirection() {
+        return direction;
+    }
+
+    public void setDirection(String direction) {
+        this.direction = direction;
+    }
 }

@@ -122,7 +122,7 @@ function ImageAnnotate(props) {
             hidePrev={true}
             hideSettings={true}
             hideClone
-            enabledRegionProps={["name"]}
+            enabledRegionProps={["name", "line-direction"]}
             userReducer={userReducer}
         />
     );

@@ -122,6 +122,7 @@ public class ObservationAreaService implements ServiceInterface<ObservationAreaE
             copiedPoly.setClassification(srcPoly.getClassification());
             copiedPoly.setName(srcPoly.getName());
             copiedPoly.setOpen(srcPoly.getOpen());
+            copiedPoly.setDirection(srcPoly.getDirection());
             targetEntity.addToPolygons(copiedPoly);
         }
 
