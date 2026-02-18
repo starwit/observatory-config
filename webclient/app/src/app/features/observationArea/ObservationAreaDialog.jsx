@@ -68,10 +68,10 @@ function ObservationAreaDialog(props) {
         if (!isValid(fields, entity)) {
             return false;
         }
-        if (entity.saeIds === undefined ||
-            entity.saeIds === null ||
-            entity.saeIds.length === 0 ||
-            entity.saeIds[0] === "") {
+        if (entity.saeStreamKeys === undefined ||
+            entity.saeStreamKeys === null ||
+            entity.saeStreamKeys.length === 0 ||
+            entity.saeStreamKeys[0] === "") {
             return false;
         }
         if (imageBlob === null) {
@@ -152,9 +152,9 @@ function ObservationAreaDialog(props) {
         }
     }
 
-    function handleSaeIdsChange(newIds) {
+    function handleSaeStreamKeysChange(newIds) {
         setEntity(draft => {
-            draft["saeIds"] = newIds;
+            draft["saeStreamKeys"] = newIds;
         });
     }
 
@@ -184,7 +184,7 @@ function ObservationAreaDialog(props) {
                             {makeEntityUpdateField(fields[0], {width: 12, autofocus: true})}
                             {fields?.slice(2, 4).map(field => makeEntityUpdateField(field, {width: 6}))}
                             <Grid size={{xs: 12}}>
-                                <CamIDList values={entity?.saeIds} handleChange={handleSaeIdsChange} />
+                                <CamIDList values={entity?.saeStreamKeys} handleChange={handleSaeStreamKeysChange} />
                             </Grid>
                             {makeEntityUpdateField(fields[1], {width: 12})}
                             {entity.geoReferenced && fields?.slice(4).map(field => makeEntityUpdateField(field, {width: 6}))}

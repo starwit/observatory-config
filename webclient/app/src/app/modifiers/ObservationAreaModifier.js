@@ -1,7 +1,7 @@
 const entityDefault = {
     id: "",
     name: "",
-    saeIds: [""],
+    saeStreamKeys: [""],
     geoReferenced: false,
     processingEnabled: false,
 };

@@ -35,7 +35,7 @@ function CamIDList(props) {
           <ValidatedTextField
             value={value !== undefined ? value : ""}
             onChange={(e) => handleInputChange(index, e.target.value)}
-            label={t("observationArea.saeIds") + ` ${index + 1}`}
+            label={t("observationArea.saeStreamKeys") + ` ${index + 1}`}
             sx={UpdateFieldStyles.textField}
             variant="standard"
             fullWidth

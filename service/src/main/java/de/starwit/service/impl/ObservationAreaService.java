@@ -71,7 +71,7 @@ public class ObservationAreaService implements ServiceInterface<ObservationAreaE
         } else {
             entity = this.findById(dto.getId());
             entity = mapper.convertToEntity(dto, entity);
-            mapAndSaveCameras(dto.getSaeIds(), entity);
+            mapAndSaveCameras(dto.getSaeStreamKeys(), entity);
             if (entity.getImage() != null) {
                 long imageId = entity.getImage().getId();
                 ImageEntity image = imageRepository.getReferenceById(imageId);
@@ -88,13 +88,13 @@ public class ObservationAreaService implements ServiceInterface<ObservationAreaE
     private void mapAndSaveCameras(List<String> addedCameras, ObservationAreaEntity entity) {
         List<CameraEntity> newCameraList = new ArrayList<>();
         if (addedCameras != null && !addedCameras.isEmpty()){
-            for (String saeId : addedCameras) {
-                List<CameraEntity> existingCamera = cameraRepository.findBySaeIdAndObservationArea(saeId, entity);
+            for (String saeStreamKey : addedCameras) {
+                List<CameraEntity> existingCamera = cameraRepository.findBySaeStreamKeyAndObservationArea(saeStreamKey, entity);
                 if (existingCamera != null && !existingCamera.isEmpty()) {
                     existingCamera.get(0).setObservationArea(entity);
                     newCameraList.addAll(existingCamera);
                 } else {
-                    CameraEntity camera = new CameraEntity(saeId, entity);
+                    CameraEntity camera = new CameraEntity(saeStreamKey, entity);
                     newCameraList.add(camera);
                 }
             }

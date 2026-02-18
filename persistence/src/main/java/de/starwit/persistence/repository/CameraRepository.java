@@ -17,7 +17,7 @@ public interface CameraRepository extends CustomRepository<CameraEntity, Long> {
     @Query("SELECT e.id FROM CameraEntity e WHERE e.observationArea is null")
     public List<Long> findAllWithEmptyObservationArea();
 
-    public List<CameraEntity> findBySaeIdAndObservationArea(String saeId, ObservationAreaEntity observationArea);
+    public List<CameraEntity> findBySaeStreamKeyAndObservationArea(String saeStreamKey, ObservationAreaEntity observationArea);
 
     public List<CameraEntity> findByObservationArea(ObservationAreaEntity observationArea);
 }
