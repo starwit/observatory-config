@@ -13,6 +13,7 @@ import de.starwit.persistence.entity.ClassificationEntity;
 import de.starwit.persistence.entity.ObservationAreaEntity;
 import de.starwit.persistence.entity.PointEntity;
 import de.starwit.persistence.entity.PolygonEntity;
+import de.starwit.persistence.enums.DirectionEnum;
 import de.starwit.service.dto.ObservatoryDto;
 import de.starwit.service.impl.ObservatoryService.IllegalGeometryException;
 
@@ -127,6 +128,7 @@ public class ObservatoryServiceTest {
         polygon.setName("lineRegion");
         polygon.setOpen(true);
         polygon.setClassification(cls);
+        polygon.setDirection(DirectionEnum.N);
 
         polygon.setPoint(Arrays.asList(
                 createPoint(1, 0, 0),

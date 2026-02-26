@@ -96,13 +96,15 @@ public class ObservatoryService {
         dbeDto.setStreamKey(observationAreaEntity.getCamera().get(0).getSaeStreamKey());
         dbeDto.setDetectionClassId(2);
         dbeDto.setEnabled(true);
+        if (polygonEntity != null && polygonEntity.getDirection() != null) {
+            dbeDto.setDirection(polygonEntity.getDirection().toString());
+        }
         dbeDto.setObservationAreaId(observationAreaEntity.getId());
         dbeDto.setClassification(polygonEntity.getClassification().getName());
         dbeDto.setGeoReferenced(observationAreaEntity.getGeoReferenced());
         dbeDto.setEnabled(observationAreaEntity.getProcessingEnabled());
         dbeDto.setCenterLongitude(observationAreaEntity.getCenterlongitude());
         dbeDto.setCenterLatitude(observationAreaEntity.getCenterlatitude());
-        dbeDto.setDirection(polygonEntity.getDirection().toString());
 
         List<GeometryPointsDto> geometryPoints = new ArrayList<>();
 
