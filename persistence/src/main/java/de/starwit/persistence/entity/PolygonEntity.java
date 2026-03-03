@@ -5,9 +5,12 @@ import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonFilter;
 
+import de.starwit.persistence.enums.DirectionEnum;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
@@ -47,6 +50,11 @@ public class PolygonEntity extends AbstractEntity<Long> {
     @NotNull
     private String name;
 
+    @JsonFilter("filterId")
+    @Column(name = "direction")
+    @Enumerated(EnumType.STRING)
+    private DirectionEnum direction;
+    
     public String getName() {
         return name;
     }
@@ -63,7 +71,15 @@ public class PolygonEntity extends AbstractEntity<Long> {
     public void setOpen(Boolean open) {
         this.open = open;
     }
+    
+    public DirectionEnum getDirection() {
+        return direction;
+    }
 
+    public void setDirection(DirectionEnum direction) {
+        this.direction = direction;
+    }
+    
     // entity relations getters and setters
     public ObservationAreaEntity getObservationArea() {
         return observationArea;

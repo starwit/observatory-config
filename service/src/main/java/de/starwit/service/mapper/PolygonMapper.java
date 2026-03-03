@@ -31,6 +31,9 @@ public class PolygonMapper implements CustomMapper<PolygonEntity, RegionDto> {
             }
             dto.setOpen(entity.getOpen());
             dto.setName(entity.getName());
+            if(entity.getDirection() != null) {
+                dto.setDirection(entity.getDirection().toString());
+            }
 
             List<List<Double>> points = pointMapper.convertToDtoList(entity.getPoint());
             if (points.size() == 2) {

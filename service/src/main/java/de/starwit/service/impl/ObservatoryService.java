@@ -96,6 +96,9 @@ public class ObservatoryService {
         dbeDto.setStreamKey(observationAreaEntity.getCamera().get(0).getSaeStreamKey());
         dbeDto.setDetectionClassId(2);
         dbeDto.setEnabled(true);
+        if (polygonEntity != null && polygonEntity.getDirection() != null) {
+            dbeDto.setDirection(polygonEntity.getDirection().toString());
+        }
         dbeDto.setObservationAreaId(observationAreaEntity.getId());
         dbeDto.setClassification(polygonEntity.getClassification().getName());
         dbeDto.setGeoReferenced(observationAreaEntity.getGeoReferenced());
