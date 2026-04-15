@@ -167,7 +167,7 @@ public class ObservationAreaController {
     public ResponseEntity<Object> copyPolygons(@PathVariable("srcId") Long srcId,
             @PathVariable("targetId") Long targetId) {
         observationareaService.copyPolygons(targetId, srcId);
-        return new ResponseEntity<Object>(null, HttpStatus.NO_CONTENT);
+        return ResponseEntity.noContent().build();
     }
 
     @ExceptionHandler(value = { EntityNotFoundException.class })

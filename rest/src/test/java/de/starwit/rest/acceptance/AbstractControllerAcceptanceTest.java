@@ -12,6 +12,7 @@ import java.net.URL;
 
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import tools.jackson.databind.json.JsonMapper;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -19,7 +20,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.json.JacksonTester;
-import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockHttpServletResponse;
@@ -40,14 +41,14 @@ public abstract class AbstractControllerAcceptanceTest<ENTITY extends AbstractEn
     @Autowired
     protected ObjectMapper mapper;
 
-    @MockBean
+    @MockitoBean
     private ObservatoryService observatoryService;
 
     @BeforeEach
     public void setup() {
         // create Object Mapper
         mapper = new ObjectMapper();
-        JacksonTester.initFields(this, new ObjectMapper());
+        JacksonTester.initFields(this, JsonMapper.builder().build());
         mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
     }
 

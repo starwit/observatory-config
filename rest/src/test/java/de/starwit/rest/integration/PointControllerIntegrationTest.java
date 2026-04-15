@@ -1,9 +1,9 @@
 package de.starwit.rest.integration;
 
 import org.junit.jupiter.api.Test;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.boot.webmvc.test.autoconfigure.WebMvcTest;
 import org.springframework.boot.test.json.JacksonTester;
-import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
 
 import de.starwit.persistence.entity.PointEntity;
 import de.starwit.rest.controller.PointController;
@@ -20,7 +20,7 @@ import de.starwit.service.impl.PointService;
 @WebMvcTest(controllers = PointController.class)
 public class PointControllerIntegrationTest extends AbstractControllerIntegrationTest<PointEntity> {
 
-    @MockBean
+    @MockitoBean
     private PointService pointService;
 
     private JacksonTester<PointEntity> jsonPointEntity;

@@ -1,9 +1,9 @@
 package de.starwit.rest.integration;
 
 import org.junit.jupiter.api.Test;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.boot.webmvc.test.autoconfigure.WebMvcTest;
 import org.springframework.boot.test.json.JacksonTester;
-import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
 
 import de.starwit.persistence.entity.PolygonEntity;
 import de.starwit.rest.controller.PolygonController;
@@ -20,7 +20,7 @@ import de.starwit.service.impl.PolygonService;
 @WebMvcTest(controllers = PolygonController.class)
 public class PolygonControllerIntegrationTest extends AbstractControllerIntegrationTest<PolygonEntity> {
 
-    @MockBean
+    @MockitoBean
     private PolygonService polygonService;
 
     private JacksonTester<PolygonEntity> jsonPolygonEntity;
