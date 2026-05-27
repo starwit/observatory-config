@@ -2,7 +2,7 @@ name: observatory-config
 
 services:
   postgres:
-    image: postgres:latest
+    image: postgres:17
     environment:
       POSTGRES_DB: observatoryconfig
       POSTGRES_USER: observatoryconfig

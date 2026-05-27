@@ -1,7 +1,5 @@
 package de.starwit.application;
 
-import tools.jackson.databind.ObjectMapper;
-import tools.jackson.databind.json.JsonMapper;
 import tools.jackson.databind.ser.std.SimpleBeanPropertyFilter;
 import tools.jackson.databind.ser.std.SimpleFilterProvider;
 
@@ -9,6 +7,7 @@ import de.starwit.persistence.repository.CustomRepositoryImpl;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.jackson.autoconfigure.JsonMapperBuilderCustomizer;
 import org.springframework.context.annotation.Bean;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.scheduling.annotation.EnableAsync;
@@ -30,13 +29,13 @@ public class Application {
     }
 
     @Bean
-    public ObjectMapper mapper() {
-        SimpleFilterProvider filterProvider = new SimpleFilterProvider();
-        filterProvider.addFilter("filterId", SimpleBeanPropertyFilter.filterOutAllExcept("id"));
-        filterProvider.addFilter("filterIdName", SimpleBeanPropertyFilter.filterOutAllExcept("id", "name", "title"));
-        filterProvider.addFilter("filterCamera", SimpleBeanPropertyFilter.filterOutAllExcept("id", "saeStreamKey"));
-        return JsonMapper.builder()
-                .filterProvider(filterProvider)
-                .build();
+    public JsonMapperBuilderCustomizer jsonMapperBuilderCustomizer() {
+        return builder -> {
+            SimpleFilterProvider filterProvider = new SimpleFilterProvider();
+            filterProvider.addFilter("filterId", SimpleBeanPropertyFilter.filterOutAllExcept("id"));
+            filterProvider.addFilter("filterIdName", SimpleBeanPropertyFilter.filterOutAllExcept("id", "name", "title"));
+            filterProvider.addFilter("filterCamera", SimpleBeanPropertyFilter.filterOutAllExcept("id", "saeStreamKey"));
+            builder.filterProvider(filterProvider);
+        };
     }
 }
