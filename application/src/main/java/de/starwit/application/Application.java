@@ -33,7 +33,8 @@ public class Application {
         return builder -> {
             SimpleFilterProvider filterProvider = new SimpleFilterProvider();
             filterProvider.addFilter("filterId", SimpleBeanPropertyFilter.filterOutAllExcept("id"));
-            filterProvider.addFilter("filterIdName", SimpleBeanPropertyFilter.filterOutAllExcept("id", "name", "title"));
+            filterProvider.addFilter("filterIdName",
+                    SimpleBeanPropertyFilter.filterOutAllExcept("id", "name", "title"));
             filterProvider.addFilter("filterCamera", SimpleBeanPropertyFilter.filterOutAllExcept("id", "saeStreamKey"));
             builder.filterProvider(filterProvider);
         };
