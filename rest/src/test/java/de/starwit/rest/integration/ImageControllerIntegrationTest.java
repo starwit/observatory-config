@@ -1,9 +1,9 @@
 package de.starwit.rest.integration;
 
 import org.junit.jupiter.api.Test;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.boot.webmvc.test.autoconfigure.WebMvcTest;
 import org.springframework.boot.test.json.JacksonTester;
-import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
 
 import de.starwit.persistence.entity.ImageEntity;
 import de.starwit.rest.controller.ImageController;
@@ -25,22 +25,22 @@ import de.starwit.service.mapper.ImageMapper;
 @WebMvcTest(controllers = ImageController.class)
 public class ImageControllerIntegrationTest extends AbstractControllerIntegrationTest<ImageEntity> {
 
-    @MockBean
+    @MockitoBean
     private ImageService imageService;
 
-    @MockBean
+    @MockitoBean
     private ClassificationService classificationService;
 
-    @MockBean
+    @MockitoBean
     private ObservationAreaService observationAreaService;
 
-    @MockBean
+    @MockitoBean
     private PolygonService polygonService;
 
-    @MockBean
+    @MockitoBean
     private PointService pointService;
 
-    @MockBean
+    @MockitoBean
     private ImageMapper mapper;
 
     private JacksonTester<ImageEntity> jsonImageEntity;
