@@ -1,56 +1,56 @@
 package de.starwit.rest.integration;
 
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.*;
+
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.springframework.boot.webmvc.test.autoconfigure.WebMvcTest;
-import org.springframework.boot.test.json.JacksonTester;
-import org.springframework.test.context.bean.override.mockito.MockitoBean;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
 
 import de.starwit.persistence.entity.ClassificationEntity;
 import de.starwit.rest.controller.ClassificationController;
 import de.starwit.service.impl.ClassificationService;
+import jakarta.persistence.EntityNotFoundException;
 
-/**
- * Tests for ClassificationController
- *
- * <pre>
- * @WebMvcTest also auto-configures MockMvc which offers a powerful way of
- * easy testing MVC controllers without starting a full HTTP server.
- * </pre>
- */
-@WebMvcTest(controllers = ClassificationController.class)
-public class ClassificationControllerIntegrationTest extends AbstractControllerIntegrationTest<ClassificationEntity> {
+public class ClassificationControllerIntegrationTest {
 
-    @MockitoBean
+    @Mock
     private ClassificationService classificationService;
 
-    private JacksonTester<ClassificationEntity> jsonClassificationEntity;
-    private static final String data = "testdata/classification/";
-    private static final String restpath = "/api/classifications/";
+    @InjectMocks
+    ClassificationController controller;
 
-    @Override
-    public Class<ClassificationEntity> getEntityClass() {
-        return ClassificationEntity.class;
+    @BeforeEach
+    void setUp() {
+        MockitoAnnotations.openMocks(this);
     }
 
-    @Override
-    public String getRestPath() {
-        return restpath;
-    }
-
-    // implement tests here
     @Test
-    public void canRetrieveById() throws Exception {
+    void testFindById_ReturnsEntity() {
+        Long id = 1L;
+        ClassificationEntity entity = new ClassificationEntity();
+        entity.setId(id);
+        when(classificationService.findById(id)).thenReturn(entity);
 
-        // ClassificationEntity entityToTest = readFromFile(data +
-        // "classification.json");
-        // when(appService.findById(0L)).thenReturn(entityToTest);
+        ClassificationEntity result = controller.findById(id);
+        assertNotNull(result);
+        assertEquals(id, result.getId());
+        verify(classificationService, times(1)).findById(id);
+    }
 
-        // MockHttpServletResponse response = retrieveById(0L);
+    @Test
+    void testFindById_EntityNotFoundException() {
+        Long id = 2L;
+        when(classificationService.findById(id)).thenThrow(new EntityNotFoundException("Not found"));
 
-        // then
-        // assertThat(response.getStatus()).isEqualTo(HttpStatus.OK.value());
-        // assertThat(response.getContentAsString())
-        // .isEqualTo(jsonAppDto.write(dto).getJson());
+        EntityNotFoundException thrown = assertThrows(EntityNotFoundException.class, () -> {
+            controller.findById(id);
+        });
+
+        assertEquals("Not found", thrown.getMessage());
+        verify(classificationService, times(1)).findById(id);
     }
 
 }

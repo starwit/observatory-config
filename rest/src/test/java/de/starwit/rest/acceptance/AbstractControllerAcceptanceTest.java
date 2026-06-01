@@ -1,18 +1,13 @@
 package de.starwit.rest.acceptance;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.assertj.core.api.Assertions.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
-import java.io.IOException;
 import java.net.URL;
-
-import com.fasterxml.jackson.databind.DeserializationFeature;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import tools.jackson.databind.json.JsonMapper;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -20,7 +15,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.json.JacksonTester;
-import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockHttpServletResponse;
@@ -29,7 +23,7 @@ import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilde
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 import de.starwit.persistence.entity.AbstractEntity;
-import de.starwit.service.impl.ObservatoryService;
+import tools.jackson.databind.json.JsonMapper;
 
 public abstract class AbstractControllerAcceptanceTest<ENTITY extends AbstractEntity<Long>> {
 
@@ -39,17 +33,12 @@ public abstract class AbstractControllerAcceptanceTest<ENTITY extends AbstractEn
     protected MockMvc mvc;
 
     @Autowired
-    protected ObjectMapper mapper;
-
-    @MockitoBean
-    private ObservatoryService observatoryService;
+    protected JsonMapper mapper;
 
     @BeforeEach
     public void setup() {
-        // create Object Mapper
-        mapper = new ObjectMapper();
-        JacksonTester.initFields(this, JsonMapper.builder().build());
-        mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+        mapper = new JsonMapper();
+        JacksonTester.initFields(this, mapper);
     }
 
     public abstract Class<ENTITY> getEntityClass();
@@ -76,7 +65,7 @@ public abstract class AbstractControllerAcceptanceTest<ENTITY extends AbstractEn
             File file = new File(res.getFile());
             ENTITY entity = mapper.readValue(file, getEntityClass());
             return entity;
-        } catch (IOException e) {
+        } catch (Exception e) {
             LOG.error("JSON mapper failed", e);
             throw new Exception("JSON mapper failed");
         }
@@ -96,7 +85,7 @@ public abstract class AbstractControllerAcceptanceTest<ENTITY extends AbstractEn
                 }
             }
             return contentBuilder.toString();
-        } catch (IOException e) {
+        } catch (Exception e) {
             LOG.error("JSON mapper failed", e);
             throw new Exception("JSON mapper failed");
         }

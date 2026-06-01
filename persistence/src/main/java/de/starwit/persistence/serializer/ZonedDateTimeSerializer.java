@@ -1,19 +1,37 @@
 package de.starwit.persistence.serializer;
 
-import com.fasterxml.jackson.core.JsonGenerator;
-import com.fasterxml.jackson.databind.JsonSerializer;
-import com.fasterxml.jackson.databind.SerializerProvider;
-
-import java.io.IOException;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 
-public class ZonedDateTimeSerializer extends JsonSerializer<ZonedDateTime> {
+import org.springframework.boot.jackson.JacksonComponent;
 
-    @Override
-    public void serialize(ZonedDateTime date, JsonGenerator jgen, SerializerProvider provider) throws IOException {
-        jgen.writeString(date != null ? ZonedDateTime.ofInstant(date.toInstant(), ZoneId.of("UTC"))
-                .format(DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss'Z'")) : null);
+import tools.jackson.core.JsonGenerator;
+import tools.jackson.core.JsonParser;
+import tools.jackson.databind.DeserializationContext;
+import tools.jackson.databind.SerializationContext;
+import tools.jackson.databind.ValueDeserializer;
+import tools.jackson.databind.ValueSerializer;
+
+@JacksonComponent
+public class ZonedDateTimeSerializer {
+
+    public static class Serializer extends ValueSerializer<ZonedDateTime> {
+
+        @Override
+        public void serialize(ZonedDateTime date, JsonGenerator jgen, SerializationContext context) {
+            jgen.writeString(date != null ? ZonedDateTime.ofInstant(date.toInstant(), ZoneId.of("UTC"))
+                    .format(DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss'Z'")) : null);
+            ;
+        }
+
+    }
+
+    public static class Deserializer extends ValueDeserializer<ZonedDateTime> {
+
+        @Override
+        public ZonedDateTime deserialize(JsonParser jsonParser, DeserializationContext ctxt) {
+            return ZonedDateTime.parse(jsonParser.getString());
+        }
     }
 }

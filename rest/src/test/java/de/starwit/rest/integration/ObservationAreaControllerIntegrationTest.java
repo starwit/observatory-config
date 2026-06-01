@@ -1,68 +1,69 @@
 package de.starwit.rest.integration;
 
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.*;
+
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.webmvc.test.autoconfigure.WebMvcTest;
-import org.springframework.boot.test.json.JacksonTester;
-import org.springframework.test.context.bean.override.mockito.MockitoBean;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
 
 import de.starwit.persistence.entity.ObservationAreaEntity;
 import de.starwit.rest.controller.ObservationAreaController;
+import de.starwit.service.dto.ObservationAreaDto;
 import de.starwit.service.impl.ClassificationService;
 import de.starwit.service.impl.ObservationAreaService;
 import de.starwit.service.impl.PointService;
 import de.starwit.service.impl.PolygonService;
+import jakarta.persistence.EntityNotFoundException;
 
-/**
- * Tests for ObservationAreaController
- *
- * <pre>
- * @WebMvcTest also auto-configures MockMvc which offers a powerful way of
- * easy testing MVC controllers without starting a full HTTP server.
- * </pre>
- */
-@WebMvcTest(controllers = ObservationAreaController.class)
-public class ObservationAreaControllerIntegrationTest extends AbstractControllerIntegrationTest<ObservationAreaEntity> {
+public class ObservationAreaControllerIntegrationTest {
 
-    @MockitoBean
-    private ObservationAreaService observationareaService;
+    @Mock
+    private ObservationAreaService service;
 
-    @MockitoBean
+    @Mock
     private ClassificationService classificationService;
 
-    @MockitoBean
+    @Mock
     private PolygonService polygonService;
 
-    @MockitoBean
+    @Mock
     private PointService pointService;
 
-    private JacksonTester<ObservationAreaEntity> jsonObservationAreaEntity;
-    private static final String data = "testdata/observationarea/";
-    private static final String restpath = "/api/observationareas/";
+    @InjectMocks
+    private ObservationAreaController controller;
 
-    @Override
-    public Class<ObservationAreaEntity> getEntityClass() {
-        return ObservationAreaEntity.class;
+    @BeforeEach
+    void setUp() {
+        MockitoAnnotations.openMocks(this);
     }
 
-    @Override
-    public String getRestPath() {
-        return restpath;
-    }
-
-    // implement tests here
     @Test
-    public void canRetrieveById() throws Exception {
+    void testFindById_ReturnsEntity() {
+        Long id = 1L;
+        ObservationAreaEntity entity = new ObservationAreaEntity();
+        entity.setId(id);
+        when(service.findById(id)).thenReturn(entity);
 
-        // ObservationAreaEntity entityToTest = readFromFile(data + "observationarea.json");
-        // when(appService.findById(0L)).thenReturn(entityToTest);
+        ObservationAreaDto result = controller.findById(id);
+        assertNotNull(result);
+        assertEquals(id, result.getId());
+        verify(service, times(1)).findById(id);
+    }
 
-        // MockHttpServletResponse response = retrieveById(0L);
+    @Test
+    void testFindById_EntityNotFoundException() {
+        Long id = 2L;
+        when(service.findById(id)).thenThrow(new EntityNotFoundException("Not found"));
 
-        // then
-        // assertThat(response.getStatus()).isEqualTo(HttpStatus.OK.value());
-        // assertThat(response.getContentAsString())
-        // .isEqualTo(jsonAppDto.write(dto).getJson());
+        EntityNotFoundException thrown = assertThrows(EntityNotFoundException.class, () -> {
+            controller.findById(id);
+        });
+
+        assertEquals("Not found", thrown.getMessage());
+        verify(service, times(1)).findById(id);
     }
 
 }

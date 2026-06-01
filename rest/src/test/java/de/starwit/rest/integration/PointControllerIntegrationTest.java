@@ -1,55 +1,56 @@
 package de.starwit.rest.integration;
 
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.*;
+
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.springframework.boot.webmvc.test.autoconfigure.WebMvcTest;
-import org.springframework.boot.test.json.JacksonTester;
-import org.springframework.test.context.bean.override.mockito.MockitoBean;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
 
 import de.starwit.persistence.entity.PointEntity;
 import de.starwit.rest.controller.PointController;
 import de.starwit.service.impl.PointService;
+import jakarta.persistence.EntityNotFoundException;
 
-/**
- * Tests for PointController
- *
- * <pre>
- * @WebMvcTest also auto-configures MockMvc which offers a powerful way of
- * easy testing MVC controllers without starting a full HTTP server.
- * </pre>
- */
-@WebMvcTest(controllers = PointController.class)
-public class PointControllerIntegrationTest extends AbstractControllerIntegrationTest<PointEntity> {
+public class PointControllerIntegrationTest {
 
-    @MockitoBean
+    @Mock
     private PointService pointService;
 
-    private JacksonTester<PointEntity> jsonPointEntity;
-    private static final String data = "testdata/point/";
-    private static final String restpath = "/api/points/";
+    @InjectMocks
+    private PointController pointController;
 
-    @Override
-    public Class<PointEntity> getEntityClass() {
-        return PointEntity.class;
+    @BeforeEach
+    void setUp() {
+        MockitoAnnotations.openMocks(this);
     }
 
-    @Override
-    public String getRestPath() {
-        return restpath;
-    }
-
-    // implement tests here
     @Test
-    public void canRetrieveById() throws Exception {
+    void testFindById_ReturnsEntity() {
+        Long id = 1L;
+        PointEntity entity = new PointEntity();
+        entity.setId(id);
+        when(pointService.findById(id)).thenReturn(entity);
 
-        // PointEntity entityToTest = readFromFile(data + "point.json");
-        // when(appService.findById(0L)).thenReturn(entityToTest);
+        PointEntity result = pointController.findById(id);
+        assertNotNull(result);
+        assertEquals(id, result.getId());
+        verify(pointService, times(1)).findById(id);
+    }
 
-        // MockHttpServletResponse response = retrieveById(0L);
+    @Test
+    void testFindById_EntityNotFoundException() {
+        Long id = 2L;
+        when(pointService.findById(id)).thenThrow(new EntityNotFoundException("Not found"));
 
-        // then
-        // assertThat(response.getStatus()).isEqualTo(HttpStatus.OK.value());
-        // assertThat(response.getContentAsString())
-        // .isEqualTo(jsonAppDto.write(dto).getJson());
+        EntityNotFoundException thrown = assertThrows(EntityNotFoundException.class, () -> {
+            pointController.findById(id);
+        });
+
+        assertEquals("Not found", thrown.getMessage());
+        verify(pointService, times(1)).findById(id);
     }
 
 }
