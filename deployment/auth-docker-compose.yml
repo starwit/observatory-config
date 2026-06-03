@@ -1,11 +1,9 @@
-version: "3.9"
-
 include: 
   - ./noauth-docker-compose.yml
 
 services:
   db-keycloak:
-    image: postgres:latest
+    image: postgres:17
     restart: on-failure
     environment:
       POSTGRES_DB: 'keycloak'
@@ -21,26 +19,27 @@ services:
       - keycloak-db:/var/lib/postgresql/data
 
   observatory-config-keycloak:
-    image: docker.io/bitnami/keycloak:26
+    image: quay.io/keycloak/keycloak:26.6
+    command: "start-dev --import-realm --verbose"
     volumes:
-      - ./keycloak/imports/realm.json:/opt/bitnami/keycloak/data/import/keycloak.obs.realm.json
+      - ./keycloak/imports/realm.json:/opt/keycloak/data/import/keycloak.obs.realm.json
     depends_on:
       db-keycloak:
         condition: service_healthy
     restart: on-failure
     environment:
-      KEYCLOAK_DATABASE_HOST: db-keycloak
-      KEYCLOAK_DATABASE_PORT: 5432
-      KEYCLOAK_DATABASE_NAME: keycloak
-      KEYCLOAK_DATABASE_USER: keycloak
-      KEYCLOAK_DATABASE_PASSWORD: keycloak
-      KEYCLOAK_ADMIN: admin
+      KC_DB: postgres
+      KC_DB_URL_HOST: db-keycloak
+      KC_DB_USERNAME: keycloak
+      KC_DB_PASSWORD: keycloak
+      KC_BOOTSTRAP_ADMIN_USERNAME: admin
+      KC_BOOTSTRAP_ADMIN_PASSWORD: admin
       KEYCLOAK_ADMIN_PASSWORD: admin
       KEYCLOAK_HTTP_RELATIVE_PATH: /auth/
-      KEYCLOAK_EXTRA_ARGS: "--import-realm"
     ports:
-      - '8080:8080'
+      - "8080:8080"
 
 volumes:
   keycloak-db:
+
 

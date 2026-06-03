@@ -58,9 +58,9 @@ Please refer official documentation on how to install Github runners at:
 
 ## Prerequisites
 
-* Java JDK 17 or later
+* Java JDK 21 or later
 * Maven 3
-* NodeJs (16.9.1) and NPM (8.3.2) - [NodeJS Install](https://nodejs.org/en/download/package-manager/)
+* NodeJs (24.11.1) and NPM (11.6.2) - [NodeJS Install](https://nodejs.org/en/download/package-manager/)
 * Postgres (available for development via docker-compose scripts)
 * using Keycloak is optional
 

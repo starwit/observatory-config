@@ -16,4 +16,4 @@ In keycloak:
 
 * add user 
 * set password under tab credentials
-* assign roles tu user (Role Mappings)
+* assign roles to user (Role Mappings)

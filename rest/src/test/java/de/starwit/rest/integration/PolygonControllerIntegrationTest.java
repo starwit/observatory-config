@@ -1,55 +1,55 @@
 package de.starwit.rest.integration;
 
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.*;
+
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
-import org.springframework.boot.test.json.JacksonTester;
-import org.springframework.boot.test.mock.mockito.MockBean;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
 
 import de.starwit.persistence.entity.PolygonEntity;
 import de.starwit.rest.controller.PolygonController;
 import de.starwit.service.impl.PolygonService;
+import jakarta.persistence.EntityNotFoundException;
 
-/**
- * Tests for PolygonController
- *
- * <pre>
- * @WebMvcTest also auto-configures MockMvc which offers a powerful way of
- * easy testing MVC controllers without starting a full HTTP server.
- * </pre>
- */
-@WebMvcTest(controllers = PolygonController.class)
-public class PolygonControllerIntegrationTest extends AbstractControllerIntegrationTest<PolygonEntity> {
+public class PolygonControllerIntegrationTest {
 
-    @MockBean
+    @Mock
     private PolygonService polygonService;
 
-    private JacksonTester<PolygonEntity> jsonPolygonEntity;
-    private static final String data = "testdata/polygon/";
-    private static final String restpath = "/api/polygons/";
+    @InjectMocks
+    private PolygonController polygonController;
 
-    @Override
-    public Class<PolygonEntity> getEntityClass() {
-        return PolygonEntity.class;
+    @BeforeEach
+    void setUp() {
+        MockitoAnnotations.openMocks(this);
     }
 
-    @Override
-    public String getRestPath() {
-        return restpath;
-    }
-
-    // implement tests here
     @Test
-    public void canRetrieveById() throws Exception {
+    void testFindById_ReturnsEntity() {
+        Long id = 1L;
+        PolygonEntity entity = new PolygonEntity();
+        entity.setId(id);
+        when(polygonService.findById(id)).thenReturn(entity);
 
-        // PolygonEntity entityToTest = readFromFile(data + "polygon.json");
-        // when(appService.findById(0L)).thenReturn(entityToTest);
-
-        // MockHttpServletResponse response = retrieveById(0L);
-
-        // then
-        // assertThat(response.getStatus()).isEqualTo(HttpStatus.OK.value());
-        // assertThat(response.getContentAsString())
-        // .isEqualTo(jsonAppDto.write(dto).getJson());
+        PolygonEntity result = polygonController.findById(id);
+        assertNotNull(result);
+        assertEquals(id, result.getId());
+        verify(polygonService, times(1)).findById(id);
     }
 
+    @Test
+    void testFindById_EntityNotFoundException() {
+        Long id = 2L;
+        when(polygonService.findById(id)).thenThrow(new EntityNotFoundException("Not found"));
+
+        EntityNotFoundException thrown = assertThrows(EntityNotFoundException.class, () -> {
+            polygonController.findById(id);
+        });
+
+        assertEquals("Not found", thrown.getMessage());
+        verify(polygonService, times(1)).findById(id);
+    }
 }

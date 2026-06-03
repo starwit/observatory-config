@@ -1,15 +1,16 @@
 package de.starwit.rest.acceptance;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.assertj.core.api.Assertions.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 
 import org.junit.jupiter.api.Test;
+import org.mockito.Mock;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.json.JacksonTester;
+import org.springframework.boot.webmvc.test.autoconfigure.AutoConfigureMockMvc;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockHttpServletResponse;
@@ -21,115 +22,121 @@ import de.starwit.persistence.entity.ClassificationEntity;
 @AutoConfigureMockMvc(addFilters = false)
 public class ClassificationControllerAcceptanceTest extends AbstractControllerAcceptanceTest<ClassificationEntity> {
 
+        final static Logger LOG = LoggerFactory.getLogger(ClassificationControllerAcceptanceTest.class);
+        private static final String restpath = "/api/classifications/";
 
-    final static Logger LOG = LoggerFactory.getLogger(ClassificationControllerAcceptanceTest.class);
-    private static final String data = "testdata/classification/";
-    private static final String restpath = "/api/classifications/";
+        private JacksonTester<ClassificationEntity> jsonTester;
 
-    private JacksonTester<ClassificationEntity> jsonTester;
+        @Override
+        public Class<ClassificationEntity> getEntityClass() {
+                return ClassificationEntity.class;
+        }
 
-    @Override
-    public Class<ClassificationEntity> getEntityClass() {
-        return ClassificationEntity.class;
-    }
+        @Override
+        public String getRestPath() {
+                return restpath;
+        }
 
-    @Override
-    public String getRestPath() {
-        return restpath;
-    }
+        @Override
+        public JacksonTester<ClassificationEntity> getJsonTester() {
+                return jsonTester;
+        }
 
-    @Override
-    public JacksonTester<ClassificationEntity> getJsonTester() {
-        return jsonTester;
-    }
+        @Test
+        public void canCreate() throws Exception {
+                // given
+                // ClassificationEntity entity = readFromFile(data + "Classification.json");
 
-    @Test
-    public void canCreate() throws Exception {
-        // given
-//        ClassificationEntity entity = readFromFile(data + "Classification.json");
-  
-        // when
-//        MockHttpServletResponse response = create(entity);
+                // when
+                // MockHttpServletResponse response = create(entity);
 
-        // then
-//        assertThat(response.getStatus()).isEqualTo(HttpStatus.OK.value());
-//        ClassificationEntity entityresult = mapper.readValue(response.getContentAsString(), ClassificationEntity.class);
-//        assertThat(entityresult.getBranch()).isEqualTo("v2");
-    }
+                // then
+                // assertThat(response.getStatus()).isEqualTo(HttpStatus.OK.value());
+                // ClassificationEntity entityresult =
+                // mapper.readValue(response.getContentAsString(), ClassificationEntity.class);
+                // assertThat(entityresult.getBranch()).isEqualTo("v2");
+        }
 
-    @Test
-    public void isValidated() throws Exception {
-        // given
-//        ClassificationEntity entity = readFromFile(data + "Classification-wrong.json");
-  
-        // when
-//        MockHttpServletResponse response = create(entity);
+        @Test
+        public void isValidated() throws Exception {
+                // given
+                // ClassificationEntity entity = readFromFile(data +
+                // "Classification-wrong.json");
 
-        // then
-//        assertThat(response.getStatus()).isEqualTo(HttpStatus.BAD_REQUEST.value());
-    }
+                // when
+                // MockHttpServletResponse response = create(entity);
 
-    @Test
-    public void canNotFindById() throws Exception {
-        // when
-        MockHttpServletResponse response = mvc
-                .perform(get(getRestPath() + "/4242").contentType(MediaType.APPLICATION_JSON)).andReturn()
-                .getResponse();
+                // then
+                // assertThat(response.getStatus()).isEqualTo(HttpStatus.BAD_REQUEST.value());
+        }
 
-        // then
-        assertThat(response.getStatus()).isEqualTo(HttpStatus.NOT_FOUND.value());
-    }
+        @Test
+        public void canNotFindById() throws Exception {
+                // when
+                MockHttpServletResponse response = mvc
+                                .perform(get(getRestPath() + "/4242").contentType(MediaType.APPLICATION_JSON))
+                                .andReturn()
+                                .getResponse();
 
-    @Test
-    public void canRetrieveById() throws Exception {
-        // given
-//        ClassificationEntity entity = readFromFile(data + "Classification.json");
-//        MockHttpServletResponse response = create(entity);
-//        ClassificationEntity entity2 = mapper.readValue(response.getContentAsString(), ClassificationEntity.class);
+                // then
+                assertThat(response.getStatus()).isEqualTo(HttpStatus.NOT_FOUND.value());
+        }
 
-        // when
-//        response = retrieveById(entity2.getId());
+        @Test
+        public void canRetrieveById() throws Exception {
+                // given
+                // ClassificationEntity entity = readFromFile(data + "Classification.json");
+                // MockHttpServletResponse response = create(entity);
+                // ClassificationEntity entity2 =
+                // mapper.readValue(response.getContentAsString(), ClassificationEntity.class);
 
-        // then
-//        assertThat(response.getStatus()).isEqualTo(HttpStatus.OK.value());
-//        ClassificationEntity entityresult = mapper.readValue(response.getContentAsString(), ClassificationEntity.class);
-//        assertThat(dtoresult.getBranch()).isEqualTo("v2");
-    }
+                // when
+                // response = retrieveById(entity2.getId());
 
-    @Test
-    public void canUpdate() throws Exception {
+                // then
+                // assertThat(response.getStatus()).isEqualTo(HttpStatus.OK.value());
+                // ClassificationEntity entityresult =
+                // mapper.readValue(response.getContentAsString(), ClassificationEntity.class);
+                // assertThat(dtoresult.getBranch()).isEqualTo("v2");
+        }
 
-        // given
-//        ClassificationEntity entity = readFromFile(data + "Classification.json");
-//        MockHttpServletResponse response = create(entity);
-//        ClassificationEntity entity2 = mapper.readValue(response.getContentAsString(), ClassificationEntity.class);
+        @Test
+        public void canUpdate() throws Exception {
 
-        // when
-//        response = update(entity2);
+                // given
+                // ClassificationEntity entity = readFromFile(data + "Classification.json");
+                // MockHttpServletResponse response = create(entity);
+                // ClassificationEntity entity2 =
+                // mapper.readValue(response.getContentAsString(), ClassificationEntity.class);
 
-        // then
-//        assertThat(response.getStatus()).isEqualTo(HttpStatus.OK.value());
-//        ClassificationEntity entityresult = mapper.readValue(response.getContentAsString(), ClassificationEntity.class);
-//        assertThat(dtoresult.getBranch()).isEqualTo("v2");
-    }
+                // when
+                // response = update(entity2);
 
-    @Override
-    @Test
-    public void canDelete() throws Exception {
-        // given
-//        ClassificationEntity entity = readFromFile(data + "Classification.json");
-//        MockHttpServletResponse response = create(entity);
-//        ClassificationEntity entity2 = mapper.readValue(response.getContentAsString(), ClassificationEntity.class);
-//        response = retrieveById(entity2.getId());
-//        assertThat(response.getStatus()).isEqualTo(HttpStatus.OK.value());
+                // then
+                // assertThat(response.getStatus()).isEqualTo(HttpStatus.OK.value());
+                // ClassificationEntity entityresult =
+                // mapper.readValue(response.getContentAsString(), ClassificationEntity.class);
+                // assertThat(dtoresult.getBranch()).isEqualTo("v2");
+        }
 
-        // when
-//        delete(entity2.getId());
+        @Override
+        @Test
+        public void canDelete() throws Exception {
+                // given
+                // ClassificationEntity entity = readFromFile(data + "Classification.json");
+                // MockHttpServletResponse response = create(entity);
+                // ClassificationEntity entity2 =
+                // mapper.readValue(response.getContentAsString(), ClassificationEntity.class);
+                // response = retrieveById(entity2.getId());
+                // assertThat(response.getStatus()).isEqualTo(HttpStatus.OK.value());
 
-        // then
-//        assertThat(response.getStatus()).isEqualTo(HttpStatus.OK.value());
-//        response = retrieveById(entity2.getId());
-//        assertThat(response.getStatus()).isEqualTo(HttpStatus.NOT_FOUND.value());
-    }
+                // when
+                // delete(entity2.getId());
+
+                // then
+                // assertThat(response.getStatus()).isEqualTo(HttpStatus.OK.value());
+                // response = retrieveById(entity2.getId());
+                // assertThat(response.getStatus()).isEqualTo(HttpStatus.NOT_FOUND.value());
+        }
 
 }

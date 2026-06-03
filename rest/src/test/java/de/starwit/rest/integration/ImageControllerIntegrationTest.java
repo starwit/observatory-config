@@ -1,9 +1,13 @@
 package de.starwit.rest.integration;
 
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.*;
+
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
-import org.springframework.boot.test.json.JacksonTester;
-import org.springframework.boot.test.mock.mockito.MockBean;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
 
 import de.starwit.persistence.entity.ImageEntity;
 import de.starwit.rest.controller.ImageController;
@@ -13,63 +17,60 @@ import de.starwit.service.impl.ObservationAreaService;
 import de.starwit.service.impl.PointService;
 import de.starwit.service.impl.PolygonService;
 import de.starwit.service.mapper.ImageMapper;
+import jakarta.persistence.EntityNotFoundException;
 
-/**
- * Tests for ImageController
- *
- * <pre>
- * @WebMvcTest also auto-configures MockMvc which offers a powerful way of
- * easy testing MVC controllers without starting a full HTTP server.
- * </pre>
- */
-@WebMvcTest(controllers = ImageController.class)
-public class ImageControllerIntegrationTest extends AbstractControllerIntegrationTest<ImageEntity> {
+public class ImageControllerIntegrationTest {
 
-    @MockBean
-    private ImageService imageService;
-
-    @MockBean
+    @Mock
     private ClassificationService classificationService;
 
-    @MockBean
+    @Mock
     private ObservationAreaService observationAreaService;
 
-    @MockBean
+    @Mock
     private PolygonService polygonService;
 
-    @MockBean
+    @Mock
     private PointService pointService;
 
-    @MockBean
+    @Mock
     private ImageMapper mapper;
 
-    private JacksonTester<ImageEntity> jsonImageEntity;
-    private static final String data = "testdata/image/";
-    private static final String restpath = "/api/images/";
+    @Mock
+    private ImageService imageService;
 
-    @Override
-    public Class<ImageEntity> getEntityClass() {
-        return ImageEntity.class;
+    @InjectMocks
+    private ImageController controller;
+
+    @BeforeEach
+    void setUp() {
+        MockitoAnnotations.openMocks(this);
     }
 
-    @Override
-    public String getRestPath() {
-        return restpath;
-    }
-
-    // implement tests here
     @Test
-    public void canRetrieveById() throws Exception {
+    void testFindById_ReturnsEntity() {
+        Long id = 1L;
+        ImageEntity entity = new ImageEntity();
+        entity.setId(id);
+        when(imageService.findById(id)).thenReturn(entity);
 
-        // ImageEntity entityToTest = readFromFile(data + "image.json");
-        // when(appService.findById(0L)).thenReturn(entityToTest);
+        ImageEntity result = controller.findById(id);
+        assertNotNull(result);
+        assertEquals(id, result.getId());
+        verify(imageService, times(1)).findById(id);
+    }
 
-        // MockHttpServletResponse response = retrieveById(0L);
+    @Test
+    void testFindById_EntityNotFoundException() {
+        Long id = 2L;
+        when(imageService.findById(id)).thenThrow(new EntityNotFoundException("Not found"));
 
-        // then
-        // assertThat(response.getStatus()).isEqualTo(HttpStatus.OK.value());
-        // assertThat(response.getContentAsString())
-        // .isEqualTo(jsonAppDto.write(dto).getJson());
+        EntityNotFoundException thrown = assertThrows(EntityNotFoundException.class, () -> {
+            controller.findById(id);
+        });
+
+        assertEquals("Not found", thrown.getMessage());
+        verify(imageService, times(1)).findById(id);
     }
 
 }
