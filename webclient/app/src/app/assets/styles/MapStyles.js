@@ -8,8 +8,7 @@ const MapStyles = {
     innerBox: theme => ({
         zIndex: "3",
         position: "absolute",
-        bgcolor: '#FFFFFF',
-        width: 350,
+        width: 500,
         marginLeft: 5,
         marginTop: 20,
         boxShadow: 2,
@@ -17,7 +16,7 @@ const MapStyles = {
     }),
     title: theme => ({
         margin: "auto",
-        width: '124px',
+        width: '300px',
         flexShrink: 0
     })
 };
