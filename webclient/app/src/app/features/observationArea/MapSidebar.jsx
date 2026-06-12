@@ -1,8 +1,8 @@
 import React, {useEffect} from 'react'
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import {ContentCopy, Delete, Edit, QueryStats} from "@mui/icons-material";
-import {CardMedia, CardActionArea, CardContent, Typography, IconButton, Box, Accordion, AccordionSummary, AccordionDetails, Tooltip, ImageListItemBar} from "@mui/material";
-import { Grid } from '@mui/material';
+import {ContentCopy, Delete, Edit, QueryStats, Camera, Dashboard, Link} from "@mui/icons-material";
+import {CardMedia, CardActionArea, CardContent, Typography, IconButton, Box, Accordion, AccordionSummary, AccordionDetails, Tooltip, ImageListItemBar, Button} from "@mui/material";
+import {Grid} from '@mui/material';
 import {imageFileUrlForId} from "../../services/ImageRest";
 import {useNavigate} from "react-router";
 import MapStyles from "../../assets/styles/MapStyles";
@@ -63,12 +63,13 @@ export default function MapSidebar(props) {
             return (
                 <CardMedia
                     component="img"
-                    height="200"
+                    height="300"
                     src={imageUrl}
+                    sx={{filter: area.processingEnabled ? 'none' : 'grayscale(100%)'}}
                 />);
         }
         return (
-            <CardContent sx={{height: 150}}>
+            <CardContent sx={{height: 250}}>
                 <Typography textAlign={"center"}>{t("observationAreaCard.noImage")}</Typography>
             </CardContent>
         );
@@ -84,39 +85,77 @@ export default function MapSidebar(props) {
                             <Accordion
                                 key={area.id}
                                 disableGutters
-                                sx={{boxShadow: 0}}
+                                sx={{
+                                    boxShadow: expanded === area.id ? '0 8px 24px rgba(0, 0, 0, 0.16)' : 0,
+                                    backgroundColor: expanded === area.id
+                                        ? 'white'
+                                        : area.processingEnabled
+                                            ? 'rgba(215, 93, 42, 0.18)'
+                                            : 'rgba(0, 0, 0, 0.06)',
+                                    borderLeft: expanded === area.id && area.processingEnabled ? '4px solid rgba(215, 93, 42, 0.7)' : '4px solid transparent',
+                                    transition: 'background-color 0.2s ease-in-out',
+                                }}
                                 onChange={handleChange(area.id)}
                                 expanded={expanded === area.id}
                             >
                                 <AccordionSummary
                                     expandIcon={<ExpandMoreIcon />}
+                                    sx={{
+                                        '& .MuiAccordionSummary-content': {
+                                            width: '100%',
+                                            margin: 0,
+                                        },
+                                    }}
                                 >
-                                    <Typography sx={MapStyles.title}>
-                                        {area.name}
-                                    </Typography>
-
-                                    <Grid size={{xs: 5}} align-items="center">
-                                        <Tooltip title={t("button.copy")}>
-                                            <IconButton onClick={() => copyArea(area)}>
-                                                <ContentCopy fontSize={"small"} />
-                                            </IconButton>
-                                        </Tooltip>
-                                        <Tooltip title={t("button.update")}>
-                                            <IconButton onClick={() => editArea(area)}>
-                                                <Edit fontSize={"small"} />
-                                            </IconButton>
-                                        </Tooltip>
-                                        <Tooltip title={t("button.delete")}>
-                                            <IconButton onClick={() => deleteArea(area)}>
-                                                <Delete fontSize={"small"} />
-                                            </IconButton>
-                                        </Tooltip>
-                                    </Grid>
+                                    <Box sx={{display: 'flex', alignItems: 'center', justifyContent: 'space-between', width: '100%'}}>
+                                        <Typography sx={{...MapStyles.title, textAlign: 'left', flex: 1}}>
+                                            {area.name}
+                                        </Typography>
+                                        {expanded === area.id && (
+                                            <Box sx={{display: 'flex', alignItems: 'center'}}>
+                                                <Tooltip title={t("button.copy")}>
+                                                    <IconButton onClick={() => copyArea(area)}>
+                                                        <ContentCopy fontSize={"small"} />
+                                                    </IconButton>
+                                                </Tooltip>
+                                                <Tooltip title={t("button.update")}>
+                                                    <IconButton onClick={() => editArea(area)}>
+                                                        <Edit fontSize={"small"} />
+                                                    </IconButton>
+                                                </Tooltip>
+                                                <Tooltip title={t("button.delete")}>
+                                                    <IconButton onClick={() => deleteArea(area)}>
+                                                        <Delete fontSize={"small"} />
+                                                    </IconButton>
+                                                </Tooltip>
+                                            </Box>
+                                        )}
+                                    </Box>
                                 </AccordionSummary>
-                                <AccordionDetails sx={{padding: 0}}>
-                                    <CardActionArea onClick={() => openArea(area)}>
+                                <AccordionDetails sx={{padding: 0, }}>
+                                    <CardActionArea onClick={() => openArea(area)} sx={{display: "flex", flexDirection: "column", alignItems: "stretch", position: "relative"}}>
                                         {renderImage(area)}
                                         {renderProcessingIcon(area.processingEnabled)}
+                                        <Box sx={{position: "absolute", display: "flex", justifyContent: "flex-end", width: "100%", px: 1, bottom: 0, backgroundColor: "rgba(255, 255, 255, 0.45)", backdropFilter: "blur(2px)"}}>
+                                            <Tooltip title={"Record Track"}>
+                                                <IconButton onClick={() => { }}>
+                                                    <Camera fontSize={"small"} />
+                                                </IconButton>
+                                            </Tooltip>
+                                            <Tooltip title={"Grafana"}>
+                                                <IconButton onClick={() => { }}>
+                                                    <Dashboard fontSize={"small"} />
+                                                </IconButton>
+                                            </Tooltip>
+                                            <Tooltip title={"ODP"}>
+                                                <IconButton onClick={() => { }}>
+                                                    <Link fontSize={"small"} />
+                                                </IconButton>
+                                            </Tooltip>
+                                            <Tooltip title={"DAVe"}>
+                                                <Button>DAVe</Button>
+                                            </Tooltip>
+                                        </Box>
                                     </CardActionArea>
                                 </AccordionDetails>
                             </Accordion>);

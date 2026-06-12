@@ -1,6 +1,6 @@
-import {ContentCopy, Delete, Edit} from "@mui/icons-material";
-import {Card, CardActionArea, CardContent, CardMedia, Divider, Box, IconButton, ImageListItemBar, Tooltip, Typography} from "@mui/material";
-import { Grid } from '@mui/material';
+import {Camera, ContentCopy, Dashboard, Delete, Edit, Link} from "@mui/icons-material";
+import {Card, CardActionArea, CardContent, CardMedia, Divider, Box, IconButton, ImageListItemBar, Tooltip, Typography, Button} from "@mui/material";
+import {Grid} from '@mui/material';
 import PropTypes from "prop-types";
 import React from "react";
 import {useTranslation} from "react-i18next";
@@ -70,15 +70,36 @@ function ObservationAreaCard(props) {
                     </Grid>
                 </CardContent>
                 <Divider />
-                <CardActionArea onClick={openArea}>
+                <CardActionArea onClick={openArea} sx={{position: "relative"}}>
                     {observationArea.image !== null ?
                         <>
                             <CardMedia
                                 component="img"
                                 height="300"
-                                src={imageUrl}>
+                                src={imageUrl}
+                                sx={{filter: observationArea.processingEnabled ? 'none' : 'grayscale(100%)'}}>
                             </CardMedia>
                             {renderProcessingIcon(observationArea.processingEnabled)}
+                            <Box sx={{position: "absolute", display: "flex", justifyContent: "flex-end", width: "100%", px: 1, bottom: 0, backgroundColor: "rgba(255, 255, 255, 0.45)", backdropFilter: "blur(2px)"}}>
+                                <Tooltip title={"Record Track"}>
+                                    <IconButton onClick={() => copyArea(area)}>
+                                        <Camera fontSize={"small"} />
+                                    </IconButton>
+                                </Tooltip>
+                                <Tooltip title={"Grafana"}>
+                                    <IconButton onClick={() => { }}>
+                                        <Dashboard fontSize={"small"} />
+                                    </IconButton>
+                                </Tooltip>
+                                <Tooltip title={"ODP"}>
+                                    <IconButton onClick={() => { }}>
+                                        <Link fontSize={"small"} />
+                                    </IconButton>
+                                </Tooltip>
+                                <Tooltip title={"DAVe"}>
+                                    <Button>DAVe</Button>
+                                </Tooltip>
+                            </Box>
                         </> :
                         <CardContent sx={{height: 300}}>
                             <Typography textAlign={"center"}>{t("observationAreaCard.noImage")}</Typography>
