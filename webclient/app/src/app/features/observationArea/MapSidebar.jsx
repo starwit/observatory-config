@@ -138,17 +138,17 @@ export default function MapSidebar(props) {
                                         {renderProcessingIcon(area.processingEnabled)}
                                         <Box sx={{position: "absolute", display: "flex", justifyContent: "flex-end", width: "100%", px: 1, bottom: 0, backgroundColor: "rgba(255, 255, 255, 0.45)", backdropFilter: "blur(2px)"}}>
                                             <Tooltip title={"Record Track"}>
-                                                <IconButton onClick={() => copyArea(area)}>
+                                                <IconButton onClick={() => { }}>
                                                     <Camera fontSize={"small"} />
                                                 </IconButton>
                                             </Tooltip>
                                             <Tooltip title={"Grafana"}>
-                                                <IconButton onClick={() => editArea(area)}>
+                                                <IconButton onClick={() => { }}>
                                                     <Dashboard fontSize={"small"} />
                                                 </IconButton>
                                             </Tooltip>
                                             <Tooltip title={"ODP"}>
-                                                <IconButton onClick={() => deleteArea(area)}>
+                                                <IconButton onClick={() => { }}>
                                                     <Link fontSize={"small"} />
                                                 </IconButton>
                                             </Tooltip>
