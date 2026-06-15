@@ -92,6 +92,7 @@ const translationEnEN = {
     "button.close": "Close",
     "button.viewlist": "Preview",
     "button.map": "Show in Map",
+    "button.visualizer": "Open live visualizer",
     "button.tracking": "Processing in progress",
     "select.none": "None",
     "error.inUse": "More than one row with the given identifier was found",

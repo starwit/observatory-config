@@ -9,7 +9,7 @@ import ObservationAreaRest from "../../services/ObservationAreaRest";
 import ObservationAreaDialog, {MODE as ObservationAreaDialogMode} from "./ObservationAreaDialog";
 import ObservationAreaCard from "./ObservationAreaCard";
 import ObservationAreaMap from "./ObservationAreaMap";
-import {ViewList, Map} from "@mui/icons-material";
+import {ViewList, Map, Insights} from "@mui/icons-material";
 import MapSidebar from "./MapSidebar";
 
 
@@ -158,7 +158,12 @@ function ObservationAreaOverview() {
                     <Typography zIndex={2} variant={"h2"} gutterBottom>
                         {t("observationAreas.title")}
                     </Typography>
-                    {renderToggleButton()}
+                    <Stack direction="row" spacing={1}>
+                        <Tooltip title={t("button.visualizer")}>
+                            <Button href="#/visualizer/map" variant="outlined" color="primary"><Insights /></Button>
+                        </Tooltip>
+                        {renderToggleButton()}
+                    </Stack>
                 </Stack>
                 {renderObservationAreas()}
                 <ConfirmationDialog

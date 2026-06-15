@@ -10,7 +10,12 @@ export default defineConfig(({command}) => {
       base: "/observatory-config/",
       server: {
         proxy: {
-          "/observatory-config/api": "http://localhost:8081"
+          "/observatory-config/api": "http://localhost:8081",
+          // SAE visualizer live-tracking STOMP websocket
+          "/observatory-config/location-websocket": {
+            target: "http://localhost:8081",
+            ws: true
+          }
         }
       },
     };
