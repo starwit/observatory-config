@@ -1,4 +1,4 @@
-package de.starwit.service.sae;
+package de.starwit.service;
 
 import java.time.Duration;
 
@@ -6,6 +6,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.ApplicationRunner;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
@@ -22,6 +23,7 @@ import io.lettuce.core.ClientOptions;
 import io.lettuce.core.ClientOptions.DisconnectedBehavior;
 
 @Configuration
+@ConditionalOnProperty(name = "spring.redis.enabled", havingValue = "true", matchIfMissing = true)
 public class StreamReceiverConfiguration {
 
     private Logger log = LoggerFactory.getLogger(StreamReceiverConfiguration.class);

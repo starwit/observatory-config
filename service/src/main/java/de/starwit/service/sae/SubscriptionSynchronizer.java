@@ -10,6 +10,7 @@ import java.util.stream.Collectors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.ApplicationListener;
 import org.springframework.data.redis.connection.stream.MapRecord;
 import org.springframework.data.redis.connection.stream.StreamOffset;
@@ -24,6 +25,7 @@ import org.springframework.web.socket.messaging.SessionUnsubscribeEvent;
 
 
 @Component
+@ConditionalOnProperty(name = "spring.redis.enabled", havingValue = "true", matchIfMissing = true)
 public class SubscriptionSynchronizer implements ApplicationListener<AbstractSubProtocolEvent> {
 
     private Logger log = LoggerFactory.getLogger(this.getClass());
