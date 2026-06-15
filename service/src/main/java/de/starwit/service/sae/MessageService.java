@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 
 import com.google.protobuf.InvalidProtocolBufferException;
 
+import de.starwit.service.dto.TrajectoryDto;
 import de.starwit.visionapi.Sae.BoundingBox;
 import de.starwit.visionapi.Sae.Detection;
 import de.starwit.visionapi.Sae.SaeMessage;
