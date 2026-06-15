@@ -1,11 +1,10 @@
-package de.starwit.service.sae;
+package de.starwit.service.impl;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -23,10 +22,12 @@ import org.springframework.web.socket.messaging.SessionDisconnectEvent;
 import org.springframework.web.socket.messaging.SessionSubscribeEvent;
 import org.springframework.web.socket.messaging.SessionUnsubscribeEvent;
 
+import de.starwit.service.messagelistener.SaeMessageListener;
+
 
 @Component
 @ConditionalOnProperty(name = "spring.redis.enabled", havingValue = "true", matchIfMissing = true)
-public class SubscriptionSynchronizer implements ApplicationListener<AbstractSubProtocolEvent> {
+public class StompSubscriptionService implements ApplicationListener<AbstractSubProtocolEvent> {
 
     private Logger log = LoggerFactory.getLogger(this.getClass());
     
@@ -34,7 +35,7 @@ public class SubscriptionSynchronizer implements ApplicationListener<AbstractSub
     private StreamMessageListenerContainer<String, MapRecord<String, String, String>> streamMessageListenerContainer;
 
     @Autowired
-    private MessageService messageService;
+    private SaeMessageListener messageService;
 
     private Map<String, List<String>> sessionIdToDestinations = new HashMap<>();
 

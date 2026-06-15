@@ -1,4 +1,4 @@
-package de.starwit.service.sae;
+package de.starwit.service.impl;
 
 import java.time.Duration;
 import java.util.ArrayList;
@@ -6,6 +6,7 @@ import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
 
 import org.slf4j.Logger;
@@ -24,23 +25,29 @@ import org.springframework.stereotype.Component;
 
 @Component
 @ConditionalOnProperty(name = "spring.redis.enabled", havingValue = "true", matchIfMissing = true)
-public class StreamMonitorService {
+public class StreamAvailabilityService {
 
     private Logger log = LoggerFactory.getLogger(this.getClass());
 
     @Value("${spring.redis.maxStreamAge:1s}")
     private Duration maxAge;
-    
+
     @Autowired
     private RedisTemplate<String, String> redisTemplate;
 
-    @Autowired
-    private MessageService messageService;
-
     private Set<String> previouslyActiveStreams = new HashSet<>();
 
+    private final Set<String> availableStreams = ConcurrentHashMap.newKeySet();
+
+    /**
+     * @return the SAE streams that have received messages recently, as determined by the latest monitoring run.
+     */
+    public List<String> getAvailableStreams() {
+        return availableStreams.stream().toList();
+    }
+
     @Scheduled(fixedRate = 2000)
-    public void getAvailableStreams() {
+    public void refreshAvailableStreams() {
         // Get the set of available streams
         Set<String> allKeys = redisTemplate.keys("*");
 
@@ -55,7 +62,8 @@ public class StreamMonitorService {
             .collect(Collectors.toSet());
 
         if (!setsEqual(recentlyUpdatedStreams, previouslyActiveStreams)) {
-            messageService.setAvailableStreams(new ArrayList<>(recentlyUpdatedStreams));
+            this.availableStreams.retainAll(recentlyUpdatedStreams);
+            this.availableStreams.addAll(recentlyUpdatedStreams);
             this.previouslyActiveStreams = recentlyUpdatedStreams;
             log.info("Available streams changed: " + Arrays.toString(recentlyUpdatedStreams.toArray()));
         }

@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import de.starwit.service.sae.MessageService;
+import de.starwit.service.impl.SaeMessageService;
 import io.swagger.v3.oas.annotations.Operation;
 
 @RestController
@@ -19,11 +19,11 @@ public class MessageController {
     private Logger log = LoggerFactory.getLogger(MessageController.class);
 
     @Autowired
-    MessageService messageService;
+    SaeMessageService saeMessageService;
 
     @Operation(summary = "get list of all available message streams")
     @GetMapping(value = "/streams")
     public List<String> getMessageStreams() {
-        return messageService.getAvailableStreams();
+        return saeMessageService.getAvailableStreams();
     }  
 }

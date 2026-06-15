@@ -24,9 +24,9 @@ import io.lettuce.core.ClientOptions.DisconnectedBehavior;
 
 @Configuration
 @ConditionalOnProperty(name = "spring.redis.enabled", havingValue = "true", matchIfMissing = true)
-public class StreamReceiverConfiguration {
+public class RedisConfiguration {
 
-    private Logger log = LoggerFactory.getLogger(StreamReceiverConfiguration.class);
+    private Logger log = LoggerFactory.getLogger(RedisConfiguration.class);
 
     @Value("${spring.redis.host:localhost}")
     private String redisHost;
