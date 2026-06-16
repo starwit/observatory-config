@@ -12,6 +12,7 @@ on:
 
 permissions:
   contents: write
+  packages: read
 
 env:
   RELEASE_VERSION: ${{ github.event.inputs.release-version }}
@@ -60,9 +61,9 @@ jobs:
         if [ ! -z "${{ env.RELEASE_VERSION }}" ]
         then
           echo "new version manually set to ${{ env.RELEASE_VERSION }}"
-          mvn -B build-helper:parse-version versions:set -DnewVersion=${{ env.RELEASE_VERSION }}-SNAPSHOT versions:commit --file pom.xml
+          mvn -B build-helper:parse-version versions:set -DnewVersion=${{ env.RELEASE_VERSION }}-SNAPSHOT versions:commit --file pom.xml --settings .github/workflows/settings.xml
         fi
-        mvn generate-sources --file pom.xml
+        mvn generate-sources --file pom.xml --settings .github/workflows/settings.xml
         git add .
         modifications=$(git status | grep "modified" || true)
         if [ ! -z "$modifications" ]
@@ -71,12 +72,11 @@ jobs:
           git commit -m "modified changelog"
           git push
         fi
-        mvn -B release:clean release:prepare -Darguments="-DskipTests" --file pom.xml
-        mvn -B release:clean --file pom.xml
+        mvn -B release:clean release:prepare -Darguments="-DskipTests --settings .github/workflows/settings.xml" --file pom.xml --settings .github/workflows/settings.xml
+        mvn -B release:clean --file pom.xml --settings .github/workflows/settings.xml
       env:
          CI: false
-         PRIVATE_REPO_USERNAME: ${{ vars.PRIVATE_REPO_USERNAME }}
-         MAVEN_REPO_READ: ${{ secrets.MAVEN_REPO_READ }}
+         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
     - name: Get tag name
       run: |
@@ -99,9 +99,10 @@ jobs:
         fi
 
     - name: Build with Maven
-      run: mvn clean -B package -P frontend --file pom.xml
+      run: mvn clean -B package -P frontend --file pom.xml --settings .github/workflows/settings.xml
       env:
          CI: false
+         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
   publish_docker:
     name: "Build and publish docker"

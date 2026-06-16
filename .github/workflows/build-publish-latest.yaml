@@ -3,6 +3,10 @@ name: Build and publish latest image
 on:
   workflow_dispatch:
 
+permissions:
+  contents: read
+  packages: read
+
 env:
   IMAGE_NAME: observatory-config
   DOCKERHUB_USERNAME: starwit
@@ -47,14 +51,17 @@ jobs:
         fi   
 
     - name: Build with Maven
-      run: mvn clean -B package -P frontend --file pom.xml
+      run: mvn clean -B package -P frontend --file pom.xml --settings .github/workflows/settings.xml
       env:
          CI: false
+         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
     - name: get version from pom.xml
       id: get-version
-      run: |      
-        echo "VERSION_BUILD=$( mvn help:evaluate -Dexpression=project.version -q -DforceStdout )"  >> "$GITHUB_OUTPUT"
+      run: |
+        echo "VERSION_BUILD=$( mvn help:evaluate -Dexpression=project.version -q -DforceStdout --settings .github/workflows/settings.xml )"  >> "$GITHUB_OUTPUT"
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
   publish_docker:
     name: "Build and publish docker"

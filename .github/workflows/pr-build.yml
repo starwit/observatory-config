@@ -7,6 +7,9 @@ on:
     branches: [ master ]
   workflow_dispatch:
 
+permissions:
+  contents: read
+  packages: read
 
 # just runs Maven, NPM and Docker build
 jobs:
@@ -48,9 +51,10 @@ jobs:
         fi
 
     - name: Build with Maven
-      run: mvn clean -B package -P frontend --file pom.xml
+      run: mvn clean -B package -P frontend --file pom.xml --settings .github/workflows/settings.xml
       env:
          CI: false
+         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
   checks:
     name: "Checks"
