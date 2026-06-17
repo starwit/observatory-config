@@ -68,10 +68,14 @@ spec:
               value: {{ .Values.app.contextPath | quote }}
             - name: OBSERVATORY_URL
               value: {{ .Values.app.observatoryUrl }}
+            - name: SPRING_REDIS_ENABLED
+              value: {{ .Values.redis.enabled | quote }}
+            {{- if .Values.redis.enabled }}
             - name: SPRING_REDIS_HOST
               value: {{ .Values.redis.host | quote }}
             - name: SPRING_REDIS_PORT
               value: {{ .Values.redis.port | quote }}
+            {{- end }}
             {{- if .Values.auth.enabled }}
             - name: SPRING_PROFILES_ACTIVE
               value: auth
