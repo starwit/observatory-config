@@ -37,11 +37,7 @@ jobs:
     - name: setup node
       uses: actions/setup-node@v4
       with:
-        node-version: 20
-        
-    - run: npm --version
-    - run: node --version
-    - run: mvn --version
+        node-version: 22
 
     - name: npm install
       run: |
@@ -62,6 +58,11 @@ jobs:
     runs-on: [self-hosted, linux, X64]
 
     steps:
+    - name: checkout
+      uses: actions/checkout@v4
+      with:
+        fetch-depth: "0"
+
     - name: get helm
       uses: azure/setup-helm@v4
 

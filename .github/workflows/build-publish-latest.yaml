@@ -16,8 +16,6 @@ jobs:
   build:
     name: "Build and publish with build number"
     runs-on: [self-hosted, linux, X64]
-    outputs:
-      VERSION_BUILD: ${{ steps.get-version.outputs.VERSION_BUILD }}
 
     steps:
     - name: checkout
@@ -37,11 +35,7 @@ jobs:
     - name: setup node
       uses: actions/setup-node@v4
       with:
-        node-version: 20
-
-    - run: npm --version
-    - run: node --version
-    - run: mvn --version
+        node-version: 22
 
     - name: npm install
       run: |
@@ -59,18 +53,10 @@ jobs:
     - name: get version from pom.xml
       id: get-version
       run: |
-        echo "VERSION_BUILD=$( mvn help:evaluate -Dexpression=project.version -q -DforceStdout --settings .github/workflows/settings.xml )"  >> "$GITHUB_OUTPUT"
+        echo "VERSION_BUILD=$( mvn help:evaluate -Dexpression=project.version -q -DforceStdout --settings .github/workflows/settings.xml )"  >> "$GITHUB_ENV"
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-  publish_docker:
-    name: "Build and publish docker"
-    needs: build
-    runs-on: [self-hosted, linux, X64]
-    env:
-      VERSION_BUILD: ${{ needs.build.outputs.VERSION_BUILD }}
-
-    steps:
     - name: Login to Docker Hub
       uses: docker/login-action@v3
       with:
