@@ -1,0 +1,41 @@
+/* eslint-disable max-len */
+const translationDeDE = {
+    "arrow.info": "Test",
+    "app.title": "SAE Visualizer",
+    "observatoryConfig.tooltip": "Zurück zur Observatory-Konfiguration",
+    "map.title": "Live Kartenansicht",
+    "map.tooltip": "Kartenansicht",
+    "grid.title": "Rasteransicht",
+    "grid.tooltip": "Rasteransicht",
+    "trajectory.title": "Trajektorienansicht",
+    "trajectory.tooltip": "Trajektorienansicht",
+    "heatmap.title": "Heatmap-Ansicht",
+    "heatmap.tooltip": "Heatmap-Ansicht",
+    "home.copyright": "Starwit Technologies GmbH",
+    
+    // Settings menu translations
+    "settings.tooltip": "Einstellungen",
+    "settings.title": "Einstellungen",
+    "settings.trajectoryDecay": "Trajektorienausblendung",
+    "settings.trajectoryDecayDescription": "Zeit bis inaktive Trajektorien vollständig ausgeblendet sind (in Sekunden)",
+    "settings.heatmapExpiry": "Heatmap-Ablauf",
+    "settings.heatmapExpiryDescription": "Zeit nach der Heatmap-Daten entfernt werden (in Sekunden)",
+    "settings.heatmapRadius": "Heatmap-Radius",
+    "settings.heatmapRadiusDescription": "Einflussradius für jeden Heatmap-Punkt festlegen (in Pixeln)",
+    "settings.heatmapPositionSource": "Heatmap-Positionsquelle",
+    "settings.heatmapPositionSourceDescription": "Quelle der Positionsdaten für die Heatmap-Darstellung",
+    "settings.heatmapMinUpdateInterval": "Heatmap-Mindestaktualisierungsintervall",
+    "settings.heatmapMinUpdateIntervalDescription": "Mindestintervall zwischen Heatmap-Updates zur Leistungsoptimierung festlegen (in Millisekunden)",
+    "settings.seconds": "Sekunden",
+    "settings.pixels": "Pixel",
+    "settings.milliseconds": "Millisekunden",
+    "settings.coordinates": "Koordinaten",
+    "settings.pixelPositions": "Pixelpositionen",
+    "settings.reset": "Zurücksetzen",
+    "common.cancel": "Abbrechen",
+    "common.save": "Speichern",
+    "singleview.uploadBackgroundImage": "Hintergrundbild hochladen",
+    "singleview.enterFullscreen": "Vollbildmodus aktivieren",
+    "singleview.clearBackgroundImage": "Hintergrundbild entfernen"
+};
+export default translationDeDE;

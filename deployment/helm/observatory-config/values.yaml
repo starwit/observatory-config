@@ -15,6 +15,13 @@ app:
   contextPath: ""
   observatoryUrl: ""
 
+# ValKey/Redis message bus for the SAE visualizer live-tracking streams.
+# Point this at an external ValKey/Redis instance reachable from the pod.
+redis:
+  enabled: false
+  host: valkey
+  port: 6379
+
 auth:
   enabled: true
   keycloakRealmUrlInternal: http://internal-hostname/realms/observatory-config

@@ -1,6 +1,6 @@
 import {Container, Typography, Stack, Button, Tooltip} from "@mui/material";
 import React, {useEffect, useMemo, useState} from "react";
-import { Grid } from '@mui/material';
+import {Grid} from '@mui/material';
 import {useTranslation} from "react-i18next";
 import AddFabButton from "../../commons/addFabButton/AddFabButton";
 import ConfirmationDialog from "../../commons/dialog/ConfirmationDialog";
@@ -9,7 +9,7 @@ import ObservationAreaRest from "../../services/ObservationAreaRest";
 import ObservationAreaDialog, {MODE as ObservationAreaDialogMode} from "./ObservationAreaDialog";
 import ObservationAreaCard from "./ObservationAreaCard";
 import ObservationAreaMap from "./ObservationAreaMap";
-import {ViewList, Map} from "@mui/icons-material";
+import {ViewList, Map, Camera} from "@mui/icons-material";
 import MapSidebar from "./MapSidebar";
 
 
@@ -158,7 +158,12 @@ function ObservationAreaOverview() {
                     <Typography zIndex={2} variant={"h2"} gutterBottom>
                         {t("observationAreas.title")}
                     </Typography>
-                    {renderToggleButton()}
+                    <Stack direction="row" spacing={1}>
+                        <Tooltip title={t("button.visualizer")}>
+                            <Button href="#/visualizer/map" variant="outlined" color="primary"><Camera /></Button>
+                        </Tooltip>
+                        {renderToggleButton()}
+                    </Stack>
                 </Stack>
                 {renderObservationAreas()}
                 <ConfirmationDialog
