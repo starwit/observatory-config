@@ -82,7 +82,7 @@ function ObservationAreaCard(props) {
                             {renderProcessingIcon(observationArea.processingEnabled)}
                             <Box sx={{position: "absolute", display: "flex", justifyContent: "flex-end", width: "100%", px: 1, bottom: 0, backgroundColor: "rgba(255, 255, 255, 0.45)", backdropFilter: "blur(2px)"}}>
                                 <Tooltip title={"Record Track"}>
-                                    <IconButton onClick={() => copyArea(area)}>
+                                    <IconButton onClick={() => copyArea(area)} href="#/visualizer/map">
                                         <Camera fontSize={"small"} />
                                     </IconButton>
                                 </Tooltip>
