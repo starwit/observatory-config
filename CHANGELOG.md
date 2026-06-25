@@ -2,6 +2,12 @@
 
 Changelog of observatory-config.
 
+## Current Version ()
+
+### Features
+
+-  added card actions to observation area card ([b69e1](https://github.com/starwit/observatory-config/commit/b69e1e2f0574b84) Anett Hübner)  
+
 ## refs/tags/0.9.1 (2025-01-22)
 
 ### Bug Fixes
