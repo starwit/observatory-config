@@ -1,4 +1,4 @@
-import {Home} from "@mui/icons-material";
+import {Camera, Home} from "@mui/icons-material";
 import EditRoundedIcon from "@mui/icons-material/EditRounded";
 import PlayCircleFilledWhiteIcon from "@mui/icons-material/PlayCircleFilledWhite";
 import StopCircleIcon from "@mui/icons-material/StopCircle";
@@ -6,7 +6,7 @@ import {IconButton, Stack, Tooltip, Typography} from "@mui/material";
 import FormControl from "@mui/material/FormControl";
 import MenuItem from "@mui/material/MenuItem";
 import Select from "@mui/material/Select";
-import React, {useMemo, useState} from "react";
+import {useMemo, useState} from "react";
 import {useTranslation} from "react-i18next";
 import ConfirmationDialog from "../../commons/dialog/ConfirmationDialog";
 import ObservationAreaRest from "../../services/ObservationAreaRest";
@@ -17,7 +17,9 @@ function ObservationAreaSelect(props) {
         selectedArea,
         onHomeClick,
         onEditClick,
-        onAreaChange
+        onAreaChange,
+        onDetailViewChanged,
+        showTrajectories = false,
     } = props;
 
     const {t} = useTranslation();
@@ -120,6 +122,14 @@ function ObservationAreaSelect(props) {
                     onSubmit={toggleProcessing}
                     confirmTitle={t("button.submit")}
                 />
+            </FormControl>
+            <FormControl sx={{paddingLeft: "0.5rem"}}>
+                <Tooltip title={t('observationArea.showTrajectories')}>
+                    <IconButton sx={{height: "2rem"}} fontSize="small"
+                        onClick={onDetailViewChanged}>
+                        {showTrajectories ? <Camera color="secondary" /> : <Camera color="primary" />}
+                    </IconButton>
+                </Tooltip>
             </FormControl>
         </Stack >
     );
