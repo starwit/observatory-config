@@ -100,7 +100,14 @@ function ObservationAreaSelect(props) {
                     </IconButton>
                 </Tooltip>
             </FormControl>
-
+            <FormControl>
+                <Tooltip title={t('observationArea.showTrajectories')}>
+                    <IconButton sx={{height: "2rem"}} fontSize="small"
+                        onClick={onDetailViewChanged}>
+                        {showTrajectories ? <Camera color="secondary" /> : <Camera color="primary" />}
+                    </IconButton>
+                </Tooltip>
+            </FormControl>
             <FormControl>
                 <Tooltip title={processingEnabled ? t("observationArea.track.stop.title") : t("observationArea.track.start.title")}>
                     <IconButton sx={{height: "2rem"}}
@@ -122,14 +129,6 @@ function ObservationAreaSelect(props) {
                     onSubmit={toggleProcessing}
                     confirmTitle={t("button.submit")}
                 />
-            </FormControl>
-            <FormControl sx={{paddingLeft: "0.5rem"}}>
-                <Tooltip title={t('observationArea.showTrajectories')}>
-                    <IconButton sx={{height: "2rem"}} fontSize="small"
-                        onClick={onDetailViewChanged}>
-                        {showTrajectories ? <Camera color="secondary" /> : <Camera color="primary" />}
-                    </IconButton>
-                </Tooltip>
             </FormControl>
         </Stack >
     );
