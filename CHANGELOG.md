@@ -2,6 +2,12 @@
 
 Changelog of observatory-config.
 
+## Current Version ()
+
+### Features
+
+-  ab#2266 added trajectories to observation details view ([a39be](https://github.com/starwit/observatory-config/commit/a39be11a3fdb826) Anett Hübner)  
+
 ## refs/tags/0.9.8 (2026-06-25)
 
 ### Features

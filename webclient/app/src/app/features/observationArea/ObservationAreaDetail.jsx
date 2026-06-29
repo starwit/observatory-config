@@ -83,7 +83,7 @@ function ObservationAreaDetail(props) {
                 onImageSizeChange={setAnnotateImageSize}
                 sx={{zIndex: 20000}}
             ></ImageAnnotate>
-            {showTrajectoriesState ? <ObservationVisualization streams={selectedArea.streams} imageSize={annotateImageSize}></ObservationVisualization> : null}
+            {showTrajectoriesState ? <ObservationVisualization streams={selectedArea.saeStreamKeys} imageSize={annotateImageSize}></ObservationVisualization> : null}
             <ObservationAreaDialog
                 open={editDialogOpen}
                 onSubmit={() => setEditDialogOpen(false)}
