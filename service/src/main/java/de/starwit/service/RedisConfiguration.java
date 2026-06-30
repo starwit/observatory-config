@@ -23,15 +23,15 @@ import io.lettuce.core.ClientOptions;
 import io.lettuce.core.ClientOptions.DisconnectedBehavior;
 
 @Configuration
-@ConditionalOnProperty(name = "spring.redis.enabled", havingValue = "true", matchIfMissing = true)
+@ConditionalOnProperty(name = "spring.data.redis.active", havingValue = "true", matchIfMissing = true)
 public class RedisConfiguration {
 
     private Logger log = LoggerFactory.getLogger(RedisConfiguration.class);
 
-    @Value("${spring.redis.host:localhost}")
+    @Value("${spring.data.redis.host:localhost}")
     private String redisHost;
 
-    @Value("${spring.redis.port:6379}")
+    @Value("${spring.data.redis.port:6379}")
     private int redisPort;
 
     @Bean

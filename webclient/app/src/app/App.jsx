@@ -1,17 +1,20 @@
-import React from "react";
-import MainContentRouter from "./MainContentRouter";
 import {CssBaseline} from "@mui/material";
+import React from "react";
+import {SettingsProvider} from "./contexts/SettingsContext";
 import ErrorHandler from "./errorHandler/ErrorHandler.jsx";
+import MainContentRouter from "./MainContentRouter";
 
 
 function App() {
     return (
         <React.Fragment>
             <ErrorHandler>
-                <CssBaseline/>
-                <MainContentRouter/>
+                <SettingsProvider>
+                    <CssBaseline />
+                    <MainContentRouter />
+                </SettingsProvider>
             </ErrorHandler>
-        </React.Fragment>
+        </React.Fragment >
     );
 }
 
