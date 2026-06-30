@@ -18,7 +18,7 @@ function ObservationAreaSelect(props) {
         onHomeClick,
         onEditClick,
         onAreaChange,
-        onDetailViewChanged,
+        onShowTrajectoriesChanged,
         showTrajectories = false,
     } = props;
 
@@ -103,7 +103,7 @@ function ObservationAreaSelect(props) {
             <FormControl>
                 <Tooltip title={t('observationArea.showTrajectories')}>
                     <IconButton sx={{height: "2rem"}} fontSize="small"
-                        onClick={onDetailViewChanged}>
+                        onClick={onShowTrajectoriesChanged}>
                         {showTrajectories ? <Camera color="secondary" /> : <Camera color="primary" />}
                     </IconButton>
                 </Tooltip>

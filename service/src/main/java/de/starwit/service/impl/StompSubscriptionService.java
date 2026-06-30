@@ -24,13 +24,12 @@ import org.springframework.web.socket.messaging.SessionUnsubscribeEvent;
 
 import de.starwit.service.messagelistener.SaeMessageListener;
 
-
 @Component
-@ConditionalOnProperty(name = "spring.redis.enabled", havingValue = "true", matchIfMissing = true)
+@ConditionalOnProperty(name = "spring.data.redis.active", havingValue = "true", matchIfMissing = true)
 public class StompSubscriptionService implements ApplicationListener<AbstractSubProtocolEvent> {
 
     private Logger log = LoggerFactory.getLogger(this.getClass());
-    
+
     @Autowired
     private StreamMessageListenerContainer<String, MapRecord<String, String, String>> streamMessageListenerContainer;
 
@@ -44,7 +43,7 @@ public class StompSubscriptionService implements ApplicationListener<AbstractSub
     @Override
     public synchronized void onApplicationEvent(AbstractSubProtocolEvent event) {
         log.debug("Received event of type " + event.getClass().getSimpleName());
-        
+
         StompHeaderAccessor headerAccessor = StompHeaderAccessor.wrap(event.getMessage());
         String sessionId = headerAccessor.getSessionId();
 
@@ -66,9 +65,9 @@ public class StompSubscriptionService implements ApplicationListener<AbstractSub
         if (log.isDebugEnabled()) {
             log.debug("Active destinations: " + Arrays.toString(getUniqueDestinations().toArray()));
         }
-        
+
     }
-    
+
     private void addDestinationToSession(String sessionId, String destination) {
         List<String> destinations = sessionIdToDestinations.get(sessionId);
         if (destinations == null) {
@@ -77,7 +76,7 @@ public class StompSubscriptionService implements ApplicationListener<AbstractSub
         }
         destinations.add(destination);
     }
-    
+
     private void removeSession(String sessionId) {
         sessionIdToDestinations.remove(sessionId);
     }
@@ -86,12 +85,14 @@ public class StompSubscriptionService implements ApplicationListener<AbstractSub
         List<String> activeDestinations = getUniqueDestinations();
         List<String> subscribedDestinations = new ArrayList<>(destinationToSubscription.keySet());
 
-        // Make sure that there is an active subscription for all active destinations (i.e. with sessions attached)
+        // Make sure that there is an active subscription for all active destinations
+        // (i.e. with sessions attached)
         for (String destination : activeDestinations) {
             if (!destinationToSubscription.containsKey(destination)) {
                 String streamId = streamIdFromDestination(destination);
                 log.info("Added subscription for " + streamId);
-                Subscription subscription = streamMessageListenerContainer.receive(StreamOffset.latest(streamId), messageService::handleMessage);
+                Subscription subscription = streamMessageListenerContainer.receive(StreamOffset.latest(streamId),
+                        messageService::handleMessage);
                 destinationToSubscription.put(destination, subscription);
             }
         }
@@ -115,8 +116,8 @@ public class StompSubscriptionService implements ApplicationListener<AbstractSub
 
     private List<String> getUniqueDestinations() {
         return sessionIdToDestinations.values().stream()
-            .flatMap(List::stream)
-            .distinct()
-            .toList();
+                .flatMap(List::stream)
+                .distinct()
+                .toList();
     }
 }

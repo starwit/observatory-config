@@ -43,7 +43,7 @@ function ObservationAreaDetail(props) {
         navigate(`/observationarea/${newAreaId}`);
     }
 
-    function onDetailViewChanged() {
+    function onShowTrajectoriesChanged() {
         setShowTrajectoriesState(!showTrajectoriesState);
     }
 
@@ -66,7 +66,7 @@ function ObservationAreaDetail(props) {
                     onHomeClick={navigateToHome}
                     onEditClick={editArea}
                     onAreaChange={navigateToArea}
-                    onDetailViewChanged={onDetailViewChanged}
+                    onShowTrajectoriesChanged={onShowTrajectoriesChanged}
                     showTrajectories={showTrajectoriesState}
                 />
             </AppBar>

@@ -79,7 +79,7 @@ const translationEnEN = {
     "observationArea.track.stop.title": "Stop Processing",
     "observationArea.track.start": "Do you want to start processing?",
     "observationArea.track.stop": "The configuration will be saved and processing of data will stop. Do you want to proceed?",
-    "observationArea.showTrajectories": "Show Trajectories",
+    "observationArea.showTrajectories": "Live View",
     "app.baseName": "observatory-config",
     "home.title": "Welcome",
     "home.welcome": "Welcome to observatory-config",

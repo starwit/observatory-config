@@ -82,7 +82,7 @@ const translationDeDE = {
     "observationArea.track.stop.title": "Datenverarbeitung stoppen",
     "observationArea.track.start": "Wollen Sie die Verarbeitung starten?",
     "observationArea.track.stop": "Wollen Sie die Konfiguration Speichern und die Verarbeitung der Daten stoppen?",
-    "observationArea.showTrajectories": "Trajektorien anzeigen",
+    "observationArea.showTrajectories": "Live-Ansicht",
     "app.baseName": "observatory-config",
     "home.title": "Willkommen",
     "home.welcome": "Wilkommen zur Konfigurationsoberfläche für Computer Vision",

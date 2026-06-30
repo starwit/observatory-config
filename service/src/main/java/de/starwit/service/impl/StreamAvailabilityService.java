@@ -21,14 +21,13 @@ import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
-
 @Component
-@ConditionalOnProperty(name = "spring.redis.enabled", havingValue = "true", matchIfMissing = true)
+@ConditionalOnProperty(name = "spring.data.redis.active", havingValue = "true", matchIfMissing = true)
 public class StreamAvailabilityService {
 
     private Logger log = LoggerFactory.getLogger(this.getClass());
 
-    @Value("${spring.redis.maxStreamAge:1s}")
+    @Value("${spring.data.redis.maxStreamAge:1s}")
     private Duration maxAge;
 
     @Autowired
@@ -39,7 +38,8 @@ public class StreamAvailabilityService {
     private final Set<String> availableStreams = ConcurrentHashMap.newKeySet();
 
     /**
-     * @return the SAE streams that have received messages recently, as determined by the latest monitoring run.
+     * @return the SAE streams that have received messages recently, as determined
+     *         by the latest monitoring run.
      */
     public List<String> getAvailableStreams() {
         return availableStreams.stream().toList();
@@ -51,14 +51,15 @@ public class StreamAvailabilityService {
         Set<String> allKeys = redisTemplate.keys("*");
 
         Set<String> streamKeys = allKeys.stream()
-            .filter(k -> redisTemplate.type(k) == DataType.STREAM)
-            .collect(Collectors.toSet());
+                .filter(k -> redisTemplate.type(k) == DataType.STREAM)
+                .collect(Collectors.toSet());
 
-        // The age calculation can yield negative results, which is fine in this case but smth to keep in mind
+        // The age calculation can yield negative results, which is fine in this case
+        // but smth to keep in mind
         Long serverTime = getServerTime();
         Set<String> recentlyUpdatedStreams = streamKeys.stream()
-            .filter(k -> (serverTime - getLastMessageTimestamp(k)) < maxAge.toMillis())
-            .collect(Collectors.toSet());
+                .filter(k -> (serverTime - getLastMessageTimestamp(k)) < maxAge.toMillis())
+                .collect(Collectors.toSet());
 
         if (!setsEqual(recentlyUpdatedStreams, previouslyActiveStreams)) {
             this.availableStreams.retainAll(recentlyUpdatedStreams);
