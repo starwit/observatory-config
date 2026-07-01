@@ -1,8 +1,15 @@
 import {MapView} from '@deck.gl/core';
 import {TileLayer} from "@deck.gl/geo-layers";
-import {BitmapLayer, IconLayer} from "@deck.gl/layers";
+import {BitmapLayer, IconLayer, ScatterplotLayer} from "@deck.gl/layers";
 import DeckGL from "@deck.gl/react";
+import ColorFunctions from "../../services/ColorFunctions";
+import StreamRest from "../../services/StreamRest";
+import WebSocketClient from "../../services/WebSocketClient";
 import cameraicon from "./../../assets/images/camera3.png";
+import PlayArrowIcon from '@mui/icons-material/PlayArrow';
+import StopIcon from '@mui/icons-material/Stop';
+import { Box } from '@mui/material';
+import { useEffect, useMemo, useRef, useState } from 'react';
 
 const MAP_VIEW = new MapView({repeat: true});
 const ICON_MAPPING = {
@@ -11,6 +18,70 @@ const ICON_MAPPING = {
 
 function ObservationAreaMap(props) {
     const {data, onLoad, viewState, onSelect} = props;
+
+    const streamRest = useMemo(() => new StreamRest(), []);
+    const wsClient = useRef(new WebSocketClient());
+    const colorFunctions = useRef(new ColorFunctions());
+
+    const [streams, setStreams] = useState({});
+    const [markerList, setMarkerList] = useState({});
+
+    useEffect(() => {
+        streamRest.getAvailableStreams().then(response => {
+            const streams = response.data;
+            const colors = colorFunctions.current.generateDistinctColors(Object.keys(response.data).length);
+            let streamsAndColors = {}
+            streams.forEach((stream, index) => {
+                streamsAndColors[stream] = colors[index];
+            });
+            setStreams(streamsAndColors);
+
+            wsClient.current.setup(handleMessage, streams);
+            wsClient.current.connect();
+        });
+        return () => wsClient.current.disconnect();
+    }, []);
+
+    // Handle incoming messages from WebSocket
+    function handleMessage(trackedObjectList, streamId) {
+        let newMarkers = [];
+        trackedObjectList.forEach(trackedObject => {
+            if (trackedObject.hasGeoCoordinates) {
+                let newMarker = {}
+                newMarker.streamId = trackedObject.streamId;
+                newMarker.id = trackedObject.objectId;
+                newMarker.name = trackedObject.objectId + ' c' + trackedObject.classId;
+                newMarker.class = trackedObject.classId;
+                newMarker.timestamp = trackedObject.receiveTimestamp;
+                newMarker.coordinates = [trackedObject.coordinates.longitude, trackedObject.coordinates.latitude];
+                newMarkers.push(newMarker);
+            } else {
+            }
+        });
+        setMarkerList(prevMarkerList => ({ ...prevMarkerList, [streamId]: newMarkers }));
+    }
+    
+    function setupLiveLayers() {
+        return Object.entries(streams).map(([stream, color]) =>
+            createIconLayer(markerList[stream], stream, color)
+        );
+    }
+    
+    function createIconLayer(markerArray, streamId, color) {
+        return new ScatterplotLayer({
+            id: 'IconLayer-' + streamId,
+            data: markerArray ?? [],
+
+            getFillColor: d => color,
+            getPosition: d => d.coordinates,
+            getRadius: .7,
+            radiusMinPixels: 7,
+            radiusUnits: 'meters',
+            iconAtlas: 'https://raw.githubusercontent.com/visgl/deck.gl-data/master/website/icon-atlas.png',
+            iconMapping: 'https://raw.githubusercontent.com/visgl/deck.gl-data/master/website/icon-atlas.json',
+            pickable: true,
+        });
+    }
 
     const layers = [
         new TileLayer({
@@ -48,7 +119,8 @@ function ObservationAreaMap(props) {
             },
             getSize: d => 5,
             getColor: d => [Math.sqrt(d.exits), 140, 0]
-        })
+        }),
+        ...setupLiveLayers()
     ];
 
     function getTooltip({object}) {
