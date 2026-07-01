@@ -97,7 +97,7 @@ function ObservationAreaOverview() {
     function renderMap() {
         if (map) {
             return (
-                <ObservationAreaMap data={observationAreas} viewState={viewState} onLoad={reloadObservationAreas} onSelect={onSelect} showLive={toggleLiveTracking} />
+                <ObservationAreaMap data={observationAreas} viewState={viewState} onLoad={reloadObservationAreas} onSelect={onSelect} showLive={toggleLiveTracking} onToggleLive={toggleLive} />
             );
         }
         return null;
@@ -196,17 +196,6 @@ function ObservationAreaOverview() {
                     selectedArea={selectedArea}
                     update={reloadObservationAreas}
                 />
-                <Box sx={{
-                    position: 'fixed',
-                    bottom: "5%",
-                    right: "6%"
-                }}>
-                    <Fab color="primary">
-                        {!toggleLiveTracking ?
-                            <PlayArrowIcon onClick={toggleLive} /> :
-                            <StopIcon onClick={toggleLive} />}
-                    </Fab>
-                </Box>
                 <AddFabButton onClick={createArea} />
             </Container>
         </>

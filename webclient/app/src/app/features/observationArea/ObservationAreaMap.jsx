@@ -6,10 +6,9 @@ import ColorFunctions from "../../services/ColorFunctions";
 import StreamRest from "../../services/StreamRest";
 import WebSocketClient from "../../services/WebSocketClient";
 import cameraicon from "./../../assets/images/camera3.png";
-import PlayArrowIcon from '@mui/icons-material/PlayArrow';
-import StopIcon from '@mui/icons-material/Stop';
-import { Box } from '@mui/material';
 import { useEffect, useMemo, useRef, useState } from 'react';
+import MapMenuLayout from '../../commons/mapMenu/MapMenuLayout';
+import ObservationMapMenu from '../../commons/mapMenu/ObservationMapMenu';
 
 const MAP_VIEW = new MapView({repeat: true});
 const ICON_MAPPING = {
@@ -17,7 +16,7 @@ const ICON_MAPPING = {
 };
 
 function ObservationAreaMap(props) {
-    const {data, onLoad, viewState, onSelect, showLive} = props;
+    const {data, onLoad, viewState, onSelect, showLive, onToggleLive} = props;
 
     const streamRest = useMemo(() => new StreamRest(), []);
     const wsClient = useRef(new WebSocketClient());
@@ -25,7 +24,6 @@ function ObservationAreaMap(props) {
 
     const [streams, setStreams] = useState({});
     const [markerList, setMarkerList] = useState({});
-
     useEffect(() => {
         streamRest.getAvailableStreams().then(response => {
             const streams = response.data;
@@ -145,6 +143,9 @@ function ObservationAreaMap(props) {
 
     return (
         <>
+            <MapMenuLayout>
+                <ObservationMapMenu setToggleLiveTracking={onToggleLive} />
+            </MapMenuLayout>
             <DeckGL
                 layers={layers}
                 views={MAP_VIEW}
