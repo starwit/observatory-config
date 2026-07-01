@@ -121,6 +121,7 @@ const translationEnEN = {
     "response.save.success": "Saved successfully.",
     "response.save.failed": "Failed to save!",
     "confirm.dialog.title": "Confirm the Dialog Title",
-    "confirm.dialog.description": "Confirm the Dialog Description"
+    "confirm.dialog.description": "Confirm the Dialog Description",
+    "map.live": "Enable Live Tracking"
 };
 export default translationEnEN;

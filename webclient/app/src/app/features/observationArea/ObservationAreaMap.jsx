@@ -144,7 +144,7 @@ function ObservationAreaMap(props) {
     return (
         <>
             <MapMenuLayout>
-                <ObservationMapMenu setToggleLiveTracking={onToggleLive} />
+                <ObservationMapMenu setToggleLiveTracking={onToggleLive} showLive={showLive} />
             </MapMenuLayout>
             <DeckGL
                 layers={layers}

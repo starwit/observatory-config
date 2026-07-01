@@ -97,7 +97,13 @@ function ObservationAreaOverview() {
     function renderMap() {
         if (map) {
             return (
-                <ObservationAreaMap data={observationAreas} viewState={viewState} onLoad={reloadObservationAreas} onSelect={onSelect} showLive={toggleLiveTracking} onToggleLive={toggleLive} />
+                <ObservationAreaMap 
+                    data={observationAreas} 
+                    viewState={viewState} 
+                    onLoad={reloadObservationAreas} 
+                    onSelect={onSelect} 
+                    showLive={toggleLiveTracking} 
+                    onToggleLive={toggleLive} />
             );
         }
         return null;
