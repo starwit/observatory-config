@@ -17,7 +17,7 @@ const ICON_MAPPING = {
 };
 
 function ObservationAreaMap(props) {
-    const {data, onLoad, viewState, onSelect} = props;
+    const {data, onLoad, viewState, onSelect, showLive} = props;
 
     const streamRest = useMemo(() => new StreamRest(), []);
     const wsClient = useRef(new WebSocketClient());
@@ -37,10 +37,18 @@ function ObservationAreaMap(props) {
             setStreams(streamsAndColors);
 
             wsClient.current.setup(handleMessage, streams);
-            wsClient.current.connect();
         });
         return () => wsClient.current.disconnect();
     }, []);
+
+    useEffect(() => {
+        if(showLive) {
+            wsClient.current.connect();
+        } else {
+            wsClient.current.disconnect();
+
+        }
+    },[showLive]);
 
     // Handle incoming messages from WebSocket
     function handleMessage(trackedObjectList, streamId) {
@@ -125,7 +133,7 @@ function ObservationAreaMap(props) {
 
     function getTooltip({object}) {
         return (
-            object && {
+            object?.image && {
                 html: `\
                 <div>
                     <img src='${window.location.pathname}api/image/as-file/${object.image.id}' width="auto" height="200rem" />
