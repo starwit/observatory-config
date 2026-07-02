@@ -2,6 +2,7 @@ import {Camera, Home} from "@mui/icons-material";
 import EditRoundedIcon from "@mui/icons-material/EditRounded";
 import PlayCircleFilledWhiteIcon from "@mui/icons-material/PlayCircleFilledWhite";
 import StopCircleIcon from "@mui/icons-material/StopCircle";
+import SaveIcon from '@mui/icons-material/Save';
 import {IconButton, Stack, Tooltip, Typography} from "@mui/material";
 import FormControl from "@mui/material/FormControl";
 import MenuItem from "@mui/material/MenuItem";
@@ -18,7 +19,8 @@ function ObservationAreaSelect(props) {
         onHomeClick,
         onEditClick,
         onAreaChange,
-        onShowTrajectoriesChanged,
+        onLiveTrajectoriesClick,
+        onSaveClick,
         showTrajectories = false,
     } = props;
 
@@ -55,11 +57,11 @@ function ObservationAreaSelect(props) {
     function renderProcessingIcon() {
         if (processingEnabled) {
             return (
-                <StopCircleIcon fontSize="small" color="error" />
+                <StopCircleIcon color="error" />
             );
         }
         return (
-            <PlayCircleFilledWhiteIcon fontSize="small" />
+            <PlayCircleFilledWhiteIcon color="primary" />
         );
     }
 
@@ -82,7 +84,7 @@ function ObservationAreaSelect(props) {
             <FormControl sx={{paddingLeft: "0.5rem"}}>
                 <IconButton sx={{height: "2rem"}}
                     onClick={onHomeClick}>
-                    <Home fontSize="small" />
+                    <Home color="primary" />
                 </IconButton>
             </FormControl>
             <FormControl sx={{boxShadow: "none", width: "20rem"}}>
@@ -96,14 +98,14 @@ function ObservationAreaSelect(props) {
             <FormControl>
                 <Tooltip title={t("button.update")}>
                     <IconButton sx={{height: "2rem"}} onClick={onEditClick}>
-                        <EditRoundedIcon fontSize="small" />
+                        <EditRoundedIcon color="primary" />
                     </IconButton>
                 </Tooltip>
             </FormControl>
             <FormControl>
                 <Tooltip title={t('observationArea.showTrajectories')}>
                     <IconButton sx={{height: "2rem"}} fontSize="small"
-                        onClick={onShowTrajectoriesChanged}>
+                        onClick={onLiveTrajectoriesClick}>
                         {showTrajectories ? <Camera color="secondary" /> : <Camera color="primary" />}
                     </IconButton>
                 </Tooltip>
@@ -129,6 +131,14 @@ function ObservationAreaSelect(props) {
                     onSubmit={toggleProcessing}
                     confirmTitle={t("button.submit")}
                 />
+            </FormControl>
+            <FormControl sx={{marginLeft: "auto", paddingRight: "0.5rem"}}>
+                <Tooltip title={t('observationArea.showTrajectories')}>
+                    <IconButton sx={{height: "2rem"}} fontSize="small"
+                        onClick={onSaveClick}>
+                        <SaveIcon color="primary" />
+                    </IconButton>
+                </Tooltip>
             </FormControl>
         </Stack >
     );
