@@ -36,4 +36,16 @@ public class SaeMessageListener {
             log.debug(e.getMessage());
         }
     }
+
+    public void handleSavingMessage(MapRecord<String, String, String> message) {
+        log.debug("Message received: {} from {}", message.getId(), message.getStream());
+        String protobuf_data = message.getValue().get("proto_data_b64");
+        try {
+            SaeMessage saeMessage = SaeMessage.parseFrom(Base64.getDecoder().decode(protobuf_data));
+            saeMessageService.saveMessage(saeMessage, message.getStream());
+        } catch (InvalidProtocolBufferException e) {
+            log.error("Error decoding proto from message. streamId=" + message.getStream());
+            log.debug(e.getMessage());
+        }
+    }
 }

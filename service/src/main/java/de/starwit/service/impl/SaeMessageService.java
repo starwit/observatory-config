@@ -11,6 +11,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
 
+import de.starwit.persistence.entity.DetectionEntity;
+import de.starwit.persistence.repository.DetectionRepository;
 import de.starwit.service.dto.TrajectoryDto;
 import de.starwit.visionapi.Sae.BoundingBox;
 import de.starwit.visionapi.Sae.Detection;
@@ -29,6 +31,9 @@ public class SaeMessageService {
     @Autowired
     private SimpMessagingTemplate template;
 
+    @Autowired
+    private DetectionRepository detectionRepository;
+
     // Optional: the stream monitor is only present when the Redis stream listener is enabled (spring.redis.enabled).
     @Autowired(required = false)
     private StreamAvailabilityService streamMonitorService;
@@ -44,6 +49,13 @@ public class SaeMessageService {
         List<TrajectoryDto> trackedObjects = convertToDTOs(saeMessage, streamId);
         this.template.convertAndSend("/topic/location/" + streamId, trackedObjects);
         log.debug("Sent " + trackedObjects.size() + " messages");
+    }
+
+    public void saveMessage(SaeMessage saeMessage, String streamId) {
+        saeMessage.getDetectionsList().forEach(detection -> {
+            log.debug("Saving detection: " + detection.getClassId() + ", " + detection.getObjectId());
+            detectionRepository.save(convertDetection(detection, saeMessage, streamId));
+        });
     }
 
     private List<TrajectoryDto> convertToDTOs(SaeMessage saeMessage, String streamId) {
@@ -90,5 +102,28 @@ public class SaeMessageService {
         t.getBoundingBox().setMaxX(bb.getMaxX() * sh.getWidth());
         t.getBoundingBox().setMaxY(bb.getMaxY() * sh.getHeight());
         return t;
+    }
+
+    private DetectionEntity convertDetection(Detection d, SaeMessage saeMessage, String streamId) {
+        var timestamp = saeMessage.getFrame().getTimestampUtcMs();
+        Shape sh = saeMessage.getFrame().getShape();
+
+        DetectionEntity entity = new DetectionEntity();
+        entity.setStreamId(streamId);
+        entity.setObjectId(HexFormat.of().formatHex(d.getObjectId().toByteArray()));
+        entity.setClassId(d.getClassId());
+        
+        LocalDateTime utcTime = LocalDateTime.ofEpochSecond(timestamp / 1000, (int) (timestamp % 1000) * 1_000_000, java.time.ZoneOffset.UTC);
+        entity.setDetectionTimestamp(utcTime);
+        
+        BoundingBox bb = d.getBoundingBox();
+        entity.setX((double) ((bb.getMinX() + bb.getMaxX()) / 2) * sh.getWidth());
+        entity.setY((double) ((bb.getMinY() + bb.getMaxY()) / 2) * sh.getHeight());
+
+        if (d.hasGeoCoordinate()) {
+            entity.setLatitude(d.getGeoCoordinate().getLatitude());
+            entity.setLongitude(d.getGeoCoordinate().getLongitude());
+        }
+        return entity;
     }
 }
