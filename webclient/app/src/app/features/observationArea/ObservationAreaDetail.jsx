@@ -3,7 +3,7 @@ import {useNavigate, useParams} from "react-router-dom";
 import {AppBar} from "../../assets/styles/HeaderStyles";
 import ObservationAreaRest from "../../services/ObservationAreaRest";
 import ImageAnnotate from "../imageAnnotate/ImageAnnotate";
-import ObservationVisualization from "../visualizer/ObservationVisualization";
+import TrajectoryDrawer from "../visualizer/TrajectoryDrawer";
 import ObservationAreaDialog, {MODE as ObservationAreaDialogMode} from "./ObservationAreaDialog";
 import ObservationAreaSelect from "./ObservationAreaSelect";
 import {Box, useForkRef} from "@mui/material";
@@ -14,7 +14,6 @@ function ObservationAreaDetail(props) {
     const navigate = useNavigate();
 
     const [liveTrajectoriesActive, setLiveTrajectoriesActive] = useState(false);
-    const [annotateImageSize, setAnnotateImageSize] = useState();
     const [observationAreas, setObservationAreas] = useState();
     const selectedArea = observationAreas?.find(a => String(a.id) === observationAreaId);
     const [editDialogOpen, setEditDialogOpen] = useState(false);
@@ -87,13 +86,21 @@ function ObservationAreaDetail(props) {
                 {renderAppBar()}
                 <ImageAnnotate
                     observationAreaId={observationAreaId}
-                    onImageSizeChange={setAnnotateImageSize}
                     sx={{zIndex: 20000}}
                     lockCanvas={liveTrajectoriesActive}
+                    renderImageOverlay={
+                        liveTrajectoriesActive && selectedArea.saeStreamKeys?.[0]
+                            ? ({width}) => (
+                                <TrajectoryDrawer
+                                    stream={selectedArea.saeStreamKeys[0]}
+                                    width={width}
+                                />
+                            )
+                            : undefined
+                    }
                     ref={annotatorRef}
                 ></ImageAnnotate>
             </Box>
-            {liveTrajectoriesActive ? <ObservationVisualization streams={selectedArea.saeStreamKeys} imageSize={annotateImageSize}></ObservationVisualization> : null}
             <ObservationAreaDialog
                 open={editDialogOpen}
                 onSubmit={() => setEditDialogOpen(false)}

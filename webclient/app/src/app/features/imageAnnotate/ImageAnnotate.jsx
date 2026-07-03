@@ -8,7 +8,7 @@ import ObservationAreaRest from "../../services/ObservationAreaRest";
 import {toast} from "react-toastify";
 
 function ImageAnnotate(props) {
-    const {observationAreaId, onImageSizeChange, lockCanvas, ref} = props;
+    const {observationAreaId, lockCanvas, renderImageOverlay, ref} = props;
 
     const {t} = useTranslation();
 
@@ -55,18 +55,6 @@ function ImageAnnotate(props) {
         if (image !== undefined) {
             image.src = image !== undefined ? imageFileUrlForId(image.id) : "";
             image.name = "";
-
-            const imageWidth = image.width;
-            const imageHeight = image.height;
-            if (onImageSizeChange && imageWidth && imageHeight) {
-                onImageSizeChange({width: imageWidth, height: imageHeight});
-            } else if (onImageSizeChange && image.src) {
-                const loadedImage = new window.Image();
-                loadedImage.onload = () => {
-                    onImageSizeChange({width: loadedImage.naturalWidth, height: loadedImage.naturalHeight});
-                };
-                loadedImage.src = image.src;
-            }
         }
         return image;
     }
@@ -113,6 +101,7 @@ function ImageAnnotate(props) {
             image={image}
             enabledRegionProps={["name", "line-direction"]}
             movementLocked={lockCanvas}
+            renderImageOverlay={renderImageOverlay}
             ref={annotatorRef}>
         </ReactImageAnnotate>
     );
