@@ -29,6 +29,12 @@ All artifacts for this application are released to [Docker Hub](https://hub.dock
 
 For target environment some configuration is necessary. In Helm you can provide config data via a custom value file. See the template [value file](deployment/helm/observatory-config/values-local-tpl.yaml) for an example. More detailed explanation for individual fields are provided in the [Readme](deployment/helm/observatory-config/Readme.md) file.
 
+# Development & Architecture
+
+Developer instructions can be found in [dev docs](docs/Readme-dev.md). This repository is part of an application and the following picture shows components to run observatory.
+
+![](/docs/observatory-architecture.svg)
+
 
 # License
 
