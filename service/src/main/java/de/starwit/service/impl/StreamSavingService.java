@@ -39,14 +39,13 @@ public class StreamSavingService {
 
     @Scheduled(fixedRate = 2000)
     public synchronized void synchronizeSubscriptions() {
-
-        log.debug("available streams for recording");
-        log.debug(streamAvailabilityService.getAvailableStreams().toString());
-        
         if(streamsToRecord == null) {
             log.debug("streamsToRecord is null, initializing it.");
             streamsToRecord = new LinkedList<>();
         }
+
+        log.debug("available streams for recording" + streamAvailabilityService.getAvailableStreams().toString());
+        log.debug("Streams marked for recording " + streamsToRecord.toString());
 
         for (String streamId : streamAvailabilityService.getAvailableStreams()) {
             if (streamsToRecord.contains(streamId) && !streamToSubscription.containsKey(streamId)) {
