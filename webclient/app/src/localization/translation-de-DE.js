@@ -127,6 +127,6 @@ const translationDeDE = {
     "response.save.failed": "Speichern fehlgeschlagen!",
     "confirm.dialog.title": "Bestätigen des Dialog Titels",
     "confirm.dialog.description": "Bestätigen der Dialog Beschreibung",
-    "map.live": "Livedaten"
+    "map.live": "Livedaten anzeigen"
 };
 export default translationDeDE;
