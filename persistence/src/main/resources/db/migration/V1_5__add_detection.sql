@@ -5,7 +5,7 @@ CREATE TABLE "detection" (
     "stream_id"           VARCHAR(255) NOT NULL,
     "object_id"           VARCHAR(255) NOT NULL,
     "class_id"            INTEGER      NOT NULL,
-    "detection_timestamp"   TIMESTAMP    NOT NULL,
+    "detection_timestamp"   TIMESTAMP WITH TIME ZONE    NOT NULL,
     "has_geo_coordinates" BOOLEAN      NOT NULL,
     "latitude"            DOUBLE PRECISION,
     "longitude"           DOUBLE PRECISION,

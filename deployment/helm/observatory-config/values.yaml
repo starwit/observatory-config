@@ -29,11 +29,15 @@ auth:
   clientId: observatory-config
   clientSecret: observatory-config # TODO get from secret
 
+# Data base configuration
 database:
   internal: true
   name: observatory-config
   username: observatory-config
   password: observatory-config
+  # how long shall recordings be stored
+  retention:
+    days: 2
 
 # extraEnv: |
 #   - name: JAVA_TOOL_OPTIONS

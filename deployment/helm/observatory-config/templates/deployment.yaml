@@ -64,6 +64,8 @@ spec:
               value: {{ .Values.database.username }}
             - name: SPRING_DATASOURCE_PASSWORD
               value: {{ .Values.database.password }}
+            - name: PARTITION_MANAGEMENT_RETENTION_DAYS
+              value: {{ .Values.database.retention.days }}
             - name: SERVER_SERVLET_CONTEXT_PATH
               value: {{ .Values.app.contextPath | quote }}
             - name: OBSERVATORY_URL
