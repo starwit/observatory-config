@@ -16,7 +16,7 @@ An individual configuration can contain many items, to count objects or collect 
 
 # Installation
 
-This application runs on Kubernetes and standard installation tool is Helm. See section [Development](#development-setup) for other ways to run software in an dev environment.
+This application runs on Kubernetes and standard installation tool is Helm. See section [Development](/docs/Readme-dev.md) for other ways to run software in a dev environment.
 
 ## Deployment with Helm
 
@@ -27,7 +27,8 @@ All artifacts for this application are released to [Docker Hub](https://hub.dock
 
 ### Custom Values File
 
-For target environment some configuration is necessary. In Helm you can provide config data via a custom value file. See the template [value file](deployment/helm/observatory-config/values-local-tpl.yaml) for an example. More detailed explanation for individual fields are provided in the [Readme](deployment/helm/observatory-config/Readme.md) file.
+For target environment some configuration is necessary. In Helm you can provide config data via a custom value file. Chart usages is documented [here](deployment/helm/observatory-config/Readme.md).
+See the template [value file](deployment/helm/observatory-config/values-local-tpl.yaml) for an example. More detailed explanation for individual fields are provided in the [Readme](deployment/helm/observatory-config/Readme.md) file.
 
 # Development & Architecture
 
