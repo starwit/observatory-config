@@ -11,7 +11,7 @@ function DeckGLOverlay(props) {
 function BaseMap(props) {
     const {
         viewState,
-        onViewStateChange,
+        onViewStateChange = null,
         layers = [],
         getTooltip = null,
         onClick = null,
@@ -23,9 +23,8 @@ function BaseMap(props) {
             <Map
                 initialViewState={viewState}
                 mapStyle="https://tiles.openfreemap.org/styles/positron"
-                onMove={evt => onViewStateChange(evt.viewState)}
+                onMove={onViewStateChange ? evt => onViewStateChange(evt.viewState) : undefined}
                 onLoad={onLoad}
-                {...viewState}
             >
                 <DeckGLOverlay
                     layers={layers}

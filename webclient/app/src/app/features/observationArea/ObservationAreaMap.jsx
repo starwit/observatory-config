@@ -13,7 +13,7 @@ const ICON_MAPPING = {
 };
 
 function ObservationAreaMap(props) {
-    const {data, onLoad, viewState, onViewStateChange, onSelect, showLive, onToggleLive} = props;
+    const {data, onLoad, viewState, onSelect, showLive, onToggleLive} = props;
 
     const streamRest = useMemo(() => new StreamRest(), []);
     const wsClient = useRef(new WebSocketClient());
@@ -126,7 +126,6 @@ function ObservationAreaMap(props) {
             <BaseMap
                 layers={layers}
                 viewState={viewState}
-                onViewStateChange={onViewStateChange}
                 getTooltip={getTooltip}
                 onClick={onSelect}
                 onLoad={onLoad}

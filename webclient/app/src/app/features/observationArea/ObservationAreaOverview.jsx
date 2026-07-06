@@ -101,7 +101,6 @@ function ObservationAreaOverview() {
                 <ObservationAreaMap
                     data={observationAreas}
                     viewState={viewState}
-                    onViewStateChange={setViewState}
                     onLoad={reloadObservationAreas}
                     onSelect={onSelect}
                     showLive={isLiveTracking}
