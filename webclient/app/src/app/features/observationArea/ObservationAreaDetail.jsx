@@ -1,25 +1,26 @@
-import {useEffect, useMemo, useState} from "react";
+import {useEffect, useMemo, useState, useRef} from "react";
 import {useNavigate, useParams} from "react-router-dom";
 import {AppBar} from "../../assets/styles/HeaderStyles";
 import ObservationAreaRest from "../../services/ObservationAreaRest";
 import ImageAnnotate from "../imageAnnotate/ImageAnnotate";
-import ObservationVisualization from "../visualizer/ObservationVisualization";
+import TrajectoryDrawer from "../visualizer/TrajectoryDrawer";
 import ObservationAreaDialog, {MODE as ObservationAreaDialogMode} from "./ObservationAreaDialog";
 import ObservationAreaSelect from "./ObservationAreaSelect";
+import {Box, useForkRef} from "@mui/material";
 
 function ObservationAreaDetail(props) {
 
     const {observationAreaId} = useParams();
-    const {showTrajectories = false} = props;
     const navigate = useNavigate();
 
-    const [showTrajectoriesState, setShowTrajectoriesState] = useState(showTrajectories);
-    const [annotateImageSize, setAnnotateImageSize] = useState();
+    const [liveTrajectoriesActive, setLiveTrajectoriesActive] = useState(false);
     const [observationAreas, setObservationAreas] = useState();
     const selectedArea = observationAreas?.find(a => String(a.id) === observationAreaId);
     const [editDialogOpen, setEditDialogOpen] = useState(false);
 
     const observationAreaRest = useMemo(() => new ObservationAreaRest(), [])
+
+    const annotatorRef = useRef(null);
 
     useEffect(() => {
         reloadObservationAreas();
@@ -43,12 +44,16 @@ function ObservationAreaDetail(props) {
         navigate(`/observationarea/${newAreaId}`);
     }
 
-    function onShowTrajectoriesChanged() {
-        setShowTrajectoriesState(!showTrajectoriesState);
+    function toggleLiveTrajectories() {
+        setLiveTrajectoriesActive(!liveTrajectoriesActive);
     }
 
     function navigateToHome() {
         navigate("/");
+    }
+
+    function saveRegions() {
+        annotatorRef.current?.saveRegions();
     }
 
     if (observationAreas === undefined || selectedArea === undefined) {
@@ -56,18 +61,18 @@ function ObservationAreaDetail(props) {
     }
 
     function renderAppBar() {
-        const appBarSx = {boxShadow: "none", left: "0rem", right: "8rem", width: "80vw", transition: "none"};
 
         return (
-            <AppBar color="transparent" sx={appBarSx}>
+            <AppBar color="inherit" position="static">
                 <ObservationAreaSelect
                     observationAreas={observationAreas}
                     selectedArea={selectedArea}
                     onHomeClick={navigateToHome}
                     onEditClick={editArea}
                     onAreaChange={navigateToArea}
-                    onShowTrajectoriesChanged={onShowTrajectoriesChanged}
-                    showTrajectories={showTrajectoriesState}
+                    onSaveClick={saveRegions}
+                    onLiveTrajectoriesClick={toggleLiveTrajectories}
+                    showTrajectories={liveTrajectoriesActive}
                 />
             </AppBar>
         )
@@ -77,13 +82,25 @@ function ObservationAreaDetail(props) {
 
     return (
         <>
-            {renderAppBar()}
-            <ImageAnnotate
-                observationAreaId={observationAreaId}
-                onImageSizeChange={setAnnotateImageSize}
-                sx={{zIndex: 20000}}
-            ></ImageAnnotate>
-            {showTrajectoriesState ? <ObservationVisualization streams={selectedArea.saeStreamKeys} imageSize={annotateImageSize}></ObservationVisualization> : null}
+            <Box sx={{height: "100vh", display: "flex", flexDirection: "column"}}>
+                {renderAppBar()}
+                <ImageAnnotate
+                    observationAreaId={observationAreaId}
+                    sx={{zIndex: 20000}}
+                    lockCanvas={liveTrajectoriesActive}
+                    renderImageOverlay={
+                        liveTrajectoriesActive && selectedArea.saeStreamKeys?.[0]
+                            ? ({width}) => (
+                                <TrajectoryDrawer
+                                    stream={selectedArea.saeStreamKeys[0]}
+                                    width={width}
+                                />
+                            )
+                            : undefined
+                    }
+                    ref={annotatorRef}
+                ></ImageAnnotate>
+            </Box>
             <ObservationAreaDialog
                 open={editDialogOpen}
                 onSubmit={() => setEditDialogOpen(false)}

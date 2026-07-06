@@ -1,8 +1,8 @@
-import React, {useEffect, useState, useRef} from "react";
+import React, {useEffect, useRef, useState} from "react";
+import {Box} from "@mui/material";
 import DeckGL from "@deck.gl/react";
 import {OrthographicView} from "@deck.gl/core";
 import {PathLayer, ScatterplotLayer} from "@deck.gl/layers";
-import {Box, Typography} from "@mui/material";
 import WebSocketClient from "../../services/WebSocketClient";
 import {useSettings} from "../../contexts/SettingsContext";
 import ObjectTracker from "../../services/ObjectTracker";
@@ -13,76 +13,36 @@ const PASSIVE_PATH_COLOR = [0, 128, 255, 200]; // Blue with some transparency fo
 const MARKER_COLOR = [90, 190, 0, 255]; // Green for active markers
 const STATIONARY_MARKER_COLOR = [137, 196, 255, 255]; // Blue for stationary markers
 
+// Renders live trajectories as a purely-visual deck.gl overlay. It is mounted by the annotator's
+// `renderImageOverlay` slot, which positions and sizes a box to exactly cover the image; `width` is
+// that box's current on-screen width in CSS pixels. Trajectory coordinates arrive in SAE frame-pixel
+// space (the message `shape`), which is deck.gl's coordinate space here — this may differ from the
+// annotator image's intrinsic resolution, so we map the frame (not `naturalWidth`) onto the box.
 function TrajectoryDrawer(props) {
-    const {stream, running, label, imageSize} = props;
+    const {stream, width} = props;
     const {trajectoryDecayMs} = useSettings();
 
     const wsClient = useRef(new WebSocketClient());
 
-    const deckGlContainer = useRef(null);
-
     const [trajectories, setTrajectories] = useState([]);
-    const [shape, setShape] = useState({});
+    const [shape, setShape] = useState(null);
     const [objectTracker, setObjectTracker] = useState(new ObjectTracker(500, trajectoryDecayMs));
-
-    const [viewState, setViewState] = useState({
-        target: [0, 0, 0],
-        zoom: -1,
-        minZoom: -5,
-        maxZoom: 10
-    });
 
     const layers = [];
 
     useEffect(() => {
-        if (running) {
-            setTrajectories([]);
-            setObjectTracker(new ObjectTracker(500, trajectoryDecayMs));
-            wsClient.current.setup(handleMessage, [stream]);
-            wsClient.current.connect();
-        } else {
-            wsClient.current.disconnect();
-        }
+        setTrajectories([]);
+        setObjectTracker(new ObjectTracker(500, trajectoryDecayMs));
+        wsClient.current.setup(handleMessage, [stream]);
+        wsClient.current.connect();
         return () => wsClient.current.disconnect();
-    }, [running, trajectoryDecayMs]);
+    }, [stream, trajectoryDecayMs]);
 
-    useEffect(() => {
-        const updateDimensions = () => {
-            if (shape) {
-                const containerWidth = deckGlContainer.current.clientWidth;
-                const containerHeight = deckGlContainer.current.clientHeight;
-
-                const {width: frameWidth, height: frameHeight} = shape;
-
-                // Calculate zoom level to fit view
-                const {width: viewWidth, height: viewHeight} = calculateViewportDimensions(
-                    containerWidth,
-                    containerHeight,
-                    frameWidth,
-                    frameHeight
-                );
-
-                // Calculate zoom to fit the frame dimensions to the viewport
-                const scale = Math.min(
-                    viewWidth / frameWidth,
-                    viewHeight / frameHeight
-                );
-
-                const zoom = Math.log2(scale);
-
-                setViewState({
-                    target: [frameWidth / 2, frameHeight / 2, 0],
-                    zoom,
-                    minZoom: -5,
-                    maxZoom: 10
-                });
-            }
-        };
-
-        updateDimensions();
-        window.addEventListener('resize', updateDimensions);
-        return () => window.removeEventListener('resize', updateDimensions);
-    }, [shape]);
+    // Map the frame-pixel space [0..shape.width] x [0..shape.height] onto the on-screen box.
+    const viewState = shape ? {
+        target: [shape.width / 2, shape.height / 2, 0],
+        zoom: Math.log2(width / shape.width),
+    } : null;
 
     function handleMessage(trackedObjectList) {
         if (trackedObjectList.length > 0) {
@@ -95,34 +55,12 @@ function TrajectoryDrawer(props) {
     function updateShape(trackedObjectList) {
         const newShape = trackedObjectList[0].shape;
         setShape(oldShape => {
-            if (oldShape.width == newShape.width && oldShape.height == newShape.height) {
+            if (oldShape && oldShape.width === newShape.width && oldShape.height === newShape.height) {
                 return oldShape;
             }
             return newShape;
         });
     }
-
-    // Function to calculate the viewport dimensions that maintain aspect ratio
-    const calculateViewportDimensions = (containerWidth, containerHeight, frameWidth, frameHeight) => {
-        if (!frameWidth || !frameHeight) return {width: containerWidth, height: containerHeight};
-
-        const frameAspectRatio = frameWidth / frameHeight;
-        const containerAspectRatio = containerWidth / containerHeight;
-
-        let viewWidth, viewHeight;
-
-        if (containerAspectRatio > frameAspectRatio) {
-            // Container is wider than frame - constrain by height
-            viewHeight = containerHeight;
-            viewWidth = viewHeight * frameAspectRatio;
-        } else {
-            // Container is taller than frame - constrain by width
-            viewWidth = containerWidth;
-            viewHeight = viewWidth / frameAspectRatio;
-        }
-
-        return {width: viewWidth, height: viewHeight};
-    };
 
     // Get passive color based on age
     function getColorForAge(createdAt) {
@@ -213,42 +151,22 @@ function TrajectoryDrawer(props) {
         }
     }
 
-    const aspectRatio = imageSize?.width && imageSize?.height
-        ? `${imageSize.width} / ${imageSize.height}`
-        : '16 / 9';
-
+    // Slightly dim the image underneath so the live trajectories stand out.
     return (
-        <Box sx={{
-            position: 'absolute',
-            aspectRatio,
-            top: '55px',
-            left: '10px',
-            right: '310px',
-            bottom: '40px',
-            maxWidth: 'calc(100% - 320px)',
-            maxHeight: 'calc(100% - 95px)',
-
-        }}>
-            <Box id={stream} ref={deckGlContainer}
-                sx={{
-                    backgroundColor: 'rgba(0, 0, 0, 0.5)',
-                    aspectRatio,
-                    position: 'relative',
-                }} >
-                {trajectories.length > 0 && (
-                    <DeckGL
-                        views={new OrthographicView({
-                            id: 'ortho',
-                            flipY: true // Y increases from top to bottom in image space
-                        })}
-                        viewState={viewState}
-                        controller={false}
-                        layers={layers}
-                        getCursor={() => 'default'}
-                        _pickable={false}
-                    />
-                )}
-            </Box>
+        <Box sx={{width: '100%', height: '100%', backgroundColor: 'rgba(0, 0, 0, 0.4)'}}>
+            {viewState && (
+                <DeckGL
+                    views={new OrthographicView({
+                        id: 'ortho',
+                        flipY: true // Y increases from top to bottom in image space
+                    })}
+                    viewState={viewState}
+                    controller={false}
+                    layers={layers}
+                    getCursor={() => 'default'}
+                    _pickable={false}
+                />
+            )}
         </Box>
     )
 }
