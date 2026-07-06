@@ -69,11 +69,11 @@ function ObservationAreaMap(props) {
     
     function setupLiveLayers() {
         return Object.entries(streams).map(([stream, color]) =>
-            createIconLayer(markerList[stream], stream, color)
+            createScatterPlotLayer(markerList[stream], stream, color)
         );
     }
     
-    function createIconLayer(markerArray, streamId, color) {
+    function createScatterPlotLayer(markerArray, streamId, color) {
         return new ScatterplotLayer({
             id: 'IconLayer-' + streamId,
             data: markerArray ?? [],
@@ -83,8 +83,6 @@ function ObservationAreaMap(props) {
             getRadius: .7,
             radiusMinPixels: 7,
             radiusUnits: 'meters',
-            iconAtlas: 'https://raw.githubusercontent.com/visgl/deck.gl-data/master/website/icon-atlas.png',
-            iconMapping: 'https://raw.githubusercontent.com/visgl/deck.gl-data/master/website/icon-atlas.json',
             pickable: true,
         });
     }

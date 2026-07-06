@@ -17,7 +17,8 @@ import StopIcon from '@mui/icons-material/Stop';
 
 function ObservationAreaOverview() {
     const [map, setMap] = useState(false);
-    const [toggleLiveTracking, setToggleLiveTracking] = useState(false);
+    const [isLiveTracking, setIsLiveTracking] = useState(false);
+
     const {t} = useTranslation();
     const observationAreaRest = useMemo(() => new ObservationAreaRest(), []);
     const [observationAreas, setObservationAreas] = useState(null);
@@ -102,7 +103,7 @@ function ObservationAreaOverview() {
                     viewState={viewState} 
                     onLoad={reloadObservationAreas} 
                     onSelect={onSelect} 
-                    showLive={toggleLiveTracking} 
+                    showLive={isLiveTracking} 
                     onToggleLive={toggleLive} />
             );
         }
@@ -160,14 +161,14 @@ function ObservationAreaOverview() {
                     editArea={editArea} 
                     copyArea={copyArea} 
                     deleteArea={promptDeleteArea} 
-                    showLive={toggleLiveTracking}>
+                    showLive={isLiveTracking}>
                     </MapSidebar>);
         }
         return null;
     }
 
     function toggleLive() {
-        setToggleLiveTracking(!toggleLiveTracking);
+        setIsLiveTracking(!isLiveTracking);
     }
 
     return (
