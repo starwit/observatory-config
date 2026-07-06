@@ -98,12 +98,13 @@ function ObservationAreaOverview() {
     function renderMap() {
         if (map) {
             return (
-                <ObservationAreaMap 
-                    data={observationAreas} 
-                    viewState={viewState} 
-                    onLoad={reloadObservationAreas} 
-                    onSelect={onSelect} 
-                    showLive={isLiveTracking} 
+                <ObservationAreaMap
+                    data={observationAreas}
+                    viewState={viewState}
+                    onViewStateChange={setViewState}
+                    onLoad={reloadObservationAreas}
+                    onSelect={onSelect}
+                    showLive={isLiveTracking}
                     onToggleLive={toggleLive} />
             );
         }
