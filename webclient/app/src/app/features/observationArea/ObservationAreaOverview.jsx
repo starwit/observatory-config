@@ -1,4 +1,4 @@
-import {Container, Typography, Stack, Button, Tooltip} from "@mui/material";
+import {Container, Typography, Stack, Button, Tooltip, Box, Fab} from "@mui/material";
 import React, {useEffect, useMemo, useState} from "react";
 import {Grid} from '@mui/material';
 import {useTranslation} from "react-i18next";
@@ -11,10 +11,14 @@ import ObservationAreaCard from "./ObservationAreaCard";
 import ObservationAreaMap from "./ObservationAreaMap";
 import {ViewList, Map, Camera} from "@mui/icons-material";
 import MapSidebar from "./MapSidebar";
+import PlayArrowIcon from '@mui/icons-material/PlayArrow';
+import StopIcon from '@mui/icons-material/Stop';
 
 
 function ObservationAreaOverview() {
     const [map, setMap] = useState(false);
+    const [isLiveTracking, setIsLiveTracking] = useState(false);
+
     const {t} = useTranslation();
     const observationAreaRest = useMemo(() => new ObservationAreaRest(), []);
     const [observationAreas, setObservationAreas] = useState(null);
@@ -94,7 +98,13 @@ function ObservationAreaOverview() {
     function renderMap() {
         if (map) {
             return (
-                <ObservationAreaMap data={observationAreas} viewState={viewState} onLoad={reloadObservationAreas} onSelect={onSelect} />
+                <ObservationAreaMap 
+                    data={observationAreas} 
+                    viewState={viewState} 
+                    onLoad={reloadObservationAreas} 
+                    onSelect={onSelect} 
+                    showLive={isLiveTracking} 
+                    onToggleLive={toggleLive} />
             );
         }
         return null;
@@ -144,9 +154,21 @@ function ObservationAreaOverview() {
 
     function renderSidebar() {
         if (map && selectedArea != null) {
-            return (<MapSidebar selected={selectedArea} observationAreas={observationAreas} editArea={editArea} copyArea={copyArea} deleteArea={promptDeleteArea} ></MapSidebar>);
+            return (<MapSidebar 
+                    selected={selectedArea} 
+                    observationAreas={observationAreas} 
+                    onSelect={onSelect} 
+                    editArea={editArea} 
+                    copyArea={copyArea} 
+                    deleteArea={promptDeleteArea} 
+                    showLive={isLiveTracking}>
+                    </MapSidebar>);
         }
         return null;
+    }
+
+    function toggleLive() {
+        setIsLiveTracking(!isLiveTracking);
     }
 
     return (
