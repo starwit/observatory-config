@@ -90,6 +90,7 @@ const translationEnEN = {
     "button.update": "Edit",
     "button.copy": "Copy",
     "button.delete": "Delete",
+    "button.save": "Save",
     "button.close": "Close",
     "button.viewlist": "Preview",
     "button.map": "Show in Map",

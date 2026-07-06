@@ -133,7 +133,7 @@ function ObservationAreaSelect(props) {
                 />
             </FormControl>
             <FormControl sx={{marginLeft: "auto", paddingRight: "0.5rem"}}>
-                <Tooltip title={t('observationArea.showTrajectories')}>
+                <Tooltip title={t('button.save')}>
                     <IconButton sx={{height: "2rem"}} fontSize="small"
                         onClick={onSaveClick}>
                         <SaveIcon color="primary" />
