@@ -1,6 +1,7 @@
 package de.starwit.persistence.entity;
 
 import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -20,7 +21,7 @@ public class DetectionEntity extends AbstractEntity<Long> {
     private int classId;
 
     @Column(name = "detection_timestamp", nullable = false)
-    private LocalDateTime detectionTimestamp;
+    private ZonedDateTime detectionTimestamp;
 
     @Column(name = "latitude")
     private Double latitude;
@@ -33,9 +34,6 @@ public class DetectionEntity extends AbstractEntity<Long> {
 
     @Column(name = "y")
     private Double y;
-
-    @Column(name = "has_geo_coordinates", nullable = false)
-    private boolean hasGeoCoordinates;
 
     public String getStreamId() {
         return streamId;
@@ -61,11 +59,11 @@ public class DetectionEntity extends AbstractEntity<Long> {
         this.classId = classId;
     }
 
-    public LocalDateTime getDetectionTimestamp() {
+    public ZonedDateTime getDetectionTimestamp() {
         return detectionTimestamp;
     }
 
-    public void setDetectionTimestamp(LocalDateTime receiveTimestamp) {
+    public void setDetectionTimestamp(ZonedDateTime receiveTimestamp) {
         this.detectionTimestamp = receiveTimestamp;
     }
 
@@ -99,13 +97,5 @@ public class DetectionEntity extends AbstractEntity<Long> {
 
     public void setY(Double y) {
         this.y = y;
-    }
-
-    public boolean isHasGeoCoordinates() {
-        return hasGeoCoordinates;
-    }
-
-    public void setHasGeoCoordinates(boolean hasGeoCoordinates) {
-        this.hasGeoCoordinates = hasGeoCoordinates;
     }
 }

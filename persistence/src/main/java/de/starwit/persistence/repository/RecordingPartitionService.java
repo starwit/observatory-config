@@ -37,7 +37,7 @@ public class RecordingPartitionService {
 
     @Value("${partition.management.retention.days:2}")
     private static final int RETENTION_DAYS = 2;
-    private static final int LOOKAHEAD_DAYS = 3; // how many days ahead to pre-create
+    private static final int LOOKAHEAD_DAYS = 1; // how many days ahead to pre-create
     private static final String PARENT_TABLE = "detection";
 
     private final JdbcTemplate jdbcTemplate;

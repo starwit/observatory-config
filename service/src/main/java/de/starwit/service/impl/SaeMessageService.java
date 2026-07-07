@@ -1,6 +1,7 @@
 package de.starwit.service.impl;
 
 import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.HexFormat;
 import java.util.List;
@@ -112,9 +113,10 @@ public class SaeMessageService {
         entity.setStreamId(streamId);
         entity.setObjectId(HexFormat.of().formatHex(d.getObjectId().toByteArray()));
         entity.setClassId(d.getClassId());
+
+        ZonedDateTime dateTime = ZonedDateTime.ofInstant(java.time.Instant.ofEpochMilli(timestamp), java.time.ZoneOffset.UTC);
         
-        LocalDateTime utcTime = LocalDateTime.ofEpochSecond(timestamp / 1000, (int) (timestamp % 1000) * 1_000_000, java.time.ZoneOffset.UTC);
-        entity.setDetectionTimestamp(utcTime);
+        entity.setDetectionTimestamp(dateTime);
         
         BoundingBox bb = d.getBoundingBox();
         entity.setX((double) ((bb.getMinX() + bb.getMaxX()) / 2) * sh.getWidth());
