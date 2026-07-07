@@ -6,6 +6,7 @@ import ImageAnnotate from "../imageAnnotate/ImageAnnotate";
 import ObservationVisualization from "../visualizer/ObservationVisualization";
 import ObservationAreaDialog, {MODE as ObservationAreaDialogMode} from "./ObservationAreaDialog";
 import ObservationAreaSelect from "./ObservationAreaSelect";
+import SavedTrajectoryDrawer from "../visualizer/SavedTrajectoriesDrawer";
 
 function ObservationAreaDetail(props) {
 
@@ -14,6 +15,7 @@ function ObservationAreaDetail(props) {
     const navigate = useNavigate();
 
     const [showTrajectoriesState, setShowTrajectoriesState] = useState(showTrajectories);
+    const [showSavedTrajectoriesState, setShowSavedTrajectoriesState] = useState(false);
     const [annotateImageSize, setAnnotateImageSize] = useState();
     const [observationAreas, setObservationAreas] = useState();
     const selectedArea = observationAreas?.find(a => String(a.id) === observationAreaId);
@@ -47,6 +49,11 @@ function ObservationAreaDetail(props) {
         setShowTrajectoriesState(!showTrajectoriesState);
     }
 
+    function onShowSavedTrajectoriesChanged() {
+        console.log("Show Saved Traj");
+        setShowSavedTrajectoriesState(!showSavedTrajectoriesState);
+    }
+
     function navigateToHome() {
         navigate("/");
     }
@@ -68,6 +75,8 @@ function ObservationAreaDetail(props) {
                     onAreaChange={navigateToArea}
                     onShowTrajectoriesChanged={onShowTrajectoriesChanged}
                     showTrajectories={showTrajectoriesState}
+                    onShowSavedTrajectoriesChanged={onShowSavedTrajectoriesChanged}
+                    showSavedTrajectories={showSavedTrajectoriesState}
                 />
             </AppBar>
         )
@@ -84,6 +93,7 @@ function ObservationAreaDetail(props) {
                 sx={{zIndex: 20000}}
             ></ImageAnnotate>
             {showTrajectoriesState ? <ObservationVisualization streams={selectedArea.saeStreamKeys} imageSize={annotateImageSize}></ObservationVisualization> : null}
+            {showSavedTrajectoriesState ? <SavedTrajectoryDrawer streamKey={selectedArea.saeStreamKeys[0]} /> : null}
             <ObservationAreaDialog
                 open={editDialogOpen}
                 onSubmit={() => setEditDialogOpen(false)}

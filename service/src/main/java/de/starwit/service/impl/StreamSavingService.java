@@ -88,4 +88,8 @@ public class StreamSavingService {
     public List<String> getStreamsToRecord() {
         return streamsToRecord;
     }
+
+    public void stopAllRecordings() {
+        streamsToRecord = new LinkedList<>();
+    }
 }

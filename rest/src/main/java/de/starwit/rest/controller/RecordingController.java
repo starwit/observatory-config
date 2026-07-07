@@ -36,6 +36,12 @@ public class RecordingController {
         return this.streamSavingService.getAvailableStreams();
     }
 
+    @Operation(summary = "stop all recordings")
+    @PostMapping(path = "/stopall")
+    public void stopAllRecordings() {
+        this.streamSavingService.stopAllRecordings();
+    }
+
     @Operation(summary = "add a stream to record")
     @PostMapping(path = "/start")
     public void addStreamToRecord(String streamName) {

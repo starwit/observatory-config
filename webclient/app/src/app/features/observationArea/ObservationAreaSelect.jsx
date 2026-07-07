@@ -1,8 +1,9 @@
 import {Camera, Home} from "@mui/icons-material";
 import EditRoundedIcon from "@mui/icons-material/EditRounded";
+import SsidChartIcon from '@mui/icons-material/SsidChart';
 import PlayCircleFilledWhiteIcon from "@mui/icons-material/PlayCircleFilledWhite";
 import StopCircleIcon from "@mui/icons-material/StopCircle";
-import {IconButton, Stack, Tooltip, Typography} from "@mui/material";
+import {Icon, IconButton, Stack, Tooltip, Typography} from "@mui/material";
 import FormControl from "@mui/material/FormControl";
 import MenuItem from "@mui/material/MenuItem";
 import Select from "@mui/material/Select";
@@ -19,7 +20,9 @@ function ObservationAreaSelect(props) {
         onEditClick,
         onAreaChange,
         onShowTrajectoriesChanged,
+        onShowSavedTrajectoriesChanged,
         showTrajectories = false,
+        showSavedTrajectories = false
     } = props;
 
     const {t} = useTranslation();
@@ -105,6 +108,14 @@ function ObservationAreaSelect(props) {
                     <IconButton sx={{height: "2rem"}} fontSize="small"
                         onClick={onShowTrajectoriesChanged}>
                         {showTrajectories ? <Camera color="secondary" /> : <Camera color="primary" />}
+                    </IconButton>
+                </Tooltip>
+            </FormControl>
+            <FormControl>
+                <Tooltip title={t('observationArea.showSavedTrajectories')}>
+                    <IconButton sx={{height: "2rem"}} fontSize="small"
+                        onClick={onShowSavedTrajectoriesChanged}>
+                        {showSavedTrajectories ? <SsidChartIcon color="secondary"/> : <SsidChartIcon color="primary"/>}
                     </IconButton>
                 </Tooltip>
             </FormControl>

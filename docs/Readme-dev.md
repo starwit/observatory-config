@@ -55,7 +55,6 @@ Each step is executed from the project home directory.
 * **default user/password is admin/admin**
 * **keycloak can be reached under <http://localhost:8080/auth>**
 
-## Debugging
 
 ### Frontend Debugging
 
@@ -75,9 +74,18 @@ Requests to `http://localhost:5173/api` are automatically proxied to `http://loc
 
 You can start the spring boot application in debug mode. See Spring Boot documentation for further details. The easiest way is, to use debug functionality integrated with your IDE like VS Code.
 
-## Postgres Client
+### Postgres Client
 
 PGadmin for GUI-based database access is available at `http://localhost:5050` (database connection is preconfigured)
+
+## API
+
+All backend functions are available via Swagger UI: http://localhost:8081/observatory-config/swagger-ui/index.html
+
+Load trajectories from backend with the following curl command. Note timezone appendix in timestamp
+```bash
+curl -X POST "localhost:8081/observatory-config/api/detection/window"   -H "Content-Type: application/json"   -d '{"timestamp": "2026-07-07T11:46:00+02:00","windowSize": 10,"streamId": "geomapper:dzs-d37-rothenfelderstr"}'
+```
 
 ## Changelog
 
