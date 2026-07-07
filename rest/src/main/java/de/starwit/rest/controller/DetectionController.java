@@ -1,7 +1,6 @@
 package de.starwit.rest.controller;
 
 import java.time.Duration;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -64,8 +63,8 @@ public class DetectionController {
                                         .toList();
                                 TracedObjectDTO dto = new TracedObjectDTO();
                                 dto.setObjectId(objectEntry.getKey());
-                                dto.setStart(points.get(0).getDetectionTimestamp().atOffset(java.time.ZoneOffset.UTC));
-                                dto.setEnd(points.get(points.size() - 1).getDetectionTimestamp().atOffset(java.time.ZoneOffset.UTC));
+                                dto.setStart(points.get(0).getDetectionTimestamp().toOffsetDateTime());
+                                dto.setEnd(points.get(points.size() - 1).getDetectionTimestamp().toOffsetDateTime());
                                 dto.setTrajectory(points.stream()
                                         .map(d -> new Point(d.getX() != null ? d.getX() : 0.0, d.getY() != null ? d.getY() : 0.0))
                                         .collect(Collectors.toList()));

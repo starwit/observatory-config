@@ -1,10 +1,9 @@
 package de.starwit.service.impl;
 
 import java.time.Duration;
-import java.time.LocalDateTime;
 import java.time.OffsetDateTime;
+import java.time.ZonedDateTime;
 import java.util.List;
-import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -24,8 +23,8 @@ public class DetectionService implements ServiceInterface<DetectionEntity, Detec
     }
 
     public List<DetectionEntity> findDetectionsInWindow(OffsetDateTime timestamp, Duration window, String streamId) {
-        LocalDateTime end = timestamp.toLocalDateTime();
-        LocalDateTime start = end.minus(window);
+        ZonedDateTime end = timestamp.toZonedDateTime();
+        ZonedDateTime start = end.minus(window);
         return detectionRepository.findByStreamIdAndDetectionTimestampBetween(streamId, start, end);
     }
 }
