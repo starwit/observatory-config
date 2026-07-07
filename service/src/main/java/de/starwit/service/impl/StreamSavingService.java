@@ -31,7 +31,7 @@ public class StreamSavingService {
     private StreamAvailabilityService streamAvailabilityService;
 
     @Autowired
-    private SaeMessageListener messageService;
+    private SaeMessageListener messageListener;
 
     private List<String> streamsToRecord;
 
@@ -51,7 +51,7 @@ public class StreamSavingService {
             if (streamsToRecord.contains(streamId) && !streamToSubscription.containsKey(streamId)) {
                 log.info("Added saving subscription for " + streamId);
                 Subscription subscription = streamMessageListenerContainer.receive(
-                        StreamOffset.latest(streamId), messageService::handleSavingMessage);
+                        StreamOffset.latest(streamId), messageListener::handleSavingMessage);
                 streamToSubscription.put(streamId, subscription);
             }
         }

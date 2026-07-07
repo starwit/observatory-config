@@ -6,7 +6,6 @@ CREATE TABLE "detection" (
     "object_id"           VARCHAR(255) NOT NULL,
     "class_id"            INTEGER      NOT NULL,
     "detection_timestamp"   TIMESTAMP WITH TIME ZONE    NOT NULL,
-    "has_geo_coordinates" BOOLEAN      NOT NULL,
     "latitude"            DOUBLE PRECISION,
     "longitude"           DOUBLE PRECISION,
     "x"                   DOUBLE PRECISION,
