@@ -6,14 +6,12 @@ import java.util.List;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.data.jpa.test.autoconfigure.DataJpaTest;
-
 import de.starwit.persistence.entity.ClassificationEntity;
 
 /**
  * Tests for ClassificationRepository
  */
-@DataJpaTest
+@DataJpaTestWithoutPartitions
 public class ClassificationRepositoryTest {
 
     @Autowired

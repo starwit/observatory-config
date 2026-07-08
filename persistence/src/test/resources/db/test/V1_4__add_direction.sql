@@ -1,0 +1,2 @@
+ALTER TABLE "polygon"
+	ADD COLUMN "direction" VARCHAR(255) DEFAULT NULL;

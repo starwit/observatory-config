@@ -25,7 +25,6 @@ class WebSocketClient {
     connect() {
         if (this.stompClient) {
             this.stompClient.onConnect = (frame) => {
-                console.log('Connected: ' + frame);
                 for (let stream of this.streams) {
                     this.#subscribe(stream);
                 }

@@ -1,6 +1,7 @@
 package de.starwit.service.messagelistener;
 
 import java.util.Base64;
+import java.util.function.BiConsumer;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -26,11 +27,19 @@ public class SaeMessageListener {
     private SaeMessageService saeMessageService;
 
     public void handleMessage(MapRecord<String, String, String> message) {
+        handle(message, saeMessageService::publishStompMessage);
+    }
+
+    public void handleSavingMessage(MapRecord<String, String, String> message) {
+        handle(message, saeMessageService::saveMessage);
+    }
+
+    private void handle(MapRecord<String, String, String> message, BiConsumer<SaeMessage, String> action) {
         log.debug("Message received: {} from {}", message.getId(), message.getStream());
         String protobuf_data = message.getValue().get("proto_data_b64");
         try {
             SaeMessage saeMessage = SaeMessage.parseFrom(Base64.getDecoder().decode(protobuf_data));
-            saeMessageService.publishStompMessage(saeMessage, message.getStream());
+            action.accept(saeMessage, message.getStream());
         } catch (InvalidProtocolBufferException e) {
             log.error("Error decoding proto from message. streamId=" + message.getStream());
             log.debug(e.getMessage());
