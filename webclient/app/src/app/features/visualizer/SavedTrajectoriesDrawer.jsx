@@ -19,34 +19,28 @@ function colorForClass(classId) {
 }
 
 function SavedTrajectoryDrawer(props) {
-    const { streamKey, width, height } = props;
+    const { streamKey, width, height, frameWidth, frameHeight } = props;
     const detectionRest = useRef(new DetectionRest());
 
     const [classTrajectories, setClassTrajectories] = useState([]);
-    const [shape, setShape] = useState({});
 
     useEffect(() => {
         detectionRest.current.findTrajectories(new Date(), 10, streamKey).then(result => {
-            const data = result.data;
-            setClassTrajectories(data);
-            let maxX = 0, maxY = 0;
-            data.forEach(({ tracedObjects }) =>
-                tracedObjects.forEach(({ trajectory }) =>
-                    trajectory.forEach(({ x, y }) => {
-                        if (x > maxX) maxX = x;
-                        if (y > maxY) maxY = y;
-                    })
-                )
-            );
-            if (maxX && maxY) setShape({ width: maxX, height: maxY });
+            console.log('SavedTrajectoryDrawer data sample:', JSON.stringify(result.data?.[0]?.tracedObjects?.[0]?.trajectory?.slice(0,3)));
+            setClassTrajectories(result.data);
         });
     }, [streamKey]);
 
     const viewState = useMemo(() => {
-        if (!shape.width || !shape.height || !width || !height) return { target: [0, 0, 0], zoom: -1, minZoom: -5, maxZoom: 10 };
-        const scale = Math.min(width / shape.width, height / shape.height);
-        return { target: [shape.width / 2, shape.height / 2, 0], zoom: Math.log2(scale), minZoom: -5, maxZoom: 10 };
-    }, [shape, width, height]);
+        console.log('SavedTrajectoryDrawer viewState inputs:', { width, height, frameWidth, frameHeight });
+        if (!frameWidth || !frameHeight || !width || !height) return null;
+        return {
+            target: [frameWidth / 2, frameHeight / 2, 0],
+            zoom: Math.log2(width / frameWidth),
+            minZoom: -5,
+            maxZoom: 10
+        };
+    }, [frameWidth, frameHeight, width, height]);
 
     const layers = classTrajectories.flatMap(({ classId, tracedObjects }) => {
         const color = colorForClass(classId);
