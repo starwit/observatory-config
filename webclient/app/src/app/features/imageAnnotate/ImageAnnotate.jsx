@@ -1,5 +1,5 @@
 import ReactImageAnnotate from "@starwit/react-image-annotate";
-import React, {useEffect, useMemo, useState} from "react";
+import React, {useEffect, useMemo, useState, useRef, useImperativeHandle} from "react";
 import {useTranslation} from "react-i18next";
 import {produce} from 'immer';
 import ClassificationRest from "../../services/ClassificationRest";
@@ -8,7 +8,7 @@ import ObservationAreaRest from "../../services/ObservationAreaRest";
 import {toast} from "react-toastify";
 
 function ImageAnnotate(props) {
-    const {observationAreaId, onImageSizeChange} = props;
+    const {observationAreaId, lockCanvas, renderImageOverlay, ref} = props;
 
     const {t} = useTranslation();
 
@@ -19,35 +19,28 @@ function ImageAnnotate(props) {
     const [classifications, setClassifications] = useState();
     const [image, setImage] = useState();
 
+    const annotatorRef = useRef(null);
+
+    useImperativeHandle(
+        ref,
+        () => ({
+            saveRegions,
+        })
+    );
+
     useEffect(() => {
         reloadClassifications();
     }, []);
 
     function reloadClassifications() {
         classificationRest.findAll().then(response => {
-            const translatedClassifications = response.data.map(classification => ({
-                ...classification,
-                name: t("classification.name." + classification.name),
-                dbKey: classification.name,
-            }));
-            setClassifications(translatedClassifications);
+            setClassifications(response.data);
         });
     }
 
     useEffect(() => {
         reloadImage();
     }, [observationAreaId]);
-
-    function userReducer(state, action) {
-        if ("SELECT_CLASSIFICATION" == action.type) {
-            const select = classifications.find((c) => c.name == action.cls);
-            if (select !== undefined) {
-
-                return produce(state, s => {s.selectedTool = select.toolType});
-            }
-        }
-        return state;
-    };
 
     function reloadImage() {
         imageRest.findWithPolygons(observationAreaId).then(response => {
@@ -62,25 +55,12 @@ function ImageAnnotate(props) {
         if (image !== undefined) {
             image.src = image !== undefined ? imageFileUrlForId(image.id) : "";
             image.name = "";
-
-            const imageWidth = image.width;
-            const imageHeight = image.height;
-            if (onImageSizeChange && imageWidth && imageHeight) {
-                onImageSizeChange({width: imageWidth, height: imageHeight});
-            } else if (onImageSizeChange && image.src) {
-                const loadedImage = new window.Image();
-                loadedImage.onload = () => {
-                    onImageSizeChange({width: loadedImage.naturalWidth, height: loadedImage.naturalHeight});
-                };
-                loadedImage.src = image.src;
-            }
         }
         return image;
     }
 
-    function savePolygons(event) {
-        let regions = event.images[0].regions;
-        regions = regions.map(r => mapDisplayTextToClsKey(r));
+    function saveRegions() {
+        let regions = annotatorRef.current?.getRegions();
 
         if (!validateRegionNames(regions)) {
             toast.error(t("error.image.notunique"))
@@ -90,17 +70,6 @@ function ImageAnnotate(props) {
         observationAreaRest.savePolygons(observationAreaId, regions).then(() => {
             toast.success(t("response.save.success"));
         });
-    }
-
-    function mapDisplayTextToClsKey(immutableRegion) {
-        const region = structuredClone(immutableRegion);
-        const matchingClassification = classifications.find(c => region.cls === c.name);
-        if (matchingClassification !== undefined) {
-            region.cls = matchingClassification.dbKey;
-        } else {
-            console.log(`Could not find matching classification for ${region.cls}. Something is seriously wrong!`);
-        }
-        return region;
     }
 
     function validateRegionNames(regions) {
@@ -123,20 +92,17 @@ function ImageAnnotate(props) {
 
     return (
         <ReactImageAnnotate
-            labelImages
-            regionClsList={classifications.map(classification => classification.name)}
-            regionColorList={classifications.map(classification => classification.color)}
-            onExit={savePolygons}
-            images={[image]}
-            hideHeaderText
-            selectedImage={0}
-            hideNext={true}
-            hidePrev={true}
-            hideSettings={true}
-            hideClone
-            hideFullScreen={true}
+            classifications={classifications.map(c => ({
+                cls: c.name, 
+                displayName: t("classification.name." + c.name), 
+                color: c.color,
+                tool: c.toolType
+            }))}
+            image={image}
             enabledRegionProps={["name", "line-direction"]}
-            userReducer={userReducer}>
+            movementLocked={lockCanvas}
+            renderImageOverlay={renderImageOverlay}
+            ref={annotatorRef}>
         </ReactImageAnnotate>
     );
 }
