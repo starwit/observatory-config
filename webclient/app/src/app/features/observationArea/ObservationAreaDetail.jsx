@@ -87,8 +87,6 @@ function ObservationAreaDetail(props) {
         )
     }
 
-
-
     return (
         <>
             <Box sx={{height: "100vh", display: "flex", flexDirection: "column"}}>
@@ -98,19 +96,18 @@ function ObservationAreaDetail(props) {
                     sx={{zIndex: 20000}}
                     lockCanvas={liveTrajectoriesActive}
                     renderImageOverlay={
-                        liveTrajectoriesActive && selectedArea.saeStreamKeys?.[0]
-                            ? ({width}) => (
-                                <TrajectoryDrawer
-                                    stream={selectedArea.saeStreamKeys[0]}
-                                    width={width}
-                                />
+                        (liveTrajectoriesActive || showSavedTrajectoriesState) && selectedArea.saeStreamKeys?.[0]
+                            ? ({ width, height }) => (
+                                <>
+                                    {liveTrajectoriesActive && <TrajectoryDrawer stream={selectedArea.saeStreamKeys[0]} width={width} />}
+                                    {showSavedTrajectoriesState && <SavedTrajectoryDrawer streamKey={selectedArea.saeStreamKeys[0]} width={width} height={height} />}
+                                </>
                             )
                             : undefined
                     }
                     ref={annotatorRef}
                 ></ImageAnnotate>
             </Box>
-            {showSavedTrajectoriesState ? <SavedTrajectoryDrawer streamKey={selectedArea.saeStreamKeys[0]} /> : null}
             <ObservationAreaDialog
                 open={editDialogOpen}
                 onSubmit={() => setEditDialogOpen(false)}
