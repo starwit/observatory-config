@@ -52,7 +52,6 @@ function ObservationAreaDetail(props) {
     }
 
     function onShowSavedTrajectoriesChanged() {
-        console.log("Show Saved Traj");
         setShowSavedTrajectoriesState(!showSavedTrajectoriesState);
     }
 
