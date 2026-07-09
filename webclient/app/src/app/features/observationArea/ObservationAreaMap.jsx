@@ -1,16 +1,13 @@
-import {MapView} from '@deck.gl/core';
-import {TileLayer} from "@deck.gl/geo-layers";
-import {BitmapLayer, IconLayer, ScatterplotLayer} from "@deck.gl/layers";
-import DeckGL from "@deck.gl/react";
+import {IconLayer, ScatterplotLayer} from "@deck.gl/layers";
 import ColorFunctions from "../../services/ColorFunctions";
 import StreamRest from "../../services/StreamRest";
 import WebSocketClient from "../../services/WebSocketClient";
 import cameraicon from "./../../assets/images/camera3.png";
 import { useEffect, useMemo, useRef, useState } from 'react';
+import BaseMap from '../../commons/geographicalMaps/BaseMap';
 import MapMenuLayout from '../../commons/mapMenu/MapMenuLayout';
 import ObservationMapMenu from '../../commons/mapMenu/ObservationMapMenu';
 
-const MAP_VIEW = new MapView({repeat: true});
 const ICON_MAPPING = {
     marker: {x: 0, y: 0, width: 128, height: 128, mask: false}
 };
@@ -88,24 +85,6 @@ function ObservationAreaMap(props) {
     }
 
     const layers = [
-        new TileLayer({
-            data: "https://cartodb-basemaps-a.global.ssl.fastly.net/light_all//{z}/{x}/{y}.png",
-            minZoom: 0,
-            maxZoom: 19,
-            tileSize: 256,
-
-            renderSubLayers: props => {
-                const {
-                    bbox: {west, south, east, north}
-                } = props.tile;
-
-                return new BitmapLayer(props, {
-                    data: null,
-                    image: props.data,
-                    bounds: [west, south, east, north]
-                });
-            }
-        }),
         new IconLayer({
             id: "icon-layer",
             data,
@@ -144,16 +123,13 @@ function ObservationAreaMap(props) {
             <MapMenuLayout>
                 <ObservationMapMenu setToggleLiveTracking={onToggleLive} showLive={showLive} />
             </MapMenuLayout>
-            <DeckGL
+            <BaseMap
                 layers={layers}
-                views={MAP_VIEW}
-                initialViewState={viewState}
-                controller={{dragRotate: false}}
-                onLoad={onLoad}
-                onClick={onSelect}
+                viewState={viewState}
                 getTooltip={getTooltip}
-            >
-            </DeckGL>
+                onClick={onSelect}
+                onLoad={onLoad}
+            />
         </>
     );
 }
