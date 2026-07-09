@@ -1,9 +1,10 @@
 import {Camera, Home} from "@mui/icons-material";
 import EditRoundedIcon from "@mui/icons-material/EditRounded";
 import SsidChartIcon from '@mui/icons-material/SsidChart';
+import EmergencyRecordingIcon from '@mui/icons-material/EmergencyRecording';
 import PlayCircleFilledWhiteIcon from "@mui/icons-material/PlayCircleFilledWhite";
 import StopCircleIcon from "@mui/icons-material/StopCircle";
-import {Icon, IconButton, Stack, Tooltip, Typography} from "@mui/material";
+import {Divider, Icon, IconButton, Stack, Tooltip, Typography} from "@mui/material";
 import SaveIcon from '@mui/icons-material/Save';
 import FormControl from "@mui/material/FormControl";
 import MenuItem from "@mui/material/MenuItem";
@@ -20,12 +21,13 @@ function ObservationAreaSelect(props) {
         onHomeClick,
         onEditClick,
         onAreaChange,
-        onShowTrajectoriesChanged,
-        onShowSavedTrajectoriesChanged,
+        onShowSavedTrajectoriesClicked,
         onLiveTrajectoriesClick,
+        onStartRecordingClick,
         onSaveClick,
         showTrajectories = false,
-        showSavedTrajectories = false
+        showSavedTrajectories = false,
+        showRecordedTrajectories = false
     } = props;
 
     const {t} = useTranslation();
@@ -115,14 +117,6 @@ function ObservationAreaSelect(props) {
                 </Tooltip>
             </FormControl>
             <FormControl>
-                <Tooltip title={t('observationArea.showSavedTrajectories')}>
-                    <IconButton sx={{height: "2rem"}} fontSize="small"
-                        onClick={onShowSavedTrajectoriesChanged}>
-                        {showSavedTrajectories ? <SsidChartIcon color="secondary"/> : <SsidChartIcon color="primary"/>}
-                    </IconButton>
-                </Tooltip>
-            </FormControl>
-            <FormControl>
                 <Tooltip title={processingEnabled ? t("observationArea.track.stop.title") : t("observationArea.track.start.title")}>
                     <IconButton sx={{height: "2rem"}}
                         onClick={() => {
@@ -134,6 +128,26 @@ function ObservationAreaSelect(props) {
                 </Tooltip>
             </FormControl>
             {renderProcessingText()}
+            
+            <Divider orientation="vertical" flexItem />
+
+            <FormControl>
+                <Tooltip title={t('observationArea.showSavedTrajectories')}>
+                    <IconButton sx={{height: "2rem"}} fontSize="small"
+                        onClick={onShowSavedTrajectoriesClicked}>
+                        {showSavedTrajectories ? <SsidChartIcon color="secondary"/> : <SsidChartIcon color="primary"/>}
+                    </IconButton>
+                </Tooltip>
+            </FormControl>
+            <FormControl>
+                <Tooltip title={t('observationArea.recordTrajectories')}>
+                    <IconButton sx={{height: "2rem"}} fontSize="small"
+                        onClick={onStartRecordingClick}>
+                        {showRecordedTrajectories ? <EmergencyRecordingIcon color="secondary"/> : <EmergencyRecordingIcon color="primary"/>}
+                    </IconButton>
+                </Tooltip>
+            </FormControl>
+
             <FormControl>
                 <ConfirmationDialog
                     title={processingEnabled ? t("observationArea.track.stop.title") : t("observationArea.track.start.title")}
@@ -144,7 +158,7 @@ function ObservationAreaSelect(props) {
                     confirmTitle={t("button.submit")}
                 />
             </FormControl>
-            <FormControl sx={{marginLeft: "auto", paddingRight: "0.5rem"}}>
+            <FormControl sx={{marginLeft: "auto", paddingRight: "0.5rem"}}> 
                 <Tooltip title={t('button.save')}>
                     <IconButton sx={{height: "2rem"}} fontSize="small"
                         onClick={onSaveClick}>

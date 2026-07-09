@@ -2,6 +2,7 @@ import {useEffect, useMemo, useState, useRef} from "react";
 import {useNavigate, useParams} from "react-router-dom";
 import {AppBar} from "../../assets/styles/HeaderStyles";
 import ObservationAreaRest from "../../services/ObservationAreaRest";
+import RecordingRest from "../../services/RecordingRest";
 import ImageAnnotate from "../imageAnnotate/ImageAnnotate";
 import TrajectoryDrawer from "../visualizer/TrajectoryDrawer";
 import ObservationAreaDialog, {MODE as ObservationAreaDialogMode} from "./ObservationAreaDialog";
@@ -15,6 +16,7 @@ function ObservationAreaDetail(props) {
     const navigate = useNavigate();
 
     const [showSavedTrajectoriesState, setShowSavedTrajectoriesState] = useState(false);
+    const [showRecordedTrajectories, setShowRecordedTrajectoriesState] = useState(false);
     
     const [liveTrajectoriesActive, setLiveTrajectoriesActive] = useState(false);
     const [observationAreas, setObservationAreas] = useState();
@@ -22,12 +24,17 @@ function ObservationAreaDetail(props) {
     const [editDialogOpen, setEditDialogOpen] = useState(false);
 
     const observationAreaRest = useMemo(() => new ObservationAreaRest(), [])
+    const recordingRest = useMemo(() => new RecordingRest(), [])
 
     const annotatorRef = useRef(null);
 
     useEffect(() => {
         reloadObservationAreas();
     }, []);
+
+    useEffect(() => {
+        if (selectedArea) checkTrajectorySaving();
+    }, [selectedArea?.id]);
 
     function reloadObservationAreas() {
         observationAreaRest.findAll().then(response => {
@@ -36,6 +43,14 @@ function ObservationAreaDetail(props) {
             }
             setObservationAreas(response.data);
             if (selectedArea !== undefined) navigateToArea(selectedArea.id);
+        });
+    }
+
+    function checkTrajectorySaving() {
+        recordingRest.getRecordingStreams().then((result) => {
+            if (selectedArea?.saeStreamKeys?.some(key => result.data.includes(key))) {
+                setShowRecordedTrajectoriesState(true);
+            }
         });
     }
 
@@ -51,8 +66,21 @@ function ObservationAreaDetail(props) {
         setLiveTrajectoriesActive(!liveTrajectoriesActive);
     }
 
-    function onShowSavedTrajectoriesChanged() {
+    function onShowSavedTrajectoriesClick() {
         setShowSavedTrajectoriesState(!showSavedTrajectoriesState);
+    }
+
+    function onStartRecordingClick() {
+
+        recordingRest.getRecordingStreams().then((result) => {
+            if (selectedArea?.saeStreamKeys?.some(key => result.data.includes(key))) {
+                recordingRest.stopRecording(selectedArea.saeStreamKeys[0]);
+                setShowRecordedTrajectoriesState(false);
+            } else {
+                recordingRest.startRecording(selectedArea.saeStreamKeys[0]);
+                setShowRecordedTrajectoriesState(true);
+            }
+        });        
     }
 
     function navigateToHome() {
@@ -79,8 +107,10 @@ function ObservationAreaDetail(props) {
                     onAreaChange={navigateToArea}
                     onLiveTrajectoriesClick={toggleLiveTrajectories}
                     showTrajectories={liveTrajectoriesActive}
-                    onShowSavedTrajectoriesChanged={onShowSavedTrajectoriesChanged}
+                    onShowSavedTrajectoriesClicked={onShowSavedTrajectoriesClick}
                     showSavedTrajectories={showSavedTrajectoriesState}
+                    onStartRecordingClick={onStartRecordingClick}
+                    showRecordedTrajectories={showRecordedTrajectories}
                 />
             </AppBar>
         )

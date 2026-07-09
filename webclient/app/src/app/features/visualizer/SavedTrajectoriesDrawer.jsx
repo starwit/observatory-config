@@ -43,8 +43,8 @@ function SavedTrajectoryDrawer(props) {
     const layers = classTrajectories.flatMap(({ classId, tracedObjects }) => {
         const color = colorForClass(classId);
         const paths = tracedObjects
-            .filter(o => o.trajectory.length >= 2)
-            .map(o => ({ path: o.trajectory.map(p => [p.x * width, p.y * height]) }));
+            .filter(tracedObject => tracedObject.trajectory.length >= 2)
+            .map(tracedObject => ({ path: tracedObject.trajectory.map(point => [point.x * width, point.y * height]) }));
         return new PathLayer({
             id: `paths-class-${classId}`,
             data: paths,
