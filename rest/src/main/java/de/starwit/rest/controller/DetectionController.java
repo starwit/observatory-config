@@ -54,28 +54,31 @@ public class DetectionController {
                 .collect(Collectors.groupingBy(DetectionEntity::getClassId,
                         Collectors.groupingBy(DetectionEntity::getObjectId)));
 
-        List<ClassTrajectoryDTO> result = byClassAndObject.entrySet().stream()
-                .map(classEntry -> {
-                    List<TracedObjectDTO> tracedObjects = classEntry.getValue().entrySet().stream()
-                            .map(objectEntry -> {
-                                List<DetectionEntity> points = objectEntry.getValue().stream()
-                                        .sorted((a, b) -> a.getDetectionTimestamp().compareTo(b.getDetectionTimestamp()))
-                                        .toList();
-                                TracedObjectDTO dto = new TracedObjectDTO();
-                                dto.setObjectId(objectEntry.getKey());
-                                dto.setStart(points.get(0).getDetectionTimestamp().toOffsetDateTime());
-                                dto.setEnd(points.get(points.size() - 1).getDetectionTimestamp().toOffsetDateTime());
-                                dto.setTrajectory(points.stream()
-                                        .map(d -> new Point(d.getX() != null ? d.getX() : 0.0, d.getY() != null ? d.getY() : 0.0))
-                                        .collect(Collectors.toList()));
-                                return dto;
-                            })
-                            .collect(Collectors.toList());
-                    return new ClassTrajectoryDTO(classEntry.getKey(), tracedObjects);
-                })
-                .collect(Collectors.toList());
+        List<ClassTrajectoryDTO> result = new ArrayList<>();
+        result = byClassAndObject.entrySet().stream()
+                    .map(this::convertToTrajectoryDTO)
+                    .collect(Collectors.toList());
         
         return result;
+    }
+
+    private ClassTrajectoryDTO convertToTrajectoryDTO(Map.Entry<Integer, Map<String, List<DetectionEntity>>> classEntry) {
+        List<TracedObjectDTO> tracedObjects = classEntry.getValue().entrySet().stream()
+                .map(objectEntry -> {
+                    List<DetectionEntity> points = objectEntry.getValue().stream()
+                            .sorted((a, b) -> a.getDetectionTimestamp().compareTo(b.getDetectionTimestamp()))
+                            .toList();
+                    TracedObjectDTO dto = new TracedObjectDTO();
+                    dto.setObjectId(objectEntry.getKey());
+                    dto.setStart(points.get(0).getDetectionTimestamp().toOffsetDateTime());
+                    dto.setEnd(points.get(points.size() - 1).getDetectionTimestamp().toOffsetDateTime());
+                    dto.setTrajectory(points.stream()
+                            .map(point -> new Point(point.getX() != null ? point.getX() : 0.0, point.getY() != null ? point.getY() : 0.0))
+                            .collect(Collectors.toList()));
+                    return dto;
+                })
+                .collect(Collectors.toList());
+        return new ClassTrajectoryDTO(classEntry.getKey(), tracedObjects);
     }
 
     @ExceptionHandler(value = { EntityNotFoundException.class })
