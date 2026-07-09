@@ -21,7 +21,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import de.starwit.persistence.entity.DetectionEntity;
-import de.starwit.rest.dtos.ClassTrajectoryDTO;
+import de.starwit.rest.dtos.TrajectoriesByClassDto;
 import de.starwit.rest.dtos.TimeWindowRequestDTO;
 import de.starwit.rest.dtos.TracedObjectDTO;
 import de.starwit.rest.exception.NotificationDto;
@@ -46,7 +46,7 @@ public class DetectionController {
 
     @Operation(summary = "Get trajectories grouped by class for a time window")
     @PostMapping(value = "/trajectories")
-    public List<ClassTrajectoryDTO> findTrajectoriesInWindow(@RequestBody TimeWindowRequestDTO requestData) {
+    public List<TrajectoriesByClassDto> findTrajectoriesInWindow(@RequestBody TimeWindowRequestDTO requestData) {
         List<DetectionEntity> detections = detectionService.findDetectionsInWindow(
                 requestData.getTimestamp(), Duration.ofMinutes(requestData.getWindowSize()), requestData.getStreamId());
 
@@ -54,7 +54,7 @@ public class DetectionController {
                 .collect(Collectors.groupingBy(DetectionEntity::getClassId,
                         Collectors.groupingBy(DetectionEntity::getObjectId)));
 
-        List<ClassTrajectoryDTO> result = new ArrayList<>();
+        List<TrajectoriesByClassDto> result = new ArrayList<>();
         result = byClassAndObject.entrySet().stream()
                     .map(this::convertToTrajectoryDTO)
                     .collect(Collectors.toList());
@@ -62,7 +62,7 @@ public class DetectionController {
         return result;
     }
 
-    private ClassTrajectoryDTO convertToTrajectoryDTO(Map.Entry<Integer, Map<String, List<DetectionEntity>>> classEntry) {
+    private TrajectoriesByClassDto convertToTrajectoryDTO(Map.Entry<Integer, Map<String, List<DetectionEntity>>> classEntry) {
 
         List<TracedObjectDTO> tracedObjects = classEntry.getValue().entrySet().stream()
                 .map(objectEntry -> {
@@ -82,7 +82,7 @@ public class DetectionController {
                     return dto;
                 })
                 .collect(Collectors.toList());
-        return new ClassTrajectoryDTO(classEntry.getKey(), tracedObjects);
+        return new TrajectoriesByClassDto(classEntry.getKey(), tracedObjects);
     }
 
     @ExceptionHandler(value = { EntityNotFoundException.class })

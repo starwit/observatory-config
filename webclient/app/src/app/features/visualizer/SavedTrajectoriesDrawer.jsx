@@ -52,7 +52,6 @@ function SavedTrajectoryDrawer(props) {
             getColor: color,
             getWidth: 2,
             widthUnits: 'pixels',
-            jointRounded: true,
             capRounded: true,
         });
     });

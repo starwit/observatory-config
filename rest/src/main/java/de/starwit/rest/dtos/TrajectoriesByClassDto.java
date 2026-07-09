@@ -2,11 +2,11 @@ package de.starwit.rest.dtos;
 
 import java.util.List;
 
-public class ClassTrajectoryDTO {
+public class TrajectoriesByClassDto {
     private int classId;
     private List<TracedObjectDTO> tracedObjects;
 
-    public ClassTrajectoryDTO(int classId, List<TracedObjectDTO> tracedObjects) {
+    public TrajectoriesByClassDto(int classId, List<TracedObjectDTO> tracedObjects) {
         this.classId = classId;
         this.tracedObjects = tracedObjects;
     }
