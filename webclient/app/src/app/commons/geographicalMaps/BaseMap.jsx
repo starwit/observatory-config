@@ -1,6 +1,7 @@
 import {MapboxOverlay} from '@deck.gl/mapbox';
 import 'maplibre-gl/dist/maplibre-gl.css';
 import {Map, useControl} from 'react-map-gl/maplibre';
+import {Box} from '@mui/material';
 
 function DeckGLOverlay(props) {
     const overlay = useControl(() => new MapboxOverlay(props));
@@ -19,7 +20,9 @@ function BaseMap(props) {
     } = props;
 
     return (
-        <div style={{width: "100vw", height: "100vh", position: "fixed", top: 0, left: 0}}>
+        <Box sx={{width: "100vw", height: "100vh", position: "fixed", top: 0, left: 0,
+            "& .maplibregl-canvas:focus": { outline: "none" },
+        }}>
             <Map
                 initialViewState={viewState}
                 mapStyle="https://tiles.openfreemap.org/styles/positron"
@@ -32,7 +35,7 @@ function BaseMap(props) {
                     onClick={onClick}
                 />
             </Map>
-        </div>
+        </Box>
     );
 }
 
