@@ -3,21 +3,18 @@ import React, {useEffect, useMemo, useState, useRef, useImperativeHandle} from "
 import {useTranslation} from "react-i18next";
 import {produce} from 'immer';
 import ClassificationRest from "../../services/ClassificationRest";
-import ImageRest, {imageFileUrlForId} from "../../services/ImageRest";
 import ObservationAreaRest from "../../services/ObservationAreaRest";
 import {toast} from "react-toastify";
 
 function ImageAnnotate(props) {
-    const {observationAreaId, lockCanvas, renderImageOverlay, ref} = props;
+    const {observationAreaId, image, lockCanvas, renderImageOverlay, ref} = props;
 
     const {t} = useTranslation();
 
     const classificationRest = useMemo(() => new ClassificationRest(), []);
     const observationAreaRest = useMemo(() => new ObservationAreaRest(), []);
-    const imageRest = useMemo(() => new ImageRest(), []);
 
     const [classifications, setClassifications] = useState();
-    const [image, setImage] = useState();
 
     const annotatorRef = useRef(null);
 
@@ -36,27 +33,6 @@ function ImageAnnotate(props) {
         classificationRest.findAll().then(response => {
             setClassifications(response.data);
         });
-    }
-
-    useEffect(() => {
-        reloadImage();
-    }, [observationAreaId]);
-
-    function reloadImage() {
-        imageRest.findWithPolygons(observationAreaId).then(response => {
-            if (response.data == null) {
-                return;
-            }
-            setImage(parseImage(response.data[0]));
-        });
-    }
-
-    function parseImage(image) {
-        if (image !== undefined) {
-            image.src = image !== undefined ? imageFileUrlForId(image.id) : "";
-            image.name = "";
-        }
-        return image;
     }
 
     function saveRegions() {
@@ -92,6 +68,7 @@ function ImageAnnotate(props) {
 
     return (
         <ReactImageAnnotate
+            key={image.id}
             classifications={classifications.map(c => ({
                 cls: c.name, 
                 displayName: t("classification.name." + c.name), 

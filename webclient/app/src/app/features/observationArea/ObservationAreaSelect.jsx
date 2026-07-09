@@ -1,17 +1,20 @@
 import {Camera, Home} from "@mui/icons-material";
 import EditRoundedIcon from "@mui/icons-material/EditRounded";
-import SsidChartIcon from '@mui/icons-material/SsidChart';
 import EmergencyRecordingIcon from '@mui/icons-material/EmergencyRecording';
 import PlayCircleFilledWhiteIcon from "@mui/icons-material/PlayCircleFilledWhite";
-import StopCircleIcon from "@mui/icons-material/StopCircle";
-import {Divider, Icon, IconButton, Stack, Tooltip, Typography} from "@mui/material";
+import RefreshIcon from "@mui/icons-material/Refresh";
 import SaveIcon from '@mui/icons-material/Save';
+import SsidChartIcon from '@mui/icons-material/SsidChart';
+import StopCircleIcon from "@mui/icons-material/StopCircle";
+import {CircularProgress, Divider, IconButton, Stack, Tooltip, Typography} from "@mui/material";
 import FormControl from "@mui/material/FormControl";
 import MenuItem from "@mui/material/MenuItem";
 import Select from "@mui/material/Select";
 import {useMemo, useState} from "react";
 import {useTranslation} from "react-i18next";
+import {toast} from "react-toastify";
 import ConfirmationDialog from "../../commons/dialog/ConfirmationDialog";
+import ImageRest from "../../services/ImageRest";
 import ObservationAreaRest from "../../services/ObservationAreaRest";
 
 function ObservationAreaSelect(props) {
@@ -24,6 +27,7 @@ function ObservationAreaSelect(props) {
         onShowSavedTrajectoriesClicked,
         onLiveTrajectoriesClick,
         onStartRecordingClick,
+        onImageRenewed,
         onSaveClick,
         showTrajectories = false,
         showSavedTrajectories = false,
@@ -34,7 +38,17 @@ function ObservationAreaSelect(props) {
 
     const [processingPromptOpen, setProcessingPromptOpen] = useState(false);
     const [processingEnabled, setProcessingEnabled] = useState(selectedArea.processingEnabled);
+    const [refreshing, setRefreshing] = useState(false);
     const observationAreaRest = useMemo(() => new ObservationAreaRest(), []);
+    const imageRest = useMemo(() => new ImageRest(), []);
+
+    function handleRefreshImage() {
+        setRefreshing(true);
+        imageRest.renewImage(selectedArea.id)
+            .then(() => onImageRenewed?.())
+            .catch(() => toast.error(t("observationArea.renewImageError")))
+            .finally(() => setRefreshing(false));
+    }
 
     const handleChange = event => {
         const newObservationAreaId = event.target.value;
@@ -109,6 +123,15 @@ function ObservationAreaSelect(props) {
                 </Tooltip>
             </FormControl>
             <FormControl>
+                <Tooltip title={t("observationArea.renewImage")}>
+                    <span>
+                        <IconButton sx={{height: "2rem"}} onClick={handleRefreshImage} disabled={refreshing}>
+                            {refreshing ? <CircularProgress size={20} /> : <RefreshIcon color="primary" />}
+                        </IconButton>
+                    </span>
+                </Tooltip>
+            </FormControl>
+            <FormControl>
                 <Tooltip title={t('observationArea.showTrajectories')}>
                     <IconButton sx={{height: "2rem"}} fontSize="small"
                         onClick={onLiveTrajectoriesClick}>
@@ -128,14 +151,14 @@ function ObservationAreaSelect(props) {
                 </Tooltip>
             </FormControl>
             {renderProcessingText()}
-            
+
             <Divider orientation="vertical" variant="middle" sx={{mt: "2px", mb: "6px"}} flexItem />
 
             <FormControl>
                 <Tooltip title={t('observationArea.showSavedTrajectories')}>
                     <IconButton sx={{height: "2rem"}} fontSize="small"
                         onClick={onShowSavedTrajectoriesClicked}>
-                        {showSavedTrajectories ? <SsidChartIcon color="secondary"/> : <SsidChartIcon color="primary"/>}
+                        {showSavedTrajectories ? <SsidChartIcon color="secondary" /> : <SsidChartIcon color="primary" />}
                     </IconButton>
                 </Tooltip>
             </FormControl>
@@ -143,7 +166,7 @@ function ObservationAreaSelect(props) {
                 <Tooltip title={t('observationArea.recordTrajectories')}>
                     <IconButton sx={{height: "2rem"}} fontSize="small"
                         onClick={onStartRecordingClick}>
-                        {showRecordedTrajectories ? <EmergencyRecordingIcon color="secondary"/> : <EmergencyRecordingIcon color="primary"/>}
+                        {showRecordedTrajectories ? <EmergencyRecordingIcon color="secondary" /> : <EmergencyRecordingIcon color="primary" />}
                     </IconButton>
                 </Tooltip>
             </FormControl>
@@ -158,7 +181,7 @@ function ObservationAreaSelect(props) {
                     confirmTitle={t("button.submit")}
                 />
             </FormControl>
-            <FormControl sx={{marginLeft: "auto", paddingRight: "0.5rem"}}> 
+            <FormControl sx={{marginLeft: "auto", paddingRight: "0.5rem"}}>
                 <Tooltip title={t('button.save')}>
                     <IconButton sx={{height: "2rem"}} fontSize="small"
                         onClick={onSaveClick}>

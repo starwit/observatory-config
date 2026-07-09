@@ -23,5 +23,9 @@ class ImageRest extends CrudRest {
 
         return axios.post(this.baseUrl + "/upload/" + id, data, config);
     }
+
+    renewImage(id) {
+        return axios.post(this.baseUrl + "/renew/" + id);
+    }
 }
 export default ImageRest;
