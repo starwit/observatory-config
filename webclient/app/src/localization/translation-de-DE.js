@@ -127,6 +127,8 @@ const translationDeDE = {
     "response.save.failed": "Speichern fehlgeschlagen!",
     "confirm.dialog.title": "Bestätigen des Dialog Titels",
     "confirm.dialog.description": "Bestätigen der Dialog Beschreibung",
-    "map.live": "Livedaten anzeigen"
+    "map.live": "Livedaten anzeigen",
+    "observationArea.showSavedTrajectories" : "Trajektorien anzeigen",
+    "observationArea.recordTrajectories" : "Start / Stop Aufzeichnung"
 };
 export default translationDeDE;

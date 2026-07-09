@@ -123,6 +123,8 @@ const translationEnEN = {
     "response.save.failed": "Failed to save!",
     "confirm.dialog.title": "Confirm the Dialog Title",
     "confirm.dialog.description": "Confirm the Dialog Description",
-    "map.live": "Enable Live Tracking"
+    "map.live": "Enable Live Tracking",
+    "observationArea.showSavedTrajectories" : "Show Saved Trajectories",
+    "observationArea.recordTrajectories" : "Start / Stop Trajectories"
 };
 export default translationEnEN;
