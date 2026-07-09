@@ -68,6 +68,7 @@ function ImageAnnotate(props) {
 
     return (
         <ReactImageAnnotate
+            // The key is used to force a new instance, because an image prop update will be ignored (due to internal state handling)
             key={image.id}
             classifications={classifications.map(c => ({
                 cls: c.name, 
