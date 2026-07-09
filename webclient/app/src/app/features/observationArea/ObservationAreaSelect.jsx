@@ -1,16 +1,19 @@
 import {Camera, Home} from "@mui/icons-material";
 import EditRoundedIcon from "@mui/icons-material/EditRounded";
+import RefreshIcon from "@mui/icons-material/Refresh";
 import PlayCircleFilledWhiteIcon from "@mui/icons-material/PlayCircleFilledWhite";
 import StopCircleIcon from "@mui/icons-material/StopCircle";
 import SaveIcon from '@mui/icons-material/Save';
-import {IconButton, Stack, Tooltip, Typography} from "@mui/material";
+import {CircularProgress, IconButton, Stack, Tooltip, Typography} from "@mui/material";
 import FormControl from "@mui/material/FormControl";
 import MenuItem from "@mui/material/MenuItem";
 import Select from "@mui/material/Select";
 import {useMemo, useState} from "react";
 import {useTranslation} from "react-i18next";
+import {toast} from "react-toastify";
 import ConfirmationDialog from "../../commons/dialog/ConfirmationDialog";
 import ObservationAreaRest from "../../services/ObservationAreaRest";
+import ImageRest from "../../services/ImageRest";
 
 function ObservationAreaSelect(props) {
     const {
@@ -20,6 +23,7 @@ function ObservationAreaSelect(props) {
         onEditClick,
         onAreaChange,
         onLiveTrajectoriesClick,
+        onImageRenewed,
         onSaveClick,
         showTrajectories = false,
     } = props;
@@ -28,7 +32,17 @@ function ObservationAreaSelect(props) {
 
     const [processingPromptOpen, setProcessingPromptOpen] = useState(false);
     const [processingEnabled, setProcessingEnabled] = useState(selectedArea.processingEnabled);
+    const [refreshing, setRefreshing] = useState(false);
     const observationAreaRest = useMemo(() => new ObservationAreaRest(), []);
+    const imageRest = useMemo(() => new ImageRest(), []);
+
+    function handleRefreshImage() {
+        setRefreshing(true);
+        imageRest.renewImage(selectedArea.id)
+            .then(() => onImageRenewed?.())
+            .catch(() => toast.error(t("observationArea.renewImageError")))
+            .finally(() => setRefreshing(false));
+    }
 
     const handleChange = event => {
         const newObservationAreaId = event.target.value;
@@ -100,6 +114,15 @@ function ObservationAreaSelect(props) {
                     <IconButton sx={{height: "2rem"}} onClick={onEditClick}>
                         <EditRoundedIcon color="primary" />
                     </IconButton>
+                </Tooltip>
+            </FormControl>
+            <FormControl>
+                <Tooltip title={t("observationArea.renewImage")}>
+                    <span>
+                        <IconButton sx={{height: "2rem"}} onClick={handleRefreshImage} disabled={refreshing}>
+                            {refreshing ? <CircularProgress size={20} /> : <RefreshIcon color="primary" />}
+                        </IconButton>
+                    </span>
                 </Tooltip>
             </FormControl>
             <FormControl>

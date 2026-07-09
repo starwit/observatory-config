@@ -95,6 +95,14 @@ public class ImageController {
         imageService.uploadImage(file, observationAreaEntity);
     }
 
+    @Operation(summary = "Renew observation area image from the latest SAE frame stream entry")
+    @PostMapping("/renew/{observationareaid}")
+    public void renewImage(@PathVariable("observationareaid") Long id)
+            throws IOException, NotificationException {
+        ObservationAreaEntity observationAreaEntity = observationAreaService.findById(id);
+        imageService.renewImage(observationAreaEntity);
+    }
+
     @GetMapping(value = "/as-file/{id}")
     public ResponseEntity<Resource> getImageWithIdAsFile(@PathVariable("id") Long id) {
         FileDto file = imageService.getImageAsFile(id);

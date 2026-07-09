@@ -80,6 +80,8 @@ const translationEnEN = {
     "observationArea.track.start": "Do you want to start processing?",
     "observationArea.track.stop": "The configuration will be saved and processing of data will stop. Do you want to proceed?",
     "observationArea.showTrajectories": "Live View",
+    "observationArea.renewImage": "Renew image",
+    "observationArea.renewImageError": "Could not renew the image. No current frame available.",
     "app.baseName": "observatory-config",
     "home.title": "Welcome",
     "home.welcome": "Welcome to observatory-config",

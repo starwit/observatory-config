@@ -2,6 +2,7 @@ import {useEffect, useMemo, useState, useRef} from "react";
 import {useNavigate, useParams} from "react-router-dom";
 import {AppBar} from "../../assets/styles/HeaderStyles";
 import ObservationAreaRest from "../../services/ObservationAreaRest";
+import ImageRest, {imageFileUrlForId} from "../../services/ImageRest";
 import ImageAnnotate from "../imageAnnotate/ImageAnnotate";
 import TrajectoryDrawer from "../visualizer/TrajectoryDrawer";
 import ObservationAreaDialog, {MODE as ObservationAreaDialogMode} from "./ObservationAreaDialog";
@@ -17,14 +18,20 @@ function ObservationAreaDetail(props) {
     const [observationAreas, setObservationAreas] = useState();
     const selectedArea = observationAreas?.find(a => String(a.id) === observationAreaId);
     const [editDialogOpen, setEditDialogOpen] = useState(false);
+    const [image, setImage] = useState();
 
     const observationAreaRest = useMemo(() => new ObservationAreaRest(), [])
+    const imageRest = useMemo(() => new ImageRest(), []);
 
     const annotatorRef = useRef(null);
 
     useEffect(() => {
         reloadObservationAreas();
     }, []);
+
+    useEffect(() => {
+        reloadImage();
+    }, [observationAreaId]);
 
     function reloadObservationAreas() {
         observationAreaRest.findAll().then(response => {
@@ -34,6 +41,23 @@ function ObservationAreaDetail(props) {
             setObservationAreas(response.data);
             if (selectedArea !== undefined) navigateToArea(selectedArea.id);
         });
+    }
+
+    function reloadImage() {
+        imageRest.findWithPolygons(observationAreaId).then(response => {
+            if (response.data == null) {
+                return;
+            }
+            setImage(parseImage(response.data[0]));
+        });
+    }
+
+    function parseImage(image) {
+        if (image !== undefined) {
+            image.src = image !== undefined ? imageFileUrlForId(image.id) : "";
+            image.name = "";
+        }
+        return image;
     }
 
     function editArea() {
@@ -72,6 +96,7 @@ function ObservationAreaDetail(props) {
                     onAreaChange={navigateToArea}
                     onSaveClick={saveRegions}
                     onLiveTrajectoriesClick={toggleLiveTrajectories}
+                    onImageRenewed={reloadImage}
                     showTrajectories={liveTrajectoriesActive}
                 />
             </AppBar>
@@ -86,6 +111,7 @@ function ObservationAreaDetail(props) {
                 {renderAppBar()}
                 <ImageAnnotate
                     observationAreaId={observationAreaId}
+                    image={image}
                     sx={{zIndex: 20000}}
                     lockCanvas={liveTrajectoriesActive}
                     renderImageOverlay={

@@ -83,6 +83,8 @@ const translationDeDE = {
     "observationArea.track.start": "Wollen Sie die Verarbeitung starten?",
     "observationArea.track.stop": "Wollen Sie die Konfiguration Speichern und die Verarbeitung der Daten stoppen?",
     "observationArea.showTrajectories": "Live-Ansicht",
+    "observationArea.renewImage": "Bild aktualisieren",
+    "observationArea.renewImageError": "Bild konnte nicht aktualisiert werden. Kein aktuelles Bild verfügbar.",
     "app.baseName": "observatory-config",
     "home.title": "Willkommen",
     "home.welcome": "Wilkommen zur Konfigurationsoberfläche für Computer Vision",
