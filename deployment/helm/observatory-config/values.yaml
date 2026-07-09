@@ -21,6 +21,8 @@ redis:
   enabled: false
   host: valkey
   port: 6379
+  # Prefix of the ValKey/Redis stream that carries still frames for the "renew image" feature.
+  frameStreamPrefix: saeapi-frame
 
 auth:
   enabled: true

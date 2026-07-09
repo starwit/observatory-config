@@ -75,6 +75,8 @@ spec:
               value: {{ .Values.redis.host | quote }}
             - name: SPRING_DATA_REDIS_PORT
               value: {{ .Values.redis.port | quote }}
+            - name: SPRING_DATA_REDIS_FRAME_STREAM_PREFIX
+              value: {{ .Values.redis.frameStreamPrefix | quote }}
             {{- end }}
             {{- if .Values.auth.enabled }}
             - name: SPRING_PROFILES_ACTIVE
