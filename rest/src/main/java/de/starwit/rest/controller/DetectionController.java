@@ -63,15 +63,19 @@ public class DetectionController {
     }
 
     private ClassTrajectoryDTO convertToTrajectoryDTO(Map.Entry<Integer, Map<String, List<DetectionEntity>>> classEntry) {
+
         List<TracedObjectDTO> tracedObjects = classEntry.getValue().entrySet().stream()
                 .map(objectEntry -> {
+                    // sort detections by timestamp, to get first/last entry
                     List<DetectionEntity> points = objectEntry.getValue().stream()
                             .sorted((a, b) -> a.getDetectionTimestamp().compareTo(b.getDetectionTimestamp()))
                             .toList();
+
                     TracedObjectDTO dto = new TracedObjectDTO();
                     dto.setObjectId(objectEntry.getKey());
                     dto.setStart(points.get(0).getDetectionTimestamp().toOffsetDateTime());
                     dto.setEnd(points.get(points.size() - 1).getDetectionTimestamp().toOffsetDateTime());
+                    // convert detection coordinates to points
                     dto.setTrajectory(points.stream()
                             .map(point -> new Point(point.getX() != null ? point.getX() : 0.0, point.getY() != null ? point.getY() : 0.0))
                             .collect(Collectors.toList()));

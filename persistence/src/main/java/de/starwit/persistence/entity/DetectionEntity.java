@@ -1,6 +1,5 @@
 package de.starwit.persistence.entity;
 
-import java.time.LocalDateTime;
 import java.time.ZonedDateTime;
 
 import jakarta.persistence.Column;

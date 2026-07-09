@@ -19,34 +19,32 @@ function colorForClass(classId) {
 }
 
 function SavedTrajectoryDrawer(props) {
-    const { streamKey, width, height, frameWidth, frameHeight } = props;
+    const { streamKey, width, height } = props;
     const detectionRest = useRef(new DetectionRest());
 
     const [classTrajectories, setClassTrajectories] = useState([]);
 
     useEffect(() => {
         detectionRest.current.findTrajectories(new Date(), 10, streamKey).then(result => {
-            console.log('SavedTrajectoryDrawer data sample:', JSON.stringify(result.data?.[0]?.tracedObjects?.[0]?.trajectory?.slice(0,3)));
             setClassTrajectories(result.data);
         });
     }, [streamKey]);
 
     const viewState = useMemo(() => {
-        console.log('SavedTrajectoryDrawer viewState inputs:', { width, height, frameWidth, frameHeight });
-        if (!frameWidth || !frameHeight || !width || !height) return null;
+        if (!width || !height) return null;
         return {
-            target: [frameWidth / 2, frameHeight / 2, 0],
-            zoom: Math.log2(width / frameWidth),
+            target: [width / 2, height / 2, 0],
+            zoom: 0,
             minZoom: -5,
             maxZoom: 10
         };
-    }, [frameWidth, frameHeight, width, height]);
+    }, [width, height]);
 
     const layers = classTrajectories.flatMap(({ classId, tracedObjects }) => {
         const color = colorForClass(classId);
         const paths = tracedObjects
-            .filter(tracedObject => tracedObject.trajectory.length >= 2)
-            .map(tracedObject => ({ path: tracedObject.trajectory.map(p => [p.x, p.y]) }));
+            .filter(o => o.trajectory.length >= 2)
+            .map(o => ({ path: o.trajectory.map(p => [p.x * width, p.y * height]) }));
         return new PathLayer({
             id: `paths-class-${classId}`,
             data: paths,

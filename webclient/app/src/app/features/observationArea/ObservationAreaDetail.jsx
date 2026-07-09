@@ -96,7 +96,7 @@ function ObservationAreaDetail(props) {
                     lockCanvas={liveTrajectoriesActive}
                     renderImageOverlay={
                         (liveTrajectoriesActive || showSavedTrajectoriesState) && selectedArea.saeStreamKeys?.[0]
-                            ? ({ width, height, naturalWidth, naturalHeight }) => (
+                            ? ({ width, height }) => (
                                 <>
                                     {liveTrajectoriesActive && <TrajectoryDrawer stream={selectedArea.saeStreamKeys[0]} width={width} />}
                                     {showSavedTrajectoriesState && (
@@ -104,8 +104,6 @@ function ObservationAreaDetail(props) {
                                             streamKey={selectedArea.saeStreamKeys[0]}
                                             width={width}
                                             height={height}
-                                            frameWidth={selectedArea.imageWidth ?? naturalWidth}
-                                            frameHeight={selectedArea.imageHeight ?? naturalHeight}
                                         />
                                     )}
                                 </>
