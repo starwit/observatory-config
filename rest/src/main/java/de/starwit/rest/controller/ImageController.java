@@ -6,6 +6,7 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.ByteArrayResource;
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -93,6 +94,25 @@ public class ImageController {
             throws IOException {
         ObservationAreaEntity observationAreaEntity = observationAreaService.findById(id);
         imageService.uploadImage(file, observationAreaEntity);
+    }
+
+    @Operation(summary = "Renew observation area image from the latest SAE frame stream entry")
+    @PostMapping("/renew/{observationareaid}")
+    public void renewImage(@PathVariable("observationareaid") Long id)
+            throws IOException, NotificationException {
+        ObservationAreaEntity observationAreaEntity = observationAreaService.findById(id);
+        imageService.renewImage(observationAreaEntity);
+    }
+
+    @Operation(summary = "Fetch the latest SAE frame for a stream key as a JPEG, without persisting it")
+    @GetMapping(value = "/fetch-from-sae")
+    public ResponseEntity<Resource> getFrameFromSae(@RequestParam("streamKey") String streamKey)
+            throws NotificationException {
+        byte[] jpeg = imageService.fetchFrameJpegByStreamKey(streamKey);
+        return ResponseEntity.ok()
+                .contentType(MediaType.IMAGE_JPEG)
+                .contentLength(jpeg.length)
+                .body(new ByteArrayResource(jpeg));
     }
 
     @GetMapping(value = "/as-file/{id}")
