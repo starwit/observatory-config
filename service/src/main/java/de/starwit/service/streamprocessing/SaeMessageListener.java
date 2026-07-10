@@ -1,4 +1,4 @@
-package de.starwit.service.messagelistener;
+package de.starwit.service.streamprocessing;
 
 import java.util.Base64;
 import java.util.function.BiConsumer;
@@ -11,7 +11,6 @@ import org.springframework.stereotype.Service;
 
 import com.google.protobuf.InvalidProtocolBufferException;
 
-import de.starwit.service.impl.SaeMessageService;
 import de.starwit.visionapi.Sae.SaeMessage;
 
 /**

@@ -1,4 +1,4 @@
-package de.starwit.service.impl;
+package de.starwit.service.streamprocessing;
 
 import java.time.LocalDateTime;
 import java.time.ZonedDateTime;

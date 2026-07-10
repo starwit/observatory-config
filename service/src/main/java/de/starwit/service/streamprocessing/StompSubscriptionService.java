@@ -1,4 +1,4 @@
-package de.starwit.service.impl;
+package de.starwit.service.streamprocessing;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -21,8 +21,6 @@ import org.springframework.web.socket.messaging.AbstractSubProtocolEvent;
 import org.springframework.web.socket.messaging.SessionDisconnectEvent;
 import org.springframework.web.socket.messaging.SessionSubscribeEvent;
 import org.springframework.web.socket.messaging.SessionUnsubscribeEvent;
-
-import de.starwit.service.messagelistener.SaeMessageListener;
 
 @Component
 @ConditionalOnProperty(name = "spring.data.redis.active", havingValue = "true", matchIfMissing = true)

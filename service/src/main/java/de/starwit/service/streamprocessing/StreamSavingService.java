@@ -1,4 +1,4 @@
-package de.starwit.service.impl;
+package de.starwit.service.streamprocessing;
 
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -15,8 +15,6 @@ import org.springframework.data.redis.connection.stream.StreamOffset;
 import org.springframework.data.redis.stream.StreamMessageListenerContainer;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
-
-import de.starwit.service.messagelistener.SaeMessageListener;
 
 @Component
 @ConditionalOnProperty(name = "spring.data.redis.active", havingValue = "true", matchIfMissing = true)
