@@ -1,10 +1,12 @@
 import {Camera, Home} from "@mui/icons-material";
 import EditRoundedIcon from "@mui/icons-material/EditRounded";
-import RefreshIcon from "@mui/icons-material/Refresh";
+import EmergencyRecordingIcon from '@mui/icons-material/EmergencyRecording';
 import PlayCircleFilledWhiteIcon from "@mui/icons-material/PlayCircleFilledWhite";
-import StopCircleIcon from "@mui/icons-material/StopCircle";
+import RefreshIcon from "@mui/icons-material/Refresh";
 import SaveIcon from '@mui/icons-material/Save';
-import {CircularProgress, IconButton, Stack, Tooltip, Typography} from "@mui/material";
+import SsidChartIcon from '@mui/icons-material/SsidChart';
+import StopCircleIcon from "@mui/icons-material/StopCircle";
+import {CircularProgress, Divider, IconButton, Stack, Tooltip, Typography} from "@mui/material";
 import FormControl from "@mui/material/FormControl";
 import MenuItem from "@mui/material/MenuItem";
 import Select from "@mui/material/Select";
@@ -12,8 +14,8 @@ import {useMemo, useState} from "react";
 import {useTranslation} from "react-i18next";
 import {toast} from "react-toastify";
 import ConfirmationDialog from "../../commons/dialog/ConfirmationDialog";
-import ObservationAreaRest from "../../services/ObservationAreaRest";
 import ImageRest from "../../services/ImageRest";
+import ObservationAreaRest from "../../services/ObservationAreaRest";
 
 function ObservationAreaSelect(props) {
     const {
@@ -22,10 +24,14 @@ function ObservationAreaSelect(props) {
         onHomeClick,
         onEditClick,
         onAreaChange,
+        onShowSavedTrajectoriesClicked,
         onLiveTrajectoriesClick,
+        onStartRecordingClick,
         onImageRenewed,
         onSaveClick,
         showTrajectories = false,
+        showSavedTrajectories = false,
+        showRecordedTrajectories = false
     } = props;
 
     const {t} = useTranslation();
@@ -147,6 +153,26 @@ function ObservationAreaSelect(props) {
                 </Tooltip>
             </FormControl>
             {renderProcessingText()}
+
+            <Divider orientation="vertical" variant="middle" sx={{mt: "2px", mb: "6px"}} flexItem />
+
+            <FormControl>
+                <Tooltip title={t('observationArea.showSavedTrajectories')}>
+                    <IconButton sx={{height: "2rem"}} fontSize="small"
+                        onClick={onShowSavedTrajectoriesClicked}>
+                        {showSavedTrajectories ? <SsidChartIcon color="secondary" /> : <SsidChartIcon color="primary" />}
+                    </IconButton>
+                </Tooltip>
+            </FormControl>
+            <FormControl>
+                <Tooltip title={t('observationArea.recordTrajectories')}>
+                    <IconButton sx={{height: "2rem"}} fontSize="small"
+                        onClick={onStartRecordingClick}>
+                        {showRecordedTrajectories ? <EmergencyRecordingIcon color="secondary" /> : <EmergencyRecordingIcon color="primary" />}
+                    </IconButton>
+                </Tooltip>
+            </FormControl>
+
             <FormControl>
                 <ConfirmationDialog
                     title={processingEnabled ? t("observationArea.track.stop.title") : t("observationArea.track.start.title")}

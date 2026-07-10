@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import de.starwit.service.impl.SaeMessageService;
+import de.starwit.service.streamprocessing.SaeMessageService;
 import io.swagger.v3.oas.annotations.Operation;
 
 @RestController

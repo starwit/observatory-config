@@ -1,4 +1,4 @@
-package de.starwit.service.impl;
+package de.starwit.service.streamprocessing;
 
 import java.time.LocalDateTime;
 import java.time.ZonedDateTime;
@@ -107,7 +107,6 @@ public class SaeMessageService {
 
     private DetectionEntity convertDetection(Detection d, SaeMessage saeMessage, String streamId) {
         var timestamp = saeMessage.getFrame().getTimestampUtcMs();
-        Shape sh = saeMessage.getFrame().getShape();
 
         DetectionEntity entity = new DetectionEntity();
         entity.setStreamId(streamId);
@@ -119,8 +118,8 @@ public class SaeMessageService {
         entity.setDetectionTimestamp(dateTime);
         
         BoundingBox bb = d.getBoundingBox();
-        entity.setX((double) ((bb.getMinX() + bb.getMaxX()) / 2) * sh.getWidth());
-        entity.setY((double) ((bb.getMinY() + bb.getMaxY()) / 2) * sh.getHeight());
+        entity.setX((double) ((bb.getMinX() + bb.getMaxX()) / 2));
+        entity.setY((double) ((bb.getMinY() + bb.getMaxY()) / 2));
 
         if (d.hasGeoCoordinate()) {
             entity.setLatitude(d.getGeoCoordinate().getLatitude());

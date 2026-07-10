@@ -1,11 +1,10 @@
-import React, {useEffect, useRef, useState} from "react";
-import {Box} from "@mui/material";
-import DeckGL from "@deck.gl/react";
 import {OrthographicView} from "@deck.gl/core";
 import {PathLayer, ScatterplotLayer} from "@deck.gl/layers";
-import WebSocketClient from "../../services/WebSocketClient";
+import DeckGL from "@deck.gl/react";
+import {useEffect, useRef, useState} from "react";
 import {useSettings} from "../../contexts/SettingsContext";
 import ObjectTracker from "../../services/ObjectTracker";
+import WebSocketClient from "../../services/WebSocketClient";
 
 
 const ACTIVE_PATH_COLOR = [100, 200, 0, 255]; // Green for active trajectories
@@ -153,21 +152,17 @@ function TrajectoryDrawer(props) {
 
     // Slightly dim the image underneath so the live trajectories stand out.
     return (
-        <Box sx={{width: '100%', height: '100%', backgroundColor: 'rgba(0, 0, 0, 0.4)'}}>
-            {viewState && (
-                <DeckGL
-                    views={new OrthographicView({
-                        id: 'ortho',
-                        flipY: true // Y increases from top to bottom in image space
-                    })}
-                    viewState={viewState}
-                    controller={false}
-                    layers={layers}
-                    getCursor={() => 'default'}
-                    _pickable={false}
-                />
-            )}
-        </Box>
+        <DeckGL
+            views={new OrthographicView({
+                id: 'ortho',
+                flipY: true // Y increases from top to bottom in image space
+            })}
+            viewState={viewState}
+            controller={false}
+            layers={layers}
+            getCursor={() => 'default'}
+            _pickable={false}
+        />
     )
 }
 

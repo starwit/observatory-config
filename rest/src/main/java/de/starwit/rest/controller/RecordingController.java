@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import de.starwit.service.impl.StreamSavingService;
+import de.starwit.service.streamprocessing.StreamSavingService;
 import io.swagger.v3.oas.annotations.Operation;
 
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
@@ -34,6 +34,12 @@ public class RecordingController {
     @GetMapping(path = "/all")
     public List<String> getAllAvailableStreams() {
         return this.streamSavingService.getAvailableStreams();
+    }
+
+    @Operation(summary = "stop all recordings")
+    @PostMapping(path = "/stopall")
+    public void stopAllRecordings() {
+        this.streamSavingService.stopAllRecordings();
     }
 
     @Operation(summary = "add a stream to record")

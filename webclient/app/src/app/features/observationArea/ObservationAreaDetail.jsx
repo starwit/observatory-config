@@ -1,22 +1,27 @@
-import {useEffect, useMemo, useState, useRef} from "react";
+import ImageNotSupportedOutlinedIcon from "@mui/icons-material/ImageNotSupportedOutlined";
+import {Box, Typography} from "@mui/material";
+import {useEffect, useMemo, useRef, useState} from "react";
+import {useTranslation} from "react-i18next";
 import {useNavigate, useParams} from "react-router-dom";
 import {AppBar} from "../../assets/styles/HeaderStyles";
-import ObservationAreaRest from "../../services/ObservationAreaRest";
+import ObservationAreaDetailStyles from "../../assets/styles/ObservationAreaDetailStyles";
 import ImageRest, {imageFileUrlForId} from "../../services/ImageRest";
+import ObservationAreaRest from "../../services/ObservationAreaRest";
+import RecordingRest from "../../services/RecordingRest";
 import ImageAnnotate from "../imageAnnotate/ImageAnnotate";
+import SavedTrajectoryDrawer from "../visualizer/SavedTrajectoriesDrawer";
 import TrajectoryDrawer from "../visualizer/TrajectoryDrawer";
 import ObservationAreaDialog, {MODE as ObservationAreaDialogMode} from "./ObservationAreaDialog";
 import ObservationAreaSelect from "./ObservationAreaSelect";
-import {Box, Typography} from "@mui/material";
-import ImageNotSupportedOutlinedIcon from "@mui/icons-material/ImageNotSupportedOutlined";
-import {useTranslation} from "react-i18next";
-import ObservationAreaDetailStyles from "../../assets/styles/ObservationAreaDetailStyles";
 
 function ObservationAreaDetail(props) {
 
     const {observationAreaId} = useParams();
     const navigate = useNavigate();
     const {t} = useTranslation();
+
+    const [showSavedTrajectoriesState, setShowSavedTrajectoriesState] = useState(false);
+    const [showRecordedTrajectories, setShowRecordedTrajectoriesState] = useState(false);
 
     const [liveTrajectoriesActive, setLiveTrajectoriesActive] = useState(false);
     const [observationAreas, setObservationAreas] = useState();
@@ -26,6 +31,7 @@ function ObservationAreaDetail(props) {
     const [imageLoaded, setImageLoaded] = useState(false);
 
     const observationAreaRest = useMemo(() => new ObservationAreaRest(), [])
+    const recordingRest = useMemo(() => new RecordingRest(), [])
     const imageRest = useMemo(() => new ImageRest(), []);
 
     const annotatorRef = useRef(null);
@@ -33,6 +39,10 @@ function ObservationAreaDetail(props) {
     useEffect(() => {
         reloadObservationAreas();
     }, []);
+
+    useEffect(() => {
+        if (selectedArea) checkTrajectorySaving();
+    }, [selectedArea?.id]);
 
     useEffect(() => {
         reloadImage();
@@ -45,6 +55,14 @@ function ObservationAreaDetail(props) {
             }
             setObservationAreas(response.data);
             if (selectedArea !== undefined) navigateToArea(selectedArea.id);
+        });
+    }
+
+    function checkTrajectorySaving() {
+        recordingRest.getRecordingStreams().then((result) => {
+            if (selectedArea?.saeStreamKeys?.some(key => result.data.includes(key))) {
+                setShowRecordedTrajectoriesState(true);
+            }
         });
     }
 
@@ -76,6 +94,23 @@ function ObservationAreaDetail(props) {
         setLiveTrajectoriesActive(!liveTrajectoriesActive);
     }
 
+    function onShowSavedTrajectoriesClick() {
+        setShowSavedTrajectoriesState(!showSavedTrajectoriesState);
+    }
+
+    function onStartRecordingClick() {
+
+        recordingRest.getRecordingStreams().then((result) => {
+            if (selectedArea?.saeStreamKeys?.some(key => result.data.includes(key))) {
+                recordingRest.stopRecording(selectedArea.saeStreamKeys[0]);
+                setShowRecordedTrajectoriesState(false);
+            } else {
+                recordingRest.startRecording(selectedArea.saeStreamKeys[0]);
+                setShowRecordedTrajectoriesState(true);
+            }
+        });
+    }
+
     function navigateToHome() {
         navigate("/");
     }
@@ -98,16 +133,17 @@ function ObservationAreaDetail(props) {
                     onHomeClick={navigateToHome}
                     onEditClick={editArea}
                     onAreaChange={navigateToArea}
-                    onSaveClick={saveRegions}
                     onLiveTrajectoriesClick={toggleLiveTrajectories}
                     onImageRenewed={reloadImage}
                     showTrajectories={liveTrajectoriesActive}
+                    onShowSavedTrajectoriesClicked={onShowSavedTrajectoriesClick}
+                    showSavedTrajectories={showSavedTrajectoriesState}
+                    onStartRecordingClick={onStartRecordingClick}
+                    showRecordedTrajectories={showRecordedTrajectories}
                 />
             </AppBar>
         )
     }
-
-
 
     return (
         <>
@@ -126,19 +162,30 @@ function ObservationAreaDetail(props) {
                         sx={{zIndex: 20000}}
                         lockCanvas={liveTrajectoriesActive}
                         renderImageOverlay={
-                            liveTrajectoriesActive && selectedArea.saeStreamKeys?.[0]
-                                ? ({width}) => (
-                                    <TrajectoryDrawer
-                                        stream={selectedArea.saeStreamKeys[0]}
-                                        width={width}
-                                    />
+                            (liveTrajectoriesActive || showSavedTrajectoriesState) && selectedArea.saeStreamKeys?.[0]
+                                ? ({width, height}) => (
+                                    <Box sx={{width: '100%', height: '100%', backgroundColor: 'rgba(0, 0, 0, 0.4)'}}>
+                                        {showSavedTrajectoriesState && (
+                                            <SavedTrajectoryDrawer
+                                                streamKey={selectedArea.saeStreamKeys[0]}
+                                                width={width}
+                                                height={height}
+                                            />
+                                        )}
+                                        {liveTrajectoriesActive &&
+                                            <TrajectoryDrawer
+                                                stream={selectedArea.saeStreamKeys[0]}
+                                                width={width}
+                                            />
+                                        }
+                                    </Box>
                                 )
                                 : undefined
                         }
                         ref={annotatorRef}
                     ></ImageAnnotate>
                 )}
-            </Box>
+            </Box >
             <ObservationAreaDialog
                 open={editDialogOpen}
                 onSubmit={() => setEditDialogOpen(false)}
