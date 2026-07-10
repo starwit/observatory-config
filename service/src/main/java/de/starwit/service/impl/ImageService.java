@@ -90,9 +90,7 @@ public class ImageService implements ServiceInterface<ImageEntity, ImageReposito
                     "Cannot renew image because no Valkey/Redis connection is configured.");
         }
 
-        String saeStreamKey = firstSaeStreamKey(observationAreaEntity);
-        String suffix = saeStreamKey.substring(saeStreamKey.indexOf(':') + 1);
-        String frameStreamKey = frameStreamPrefix + ":" + suffix;
+        String frameStreamKey = toFrameStreamKey(firstSaeStreamKey(observationAreaEntity));
 
         byte[] jpegBytes = fetchLatestFrame(frameStreamKey);
 
@@ -112,6 +110,31 @@ public class ImageService implements ServiceInterface<ImageEntity, ImageReposito
         observationAreaEntity.setImage(imageEntity);
 
         return imageRepository.save(imageEntity);
+    }
+
+    /**
+     * Fetches the latest still frame from the SAE frame stream for the given raw SAE stream key
+     * and returns the JPEG bytes, without touching any observation area.
+     */
+    public byte[] fetchFrameJpegByStreamKey(String saeStreamKey) throws NotificationException {
+        if (redisTemplate == null) {
+            throw new NotificationException("error.image.renew.noredis",
+                    "Cannot fetch image because no Valkey/Redis connection is configured.");
+        }
+        if (saeStreamKey == null || saeStreamKey.isBlank()) {
+            throw new NotificationException("error.image.renew.nostreamkey",
+                    "No SAE stream key was provided.");
+        }
+        return fetchLatestFrame(toFrameStreamKey(saeStreamKey));
+    }
+
+    /**
+     * Derives the Valkey/Redis frame-stream key from a SAE stream key:
+     * {@code <frameStreamPrefix>:<suffix>}
+     */
+    private String toFrameStreamKey(String saeStreamKey) {
+        String suffix = saeStreamKey.substring(saeStreamKey.indexOf(':') + 1);
+        return frameStreamPrefix + ":" + suffix;
     }
 
     private String firstSaeStreamKey(ObservationAreaEntity observationAreaEntity) throws NotificationException {

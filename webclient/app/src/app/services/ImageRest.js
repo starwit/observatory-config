@@ -27,5 +27,12 @@ class ImageRest extends CrudRest {
     renewImage(id) {
         return axios.post(this.baseUrl + "/renew/" + id);
     }
+
+    fetchFromSae(streamKey) {
+        return axios.get(this.baseUrl + "/fetch-from-sae", {
+            params: {streamKey},
+            responseType: "blob",
+        });
+    }
 }
 export default ImageRest;

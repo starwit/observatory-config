@@ -1,7 +1,10 @@
-import {Box} from "@mui/material";
+import ImageNotSupportedOutlinedIcon from "@mui/icons-material/ImageNotSupportedOutlined";
+import {Box, Typography} from "@mui/material";
 import {useEffect, useMemo, useRef, useState} from "react";
+import {useTranslation} from "react-i18next";
 import {useNavigate, useParams} from "react-router-dom";
 import {AppBar} from "../../assets/styles/HeaderStyles";
+import ObservationAreaDetailStyles from "../../assets/styles/ObservationAreaDetailStyles";
 import ImageRest, {imageFileUrlForId} from "../../services/ImageRest";
 import ObservationAreaRest from "../../services/ObservationAreaRest";
 import RecordingRest from "../../services/RecordingRest";
@@ -15,6 +18,7 @@ function ObservationAreaDetail(props) {
 
     const {observationAreaId} = useParams();
     const navigate = useNavigate();
+    const {t} = useTranslation();
 
     const [showSavedTrajectoriesState, setShowSavedTrajectoriesState] = useState(false);
     const [showRecordedTrajectories, setShowRecordedTrajectoriesState] = useState(false);
@@ -24,6 +28,7 @@ function ObservationAreaDetail(props) {
     const selectedArea = observationAreas?.find(a => String(a.id) === observationAreaId);
     const [editDialogOpen, setEditDialogOpen] = useState(false);
     const [image, setImage] = useState();
+    const [imageLoaded, setImageLoaded] = useState(false);
 
     const observationAreaRest = useMemo(() => new ObservationAreaRest(), [])
     const recordingRest = useMemo(() => new RecordingRest(), [])
@@ -62,11 +67,10 @@ function ObservationAreaDetail(props) {
     }
 
     function reloadImage() {
+        setImageLoaded(false);
         imageRest.findWithPolygons(observationAreaId).then(response => {
-            if (response.data == null) {
-                return;
-            }
-            setImage(parseImage(response.data[0]));
+            setImage(response.data == null ? undefined : parseImage(response.data[0]));
+            setImageLoaded(true);
         });
     }
 
