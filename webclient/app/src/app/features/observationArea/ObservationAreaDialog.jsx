@@ -1,5 +1,6 @@
-import {Button, Dialog, DialogActions, DialogContent, FormControl, Stack, Typography} from "@mui/material";
+import {Button, CircularProgress, Dialog, DialogActions, DialogContent, FormControl, IconButton, Stack, Tooltip, Typography} from "@mui/material";
 import { Grid } from '@mui/material';
+import CameraAltIcon from "@mui/icons-material/CameraAlt";
 import {toast} from "react-toastify";
 import PropTypes from "prop-types";
 import React, {useEffect, useMemo, useState} from "react";
@@ -32,6 +33,7 @@ function ObservationAreaDialog(props) {
     const [hasFormError, setHasFormError] = useState(false);
     const [imageChanged, setImageChanged] = useState(false);
     const [imageBlob, setImageBlob] = useState(null);
+    const [saeImageLoading, setSaeImageLoading] = useState(false);
 
     useEffect(() => {
         if (open === true) {
@@ -54,10 +56,11 @@ function ObservationAreaDialog(props) {
         }
     }, [selectedArea, mode, open]);
 
-    async function loadExistingImage() {
+    function loadExistingImage() {
         if (selectedArea.image !== null) {
-            const imageBlob = await (await fetch(imageFileUrlForId(selectedArea.image.id))).blob();
-            setImageBlob(imageBlob);
+            fetch(imageFileUrlForId(selectedArea.image.id))
+                .then(response => response.blob())
+                .then(imageBlob => setImageBlob(imageBlob));
         }
     }
 
@@ -73,9 +76,6 @@ function ObservationAreaDialog(props) {
             entity.saeStreamKeys === null ||
             entity.saeStreamKeys.length === 0 ||
             entity.saeStreamKeys[0] === "") {
-            return false;
-        }
-        if (imageBlob === null) {
             return false;
         }
         return true;
@@ -159,6 +159,22 @@ function ObservationAreaDialog(props) {
         });
     }
 
+    const saeImageDisabled = saeImageLoading || entity.geoReferenced || !entity?.saeStreamKeys?.[0];
+
+    function handleGrabFromSae() {
+        setSaeImageLoading(true);
+        imageRest.fetchFromSae(entity.saeStreamKeys[0])
+            .then(({data: blob}) => {
+                setImageBlob(blob);
+                setImageChanged(true);
+            })
+            .catch(error => {
+                console.error(error);
+                toast.error(t("observationArea.renewImageError"));
+            })
+            .finally(() => setSaeImageLoading(false));
+    }
+
     function makeEntityUpdateField(field, {width = 12, autofocus = false}) {
         return (
             <Grid key={field.name} size={width}>
@@ -185,18 +201,38 @@ function ObservationAreaDialog(props) {
                             {makeEntityUpdateField(fields[0], {width: 12, autofocus: true})}
                             {fields?.slice(2, 4).map(field => makeEntityUpdateField(field, {width: 6}))}
                             <Grid size={{xs: 12}}>
-                                <FormControl fullWidth>
-                                    <ValidatedTextField
-                                        value={entity?.saeStreamKeys?.[0] ?? ""}
-                                        onChange={(e) => handleSaeStreamKeyChange(e.target.value)}
-                                        label={t("observationArea.saeStreamKeys")}
-                                        sx={UpdateFieldStyles.textField}
-                                        variant="standard"
-                                        fullWidth
-                                        helperText={""}
-                                        notNull
-                                    />
-                                </FormControl>
+                                <Stack direction="row" alignItems="flex-end" spacing={1}>
+                                    <FormControl fullWidth>
+                                        <ValidatedTextField
+                                            value={entity?.saeStreamKeys?.[0] ?? ""}
+                                            onChange={(e) => handleSaeStreamKeyChange(e.target.value)}
+                                            label={t("observationArea.saeStreamKeys")}
+                                            sx={UpdateFieldStyles.textField}
+                                            variant="standard"
+                                            fullWidth
+                                            helperText={""}
+                                            notNull
+                                        />
+                                    </FormControl>
+                                    <Tooltip
+                                        slotProps={{popper: {sx: {zIndex: 10001}}}}
+                                        title={
+                                            entity.geoReferenced
+                                                ? t("observationArea.renewImage.geoReferencedDisabled")
+                                                : !entity?.saeStreamKeys?.[0]
+                                                    ? ""
+                                                    : t("observationArea.getImageFromSae")
+                                        }>
+                                        <span>
+                                            <IconButton
+                                                onClick={handleGrabFromSae}
+                                                disabled={saeImageDisabled}
+                                            >
+                                                {saeImageLoading ? <CircularProgress size={20} /> : <CameraAltIcon color={saeImageDisabled ? "disabled" : "primary"} />}
+                                            </IconButton>
+                                        </span>
+                                    </Tooltip>
+                                </Stack>
                             </Grid>
                             {makeEntityUpdateField(fields[1], {width: 12})}
                             {entity.geoReferenced && fields?.slice(4).map(field => makeEntityUpdateField(field, {width: 6}))}
@@ -209,7 +245,7 @@ function ObservationAreaDialog(props) {
                                     {imageBlob && <img src={URL.createObjectURL(imageBlob)} style={ImageUploadStyles.previewStyle} alt={t("observationArea.image.preview")} />}
                                 </FormControl>
                                 {imageBlob === null ?
-                                    <Typography variant="caption" color="#d32f2f">{t("observationArea.image.hint")}</Typography> : null
+                                    <Typography variant="caption" color="text.secondary">{t("observationArea.image.hint")}</Typography> : null
                                 }
                             </Stack>
                         </Grid>

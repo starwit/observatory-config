@@ -36,6 +36,8 @@ function ObservationAreaSelect(props) {
     const observationAreaRest = useMemo(() => new ObservationAreaRest(), []);
     const imageRest = useMemo(() => new ImageRest(), []);
 
+    const renewImageDisabled = refreshing || selectedArea.geoReferenced;
+
     function handleRefreshImage() {
         setRefreshing(true);
         imageRest.renewImage(selectedArea.id)
@@ -117,10 +119,10 @@ function ObservationAreaSelect(props) {
                 </Tooltip>
             </FormControl>
             <FormControl>
-                <Tooltip title={t("observationArea.renewImage")}>
+                <Tooltip title={selectedArea.geoReferenced ? t("observationArea.renewImage.geoReferencedDisabled") : t("observationArea.renewImage")}>
                     <span>
-                        <IconButton sx={{height: "2rem"}} onClick={handleRefreshImage} disabled={refreshing}>
-                            {refreshing ? <CircularProgress size={20} /> : <RefreshIcon color="primary" />}
+                        <IconButton sx={{height: "2rem"}} onClick={handleRefreshImage} disabled={renewImageDisabled}>
+                            {refreshing ? <CircularProgress size={20} /> : <RefreshIcon color={renewImageDisabled ? "disabled" : "primary"} />}
                         </IconButton>
                     </span>
                 </Tooltip>
