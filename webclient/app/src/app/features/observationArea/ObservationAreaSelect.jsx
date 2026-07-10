@@ -129,7 +129,7 @@ function ObservationAreaSelect(props) {
             </FormControl>
             {renderProcessingText()}
             
-            <Divider orientation="vertical" flexItem />
+            <Divider orientation="vertical" variant="middle" sx={{mt: "2px", mb: "6px"}} flexItem />
 
             <FormControl>
                 <Tooltip title={t('observationArea.showSavedTrajectories')}>
