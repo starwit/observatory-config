@@ -9,11 +9,12 @@ import {useImmer} from "use-immer";
 import ImageUploadStyles from "../../assets/styles/ImageUploadStyles";
 import DialogHeader from "../../commons/dialog/DialogHeader";
 import UpdateField from "../../commons/form/UpdateField";
+import UpdateFieldStyles from "../../commons/form/UpdateFieldStyles";
+import ValidatedTextField from "../../commons/form/ValidatedTextField";
 import {handleChange, isValid, prepareForSave} from "../../modifiers/DefaultModifier";
 import {entityDefault, entityFields} from "../../modifiers/ObservationAreaModifier";
 import ImageRest, {imageFileUrlForId} from "../../services/ImageRest";
 import ObservationAreaRest from "../../services/ObservationAreaRest";
-import CamIDList from "./CamIDList";
 
 export const MODE = Object.freeze({
     UPDATE: "update",
@@ -152,9 +153,9 @@ function ObservationAreaDialog(props) {
         }
     }
 
-    function handleSaeStreamKeysChange(newIds) {
+    function handleSaeStreamKeyChange(newValue) {
         setEntity(draft => {
-            draft["saeStreamKeys"] = newIds;
+            draft["saeStreamKeys"] = [newValue];
         });
     }
 
@@ -184,7 +185,18 @@ function ObservationAreaDialog(props) {
                             {makeEntityUpdateField(fields[0], {width: 12, autofocus: true})}
                             {fields?.slice(2, 4).map(field => makeEntityUpdateField(field, {width: 6}))}
                             <Grid size={{xs: 12}}>
-                                <CamIDList values={entity?.saeStreamKeys} handleChange={handleSaeStreamKeysChange} />
+                                <FormControl fullWidth>
+                                    <ValidatedTextField
+                                        value={entity?.saeStreamKeys?.[0] ?? ""}
+                                        onChange={(e) => handleSaeStreamKeyChange(e.target.value)}
+                                        label={t("observationArea.saeStreamKeys")}
+                                        sx={UpdateFieldStyles.textField}
+                                        variant="standard"
+                                        fullWidth
+                                        helperText={""}
+                                        notNull
+                                    />
+                                </FormControl>
                             </Grid>
                             {makeEntityUpdateField(fields[1], {width: 12})}
                             {entity.geoReferenced && fields?.slice(4).map(field => makeEntityUpdateField(field, {width: 6}))}
