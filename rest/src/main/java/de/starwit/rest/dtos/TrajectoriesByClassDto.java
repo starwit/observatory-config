@@ -4,9 +4,9 @@ import java.util.List;
 
 public class TrajectoriesByClassDto {
     private int classId;
-    private List<TracedObjectDTO> tracedObjects;
+    private List<TracedObjectDto> tracedObjects;
 
-    public TrajectoriesByClassDto(int classId, List<TracedObjectDTO> tracedObjects) {
+    public TrajectoriesByClassDto(int classId, List<TracedObjectDto> tracedObjects) {
         this.classId = classId;
         this.tracedObjects = tracedObjects;
     }
@@ -15,7 +15,7 @@ public class TrajectoriesByClassDto {
         return classId;
     }
 
-    public List<TracedObjectDTO> getTracedObjects() {
+    public List<TracedObjectDto> getTracedObjects() {
         return tracedObjects;
     }
 }

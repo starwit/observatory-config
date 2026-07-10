@@ -45,10 +45,11 @@ function SavedTrajectoryDrawer(props) {
         const paths = tracedObjects
             .filter(tracedObject => tracedObject.trajectory.length >= 2)
             .map(tracedObject => ({ path: tracedObject.trajectory.map(point => [point.x * width, point.y * height]) }));
+        
         return new PathLayer({
             id: `paths-class-${classId}`,
             data: paths,
-            getPath: d => d.path,
+            getPath: dataItem => dataItem.path, //what is d?
             getColor: color,
             getWidth: 2,
             widthUnits: 'pixels',

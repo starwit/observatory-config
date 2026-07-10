@@ -22,8 +22,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import de.starwit.persistence.entity.DetectionEntity;
 import de.starwit.rest.dtos.TrajectoriesByClassDto;
-import de.starwit.rest.dtos.TimeWindowRequestDTO;
-import de.starwit.rest.dtos.TracedObjectDTO;
+import de.starwit.rest.dtos.TimeWindowRequestDto;
+import de.starwit.rest.dtos.TracedObjectDto;
 import de.starwit.rest.exception.NotificationDto;
 import de.starwit.service.impl.DetectionService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -46,7 +46,7 @@ public class DetectionController {
 
     @Operation(summary = "Get trajectories grouped by class for a time window")
     @PostMapping(value = "/trajectories")
-    public List<TrajectoriesByClassDto> findTrajectoriesInWindow(@RequestBody TimeWindowRequestDTO requestData) {
+    public List<TrajectoriesByClassDto> findTrajectoriesInWindow(@RequestBody TimeWindowRequestDto requestData) {
         List<DetectionEntity> detections = detectionService.findDetectionsInWindow(
                 requestData.getTimestamp(), Duration.ofMinutes(requestData.getWindowSize()), requestData.getStreamId());
 
@@ -64,14 +64,14 @@ public class DetectionController {
 
     private TrajectoriesByClassDto convertToTrajectoryDTO(Map.Entry<Integer, Map<String, List<DetectionEntity>>> classEntry) {
 
-        List<TracedObjectDTO> tracedObjects = classEntry.getValue().entrySet().stream()
+        List<TracedObjectDto> tracedObjects = classEntry.getValue().entrySet().stream()
                 .map(objectEntry -> {
                     // sort detections by timestamp, to get first/last entry
                     List<DetectionEntity> points = objectEntry.getValue().stream()
                             .sorted((a, b) -> a.getDetectionTimestamp().compareTo(b.getDetectionTimestamp()))
                             .toList();
 
-                    TracedObjectDTO dto = new TracedObjectDTO();
+                    TracedObjectDto dto = new TracedObjectDto();
                     dto.setObjectId(objectEntry.getKey());
                     dto.setStart(points.get(0).getDetectionTimestamp().toOffsetDateTime());
                     dto.setEnd(points.get(points.size() - 1).getDetectionTimestamp().toOffsetDateTime());

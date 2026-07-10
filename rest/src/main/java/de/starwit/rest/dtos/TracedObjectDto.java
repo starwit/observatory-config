@@ -5,7 +5,7 @@ import java.util.List;
 
 import org.springframework.data.geo.Point;
 
-public class TracedObjectDTO {
+public class TracedObjectDto {
     String objectId;
     OffsetDateTime start;
     OffsetDateTime end;
