@@ -19,16 +19,20 @@ function colorForClass(classId) {
 }
 
 function SavedTrajectoryDrawer(props) {
-    const { streamKey, width, height } = props;
+    const { streamKey, width, height, start, end } = props;
     const detectionRest = useRef(new DetectionRest());
 
     const [classTrajectories, setClassTrajectories] = useState([]);
 
     useEffect(() => {
-        detectionRest.current.findTrajectories(new Date(), 10, streamKey).then(result => {
+        if (!start || !end) {
+            setClassTrajectories([]);
+            return;
+        }
+        detectionRest.current.findTrajectories(start, end, streamKey).then(result => {
             setClassTrajectories(result.data);
         });
-    }, [streamKey]);
+    }, [streamKey, start, end]);
 
     const viewState = useMemo(() => {
         if (!width || !height) return null;

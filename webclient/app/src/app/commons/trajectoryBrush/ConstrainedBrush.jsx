@@ -1,0 +1,110 @@
+import {Brush} from "@visx/brush";
+import PropTypes from "prop-types";
+import {useCallback, useEffect, useRef} from "react";
+
+/** Continuous scales (time, linear, …) are invertible; band/point scales are not. */
+function isContinuous(scale) {
+    return "invert" in scale && typeof scale.invert === "function";
+}
+
+/**
+ * Clamps `state.extent` so the selection is at most `maxWidth` domain units wide, anchoring the
+ * edge the user is *not* dragging. Returns the clamped state, or null when no clamping is needed.
+ *
+ * Only `extent` is touched: while brushing, BaseBrush keeps `start`/`end` as the pre-drag anchors
+ * and recomputes the extent from them plus the total pointer offset, so rewriting them mid-drag
+ * would make the next pointer move jump.
+ */
+function clampExtent(state, xScale, maxWidth) {
+    if (!isContinuous(xScale)) return null;
+
+    const {extent, bounds, start, end, activeHandle, brushingType} = state;
+    const x0 = Math.min(extent.x0, extent.x1);
+    const x1 = Math.max(extent.x0, extent.x1);
+
+    // Idle / not-yet-drawn brush.
+    if (x0 < 0 || x1 <= x0) return null;
+    // Moving the selection preserves its width, so there is nothing to clamp.
+    if (brushingType === "move") return null;
+
+    const toDomain = (px) => Number(xScale.invert(px));
+    const toPixels = (domainValue) => Number(xScale(domainValue));
+
+    if (toDomain(x1) - toDomain(x0) <= maxWidth) return null;
+
+    // The pixel the drag pivots around, i.e. the edge the user is *not* moving. BaseBrush keeps this
+    // in start/end: dragging the left handle pivots on `end`, the right handle and a new selection
+    // pivot on `start`. Programmatic updates have no drag, so they pivot on the left edge.
+    // `brushingType` is only set with useWindowMoveEvents; otherwise handle drags set `activeHandle`.
+    const dragType = brushingType ?? activeHandle;
+    const anchor = dragType === "left" ? end.x : dragType === "right" || dragType === "select" ? start.x : x0;
+
+    // Which extent edge is the anchor? Not necessarily the one matching the drag direction: dragging a
+    // handle past the opposite one swaps them, since BaseBrush normalizes the extent to x0 <= x1.
+    const anchorIsRightEdge = Math.abs(anchor - x1) < Math.abs(anchor - x0);
+
+    const clamped = anchorIsRightEdge
+        ? {x0: Math.max(bounds.x0, toPixels(toDomain(x1) - maxWidth)), x1}
+        : {x0, x1: Math.min(bounds.x1, toPixels(toDomain(x0) + maxWidth))};
+
+    const nextExtent = {...extent, ...clamped};
+
+    return {
+        ...state,
+        extent: nextExtent,
+        // Outside of a drag (initial position, programmatic updates) start/end are the source of
+        // truth for the rendered selection, so they have to follow the clamped extent.
+        ...(state.isBrushing
+            ? {}
+            : {
+                start: {...start, x: nextExtent.x0},
+                end: {...end, x: nextExtent.x1},
+            }),
+    };
+}
+
+/**
+ * A `Brush` whose selection can never be wider than `maxWidth` x-domain units.
+ *
+ * Takes every `Brush` prop, plus `maxWidth`: the maximum selection width in x-domain units.
+ * For a time scale that means milliseconds (e.g. 20 * 60 * 1000 for 20 minutes).
+ */
+function ConstrainedBrush({maxWidth, xScale, onChange, ...brushProps}) {
+    const brushRef = useRef(null);
+
+    /** Returns true when the brush was clamped (which re-triggers onChange with the clamped bounds). */
+    const constrain = useCallback(() => {
+        const brush = brushRef.current;
+        if (!brush) return false;
+
+        const clamped = clampExtent(brush.state, xScale, maxWidth);
+        if (!clamped) return false;
+
+        brush.updateBrush(() => clamped);
+        return true;
+    }, [xScale, maxWidth]);
+
+    // Enforce the constraint on the initial brush position and whenever maxWidth or the scale change.
+    useEffect(() => {
+        constrain();
+    }, [constrain]);
+
+    const handleChange = useCallback(
+        (bounds) => {
+            // Swallow the out-of-bounds value: clamping fires onChange again with the clamped selection.
+            if (constrain()) return;
+            onChange?.(bounds);
+        },
+        [constrain, onChange],
+    );
+
+    return <Brush {...brushProps} xScale={xScale} innerRef={brushRef} onChange={handleChange} />;
+}
+
+ConstrainedBrush.propTypes = {
+    maxWidth: PropTypes.number.isRequired,
+    xScale: PropTypes.func.isRequired,
+    onChange: PropTypes.func,
+};
+
+export default ConstrainedBrush;

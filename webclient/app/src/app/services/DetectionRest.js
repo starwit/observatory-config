@@ -6,8 +6,16 @@ class DetectionRest extends CrudRest {
         super(window.location.pathname + "api/detection");
     }
 
-    findTrajectories(timestamp, windowSize, streamId) {
-        return axios.post(this.baseUrl + "/trajectories", { timestamp, windowSize, streamId });
+    findTrajectories(start, end, streamId) {
+        return axios.post(this.baseUrl + "/trajectories", {
+            start: start.toISOString(),
+            end: end.toISOString(),
+            streamId
+        });
+    }
+
+    getObjectCountHistogram(streamId, buckets = 200) {
+        return axios.get(this.baseUrl + "/object-count-histogram", { params: { streamId, buckets } });
     }
 }
 

@@ -135,6 +135,7 @@ const translationDeDE = {
     "confirm.dialog.description": "Bestätigen der Dialog Beschreibung",
     "map.live": "Livedaten anzeigen",
     "observationArea.showSavedTrajectories" : "Trajektorien anzeigen",
-    "observationArea.recordTrajectories" : "Start / Stop Aufzeichnung"
+    "observationArea.recordTrajectories" : "Start / Stop Aufzeichnung",
+    "observationArea.trajectoryFilter.noRecordings" : "Keine aufgezeichneten Trajektorien für diesen Stream verfügbar"
 };
 export default translationDeDE;

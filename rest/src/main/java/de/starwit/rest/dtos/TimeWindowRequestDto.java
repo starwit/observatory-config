@@ -7,26 +7,27 @@ import org.springframework.format.annotation.DateTimeFormat;
 public class TimeWindowRequestDto {
 
     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
-    private OffsetDateTime timestamp;
+    private OffsetDateTime start;
 
-    private int windowSize;
-    
+    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
+    private OffsetDateTime end;
+
     private String streamId;
 
-    public OffsetDateTime getTimestamp() {
-        return timestamp;
+    public OffsetDateTime getStart() {
+        return start;
     }
 
-    public void setTimestamp(OffsetDateTime timestamp) {
-        this.timestamp = timestamp;
+    public void setStart(OffsetDateTime start) {
+        this.start = start;
     }
 
-    public int getWindowSize() {
-        return windowSize;
+    public OffsetDateTime getEnd() {
+        return end;
     }
 
-    public void setWindowSize(int windowSize) {
-        this.windowSize = windowSize;
+    public void setEnd(OffsetDateTime end) {
+        this.end = end;
     }
 
     public String getStreamId() {
