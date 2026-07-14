@@ -1,5 +1,5 @@
 import {Button, CircularProgress, Dialog, DialogActions, DialogContent, FormControl, IconButton, Stack, Tooltip, Typography} from "@mui/material";
-import { Grid } from '@mui/material';
+import {Grid} from '@mui/material';
 import CameraAltIcon from "@mui/icons-material/CameraAlt";
 import {toast} from "react-toastify";
 import PropTypes from "prop-types";
@@ -72,10 +72,9 @@ function ObservationAreaDialog(props) {
         if (!isValid(fields, entity)) {
             return false;
         }
-        if (entity.saeStreamKeys === undefined ||
-            entity.saeStreamKeys === null ||
-            entity.saeStreamKeys.length === 0 ||
-            entity.saeStreamKeys[0] === "") {
+        if (entity.saeStreamKey === undefined ||
+            entity.saeStreamKey === null ||
+            entity.saeStreamKey === "") {
             return false;
         }
         return true;
@@ -155,15 +154,15 @@ function ObservationAreaDialog(props) {
 
     function handleSaeStreamKeyChange(newValue) {
         setEntity(draft => {
-            draft["saeStreamKeys"] = [newValue];
+            draft["saeStreamKey"] = newValue;
         });
     }
 
-    const saeImageDisabled = saeImageLoading || entity.geoReferenced || !entity?.saeStreamKeys?.[0];
+    const saeImageDisabled = saeImageLoading || entity.geoReferenced || !entity?.saeStreamKey;
 
     function handleGrabFromSae() {
         setSaeImageLoading(true);
-        imageRest.fetchFromSae(entity.saeStreamKeys[0])
+        imageRest.fetchFromSae(entity.saeStreamKey)
             .then(({data: blob}) => {
                 setImageBlob(blob);
                 setImageChanged(true);
@@ -204,7 +203,7 @@ function ObservationAreaDialog(props) {
                                 <Stack direction="row" alignItems="flex-end" spacing={1}>
                                     <FormControl fullWidth>
                                         <ValidatedTextField
-                                            value={entity?.saeStreamKeys?.[0] ?? ""}
+                                            value={entity?.saeStreamKey ?? ""}
                                             onChange={(e) => handleSaeStreamKeyChange(e.target.value)}
                                             label={t("observationArea.saeStreamKeys")}
                                             sx={UpdateFieldStyles.textField}
@@ -219,7 +218,7 @@ function ObservationAreaDialog(props) {
                                         title={
                                             entity.geoReferenced
                                                 ? t("observationArea.renewImage.geoReferencedDisabled")
-                                                : !entity?.saeStreamKeys?.[0]
+                                                : !entity?.saeStreamKey
                                                     ? ""
                                                     : t("observationArea.getImageFromSae")
                                         }>

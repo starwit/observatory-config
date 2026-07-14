@@ -60,7 +60,7 @@ function ObservationAreaDetail(props) {
 
     function checkTrajectorySaving() {
         recordingRest.getRecordingStreams().then((result) => {
-            if (selectedArea?.saeStreamKeys?.some(key => result.data.includes(key))) {
+            if (selectedArea?.saeStreamKey && result.data.includes(selectedArea.saeStreamKey)) {
                 setShowRecordedTrajectoriesState(true);
             }
         });
@@ -101,11 +101,11 @@ function ObservationAreaDetail(props) {
     function onStartRecordingClick() {
 
         recordingRest.getRecordingStreams().then((result) => {
-            if (selectedArea?.saeStreamKeys?.some(key => result.data.includes(key))) {
-                recordingRest.stopRecording(selectedArea.saeStreamKeys[0]);
+            if (selectedArea?.saeStreamKey && result.data.includes(selectedArea.saeStreamKey)) {
+                recordingRest.stopRecording(selectedArea.saeStreamKey);
                 setShowRecordedTrajectoriesState(false);
             } else {
-                recordingRest.startRecording(selectedArea.saeStreamKeys[0]);
+                recordingRest.startRecording(selectedArea.saeStreamKey);
                 setShowRecordedTrajectoriesState(true);
             }
         });
@@ -162,19 +162,19 @@ function ObservationAreaDetail(props) {
                         sx={{zIndex: 20000}}
                         lockCanvas={liveTrajectoriesActive}
                         renderImageOverlay={
-                            (liveTrajectoriesActive || showSavedTrajectoriesState) && selectedArea.saeStreamKeys?.[0]
+                            (liveTrajectoriesActive || showSavedTrajectoriesState) && selectedArea.saeStreamKey
                                 ? ({width, height}) => (
                                     <Box sx={{width: '100%', height: '100%', backgroundColor: 'rgba(0, 0, 0, 0.4)'}}>
                                         {showSavedTrajectoriesState && (
                                             <SavedTrajectoryDrawer
-                                                streamKey={selectedArea.saeStreamKeys[0]}
+                                                streamKey={selectedArea.saeStreamKey}
                                                 width={width}
                                                 height={height}
                                             />
                                         )}
                                         {liveTrajectoriesActive &&
                                             <TrajectoryDrawer
-                                                stream={selectedArea.saeStreamKeys[0]}
+                                                stream={selectedArea.saeStreamKey}
                                                 width={width}
                                             />
                                         }

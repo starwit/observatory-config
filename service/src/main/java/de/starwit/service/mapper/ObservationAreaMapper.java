@@ -1,8 +1,5 @@
 package de.starwit.service.mapper;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import de.starwit.persistence.entity.CameraEntity;
 import de.starwit.persistence.entity.ObservationAreaEntity;
 import de.starwit.service.dto.ObservationAreaDto;
@@ -19,15 +16,13 @@ public class ObservationAreaMapper implements CustomMapper<ObservationAreaEntity
         dto.setName(entity.getName());
         if (entity.getImage() == null || entity.getImage().getData() == null) {
             dto.setImage(null);
-        }else{
+        } else {
             dto.setImage(entity.getImage());
-        }        
+        }
         dto.setCenterlatitude(entity.getCenterlatitude());
         dto.setCenterlongitude(entity.getCenterlongitude());
-        List<String> cameras = new ArrayList<>();
-        if(entity.getCamera() != null && !entity.getCamera().isEmpty()) {
-            entity.getCamera().forEach(camera -> {cameras.add(camera.getSaeStreamKey());});
-            dto.setSaeStreamKeys(cameras);
+        if (entity.getCamera() != null) {
+            dto.setSaeStreamKey(entity.getCamera().getSaeStreamKey());
         }
         dto.setDegreeperpixelx(entity.getDegreeperpixelx());
         dto.setDegreeperpixely(entity.getDegreeperpixely());
@@ -67,14 +62,10 @@ public class ObservationAreaMapper implements CustomMapper<ObservationAreaEntity
         return entity;
     }
 
-    public List<CameraEntity> getDefaultCameras(ObservationAreaDto dto, ObservationAreaEntity observationAreaEntity) {
-        if (dto.getSaeStreamKeys() == null) {
+    public CameraEntity getDefaultCamera(ObservationAreaDto dto, ObservationAreaEntity observationAreaEntity) {
+        if (dto.getSaeStreamKey() == null || dto.getSaeStreamKey().isBlank()) {
             return null;
         }
-        List<CameraEntity> cameras = new ArrayList<>();
-        dto.getSaeStreamKeys().forEach(saeStreamKey -> {
-            cameras.add(new CameraEntity(saeStreamKey, observationAreaEntity));
-        });
-        return cameras;
+        return new CameraEntity(dto.getSaeStreamKey(), observationAreaEntity);
     }
 }

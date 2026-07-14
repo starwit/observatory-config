@@ -5,7 +5,7 @@ import com.fasterxml.jackson.annotation.JsonFilter;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotBlank;
 
@@ -23,13 +23,13 @@ public class CameraEntity extends AbstractEntity<Long> {
 
     // entity relations
     @JsonFilter("filterId")
-    @ManyToOne
+    @OneToOne
     @JoinColumn(name = "observationarea_id")
     private ObservationAreaEntity observationArea;
 
     public CameraEntity() {
     }
-    
+
     public CameraEntity(String saeStreamKey, ObservationAreaEntity observationArea) {
         this.saeStreamKey = saeStreamKey;
         this.observationArea = observationArea;

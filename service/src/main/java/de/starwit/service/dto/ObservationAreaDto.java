@@ -1,7 +1,6 @@
 package de.starwit.service.dto;
 
 import java.math.BigDecimal;
-import java.util.List;
 
 import de.starwit.persistence.entity.ImageEntity;
 import jakarta.validation.constraints.Max;
@@ -13,7 +12,7 @@ public class ObservationAreaDto {
 
     private String name;
 
-    List<String> saeStreamKeys;
+    private String saeStreamKey;
 
     ImageEntity image;
 
@@ -57,12 +56,12 @@ public class ObservationAreaDto {
         this.name = name;
     }
 
-    public List<String> getSaeStreamKeys() {
-        return saeStreamKeys;
+    public String getSaeStreamKey() {
+        return saeStreamKey;
     }
 
-    public void setSaeStreamKeys(List<String> saeStreamKeys) {
-        this.saeStreamKeys = saeStreamKeys;
+    public void setSaeStreamKey(String saeStreamKey) {
+        this.saeStreamKey = saeStreamKey;
     }
 
     public BigDecimal getTopleftlatitude() {

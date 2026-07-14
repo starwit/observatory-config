@@ -93,7 +93,7 @@ public class ObservatoryService {
         ObservatoryDto dbeDto = new ObservatoryDto();
 
         dbeDto.setName(polygonEntity.getName());
-        dbeDto.setStreamKey(observationAreaEntity.getCamera().get(0).getSaeStreamKey());
+        dbeDto.setStreamKey(observationAreaEntity.getCamera().getSaeStreamKey());
         dbeDto.setDetectionClassId(2);
         dbeDto.setEnabled(true);
         if (polygonEntity != null && polygonEntity.getDirection() != null) {
