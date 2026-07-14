@@ -16,7 +16,7 @@
     "@mui/material": "7.3.8",
     "@starwit/react-image-annotate": "7.0.2",
     "@stomp/stompjs": "^7.1.1",
-    "axios": "1.13.5",
+    "axios": "1.16.0",
     "color-convert": "^3.1.0",
     "i18next": "^25.8.11",
     "i18next-browser-languagedetector": "^8.2.1",
@@ -40,11 +40,11 @@
     "extends": "react-app"
   },
   "devDependencies": {
-    "@vitejs/plugin-react": "^5.1.4",
+    "@vitejs/plugin-react": "^5.2.0",
     "eslint": "^9.35.0",
     "eslint-config-google": "^0.14.0",
     "eslint-plugin-react": "^7.37.5",
     "prop-types": "^15.8.1",
-    "vite": "^7.3.1"
+    "vite": "^8.1.4"
   }
 }
