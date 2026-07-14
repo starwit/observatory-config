@@ -66,6 +66,6 @@ public class ObservationAreaMapper implements CustomMapper<ObservationAreaEntity
         if (dto.getSaeStreamKey() == null || dto.getSaeStreamKey().isBlank()) {
             return null;
         }
-        return new CameraEntity(dto.getSaeStreamKey(), observationAreaEntity);
+        return new CameraEntity(dto.getSaeStreamKey());
     }
 }

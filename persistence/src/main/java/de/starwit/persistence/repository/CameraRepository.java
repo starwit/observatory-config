@@ -6,7 +6,6 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import de.starwit.persistence.entity.CameraEntity;
-import de.starwit.persistence.entity.ObservationAreaEntity;
 
 /**
  * Camera Repository class
@@ -14,11 +13,8 @@ import de.starwit.persistence.entity.ObservationAreaEntity;
 @Repository
 public interface CameraRepository extends CustomRepository<CameraEntity, Long> {
 
-    @Query("SELECT e.id FROM CameraEntity e WHERE e.observationArea is null")
+    @Query("SELECT e.id FROM CameraEntity e WHERE e.observationAreas is null OR e.observationAreas is empty")
     public List<Long> findAllWithEmptyObservationArea();
 
-    public CameraEntity findBySaeStreamKeyAndObservationArea(String saeStreamKey,
-            ObservationAreaEntity observationArea);
-
-    public CameraEntity findByObservationArea(ObservationAreaEntity observationArea);
+    public CameraEntity findBySaeStreamKey(String saeStreamKey);
 }

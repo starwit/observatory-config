@@ -65,7 +65,10 @@ public class ObservationAreaService implements ServiceInterface<ObservationAreaE
             if (entity != null) {
                 entity = observationareaRepository.saveAndFlush(entity);
                 CameraEntity camera = mapper.getDefaultCamera(dto, entity);
-                camera = camera == null ? null : cameraRepository.saveAndFlush(camera);
+                if (camera != null) {
+                    CameraEntity existingCamera = cameraRepository.findBySaeStreamKey(camera.getSaeStreamKey());
+                    entity.setCamera(existingCamera == null ? cameraRepository.saveAndFlush(camera) : existingCamera);
+                }
             }
         } else {
             entity = this.findById(dto.getId());
@@ -85,15 +88,16 @@ public class ObservationAreaService implements ServiceInterface<ObservationAreaE
     }
 
     private void mapAndSaveCamera(String addedStreamKey, ObservationAreaEntity entity) {
-        if (addedStreamKey != null && !addedStreamKey.isEmpty()) {
-            CameraEntity existingCamera = cameraRepository.findBySaeStreamKeyAndObservationArea(addedStreamKey, entity);
-            if (existingCamera != null) {
-                existingCamera.setObservationArea(entity);
-                cameraRepository.saveAndFlush(existingCamera);
-            } else {
-                CameraEntity newCamera = new CameraEntity(addedStreamKey, entity);
-                cameraRepository.saveAndFlush(newCamera);
-            }
+        if (addedStreamKey == null || addedStreamKey.isBlank()) {
+            entity.setCamera(null);
+            return;
+        }
+        CameraEntity existingCamera = cameraRepository.findBySaeStreamKey(addedStreamKey);
+        if (existingCamera != null) {
+            entity.setCamera(existingCamera);
+        } else {
+            CameraEntity newCamera = new CameraEntity(addedStreamKey);
+            entity.setCamera(cameraRepository.saveAndFlush(newCamera));
         }
     }
 
