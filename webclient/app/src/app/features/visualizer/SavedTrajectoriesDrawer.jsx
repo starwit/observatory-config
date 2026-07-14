@@ -6,12 +6,12 @@ import { PathLayer } from "@deck.gl/layers";
 import DetectionRest from "../../services/DetectionRest";
 
 const CLASS_COLORS = [
-    [255, 100, 100, 220],
-    [100, 200, 100, 220],
-    [100, 100, 255, 220],
-    [255, 200, 50, 220],
-    [200, 100, 255, 220],
-    [50, 220, 220, 220],
+    [255, 100, 100, 100],
+    [100, 200, 100, 100],
+    [100, 100, 255, 100],
+    [255, 200, 50, 100],
+    [200, 100, 255, 100],
+    [50, 220, 220, 100],
 ];
 
 function colorForClass(classId) {

@@ -12,9 +12,10 @@ public interface DetectionRepository extends CustomRepository<DetectionEntity, L
 
     List<DetectionEntity> findByStreamIdAndDetectionTimestampBetween(String streamId, ZonedDateTime start, ZonedDateTime end);
 
-    // TODO Why is this an Object[] result? I'd prefer something typed.
-    @Query("SELECT MIN(d.detectionTimestamp), MAX(d.detectionTimestamp) FROM DetectionEntity d WHERE d.streamId = :streamId")
-    List<Object[]> findTimestampBoundsByStreamId(@Param("streamId") String streamId);
+    @Query("SELECT new de.starwit.persistence.repository.TimestampBounds("
+            + "MIN(d.detectionTimestamp), MAX(d.detectionTimestamp)) "
+            + "FROM DetectionEntity d WHERE d.streamId = :streamId")
+    TimestampBounds findTimestampBoundsByStreamId(@Param("streamId") String streamId);
 
     @Query(value = "SELECT cast(floor(extract(epoch from (detection_timestamp - :start)) / :bucketSeconds) as bigint) AS bucketIndex, "
             + "count(distinct object_id) AS objectCount "

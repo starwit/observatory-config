@@ -10,6 +10,19 @@ import PropTypes from "prop-types";
 const getDate = (d) => new Date(d.timestamp);
 const getObjectCount = (d) => d.objectCount;
 
+// Follows the browser locale but forces a 24h clock (hourCycle "h23"). Midnight ticks show the date
+// instead, so multi-day intervals stay readable.
+const timeFormatter = new Intl.DateTimeFormat(undefined, {hour: "2-digit", minute: "2-digit", hourCycle: "h23"});
+const dateFormatter = new Intl.DateTimeFormat(undefined, {day: "2-digit", month: "2-digit"});
+
+function formatAxisTick(value) {
+    const date = value instanceof Date ? value : new Date(value);
+    if (date.getHours() === 0 && date.getMinutes() === 0) {
+        return dateFormatter.format(date);
+    }
+    return timeFormatter.format(date);
+}
+
 function BrushAreaChart({data, width, yMax, margin, xScale, yScale, children}) {
     const theme = useTheme();
 
@@ -22,7 +35,6 @@ function BrushAreaChart({data, width, yMax, margin, xScale, yScale, children}) {
         fontFamily: theme.typography.fontFamily,
         fontSize: 10,
     };
-    // TODO The bottom axis ticks should be in 24h format (or even better, follow the browser locale settings)
     return (
         <Group left={margin.left} top={margin.top}>
             <LinearGradient
@@ -46,6 +58,7 @@ function BrushAreaChart({data, width, yMax, margin, xScale, yScale, children}) {
                 top={yMax}
                 scale={xScale}
                 numTicks={width > 520 ? 10 : 5}
+                tickFormat={formatAxisTick}
                 stroke={axisColor}
                 tickLength={4}
                 tickStroke={axisColor}

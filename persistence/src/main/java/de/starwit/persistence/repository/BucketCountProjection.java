@@ -1,11 +1,9 @@
 package de.starwit.persistence.repository;
 
 /**
- * Projection for the bucketed unique-object-count aggregation query in {@link DetectionRepository}.
+ * Projection for the bucketed unique-object-count aggregation query in {@link DetectionRepository}:
+ * the bucket index and the number of distinct objects seen within it. Component names must match the
+ * query's column aliases ({@code bucketIndex}, {@code objectCount}).
  */
-public interface BucketCountProjection {
-// TODO This should be a record
-    Long getBucketIndex();
-
-    Long getObjectCount();
+public record BucketCountProjection(Long bucketIndex, Long objectCount) {
 }

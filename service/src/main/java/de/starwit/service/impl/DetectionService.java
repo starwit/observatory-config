@@ -8,19 +8,21 @@ import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import de.starwit.persistence.entity.DetectionEntity;
 import de.starwit.persistence.repository.BucketCountProjection;
 import de.starwit.persistence.repository.DetectionRepository;
+import de.starwit.persistence.repository.TimestampBounds;
 import de.starwit.service.dto.ObjectCountBucketDto;
 import de.starwit.service.dto.ObjectCountHistogramDto;
 
 @Service
 public class DetectionService implements ServiceInterface<DetectionEntity, DetectionRepository> {
 
-    // TODO This should be a property
-    private static final int MAX_BUCKETS = 200;
+    @Value("${detection.histogram.max-buckets:200}")
+    private int maxBuckets;
 
     @Autowired
     private DetectionRepository detectionRepository;
@@ -36,26 +38,23 @@ public class DetectionService implements ServiceInterface<DetectionEntity, Detec
     }
 
     public ObjectCountHistogramDto getObjectCountHistogram(String streamId, int buckets) {
-        List<Object[]> boundsResult = detectionRepository.findTimestampBoundsByStreamId(streamId);
-        Object[] bounds = boundsResult.isEmpty() ? null : boundsResult.get(0);
-        ZonedDateTime min = bounds != null ? (ZonedDateTime) bounds[0] : null;
-        ZonedDateTime max = bounds != null ? (ZonedDateTime) bounds[1] : null;
+        TimestampBounds bounds = detectionRepository.findTimestampBoundsByStreamId(streamId);
+        ZonedDateTime min = bounds != null ? bounds.min() : null;
+        ZonedDateTime max = bounds != null ? bounds.max() : null;
 
         if (min == null || max == null) {
             return new ObjectCountHistogramDto(streamId, null, null, 0, new ArrayList<>());
         }
 
-        int n = Math.max(1, Math.min(buckets, MAX_BUCKETS));
+        int n = Math.max(1, Math.min(buckets, maxBuckets));
         long durationSeconds = Math.max(1, java.time.Duration.between(min, max).getSeconds());
         long bucketSeconds = Math.max(1, (long) Math.ceil((double) durationSeconds / n));
 
         Map<Long, Long> countsByBucket = new HashMap<>();
         for (BucketCountProjection row : detectionRepository.findObjectCountBuckets(streamId, min, max, bucketSeconds)) {
-            countsByBucket.put(row.getBucketIndex(), row.getObjectCount());
+            countsByBucket.put(row.bucketIndex(), row.objectCount());
         }
 
-        // TODO Why do we use n here? Are we absolutely sure that the query always returns n results?
-        // TODO Also, can't we put this whole calculation into the sql query? S.t. it returns buckets already with timestamps to make this loop unnecessary?
         List<ObjectCountBucketDto> series = new ArrayList<>(n);
         for (int i = 0; i < n; i++) {
             ZonedDateTime bucketStart = min.plusSeconds((long) i * bucketSeconds);

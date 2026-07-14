@@ -134,9 +134,8 @@ function TrajectoryBrushFilter({streamKey, onRangeChange, maxWidthMs = DEFAULT_M
         return <Box sx={{height}} />;
     }
 
-    // TODO Something is user selectable here which is irritating, maybe the svg?
     return (
-        <Box sx={{height, width: "100%"}}>
+        <Box sx={{height, width: "100%", userSelect: "none"}}>
             <ParentSize>
                 {({width}) => (
                     <BrushChart
