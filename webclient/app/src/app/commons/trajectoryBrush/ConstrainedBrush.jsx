@@ -71,28 +71,44 @@ function clampExtent(state, xScale, maxWidth) {
  */
 function ConstrainedBrush({maxWidth, xScale, onChange, ...brushProps}) {
     const brushRef = useRef(null);
+    
+    // Read xScale through a ref so `constrain`'s identity does not change on resize (a resize builds a
+    // new xScale). See the effect below for why re-running constrain on scale changes is harmful.
+    const xScaleRef = useRef(xScale);
+    xScaleRef.current = xScale;
 
     /** Returns true when the brush was clamped (which re-triggers onChange with the clamped bounds). */
     const constrain = useCallback(() => {
         const brush = brushRef.current;
         if (!brush) return false;
 
-        const clamped = clampExtent(brush.state, xScale, maxWidth);
+        const clamped = clampExtent(brush.state, xScaleRef.current, maxWidth);
         if (!clamped) return false;
 
         brush.updateBrush(() => clamped);
         return true;
-    }, [xScale, maxWidth]);
+    }, [maxWidth]);
 
     // Enforce the constraint on the initial brush position and whenever maxWidth or the scale change.
+    //
+    // Deliberately NOT re-run on xScale changes. A window resize builds a new xScale, but BaseBrush
+    // already rescales the selection's pixel extent proportionally to the new width in its own
+    // componentDidUpdate, which preserves the domain-width constraint automatically (pixels scale with
+    // the range, so the domain span is unchanged). Re-running constrain here would fire during the
+    // resize while brush.state still holds the pre-rescale pixels (x1 === oldWidth) and convert them
+    // with the new, smaller-range scale — making the domain span appear to exceed maxWidth and clamping
+    // to an out-of-range x1, which clobbers BaseBrush's rescale and leaves the selection past the end.
     useEffect(() => {
         constrain();
     }, [constrain]);
 
     const handleChange = useCallback(
         (bounds) => {
+            // Constrain selection if necessary (updated === true means the values were out of bounds and therefore updated)
+            const updated = constrain();
+
             // Swallow the out-of-bounds value: clamping fires onChange again with the clamped selection.
-            if (constrain()) return;
+            if (updated) return;
             onChange?.(bounds);
         },
         [constrain, onChange],
