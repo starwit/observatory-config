@@ -1,5 +1,5 @@
 import ImageNotSupportedOutlinedIcon from "@mui/icons-material/ImageNotSupportedOutlined";
-import {Box, Typography} from "@mui/material";
+import {Box, Collapse, Typography} from "@mui/material";
 import {useEffect, useMemo, useRef, useState} from "react";
 import {useTranslation} from "react-i18next";
 import {useNavigate, useParams} from "react-router-dom";
@@ -147,14 +147,16 @@ function ObservationAreaDetail(props) {
                     onStartRecordingClick={onStartRecordingClick}
                     showRecordedTrajectories={showRecordedTrajectories}
                 />
-                {showSavedTrajectoriesState && selectedArea.saeStreamKeys?.[0] && (
-                    <Box sx={{height: "105px", borderTop: 1, borderBottom: 1, borderColor: "divider"}}>
-                        <TrajectoryBrushFilter
-                            streamKey={selectedArea.saeStreamKeys[0]}
-                            onRangeChange={setSelectedTrajectoryRange}
-                            height={100}
-                        />
-                    </Box>
+                {selectedArea.saeStreamKeys?.[0] && (
+                    <Collapse in={showSavedTrajectoriesState} timeout={300} unmountOnExit>
+                        <Box sx={{height: "105px", borderTop: 1, borderBottom: 1, borderColor: "divider"}}>
+                            <TrajectoryBrushFilter
+                                streamKey={selectedArea.saeStreamKeys[0]}
+                                onRangeChange={setSelectedTrajectoryRange}
+                                height={100}
+                            />
+                        </Box>
+                    </Collapse>
                 )}
             </AppBar>
         )
