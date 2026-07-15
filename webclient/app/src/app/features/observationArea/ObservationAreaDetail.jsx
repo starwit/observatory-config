@@ -146,6 +146,15 @@ function ObservationAreaDetail(props) {
                     onStartRecordingClick={onStartRecordingClick}
                     showRecordedTrajectories={showRecordedTrajectories}
                 />
+                {showSavedTrajectoriesState && selectedArea.saeStreamKeys?.[0] && (
+                    <Box sx={{height: "105px", borderTop: 1, borderBottom: 1, borderColor: "divider"}}>
+                        <TrajectoryBrushFilter
+                            streamKey={selectedArea.saeStreamKeys[0]}
+                            onRangeChange={setSelectedTrajectoryRange}
+                            height={100}
+                        />
+                    </Box>
+                )}
             </AppBar>
         )
     }
@@ -154,15 +163,7 @@ function ObservationAreaDetail(props) {
         <>
             <Box sx={{height: "100vh", display: "flex", flexDirection: "column"}}>
                 {renderAppBar()}
-                {showSavedTrajectoriesState && selectedArea.saeStreamKeys?.[0] && (
-                    <Box sx={{height: "105px", borderBottom: 1, borderColor: "divider"}}>
-                        <TrajectoryBrushFilter
-                            streamKey={selectedArea.saeStreamKeys[0]}
-                            onRangeChange={setSelectedTrajectoryRange}
-                            height={100}
-                        />
-                    </Box>
-                )}
+                
                 <Box sx={{flex: 1, minHeight: 0}}>
                     {imageLoaded && !image ? (
                         <Box sx={ObservationAreaDetailStyles.noImagePlaceholder}>

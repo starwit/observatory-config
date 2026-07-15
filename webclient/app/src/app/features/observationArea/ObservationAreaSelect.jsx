@@ -99,7 +99,7 @@ function ObservationAreaSelect(props) {
     return (
         <Stack
             direction="row"
-            sx={{marginTop: "0.4rem", height: "2.2rem", color: "dimgrey"}}
+            sx={{marginTop: "0.4rem", height: "2.4rem", color: "dimgrey"}}
             useFlexGap
             flexWrap="nowrap"
         >
