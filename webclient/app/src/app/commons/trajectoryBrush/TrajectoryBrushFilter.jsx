@@ -1,4 +1,4 @@
-import {Box, Typography} from "@mui/material";
+import {Box, CircularProgress, Typography} from "@mui/material";
 import {ParentSize} from "@visx/responsive";
 import {scaleLinear, scaleTime} from "@visx/scale";
 import {max} from "@visx/vendor/d3-array";
@@ -131,7 +131,11 @@ function TrajectoryBrushFilter({streamKey, onRangeChange, maxWidthMs = DEFAULT_M
     }
 
     if (!hasData) {
-        return <Box sx={{height}} />;
+        return (
+            <Box sx={{height, display: "flex", alignItems: "center", justifyContent: "center"}}>
+                <CircularProgress disableShrink/>
+            </Box>
+        );
     }
 
     return (
