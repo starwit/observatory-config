@@ -54,6 +54,8 @@ public class DetectionService implements ServiceInterface<DetectionEntity, Detec
             return new ObjectCountHistogramDto(streamId, null, null, 0, new ArrayList<>());
         }
 
+        // Divide the total time span of available data evenly across the requested number of buckets,
+        // rounding up so the whole range is covered by at least one second per bucket.
         int n = Math.max(1, Math.min(buckets, maxBuckets));
         long durationSeconds = Math.max(1, Duration.between(min, max).getSeconds());
         long bucketSeconds = Math.max(1, (long) Math.ceil((double) durationSeconds / n));
