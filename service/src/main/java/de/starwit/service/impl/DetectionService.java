@@ -1,5 +1,6 @@
 package de.starwit.service.impl;
 
+import java.time.Duration;
 import java.time.OffsetDateTime;
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
@@ -37,17 +38,24 @@ public class DetectionService implements ServiceInterface<DetectionEntity, Detec
                 streamId, start.toZonedDateTime(), end.toZonedDateTime());
     }
 
+    /**
+     * Buckets a stream's detections into equal time intervals with per-bucket object counts.
+     *
+     * @param streamId the stream whose detections are aggregated
+     * @param buckets  the requested number of intervals (clamped to {@code [1, maxBuckets]})
+     * @return the histogram, or an empty one if the stream has no detections
+     */
     public ObjectCountHistogramDto getObjectCountHistogram(String streamId, int buckets) {
-        TimestampBounds bounds = detectionRepository.findTimestampBoundsByStreamId(streamId);
-        ZonedDateTime min = bounds != null ? bounds.min() : null;
-        ZonedDateTime max = bounds != null ? bounds.max() : null;
+        TimestampBounds streamBounds = detectionRepository.findTimestampBoundsByStreamId(streamId);
+        ZonedDateTime min = streamBounds != null ? streamBounds.min() : null;
+        ZonedDateTime max = streamBounds != null ? streamBounds.max() : null;
 
         if (min == null || max == null) {
             return new ObjectCountHistogramDto(streamId, null, null, 0, new ArrayList<>());
         }
 
         int n = Math.max(1, Math.min(buckets, maxBuckets));
-        long durationSeconds = Math.max(1, java.time.Duration.between(min, max).getSeconds());
+        long durationSeconds = Math.max(1, Duration.between(min, max).getSeconds());
         long bucketSeconds = Math.max(1, (long) Math.ceil((double) durationSeconds / n));
 
         Map<Long, Long> countsByBucket = new HashMap<>();
