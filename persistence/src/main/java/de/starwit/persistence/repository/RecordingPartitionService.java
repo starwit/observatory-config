@@ -1,25 +1,22 @@
 package de.starwit.persistence.repository;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.time.OffsetDateTime;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeFormatterBuilder;
 import java.time.temporal.ChronoField;
-import java.time.temporal.ChronoUnit;
-
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
-import org.springframework.data.domain.OffsetScrollPosition;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
@@ -66,8 +63,37 @@ public class RecordingPartitionService {
 
     @PostConstruct
     public void init() {
+        // Fail fast if existing partitions don't align with the configured timezone
+        // before we start creating new (misaligned) ones.
+        validateExistingPartitions();
+
         // check if partition exist upon start, if not create
         ensureFuturePartitions();
+    }
+
+    /**
+     * Verifies that all existing partitions have bounds that align with midnight in the
+     * currently configured timezone. A mismatch almost always means the
+     * {@code partition.management.timezone} property was changed after the partitions were
+     * created, which would silently corrupt the daily partitioning scheme (new partitions
+     * created at different day boundaries than existing ones, causing gaps or overlaps).
+     * This is unrecoverable automatically, so we throw to terminate application startup.
+     */
+    private void validateExistingPartitions() {
+        List<PartitionInfo> partitions = fetchPartitions(PARENT_TABLE);
+
+        for (PartitionInfo partition : partitions) {
+            if (partition == null) continue;
+            if (!isMidnight(partition.fromBound()) || !isMidnight(partition.toBound())) {
+                String message = String.format(
+                        "Partition %s has bounds [%s, %s) that do not align with midnight for timezone %s. "
+                        + "This likely means the 'partition.management.timezone' property was changed after "
+                        + "the partition was created. Refusing to start to avoid corrupting the partitioning scheme.",
+                        partition.name(), partition.rawFromBound(), partition.rawToBound(), zoneId());
+                log.error(message);
+                throw new IllegalStateException(message);
+            }
+        }
     }
 
     // --- Partition creation ---------------------------------------------
@@ -150,9 +176,21 @@ public class RecordingPartitionService {
             log.debug("Skipping partition {} with expression: {}", name, expr);
             return null;
         }
-        LocalDateTime from = OffsetDateTime.parse(matcher.group(1), PG_TIMESTAMPTZ).atZoneSameInstant(zoneId()).toLocalDateTime();
-        LocalDateTime to = OffsetDateTime.parse(matcher.group(2), PG_TIMESTAMPTZ).atZoneSameInstant(zoneId()).toLocalDateTime();
-        return new PartitionInfo(name, from, to);
+        String rawFrom = matcher.group(1);
+        String rawTo = matcher.group(2);
+        LocalDateTime from = OffsetDateTime.parse(rawFrom, PG_TIMESTAMPTZ).atZoneSameInstant(zoneId()).toLocalDateTime();
+        LocalDateTime to = OffsetDateTime.parse(rawTo, PG_TIMESTAMPTZ).atZoneSameInstant(zoneId()).toLocalDateTime();
+
+        if (!isMidnight(from) || !isMidnight(to)) {
+            log.warn("Partition {}: bounds [{}, {}) do not align with midnight for zone {}",
+                    name, rawFrom, rawTo, zoneId());
+        }
+
+        return new PartitionInfo(name, from, to, rawFrom, rawTo);
+    }
+
+    private boolean isMidnight(LocalDateTime dateTime) {
+        return dateTime.toLocalTime().equals(LocalTime.MIDNIGHT);
     }
 
     private void dropPartition(String partitionName) {
@@ -160,5 +198,5 @@ public class RecordingPartitionService {
         jdbcTemplate.execute("DROP TABLE IF EXISTS \"" + partitionName + "\"");
     }
 
-    private record PartitionInfo(String name, LocalDateTime fromBound, LocalDateTime toBound) {}    
+    private record PartitionInfo(String name, LocalDateTime fromBound, LocalDateTime toBound, String rawFromBound, String rawToBound) {}    
 }
