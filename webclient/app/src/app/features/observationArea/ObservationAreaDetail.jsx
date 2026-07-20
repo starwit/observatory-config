@@ -166,48 +166,45 @@ function ObservationAreaDetail(props) {
         <>
             <Box sx={{height: "100vh", display: "flex", flexDirection: "column"}}>
                 {renderAppBar()}
-                
-                <Box sx={{flex: 1, minHeight: 0}}>
-                    {imageLoaded && !image ? (
-                        <Box sx={ObservationAreaDetailStyles.noImagePlaceholder}>
-                            <ImageNotSupportedOutlinedIcon sx={ObservationAreaDetailStyles.noImageIcon} />
-                            <Typography variant="h6">{t("observationArea.detail.noImage.title")}</Typography>
-                            <Typography variant="body2">{t("observationArea.detail.noImage.hint")}</Typography>
-                        </Box>
-                    ) : (
-                        <ImageAnnotate
-                            observationAreaId={observationAreaId}
-                            image={image}
-                            sx={{zIndex: 20000}}
-                            lockCanvas={liveTrajectoriesActive}
-                            renderImageOverlay={
-                                (liveTrajectoriesActive || showSavedTrajectoriesState) && selectedArea.saeStreamKeys?.[0]
-                                    ? ({width, height}) => (
-                                        <Box sx={{width: '100%', height: '100%', backgroundColor: 'rgba(0, 0, 0, 0.4)'}}>
-                                            {showSavedTrajectoriesState && (
-                                                <SavedTrajectoryDrawer
-                                                    streamKey={selectedArea.saeStreamKeys[0]}
-                                                    width={width}
-                                                    height={height}
-                                                    start={selectedTrajectoryRange?.start}
-                                                    end={selectedTrajectoryRange?.end}
-                                                />
-                                            )}
-                                            {liveTrajectoriesActive &&
-                                                <TrajectoryDrawer
-                                                    stream={selectedArea.saeStreamKeys[0]}
-                                                    width={width}
-                                                />
-                                            }
-                                        </Box>
-                                    )
-                                    : undefined
-                            }
-                            ref={annotatorRef}
-                        ></ImageAnnotate>
-                    )}
-                </Box>
-            </Box >
+                {imageLoaded && !image ? (
+                    <Box sx={ObservationAreaDetailStyles.noImagePlaceholder}>
+                        <ImageNotSupportedOutlinedIcon sx={ObservationAreaDetailStyles.noImageIcon} />
+                        <Typography variant="h6">{t("observationArea.detail.noImage.title")}</Typography>
+                        <Typography variant="body2">{t("observationArea.detail.noImage.hint")}</Typography>
+                    </Box>
+                ) : (
+                    <ImageAnnotate
+                        observationAreaId={observationAreaId}
+                        image={image}
+                        sx={{zIndex: 20000}}
+                        lockCanvas={liveTrajectoriesActive}
+                        renderImageOverlay={
+                            (liveTrajectoriesActive || showSavedTrajectoriesState) && selectedArea.saeStreamKeys?.[0]
+                                ? ({width, height}) => (
+                                    <Box sx={{width: '100%', height: '100%', backgroundColor: 'rgba(0, 0, 0, 0.4)'}}>
+                                        {showSavedTrajectoriesState && (
+                                            <SavedTrajectoryDrawer
+                                                streamKey={selectedArea.saeStreamKeys[0]}
+                                                width={width}
+                                                height={height}
+                                                start={selectedTrajectoryRange?.start}
+                                                end={selectedTrajectoryRange?.end}
+                                            />
+                                        )}
+                                        {liveTrajectoriesActive &&
+                                            <TrajectoryDrawer
+                                                stream={selectedArea.saeStreamKeys[0]}
+                                                width={width}
+                                            />
+                                        }
+                                    </Box>
+                                )
+                                : undefined
+                        }
+                        ref={annotatorRef}
+                    ></ImageAnnotate>
+                )}
+            </Box>
             <ObservationAreaDialog
                 open={editDialogOpen}
                 onSubmit={() => setEditDialogOpen(false)}
