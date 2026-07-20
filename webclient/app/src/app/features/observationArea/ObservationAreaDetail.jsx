@@ -137,6 +137,7 @@ function ObservationAreaDetail(props) {
                     selectedArea={selectedArea}
                     onHomeClick={navigateToHome}
                     onEditClick={editArea}
+                    onSaveClick={saveRegions}
                     onAreaChange={navigateToArea}
                     onLiveTrajectoriesClick={toggleLiveTrajectories}
                     onImageRenewed={reloadImage}

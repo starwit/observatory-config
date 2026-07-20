@@ -21,6 +21,8 @@ metadata:
     {{- include "observatory-config.labels" . | nindent 4 }}
 spec:
   replicas: 1
+  strategy:
+    type: Recreate
   selector:
     matchLabels:
       {{- include "observatory-config.selectorLabels" . | nindent 6 }}

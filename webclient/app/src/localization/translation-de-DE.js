@@ -104,7 +104,6 @@ const translationDeDE = {
     "button.close": "Schließen",
     "button.viewlist": "Vorschaubilder anzeigen",
     "button.map": "Auf Karte anzeigen",
-    "button.visualizer": "Live-Visualisierung öffnen",
     "button.tracking": "Verarbeitung läuft",
     "select.none": "keine Auswahl",
     "error.inUse": "Es wurde mehr als eine Zeile mit dem angegebenen Bezeichner gefunden",
