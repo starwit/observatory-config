@@ -9,7 +9,7 @@ import ObservationAreaRest from "../../services/ObservationAreaRest";
 import ObservationAreaDialog, {MODE as ObservationAreaDialogMode} from "./ObservationAreaDialog";
 import ObservationAreaCard from "./ObservationAreaCard";
 import ObservationAreaMap from "./ObservationAreaMap";
-import {ViewList, Map, Camera} from "@mui/icons-material";
+import {ViewList, Map} from "@mui/icons-material";
 import MapSidebar from "./MapSidebar";
 import PlayArrowIcon from '@mui/icons-material/PlayArrow';
 import StopIcon from '@mui/icons-material/Stop';
@@ -181,9 +181,6 @@ function ObservationAreaOverview() {
                         {t("observationAreas.title")}
                     </Typography>
                     <Stack direction="row" spacing={1}>
-                        <Tooltip title={t("button.visualizer")}>
-                            <Button href="#/visualizer/map" variant="outlined" color="primary"><Camera /></Button>
-                        </Tooltip>
                         {renderToggleButton()}
                     </Stack>
                 </Stack>

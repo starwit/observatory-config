@@ -1,4 +1,4 @@
-import {Camera, ContentCopy, Dashboard, Delete, Edit, Link} from "@mui/icons-material";
+import {ContentCopy, Dashboard, Delete, Edit, Link} from "@mui/icons-material";
 import {Card, CardActionArea, CardContent, CardMedia, Divider, Box, IconButton, ImageListItemBar, Tooltip, Typography, Button} from "@mui/material";
 import {Grid} from '@mui/material';
 import PropTypes from "prop-types";
@@ -81,11 +81,6 @@ function ObservationAreaCard(props) {
                             </CardMedia>
                             {renderProcessingIcon(observationArea.processingEnabled)}
                             <Box sx={{position: "absolute", display: "flex", justifyContent: "flex-end", width: "100%", px: 1, bottom: 0, backgroundColor: "rgba(255, 255, 255, 0.45)", backdropFilter: "blur(2px)"}}>
-                                <Tooltip title={"Record Track"}>
-                                    <IconButton onClick={() => copyArea(area)} href="#/visualizer/map">
-                                        <Camera fontSize={"small"} />
-                                    </IconButton>
-                                </Tooltip>
                                 <Tooltip title={"Grafana"}>
                                     <IconButton onClick={() => { }}>
                                         <Dashboard fontSize={"small"} />
