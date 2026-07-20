@@ -30,7 +30,7 @@ function TrajectoryBrushFilter({streamKey, onRangeChange, maxWidthMs = DEFAULT_M
 
     const hasData = Boolean(histogram?.intervalStart && histogram?.buckets?.length > 0);
 
-    // Load the trajectories for the default (most recent) selection as soon as the histogram arrives.
+    // Load the trajectories for the default (most recent) selection as soon as the jhistogram arrives.
     useEffect(() => {
         if (!hasData) return;
         const end = new Date(histogram.intervalEnd);

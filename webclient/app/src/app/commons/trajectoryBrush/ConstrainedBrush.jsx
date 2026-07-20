@@ -8,14 +8,14 @@ function isContinuous(scale) {
 }
 
 /**
- * Clamps `state.extent` so the selection is at most `maxWidth` domain units wide, anchoring the
- * edge the user is *not* dragging. Returns the clamped state, or null when no clamping is needed.
+ * Constrains `state.extent` so the selection is at most `maxWidth` domain units wide, anchoring the
+ * edge the user is *not* dragging. Returns the constrained state, or null when no constraining is needed.
  *
  * Only `extent` is touched: while brushing, BaseBrush keeps `start`/`end` as the pre-drag anchors
  * and recomputes the extent from them plus the total pointer offset, so rewriting them mid-drag
  * would make the next pointer move jump.
  */
-function clampExtent(state, xScale, maxWidth) {
+function constrainExtent(state, xScale, maxWidth) {
     if (!isContinuous(xScale)) return null;
 
     const {extent, bounds, start, end, activeHandle, brushingType} = state;
@@ -24,7 +24,7 @@ function clampExtent(state, xScale, maxWidth) {
 
     // Idle / not-yet-drawn brush.
     if (x0 < 0 || x1 <= x0) return null;
-    // Moving the selection preserves its width, so there is nothing to clamp.
+    // Moving the selection preserves its width, so there is nothing to constrain.
     if (brushingType === "move") return null;
 
     const toDomain = (px) => Number(xScale.invert(px));
@@ -43,17 +43,17 @@ function clampExtent(state, xScale, maxWidth) {
     // handle past the opposite one swaps them, since BaseBrush normalizes the extent to x0 <= x1.
     const anchorIsRightEdge = Math.abs(anchor - x1) < Math.abs(anchor - x0);
 
-    const clamped = anchorIsRightEdge
+    const constrained = anchorIsRightEdge
         ? {x0: Math.max(bounds.x0, toPixels(toDomain(x1) - maxWidth)), x1}
         : {x0, x1: Math.min(bounds.x1, toPixels(toDomain(x0) + maxWidth))};
 
-    const nextExtent = {...extent, ...clamped};
+    const nextExtent = {...extent, ...constrained};
 
     return {
         ...state,
         extent: nextExtent,
         // Outside of a drag (initial position, programmatic updates) start/end are the source of
-        // truth for the rendered selection, so they have to follow the clamped extent.
+        // truth for the rendered selection, so they have to follow the constrained extent.
         ...(state.isBrushing
             ? {}
             : {
@@ -77,15 +77,15 @@ function ConstrainedBrush({maxWidth, xScale, onChange, ...brushProps}) {
     const xScaleRef = useRef(xScale);
     xScaleRef.current = xScale;
 
-    /** Returns true when the brush was clamped (which re-triggers onChange with the clamped bounds). */
+    /** Returns true when the brush was constrained (which re-triggers onChange with the constrained bounds). */
     const constrain = useCallback(() => {
         const brush = brushRef.current;
         if (!brush) return false;
 
-        const clamped = clampExtent(brush.state, xScaleRef.current, maxWidth);
-        if (!clamped) return false;
+        const constrained = constrainExtent(brush.state, xScaleRef.current, maxWidth);
+        if (!constrained) return false;
 
-        brush.updateBrush(() => clamped);
+        brush.updateBrush(() => constrained);
         return true;
     }, [maxWidth]);
 
@@ -96,7 +96,7 @@ function ConstrainedBrush({maxWidth, xScale, onChange, ...brushProps}) {
     // componentDidUpdate, which preserves the domain-width constraint automatically (pixels scale with
     // the range, so the domain span is unchanged). Re-running constrain here would fire during the
     // resize while brush.state still holds the pre-rescale pixels (x1 === oldWidth) and convert them
-    // with the new, smaller-range scale — making the domain span appear to exceed maxWidth and clamping
+    // with the new, smaller-range scale — making the domain span appear to exceed maxWidth and constraining
     // to an out-of-range x1, which clobbers BaseBrush's rescale and leaves the selection past the end.
     useEffect(() => {
         constrain();
@@ -107,7 +107,7 @@ function ConstrainedBrush({maxWidth, xScale, onChange, ...brushProps}) {
             // Constrain selection if necessary (updated === true means the values were out of bounds and therefore updated)
             const updated = constrain();
 
-            // Swallow the out-of-bounds value: clamping fires onChange again with the clamped selection.
+            // Swallow the out-of-bounds value: constraining fires onChange again with the constrained selection.
             if (updated) return;
             onChange?.(bounds);
         },
