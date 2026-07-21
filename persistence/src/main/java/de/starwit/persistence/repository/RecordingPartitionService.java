@@ -18,7 +18,6 @@ import java.util.regex.Pattern;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
@@ -26,7 +25,6 @@ import org.springframework.stereotype.Service;
 import jakarta.annotation.PostConstruct;
 
 @Service
-@ConditionalOnProperty(name = "partition.management.enabled", havingValue = "true", matchIfMissing = false)
 public class RecordingPartitionService {
     
     private static final Logger log = LoggerFactory.getLogger(RecordingPartitionService.class);
@@ -45,13 +43,13 @@ public class RecordingPartitionService {
     private static final DateTimeFormatter PARTITION_SUFFIX_FORMAT =
             DateTimeFormatter.ofPattern("yyyy_MM_dd_HH_mm_ss");
 
-    @Value("${partition.management.retentionTime:2d}")
+    @Value("${partition.management.retentionTime:1d}")
     private Duration RETENTION_TIME;
     
     @Value("${partition.management.partitionRangeDuration:1d}")
     private Duration PARTITION_RANGE;
 
-    @Value("${partition.management.partitionInitTimeUTC:00:00:00}")
+    @Value("${partition.management.partitionInitTimeUTC:00:00}")
     private LocalTime PARTITION_INIT_TIME_UTC;
 
     private static final String PARENT_TABLE = "detection";
