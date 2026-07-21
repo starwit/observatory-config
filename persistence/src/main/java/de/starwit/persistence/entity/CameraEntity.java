@@ -1,11 +1,12 @@
 package de.starwit.persistence.entity;
 
+import java.util.Set;
+
 import com.fasterxml.jackson.annotation.JsonFilter;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotBlank;
 
@@ -23,16 +24,14 @@ public class CameraEntity extends AbstractEntity<Long> {
 
     // entity relations
     @JsonFilter("filterId")
-    @ManyToOne
-    @JoinColumn(name = "observationarea_id")
-    private ObservationAreaEntity observationArea;
+    @OneToMany(mappedBy = "camera")
+    private Set<ObservationAreaEntity> observationAreas;
 
     public CameraEntity() {
     }
-    
-    public CameraEntity(String saeStreamKey, ObservationAreaEntity observationArea) {
+
+    public CameraEntity(String saeStreamKey) {
         this.saeStreamKey = saeStreamKey;
-        this.observationArea = observationArea;
     }
 
     // entity fields getters and setters
@@ -45,11 +44,11 @@ public class CameraEntity extends AbstractEntity<Long> {
     }
 
     // entity relations getters and setters
-    public ObservationAreaEntity getObservationArea() {
-        return observationArea;
+    public Set<ObservationAreaEntity> getObservationAreas() {
+        return observationAreas;
     }
 
-    public void setObservationArea(ObservationAreaEntity observationArea) {
-        this.observationArea = observationArea;
+    public void setObservationAreas(Set<ObservationAreaEntity> observationAreas) {
+        this.observationAreas = observationAreas;
     }
 }

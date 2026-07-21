@@ -2,7 +2,6 @@ package de.starwit.persistence.entity;
 
 import java.math.BigDecimal;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 import com.fasterxml.jackson.annotation.JsonFilter;
@@ -10,6 +9,8 @@ import com.fasterxml.jackson.annotation.JsonFilter;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
@@ -31,7 +32,7 @@ public class ObservationAreaEntity extends AbstractEntity<Long> {
 
     // entity relations
     @JsonFilter("filterId")
-    @OneToMany(mappedBy = "observationArea", cascade = {CascadeType.ALL}, orphanRemoval = true)
+    @OneToMany(mappedBy = "observationArea", cascade = { CascadeType.ALL }, orphanRemoval = true)
     private Set<PolygonEntity> polygon;
 
     // entity relations
@@ -40,9 +41,10 @@ public class ObservationAreaEntity extends AbstractEntity<Long> {
     private ImageEntity image;
 
     @JsonFilter("filterCamera")
-    @OneToMany(mappedBy = "observationArea", cascade = { CascadeType.ALL }, orphanRemoval = true)
-    private List<CameraEntity> camera;
-  
+    @ManyToOne
+    @JoinColumn(name = "camera_id")
+    private CameraEntity camera;
+
     @Min(value = -90)
     @Max(value = 90)
     @Column(name = "center_latitude")
@@ -98,11 +100,11 @@ public class ObservationAreaEntity extends AbstractEntity<Long> {
         this.image = image;
     }
 
-    public List<CameraEntity> getCamera() {
+    public CameraEntity getCamera() {
         return camera;
     }
 
-    public void setCamera(List<CameraEntity> camera) {
+    public void setCamera(CameraEntity camera) {
         this.camera = camera;
     }
 

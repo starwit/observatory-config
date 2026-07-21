@@ -1,6 +1,5 @@
 package de.starwit.service.impl;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,7 +38,7 @@ public class ObservationAreaService implements ServiceInterface<ObservationAreaE
 
     public ObservationAreaEntity saveAndFlush(ObservationAreaEntity entity) {
         return observationareaRepository.saveAndFlush(entity);
-    }    
+    }
 
     @Override
     public ObservationAreaRepository getRepository() {
@@ -53,10 +52,10 @@ public class ObservationAreaService implements ServiceInterface<ObservationAreaE
 
     @Override
     public void delete(Long id) throws NotificationException {
-            this.getRepository().deleteById(id);
+        this.getRepository().deleteById(id);
     }
 
-    public ObservationAreaDto saveOrUpdateDto(ObservationAreaDto dto){
+    public ObservationAreaDto saveOrUpdateDto(ObservationAreaDto dto) {
         if (dto == null) {
             return null;
         }
@@ -65,13 +64,16 @@ public class ObservationAreaService implements ServiceInterface<ObservationAreaE
             entity = mapper.convertToEntity(dto);
             if (entity != null) {
                 entity = observationareaRepository.saveAndFlush(entity);
-                List<CameraEntity> cameras = mapper.getDefaultCameras(dto, entity);
-                cameras = cameras == null ? null : cameraRepository.saveAllAndFlush(cameras);
+                CameraEntity camera = mapper.getDefaultCamera(dto, entity);
+                if (camera != null) {
+                    CameraEntity existingCamera = cameraRepository.findBySaeStreamKey(camera.getSaeStreamKey());
+                    entity.setCamera(existingCamera == null ? cameraRepository.saveAndFlush(camera) : existingCamera);
+                }
             }
         } else {
             entity = this.findById(dto.getId());
             entity = mapper.convertToEntity(dto, entity);
-            mapAndSaveCameras(dto.getSaeStreamKeys(), entity);
+            mapAndSaveCamera(dto.getSaeStreamKey(), entity);
             if (entity.getImage() != null) {
                 long imageId = entity.getImage().getId();
                 ImageEntity image = imageRepository.getReferenceById(imageId);
@@ -85,30 +87,24 @@ public class ObservationAreaService implements ServiceInterface<ObservationAreaE
         return mapper.convertToDto(entity);
     }
 
-    private void mapAndSaveCameras(List<String> addedCameras, ObservationAreaEntity entity) {
-        List<CameraEntity> newCameraList = new ArrayList<>();
-        if (addedCameras != null && !addedCameras.isEmpty()){
-            for (String saeStreamKey : addedCameras) {
-                List<CameraEntity> existingCamera = cameraRepository.findBySaeStreamKeyAndObservationArea(saeStreamKey, entity);
-                if (existingCamera != null && !existingCamera.isEmpty()) {
-                    existingCamera.get(0).setObservationArea(entity);
-                    newCameraList.addAll(existingCamera);
-                } else {
-                    CameraEntity camera = new CameraEntity(saeStreamKey, entity);
-                    newCameraList.add(camera);
-                }
-            }
+    private void mapAndSaveCamera(String addedStreamKey, ObservationAreaEntity entity) {
+        if (addedStreamKey == null || addedStreamKey.isBlank()) {
+            entity.setCamera(null);
+            return;
         }
-        List<CameraEntity> toBeRemoved = cameraRepository.findByObservationArea(entity);
-        toBeRemoved.removeAll(newCameraList);
-        cameraRepository.deleteAll(toBeRemoved);
-        cameraRepository.saveAllAndFlush(newCameraList);
+        CameraEntity existingCamera = cameraRepository.findBySaeStreamKey(addedStreamKey);
+        if (existingCamera != null) {
+            entity.setCamera(existingCamera);
+        } else {
+            CameraEntity newCamera = new CameraEntity(addedStreamKey);
+            entity.setCamera(cameraRepository.saveAndFlush(newCamera));
+        }
     }
 
     public void copyPolygons(Long copyTargetId, Long copySrcId) {
         ObservationAreaEntity targetEntity = observationareaRepository.findById(copyTargetId).get();
         ObservationAreaEntity srcEntity = observationareaRepository.findById(copySrcId).get();
-        
+
         for (PolygonEntity srcPoly : srcEntity.getPolygon()) {
             PolygonEntity copiedPoly = new PolygonEntity();
 

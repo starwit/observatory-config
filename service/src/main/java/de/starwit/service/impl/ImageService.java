@@ -22,7 +22,6 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.google.protobuf.InvalidProtocolBufferException;
 
-import de.starwit.persistence.entity.CameraEntity;
 import de.starwit.persistence.entity.ImageEntity;
 import de.starwit.persistence.entity.ObservationAreaEntity;
 import de.starwit.persistence.exception.NotificationException;
@@ -38,8 +37,10 @@ public class ImageService implements ServiceInterface<ImageEntity, ImageReposito
     @Autowired
     private ImageRepository imageRepository;
 
-    // The Redis/Valkey template bean only exists when spring.data.redis.active=true;
-    // inject it optionally so image upload/metadata handling keeps working without a broker.
+    // The Redis/Valkey template bean only exists when
+    // spring.data.redis.active=true;
+    // inject it optionally so image upload/metadata handling keeps working without
+    // a broker.
     @Autowired(required = false)
     private RedisTemplate<String, String> redisTemplate;
 
@@ -78,13 +79,17 @@ public class ImageService implements ServiceInterface<ImageEntity, ImageReposito
     }
 
     /**
-     * Renews the observation area's image by fetching the most recent still frame from the
+     * Renews the observation area's image by fetching the most recent still frame
+     * from the
      * SAE frame stream in Valkey/Redis, decoding the JPEG and storing it as a fresh
-     * {@link ImageEntity} (mirroring {@link #uploadImage}). The frame stream key is derived
-     * from the first camera's SAE stream key: {@code <frameStreamPrefix>:<suffix>}, where the
+     * {@link ImageEntity} (mirroring {@link #uploadImage}). The frame stream key is
+     * derived
+     * from the first camera's SAE stream key: {@code <frameStreamPrefix>:<suffix>},
+     * where the
      * suffix is the part of the SAE stream key after the first ':'.
      */
-    public ImageEntity renewImage(ObservationAreaEntity observationAreaEntity) throws IOException, NotificationException {
+    public ImageEntity renewImage(ObservationAreaEntity observationAreaEntity)
+            throws IOException, NotificationException {
         if (redisTemplate == null) {
             throw new NotificationException("error.image.renew.noredis",
                     "Cannot renew image because no Valkey/Redis connection is configured.");
@@ -113,7 +118,8 @@ public class ImageService implements ServiceInterface<ImageEntity, ImageReposito
     }
 
     /**
-     * Fetches the latest still frame from the SAE frame stream for the given raw SAE stream key
+     * Fetches the latest still frame from the SAE frame stream for the given raw
+     * SAE stream key
      * and returns the JPEG bytes, without touching any observation area.
      */
     public byte[] fetchFrameJpegByStreamKey(String saeStreamKey) throws NotificationException {
@@ -138,13 +144,12 @@ public class ImageService implements ServiceInterface<ImageEntity, ImageReposito
     }
 
     private String firstSaeStreamKey(ObservationAreaEntity observationAreaEntity) throws NotificationException {
-        List<CameraEntity> cameras = observationAreaEntity.getCamera();
-        if (cameras == null || cameras.isEmpty() || cameras.get(0).getSaeStreamKey() == null
-                || cameras.get(0).getSaeStreamKey().isBlank()) {
+        if (observationAreaEntity.getCamera() == null || observationAreaEntity.getCamera().getSaeStreamKey() == null
+                || observationAreaEntity.getCamera().getSaeStreamKey().isBlank()) {
             throw new NotificationException("error.image.renew.nostreamkey",
                     "The observation area has no camera with a SAE stream key.");
         }
-        return cameras.get(0).getSaeStreamKey();
+        return observationAreaEntity.getCamera().getSaeStreamKey();
     }
 
     private byte[] fetchLatestFrame(String frameStreamKey) throws NotificationException {

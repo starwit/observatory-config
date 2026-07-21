@@ -170,7 +170,7 @@ public class ObservatoryServiceTest {
         observationArea.setGeoReferenced(false);
         observationArea.setTopleftlongitude(new BigDecimal(10));
         observationArea.setTopleftlatitude(new BigDecimal(52));
-        observationArea.setCamera(Arrays.asList(camera));
+        observationArea.setCamera(camera);
         return observationArea;
     }
 
