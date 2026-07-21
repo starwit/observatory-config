@@ -1,15 +1,17 @@
 package de.starwit.persistence.repository;
 
-import java.time.LocalDate;
-import java.time.LocalDateTime;
+import java.time.Duration;
+import java.time.Instant;
 import java.time.LocalTime;
 import java.time.OffsetDateTime;
-import java.time.ZoneId;
-import java.time.ZonedDateTime;
+import java.time.ZoneOffset;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeFormatterBuilder;
 import java.time.temporal.ChronoField;
+import java.util.Comparator;
 import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -41,15 +43,18 @@ public class RecordingPartitionService {
             .toFormatter();
 
     private static final DateTimeFormatter PARTITION_SUFFIX_FORMAT =
-            DateTimeFormatter.ofPattern("yyyy_MM_dd");
+            DateTimeFormatter.ofPattern("yyyy_MM_dd_HH_mm_ss");
 
-    @Value("${partition.management.retention.days:2}")
-    private static final int RETENTION_DAYS = 2;
-    private static final int LOOKAHEAD_DAYS = 1; // how many days ahead to pre-create
+    @Value("${partition.management.retentionTime:2d}")
+    private Duration RETENTION_TIME;
+    
+    @Value("${partition.management.partitionRangeDuration:1d}")
+    private Duration PARTITION_RANGE;
+
+    @Value("${partition.management.partitionInitTimeUTC:00:00:00}")
+    private LocalTime PARTITION_INIT_TIME_UTC;
+
     private static final String PARENT_TABLE = "detection";
-
-    @Value("${partition.management.timezone:UTC}")
-    private String timezone;
 
     private final JdbcTemplate jdbcTemplate;
 
@@ -57,65 +62,60 @@ public class RecordingPartitionService {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    private ZoneId zoneId() {
-        return ZoneId.of(timezone);
-    }
-
     @PostConstruct
     public void init() {
-        // Fail fast if existing partitions don't align with the configured timezone
-        // before we start creating new (misaligned) ones.
-        validateExistingPartitions();
-
-        // check if partition exist upon start, if not create
+        // make sure that partitions exist once at start
         ensureFuturePartitions();
     }
 
-    /**
-     * Verifies that all existing partitions have bounds that align with midnight in the
-     * currently configured timezone. A mismatch almost always means the
-     * {@code partition.management.timezone} property was changed after the partitions were
-     * created, which would silently corrupt the daily partitioning scheme (new partitions
-     * created at different day boundaries than existing ones, causing gaps or overlaps).
-     * This is unrecoverable automatically, so we throw to terminate application startup.
-     */
-    private void validateExistingPartitions() {
-        List<PartitionInfo> partitions = fetchPartitions(PARENT_TABLE);
-
-        for (PartitionInfo partition : partitions) {
-            if (partition == null) continue;
-            if (!isMidnight(partition.fromBound()) || !isMidnight(partition.toBound())) {
-                String message = String.format(
-                        "Partition %s has bounds [%s, %s) that do not align with midnight for timezone %s. "
-                        + "This likely means the 'partition.management.timezone' property was changed after "
-                        + "the partition was created. Refusing to start to avoid corrupting the partitioning scheme.",
-                        partition.name(), partition.rawFromBound(), partition.rawToBound(), zoneId());
-                log.error(message);
-                throw new IllegalStateException(message);
-            }
-        }
+    @Scheduled(fixedRateString = "${partition.management.maintenanceInterval:1h}")
+    public void runPartitionMaintenance() {
+        log.info("Running partition maintenance");
+        ensureFuturePartitions();
+        dropExpiredPartitions();
     }
 
     // --- Partition creation ---------------------------------------------
 
-    @Scheduled(cron = "0 0 1 * * *") // daily at 01:00, before the drop job
     public void ensureFuturePartitions() {
-        LocalDate today = LocalDate.now();
+        // Determine end bound of last existing partition
+        Optional<OffsetDateTime> lastPartitionEnd = lastPartitionEnd();
+        log.debug("Last partition ends at {}", lastPartitionEnd);
+        
+        // Use a new init time if there is no partition yet
+        OffsetDateTime nextPartitionStart = lastPartitionEnd.orElse(calcPartitionInit(Instant.now()));
 
-        log.info("Check if new partitions need to be created.");
+        while (nextPartitionStart.isBefore(OffsetDateTime.now(ZoneOffset.UTC).plus(PARTITION_RANGE.multipliedBy(2)))) {
+            OffsetDateTime from = nextPartitionStart;
+            OffsetDateTime to = from.plus(PARTITION_RANGE);
+            createPartitionIfMissing(from, to);
 
-        // Create today's partition too, in case it's somehow missing
-        for (int offset = 0; offset <= LOOKAHEAD_DAYS; offset++) {
-            LocalDate day = today.plusDays(offset);
-            createDailyPartitionIfMissing(day);
+            // If there is no partition after running the previous line there is something seriously wrong
+            nextPartitionStart = lastPartitionEnd().orElseThrow();
+        }
+   
+    }
+
+    private Optional<OffsetDateTime> lastPartitionEnd() {
+        List<PartitionInfo> existingPartitions = fetchPartitions(PARENT_TABLE);
+
+        return existingPartitions.stream()
+            .map(p -> p.toBound())
+            .filter(Objects::nonNull)
+            .max(Comparator.naturalOrder());
+    }
+
+    OffsetDateTime calcPartitionInit(Instant now) {
+        OffsetDateTime nowUtc = now.atOffset(ZoneOffset.UTC);
+        if (nowUtc.toLocalTime().isBefore(PARTITION_INIT_TIME_UTC)) {
+            return OffsetDateTime.of(nowUtc.toLocalDate().minusDays(1), PARTITION_INIT_TIME_UTC, ZoneOffset.UTC);
+        } else {
+            return OffsetDateTime.of(nowUtc.toLocalDate(), PARTITION_INIT_TIME_UTC, ZoneOffset.UTC);
         }
     }
 
-    private void createDailyPartitionIfMissing(LocalDate day) {
-        ZonedDateTime from = day.atStartOfDay(zoneId());
-        ZonedDateTime to = day.plusDays(1).atStartOfDay(zoneId());
-
-        String partitionName = PARENT_TABLE + "_p" + day.format(PARTITION_SUFFIX_FORMAT);
+    private void createPartitionIfMissing(OffsetDateTime from, OffsetDateTime to) {
+        String partitionName = PARENT_TABLE + "_p" + from.format(PARTITION_SUFFIX_FORMAT);
 
         String sql = String.format("""
                 CREATE TABLE IF NOT EXISTS "%s"
@@ -128,8 +128,8 @@ public class RecordingPartitionService {
                 to);
 
         try {
+            log.info("Creating partition {} for range [{}, {})", partitionName, from, to);
             jdbcTemplate.execute(sql);
-            log.info("Ensured partition {} exists for range [{}, {})", partitionName, from, to);
         } catch (Exception e) {
             log.error("Failed to create partition {} for range [{}, {})", partitionName, from, to, e);
         }
@@ -137,18 +137,15 @@ public class RecordingPartitionService {
 
     // --- Partition deletion ----------------------------------------------
 
-    @Scheduled(cron = "0 * * * * *") // daily at 02:30
-    public void dropOldPartitions() {
-        LocalDateTime cutoff = LocalDateTime.now()
-                .minusDays(RETENTION_DAYS);
-
-        log.info("Check if old partitions need to be deleted.");
+    public void dropExpiredPartitions() {
+        OffsetDateTime cutoff = OffsetDateTime.now().minus(RETENTION_TIME);
 
         List<PartitionInfo> partitions = fetchPartitions(PARENT_TABLE);
 
         for (PartitionInfo partition : partitions) {
             if (partition == null) continue;
             if (partition.toBound().isBefore(cutoff)) {
+                log.info("Dropping partition with range FROM {} TO {}", partition.fromBound(), partition.toBound());
                 dropPartition(partition.name());
             }
         }
@@ -165,38 +162,34 @@ public class RecordingPartitionService {
                 WHERE parent.relname = ?
                 """;
 
-        return jdbcTemplate.query(sql, (rs, rowNum) ->
+        List<PartitionInfo> partitions = jdbcTemplate.query(sql, (rs, rowNum) ->
                 parsePartitionInfo(rs.getString("partition_name"), rs.getString("partition_expression")),
                 parentTable);
+
+        for (PartitionInfo partition : partitions) {
+            log.debug("Found existing partition: {}", partition);
+        }
+
+        return partitions;
     }
 
     private PartitionInfo parsePartitionInfo(String name, String expr) {
         Matcher matcher = RANGE_PATTERN.matcher(expr);
         if (!matcher.find()) {
-            log.debug("Skipping partition {} with expression: {}", name, expr);
+            log.warn("Skipping partition {} not matching expression: {}", name, expr);
             return null;
         }
         String rawFrom = matcher.group(1);
         String rawTo = matcher.group(2);
-        LocalDateTime from = OffsetDateTime.parse(rawFrom, PG_TIMESTAMPTZ).atZoneSameInstant(zoneId()).toLocalDateTime();
-        LocalDateTime to = OffsetDateTime.parse(rawTo, PG_TIMESTAMPTZ).atZoneSameInstant(zoneId()).toLocalDateTime();
-
-        if (!isMidnight(from) || !isMidnight(to)) {
-            log.warn("Partition {}: bounds [{}, {}) do not align with midnight for zone {}",
-                    name, rawFrom, rawTo, zoneId());
-        }
+        OffsetDateTime from = OffsetDateTime.parse(rawFrom, PG_TIMESTAMPTZ).withOffsetSameInstant(ZoneOffset.UTC);
+        OffsetDateTime to = OffsetDateTime.parse(rawTo, PG_TIMESTAMPTZ).withOffsetSameInstant(ZoneOffset.UTC);
 
         return new PartitionInfo(name, from, to, rawFrom, rawTo);
     }
 
-    private boolean isMidnight(LocalDateTime dateTime) {
-        return dateTime.toLocalTime().equals(LocalTime.MIDNIGHT);
-    }
-
     private void dropPartition(String partitionName) {
-        log.info("Dropping old detection partition: {}", partitionName);
         jdbcTemplate.execute("DROP TABLE IF EXISTS \"" + partitionName + "\"");
     }
 
-    private record PartitionInfo(String name, LocalDateTime fromBound, LocalDateTime toBound, String rawFromBound, String rawToBound) {}    
+    private record PartitionInfo(String name, OffsetDateTime fromBound, OffsetDateTime toBound, String rawFromBound, String rawToBound) {}    
 }
