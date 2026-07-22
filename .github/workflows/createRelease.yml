@@ -77,11 +77,12 @@ jobs:
          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
     - name: Get tag name
+      id: get_tag
       run: |
-        echo "TAG=$( git describe --abbrev=0 )" >> $GITHUB_OUTPUT
+        echo "tag=$( git describe --abbrev=0 )" >> $GITHUB_OUTPUT
 
     - name: Create github release
-      run: gh release create ${{ steps.get_tag.outputs.TAG }} -F CHANGELOG.md
+      run: gh release create ${{ steps.get_tag.outputs.tag }} -F CHANGELOG.md
       env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
