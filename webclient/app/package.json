@@ -49,11 +49,11 @@
     "extends": "react-app"
   },
   "devDependencies": {
-    "@vitejs/plugin-react": "^5.1.4",
+    "@vitejs/plugin-react": "^5.2.0",
     "eslint": "^9.35.0",
     "eslint-config-google": "^0.14.0",
     "eslint-plugin-react": "^7.37.5",
     "prop-types": "^15.8.1",
-    "vite": "^7.3.1"
+    "vite": "^8.1.5"
   }
 }
