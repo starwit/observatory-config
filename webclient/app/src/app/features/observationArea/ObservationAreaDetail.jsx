@@ -147,11 +147,11 @@ function ObservationAreaDetail(props) {
                     onStartRecordingClick={onStartRecordingClick}
                     showRecordedTrajectories={showRecordedTrajectories}
                 />
-                {selectedArea.saeStreamKeys?.[0] && (
+                {selectedArea.saeStreamKey && (
                     <Collapse in={showSavedTrajectoriesState} timeout={300} unmountOnExit>
                         <Box sx={{height: "105px", borderTop: 1, borderBottom: 1, borderColor: "divider"}}>
                             <TrajectoryBrushFilter
-                                streamKey={selectedArea.saeStreamKeys[0]}
+                                streamKey={selectedArea.saeStreamKey}
                                 onRangeChange={setSelectedTrajectoryRange}
                                 height={100}
                             />
