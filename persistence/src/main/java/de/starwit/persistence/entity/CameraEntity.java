@@ -22,6 +22,9 @@ public class CameraEntity extends AbstractEntity<Long> {
     @Column(name = "saestreamkey", nullable = false)
     private String saeStreamKey;
 
+    @Column(name = "recording_enabled", nullable = false)
+    private boolean recordingEnabled = false;
+
     // entity relations
     @JsonFilter("filterId")
     @OneToMany(mappedBy = "camera")
@@ -41,6 +44,14 @@ public class CameraEntity extends AbstractEntity<Long> {
 
     public void setSaeStreamKey(String saeStreamKey) {
         this.saeStreamKey = saeStreamKey;
+    }
+
+    public boolean isRecordingEnabled() {
+        return recordingEnabled;
+    }
+
+    public void setRecordingEnabled(boolean recordingEnabled) {
+        this.recordingEnabled = recordingEnabled;
     }
 
     // entity relations getters and setters
