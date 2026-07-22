@@ -1,5 +1,6 @@
 package de.starwit.persistence.repository;
 
+import java.sql.DatabaseMetaData;
 import java.time.Duration;
 import java.time.Instant;
 import java.time.LocalTime;
@@ -19,6 +20,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.support.JdbcUtils;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
@@ -54,7 +56,13 @@ public class RecordingPartitionService {
 
     private static final String PARENT_TABLE = "detection";
 
+    private static final String POSTGRESQL_PRODUCT_NAME = "PostgreSQL";
+
     private final JdbcTemplate jdbcTemplate;
+
+    // Declarative partitioning is PostgreSQL-specific, so it is skipped on any other
+    // database (e.g. the H2 instance used in tests)
+    private boolean partitioningSupported;
 
     public RecordingPartitionService(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
@@ -62,15 +70,38 @@ public class RecordingPartitionService {
 
     @PostConstruct
     public void init() {
-        // make sure that partitions exist once at start
+        partitioningSupported = isPostgreSql();
+        if (!partitioningSupported) {
+            log.warn("Database is not PostgreSQL - partition management is disabled");
+            return;
+        }
+
+        // Make sure that partitions exist once at start
+        // In abnormal database conditions this will throw and cancel application startup!
         ensureFuturePartitions();
     }
 
     @Scheduled(fixedRateString = "${partition.management.maintenanceInterval:1h}")
     public void runPartitionMaintenance() {
+        if (!partitioningSupported) {
+            return;
+        }
+
         log.info("Running partition maintenance");
-        ensureFuturePartitions();
+        // Drop first to increase chances of escaping a "file system full" condition
         dropExpiredPartitions();
+        ensureFuturePartitions();
+    }
+
+    private boolean isPostgreSql() {
+        try {
+            String productName = JdbcUtils.extractDatabaseMetaData(jdbcTemplate.getDataSource(),
+                    DatabaseMetaData::getDatabaseProductName);
+            return POSTGRESQL_PRODUCT_NAME.equalsIgnoreCase(productName);
+        } catch (Exception e) {
+            log.error("Could not determine database product - assuming partitioning is unsupported", e);
+            return false;
+        }
     }
 
     // --- Partition creation ---------------------------------------------
@@ -88,8 +119,7 @@ public class RecordingPartitionService {
             OffsetDateTime to = from.plus(PARTITION_RANGE);
             createPartitionIfMissing(from, to);
 
-            // If there is no partition after running the previous line there is something seriously wrong
-            nextPartitionStart = lastPartitionEnd().orElseThrow();
+            nextPartitionStart = to;
         }
    
     }
@@ -130,6 +160,7 @@ public class RecordingPartitionService {
             jdbcTemplate.execute(sql);
         } catch (Exception e) {
             log.error("Failed to create partition {} for range [{}, {})", partitionName, from, to, e);
+            throw e;
         }
     }
 
