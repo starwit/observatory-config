@@ -6,12 +6,12 @@ import { PathLayer } from "@deck.gl/layers";
 import DetectionRest from "../../services/DetectionRest";
 
 const CLASS_COLORS = [
-    [255, 100, 100, 220],
-    [100, 200, 100, 220],
-    [100, 100, 255, 220],
-    [255, 200, 50, 220],
-    [200, 100, 255, 220],
-    [50, 220, 220, 220],
+    [255, 100, 100, 100],
+    [100, 200, 100, 100],
+    [100, 100, 255, 100],
+    [255, 200, 50, 100],
+    [200, 100, 255, 100],
+    [50, 220, 220, 100],
 ];
 
 function colorForClass(classId) {
@@ -19,16 +19,20 @@ function colorForClass(classId) {
 }
 
 function SavedTrajectoryDrawer(props) {
-    const { streamKey, width, height } = props;
+    const { streamKey, width, height, start, end } = props;
     const detectionRest = useRef(new DetectionRest());
 
     const [classTrajectories, setClassTrajectories] = useState([]);
 
     useEffect(() => {
-        detectionRest.current.findTrajectories(new Date(), 10, streamKey).then(result => {
+        if (!start || !end) {
+            setClassTrajectories([]);
+            return;
+        }
+        detectionRest.current.findTrajectories(start, end, streamKey).then(result => {
             setClassTrajectories(result.data);
         });
-    }, [streamKey]);
+    }, [streamKey, start, end]);
 
     const viewState = useMemo(() => {
         if (!width || !height) return null;

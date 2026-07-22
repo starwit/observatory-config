@@ -1,0 +1,1 @@
+CREATE INDEX idx_detection_stream_id_timestamp ON detection (stream_id, detection_timestamp);

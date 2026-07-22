@@ -130,6 +130,7 @@ const translationEnEN = {
     "confirm.dialog.description": "Confirm the Dialog Description",
     "map.live": "Enable Live Tracking",
     "observationArea.showSavedTrajectories" : "Show Saved Trajectories",
-    "observationArea.recordTrajectories" : "Start / Stop Trajectories"
+    "observationArea.recordTrajectories" : "Start / Stop Trajectories",
+    "observationArea.trajectoryFilter.noRecordings" : "No recorded trajectories available for this stream"
 };
 export default translationEnEN;

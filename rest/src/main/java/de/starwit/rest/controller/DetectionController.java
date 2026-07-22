@@ -1,6 +1,5 @@
 package de.starwit.rest.controller;
 
-import java.time.Duration;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -18,6 +17,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import de.starwit.persistence.entity.DetectionEntity;
@@ -25,6 +25,7 @@ import de.starwit.rest.dtos.TrajectoriesByClassDto;
 import de.starwit.rest.dtos.TimeWindowRequestDto;
 import de.starwit.rest.dtos.TracedObjectDto;
 import de.starwit.rest.exception.NotificationDto;
+import de.starwit.service.dto.ObjectCountHistogramDto;
 import de.starwit.service.impl.DetectionService;
 import io.swagger.v3.oas.annotations.Operation;
 import jakarta.persistence.EntityNotFoundException;
@@ -47,8 +48,8 @@ public class DetectionController {
     @Operation(summary = "Get trajectories grouped by class for a time window")
     @PostMapping(value = "/trajectories")
     public List<TrajectoriesByClassDto> findTrajectoriesInWindow(@RequestBody TimeWindowRequestDto requestData) {
-        List<DetectionEntity> detections = detectionService.findDetectionsInWindow(
-                requestData.getTimestamp(), Duration.ofMinutes(requestData.getWindowSize()), requestData.getStreamId());
+        List<DetectionEntity> detections = detectionService.findDetectionsBetween(
+                requestData.getStart(), requestData.getEnd(), requestData.getStreamId());
 
         Map<Integer, Map<String, List<DetectionEntity>>> byClassAndObject = detections.stream()
                 .collect(Collectors.groupingBy(DetectionEntity::getClassId,
@@ -60,6 +61,14 @@ public class DetectionController {
                     .collect(Collectors.toList());
         
         return result;
+    }
+
+    @Operation(summary = "Get unique-object-count histogram over the whole recorded interval of a stream")
+    @GetMapping(value = "/object-count-histogram")
+    public ObjectCountHistogramDto getObjectCountHistogram(
+            @RequestParam String streamId,
+            @RequestParam(defaultValue = "200") int buckets) {
+        return detectionService.getObjectCountHistogram(streamId, buckets);
     }
 
     private TrajectoriesByClassDto convertToTrajectoryDTO(Map.Entry<Integer, Map<String, List<DetectionEntity>>> classEntry) {
