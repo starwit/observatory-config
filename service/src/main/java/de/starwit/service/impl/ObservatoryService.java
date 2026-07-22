@@ -69,6 +69,11 @@ public class ObservatoryService {
     }
 
     public void sendConfig(ObservationAreaEntity observationAreaEntity) {
+        if (observationAreaEntity.getCamera() == null) {
+            log.warn("Skipping observation area '" + observationAreaEntity.getName()
+                    + "' during config sync, because it has no camera assigned");
+            return;
+        }
         for (PolygonEntity polygon : observationAreaEntity.getPolygon()) {
             try {
                 ObservatoryDto dto = toObservatoryDto(observationAreaEntity, polygon);

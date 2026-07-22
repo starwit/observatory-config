@@ -205,7 +205,7 @@ function ObservationAreaDialog(props) {
                                         <ValidatedTextField
                                             value={entity?.saeStreamKey ?? ""}
                                             onChange={(e) => handleSaeStreamKeyChange(e.target.value)}
-                                            label={t("observationArea.saeStreamKeys")}
+                                            label={t("observationArea.saeStreamKey")}
                                             sx={UpdateFieldStyles.textField}
                                             variant="standard"
                                             fullWidth

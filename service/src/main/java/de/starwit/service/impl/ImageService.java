@@ -95,7 +95,7 @@ public class ImageService implements ServiceInterface<ImageEntity, ImageReposito
                     "Cannot renew image because no Valkey/Redis connection is configured.");
         }
 
-        String frameStreamKey = toFrameStreamKey(firstSaeStreamKey(observationAreaEntity));
+        String frameStreamKey = toFrameStreamKey(saeStreamKeyOf(observationAreaEntity));
 
         byte[] jpegBytes = fetchLatestFrame(frameStreamKey);
 
@@ -143,7 +143,7 @@ public class ImageService implements ServiceInterface<ImageEntity, ImageReposito
         return frameStreamPrefix + ":" + suffix;
     }
 
-    private String firstSaeStreamKey(ObservationAreaEntity observationAreaEntity) throws NotificationException {
+    private String saeStreamKeyOf(ObservationAreaEntity observationAreaEntity) throws NotificationException {
         if (observationAreaEntity.getCamera() == null || observationAreaEntity.getCamera().getSaeStreamKey() == null
                 || observationAreaEntity.getCamera().getSaeStreamKey().isBlank()) {
             throw new NotificationException("error.image.renew.nostreamkey",
