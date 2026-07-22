@@ -43,11 +43,20 @@ function ErrorHandler(props) {
                             errorMessage = "error.unknown";
                     }
 
-                    if (data.messageKey) {
-                        errorMessage = data.messageKey;
+                    console.error(`A ${config.method} request failed with status code ${status}:`, data, config);
+
+                    // Requests with responseType "blob" deliver the error body as a Blob, which can only be read asynchronously
+                    if (data instanceof Blob) {
+                        const fallbackMessage = errorMessage;
+                        data.text()
+                            .then(text => toast.error(t(JSON.parse(text).messageKey ?? fallbackMessage)))
+                            .catch(() => toast.error(t(fallbackMessage)));
+                        return Promise.reject(error);
                     }
 
-                    console.error(`A ${config.method} request failed with status code ${status}:`, data, config);
+                    if (data?.messageKey) {
+                        errorMessage = data.messageKey;
+                    }
                 }
 
                 toast.error(t(errorMessage));

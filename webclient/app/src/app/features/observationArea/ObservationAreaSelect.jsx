@@ -12,7 +12,6 @@ import MenuItem from "@mui/material/MenuItem";
 import Select from "@mui/material/Select";
 import {useMemo, useState} from "react";
 import {useTranslation} from "react-i18next";
-import {toast} from "react-toastify";
 import ConfirmationDialog from "../../commons/dialog/ConfirmationDialog";
 import ImageRest from "../../services/ImageRest";
 import ObservationAreaRest from "../../services/ObservationAreaRest";
@@ -48,7 +47,7 @@ function ObservationAreaSelect(props) {
         setRefreshing(true);
         imageRest.renewImage(selectedArea.id)
             .then(() => onImageRenewed?.())
-            .catch(() => toast.error(t("observationArea.renewImageError")))
+            .catch(() => {/* error is reported by the global error handler */})
             .finally(() => setRefreshing(false));
     }
 
