@@ -167,10 +167,7 @@ function ObservationAreaDialog(props) {
                 setImageBlob(blob);
                 setImageChanged(true);
             })
-            .catch(error => {
-                console.error(error);
-                toast.error(t("observationArea.renewImageError"));
-            })
+            .catch(() => {/* error is reported by the global error handler */})
             .finally(() => setSaeImageLoading(false));
     }
 

@@ -25,6 +25,8 @@ root.render(
             pauseOnFocusLoss
             draggable={false}
             theme="colored"
+            // Toastify defaults to 9999, which is below the dialogs and the annotator overlay
+            style={{zIndex: 100000}}
         />
     </Router>
 );
