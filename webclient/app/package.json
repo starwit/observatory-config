@@ -25,7 +25,7 @@
     "@visx/scale": "^4.0.0",
     "@visx/shape": "^4.0.0",
     "@visx/vendor": "^4.0.0",
-    "axios": "1.13.5",
+    "axios": "1.18.0",
     "color-convert": "^3.1.0",
     "i18next": "^25.8.11",
     "i18next-browser-languagedetector": "^8.2.1",
@@ -36,8 +36,8 @@
     "react-dropzone": "15.0.0",
     "react-i18next": "^16.5.4",
     "react-map-gl": "^8.1.1",
-    "react-router": "^7.13.0",
-    "react-router-dom": "^7.13.0",
+    "react-router": "^7.18.1",
+    "react-router-dom": "^7.18.1",
     "react-toastify": "^11.0.5",
     "use-immer": "^0.11.0"
   },
@@ -49,11 +49,11 @@
     "extends": "react-app"
   },
   "devDependencies": {
-    "@vitejs/plugin-react": "^5.1.4",
+    "@vitejs/plugin-react": "^5.2.0",
     "eslint": "^9.35.0",
     "eslint-config-google": "^0.14.0",
     "eslint-plugin-react": "^7.37.5",
     "prop-types": "^15.8.1",
-    "vite": "^7.3.1"
+    "vite": "^8.1.5"
   }
 }
