@@ -66,8 +66,14 @@ spec:
               value: {{ .Values.database.username }}
             - name: SPRING_DATASOURCE_PASSWORD
               value: {{ .Values.database.password }}
-            - name: PARTITION_MANAGEMENT_RETENTION_DAYS
-              value: {{ .Values.database.retention.days }}
+            - name: PARTITION_MANAGEMENT_RETENTIONTIME
+              value: {{ .Values.database.partitionManagement.retentionTime | quote }}
+            - name: PARTITION_MANAGEMENT_PARTITIONRANGEDURATION
+              value: {{ .Values.database.partitionManagement.partitionRangeDuration | quote }}
+            - name: PARTITION_MANAGEMENT_PARTITIONINITTIMEUTC
+              value: {{ .Values.database.partitionManagement.partitionInitTimeUTC | quote }}
+            - name: PARTITION_MANAGEMENT_MAINTENANCEINTERVAL
+              value: {{ .Values.database.partitionManagement.maintenanceInterval | quote }}
             - name: SERVER_SERVLET_CONTEXT_PATH
               value: {{ .Values.app.contextPath | quote }}
             - name: OBSERVATORY_URL

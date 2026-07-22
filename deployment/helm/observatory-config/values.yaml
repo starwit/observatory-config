@@ -37,9 +37,16 @@ database:
   name: observatory-config
   username: observatory-config
   password: observatory-config
-  # how long shall recordings be stored
-  retention:
-    days: 2
+  # Partition management for the recorded detection data
+  partitionManagement:
+    # How long recorded data is kept before its partition is dropped
+    retentionTime: 2d
+    # Time range covered by a single partition
+    partitionRangeDuration: 6h
+    # Time of day (UTC) the very first partition starts at - determines all following partition bounds
+    partitionInitTimeUTC: "00:00"
+    # How often partitions are created/dropped
+    maintenanceInterval: 1h
 
 # extraEnv: |
 #   - name: JAVA_TOOL_OPTIONS

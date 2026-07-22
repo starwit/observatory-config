@@ -31,7 +31,10 @@ This Helm chart deploys Observatory Config to a Kubernetes cluster.
 | `database.name` | `observatory-config` | Database name |
 | `database.username` | `observatory-config` | Database username |
 | `database.password` | `observatory-config` | Database password |
-| `database.retention.days` | `2` | Number of days to retain recordings |
+| `database.partitionManagement.retentionTime` | `2d` | How long recorded data is kept before its partition is dropped |
+| `database.partitionManagement.partitionRangeDuration` | `6h` | Time range covered by a single partition |
+| `database.partitionManagement.partitionInitTimeUTC` | `"00:00"` | Time of day (UTC) the very first partition starts at - determines all following partition bounds |
+| `database.partitionManagement.maintenanceInterval` | `1h` | How often partitions are created/dropped |
 | **Ingress** | | |
 | `ingress.enabled` | `true` | Enable ingress |
 | `ingress.annotations` | `cert-manager.io/cluster-issuer: letsencrypt-prod` | Ingress annotations |
