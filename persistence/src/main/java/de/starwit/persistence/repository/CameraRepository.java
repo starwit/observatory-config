@@ -18,6 +18,13 @@ public interface CameraRepository extends CustomRepository<CameraEntity, Long> {
 
     public CameraEntity findBySaeStreamKey(String saeStreamKey);
 
+    public List<CameraEntity> findByRecordingEnabledTrue();
+
+    @Modifying
+    @Transactional
+    @Query("UPDATE CameraEntity c SET c.recordingEnabled = false WHERE c.recordingEnabled = true")
+    int clearAllRecordingFlags();
+
     @Modifying
     @Transactional
     @Query(value = "DELETE FROM camera c WHERE NOT EXISTS (SELECT 1 FROM observationarea oa WHERE oa.camera_id = c.id)", nativeQuery = true)
