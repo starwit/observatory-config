@@ -38,14 +38,14 @@ public class ControllerExceptionHandler extends ResponseEntityExceptionHandler {
 
     @ExceptionHandler(value = { Exception.class })
     public ResponseEntity<Object> handleException(Exception ex) {
-        LOG.error(ex.getClass() + " " + ex.getMessage(), ex.fillInStackTrace());
+        LOG.error(ex.getClass() + " " + ex.getMessage(), ex);
         NotificationDto output = new NotificationDto("error.internalServerError", "Internal Server Error");
         return new ResponseEntity<>(output, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
     @ExceptionHandler(value = { InvalidDefinitionException.class })
     public ResponseEntity<Object> handleInvalidDefinitionException(Exception ex) {
-        LOG.error(ex.getClass() + " " + ex.getMessage(), ex.fillInStackTrace());
+        LOG.error(ex.getClass() + " " + ex.getMessage(), ex);
         String outputString = "Invalid Definition: " + ex.getMessage() + ".";
         NotificationDto output = new NotificationDto("error.invalidDefinition", outputString);
         return new ResponseEntity<>(output, HttpStatus.BAD_REQUEST);
@@ -140,7 +140,7 @@ public class ControllerExceptionHandler extends ResponseEntityExceptionHandler {
 
     @Override
     protected ResponseEntity<Object> handleMethodArgumentNotValid(@NonNull MethodArgumentNotValidException ex,
-        @NonNull HttpHeaders headers, @NonNull HttpStatusCode status, @NonNull WebRequest request) {
+            @NonNull HttpHeaders headers, @NonNull HttpStatusCode status, @NonNull WebRequest request) {
 
         Map<String, String> errors = new HashMap<>();
         ex.getBindingResult().getAllErrors().forEach((error) -> {
