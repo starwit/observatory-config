@@ -28,6 +28,7 @@ import de.starwit.rest.exception.NotificationDto;
 import de.starwit.service.dto.ObjectCountHistogramDto;
 import de.starwit.service.impl.DetectionService;
 import io.swagger.v3.oas.annotations.Operation;
+import jakarta.validation.Valid;
 import jakarta.persistence.EntityNotFoundException;
 
 @RestController
@@ -47,7 +48,7 @@ public class DetectionController {
 
     @Operation(summary = "Get trajectories grouped by class for a time window")
     @PostMapping(value = "/trajectories")
-    public List<TrajectoriesByClassDto> findTrajectoriesInWindow(@RequestBody TimeWindowRequestDto requestData) {
+    public List<TrajectoriesByClassDto> findTrajectoriesInWindow(@Valid @RequestBody TimeWindowRequestDto requestData) {
         List<DetectionEntity> detections = detectionService.findDetectionsBetween(
                 requestData.getStart(), requestData.getEnd(), requestData.getStreamId());
 
