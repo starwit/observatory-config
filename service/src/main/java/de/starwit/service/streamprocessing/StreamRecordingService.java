@@ -1,7 +1,6 @@
 package de.starwit.service.streamprocessing;
 
 import java.util.HashMap;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
@@ -16,11 +15,14 @@ import org.springframework.data.redis.stream.StreamMessageListenerContainer;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
+import de.starwit.persistence.entity.CameraEntity;
+import de.starwit.persistence.repository.CameraRepository;
+
 @Component
 @ConditionalOnProperty(name = "spring.data.redis.active", havingValue = "true", matchIfMissing = true)
-public class StreamSavingService {
+public class StreamRecordingService {
 
-    private Logger log = LoggerFactory.getLogger(StreamSavingService.class);
+    private Logger log = LoggerFactory.getLogger(StreamRecordingService.class);
 
     @Autowired
     private StreamMessageListenerContainer<String, MapRecord<String, String, String>> streamMessageListenerContainer;
@@ -31,16 +33,14 @@ public class StreamSavingService {
     @Autowired
     private SaeMessageListener messageListener;
 
-    private List<String> streamsToRecord;
+    @Autowired
+    private CameraRepository cameraRepository;
 
     private Map<String, Subscription> streamToSubscription = new HashMap<>();
 
     @Scheduled(fixedRate = 2000)
     public synchronized void synchronizeSubscriptions() {
-        if(streamsToRecord == null) {
-            log.debug("streamsToRecord is null, initializing it.");
-            streamsToRecord = new LinkedList<>();
-        }
+        List<String> streamsToRecord = getStreamsToRecord();
 
         log.debug("available streams for recording" + streamAvailabilityService.getAvailableStreams().toString());
         log.debug("Streams marked for recording " + streamsToRecord.toString());
@@ -67,27 +67,29 @@ public class StreamSavingService {
         return streamAvailabilityService.getAvailableStreams();
     }
 
-    public void addStreamToRecord(String streamName) {
-        if(streamsToRecord.contains(streamName)) {
-            log.debug("Stream " + streamName + " is already in the list of streams to record.");
-            return;
-        } else {
-            streamsToRecord.add(streamName);
-            log.debug("Stream " + streamName + " added to the list of streams to record.");
-
-        }
-    }
-
-    public void removeStreamFromRecord(String streamName) {
-        log.debug("remove stream from recording " + streamName);
-        streamsToRecord.remove(streamName);
-    }
-
     public List<String> getStreamsToRecord() {
-        return streamsToRecord;
+        return cameraRepository.findByRecordingEnabledTrue().stream()
+                .map(CameraEntity::getSaeStreamKey)
+                .toList();
     }
 
     public void stopAllRecordings() {
-        streamsToRecord = new LinkedList<>();
+        int clearedCount = cameraRepository.clearAllRecordingFlags();
+        log.debug("Stopped recording for " + clearedCount + " camera(s).");
+    }
+
+    public void setRecordingEnabled(String streamName, boolean recordingEnabled) {
+        CameraEntity camera = cameraRepository.findBySaeStreamKey(streamName);
+        if (camera == null) {
+            log.warn("No camera found for stream " + streamName + ", cannot change its recording status.");
+            return;
+        }
+        if (camera.isRecordingEnabled() == recordingEnabled) {
+            log.debug("Stream " + streamName + " already has recording status " + recordingEnabled + ".");
+            return;
+        }
+        camera.setRecordingEnabled(recordingEnabled);
+        cameraRepository.saveAndFlush(camera);
+        log.debug("Set recording status of stream " + streamName + " to " + recordingEnabled + ".");
     }
 }

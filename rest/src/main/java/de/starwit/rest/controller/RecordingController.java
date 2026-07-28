@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import de.starwit.service.streamprocessing.StreamSavingService;
+import de.starwit.service.streamprocessing.StreamRecordingService;
 import io.swagger.v3.oas.annotations.Operation;
 
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
@@ -22,35 +22,35 @@ public class RecordingController {
     static final Logger LOG = LoggerFactory.getLogger(RecordingController.class);
 
     @Autowired
-    private StreamSavingService streamSavingService;
+    private StreamRecordingService streamRecordingService;
 
     @Operation(summary = "current streams, to be recorded")
     @GetMapping
     public List<String> getCurrentRecorderStreams() {
-        return this.streamSavingService.getStreamsToRecord();
+        return this.streamRecordingService.getStreamsToRecord();
     }
 
     @Operation(summary = "get all available streams")
     @GetMapping(path = "/all")
     public List<String> getAllAvailableStreams() {
-        return this.streamSavingService.getAvailableStreams();
+        return this.streamRecordingService.getAvailableStreams();
     }
 
     @Operation(summary = "stop all recordings")
     @PostMapping(path = "/stopall")
     public void stopAllRecordings() {
-        this.streamSavingService.stopAllRecordings();
+        this.streamRecordingService.stopAllRecordings();
     }
 
     @Operation(summary = "add a stream to record")
     @PostMapping(path = "/start")
-    public void addStreamToRecord(String streamName) {
-        this.streamSavingService.addStreamToRecord(streamName);
+    public void startRecording(String streamName) {
+        this.streamRecordingService.setRecordingEnabled(streamName, true);
     }
 
     @Operation(summary = "remove a stream from recording")
     @PostMapping(path = "/stop")
-    public void removeStreamFromRecord(String streamName) {
-        this.streamSavingService.removeStreamFromRecord(streamName);
+    public void stopRecording(String streamName) {
+        this.streamRecordingService.setRecordingEnabled(streamName, false);
     }
 }

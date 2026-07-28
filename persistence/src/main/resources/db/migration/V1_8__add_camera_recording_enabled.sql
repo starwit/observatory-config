@@ -1,0 +1,2 @@
+ALTER TABLE "camera"
+    ADD COLUMN "recording_enabled" BOOLEAN NOT NULL DEFAULT FALSE;

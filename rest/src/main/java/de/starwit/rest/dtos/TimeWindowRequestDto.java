@@ -4,14 +4,20 @@ import java.time.OffsetDateTime;
 
 import org.springframework.format.annotation.DateTimeFormat;
 
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+
 public class TimeWindowRequestDto {
 
+    @NotNull
     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
     private OffsetDateTime start;
-
+    
+    @NotNull
     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
     private OffsetDateTime end;
-
+    
+    @NotBlank
     private String streamId;
 
     public OffsetDateTime getStart() {

@@ -63,9 +63,8 @@ function ObservationAreaDetail(props) {
 
     function checkTrajectorySaving() {
         recordingRest.getRecordingStreams().then((result) => {
-            if (selectedArea?.saeStreamKey && result.data.includes(selectedArea.saeStreamKey)) {
-                setShowRecordedTrajectoriesState(true);
-            }
+            setShowRecordedTrajectoriesState(
+                !!selectedArea?.saeStreamKey && result.data.includes(selectedArea.saeStreamKey));
         });
     }
 
