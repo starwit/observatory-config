@@ -8,6 +8,9 @@ export default defineConfig(({command}) => {
         react(),
       ],
       base: "/observatory-config/",
+      optimizeDeps: {
+        exclude: ["maplibre-gl"]
+      },
       server: {
         proxy: {
           "/observatory-config/api": "http://localhost:8081",

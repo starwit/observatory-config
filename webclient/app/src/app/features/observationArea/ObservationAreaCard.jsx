@@ -1,10 +1,10 @@
 import {ContentCopy, Dashboard, Delete, Edit, Link} from "@mui/icons-material";
-import {Card, CardActionArea, CardContent, CardMedia, Divider, Box, IconButton, ImageListItemBar, Tooltip, Typography, Button} from "@mui/material";
+import {Card, CardActionArea, CardContent, CardMedia, Divider, Box, IconButton, Tooltip, Typography, Button} from "@mui/material";
 import {Grid} from '@mui/material';
 import PropTypes from "prop-types";
 import React from "react";
 import {useTranslation} from "react-i18next";
-import {useNavigate} from "react-router";
+import {useNavigate} from "react-router-dom";
 import {imageFileUrlForId} from "../../services/ImageRest";
 import QueryStats from "@mui/icons-material/QueryStats";
 
@@ -19,19 +19,12 @@ function ObservationAreaCard(props) {
     function renderProcessingIcon(processingEnabled) {
         if (processingEnabled) {
             return (
-                <ImageListItemBar
-                    sx={{background: "rgba(215, 93, 42, 0.7)"}}
-                    actionPosition="left"
-                    position="top"
-                    actionIcon={
-                        <Box display='flex' alignItems="center">
-                            <QueryStats sx={{color: "white", margin: "0.5rem", scale: "90%", opacity: "90%"}} fontSize="large"></QueryStats>
-                            <Typography variant="h6" component="div" color="white">
-                                {t("button.tracking")}
-                            </Typography>
-                        </Box>
-                    }
-                ></ImageListItemBar>
+                <Box sx={{position: "absolute", top: 0, left: 0, width: "100%", display: "flex", alignItems: "center", background: "rgba(215, 93, 42, 0.7)"}}>
+                    <QueryStats sx={{color: "white", margin: "0.5rem", scale: "90%", opacity: "90%"}} fontSize="large" />
+                    <Typography variant="h6" component="div" sx={{color: "white"}}>
+                        {t("button.tracking")}
+                    </Typography>
+                </Box>
             );
         }
     }

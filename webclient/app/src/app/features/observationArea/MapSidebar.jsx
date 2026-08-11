@@ -4,7 +4,7 @@ import {ContentCopy, Delete, Edit, QueryStats, Camera, Dashboard, Link} from "@m
 import {CardMedia, CardActionArea, CardContent, Typography, IconButton, Box, Accordion, AccordionSummary, AccordionDetails, Tooltip, ImageListItemBar, Button} from "@mui/material";
 import {Grid} from '@mui/material';
 import {imageFileUrlForId} from "../../services/ImageRest";
-import {useNavigate} from "react-router";
+import {useNavigate} from "react-router-dom";
 import MapStyles from "../../assets/styles/MapStyles";
 import {useTranslation} from "react-i18next";
 
