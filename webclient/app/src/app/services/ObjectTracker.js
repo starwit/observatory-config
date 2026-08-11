@@ -129,11 +129,13 @@ class ObjectTracker {
     }
 
     addPassiveTrajectory(trajectory) {
+      const lastPoint = trajectory.points[trajectory.points.length - 1];
       this.passiveTrajectories.push({
         path: trajectory.points.map(p => [p.x, p.y]),
         timestamps: trajectory.points.map(p => p.timestamp),
         isStationary: trajectory.stationary,
         createdAt: new Date().getTime(),
+        classId: lastPoint?.objectClass,
       });
     }
 
@@ -162,6 +164,7 @@ class ObjectTracker {
             lastPoint: points[points.length - 1],
             isActive: true,
             isStationary: stationary,
+            classId: points[points.length - 1].objectClass,
           });
         }
       });
@@ -177,6 +180,7 @@ class ObjectTracker {
         timestamps: traj.timestamps,
         isActive: false,
         createdAt: traj.createdAt,
+        classId: traj.classId,
       }));
     }
     

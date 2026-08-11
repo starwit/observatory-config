@@ -7,10 +7,21 @@ import ObjectTracker from "../../services/ObjectTracker";
 import WebSocketClient from "../../services/WebSocketClient";
 
 
-const ACTIVE_PATH_COLOR = [100, 200, 0, 255]; // Green for active trajectories
-const PASSIVE_PATH_COLOR = [0, 128, 255, 200]; // Blue with some transparency for passive trajectories
-const MARKER_COLOR = [90, 190, 0, 255]; // Green for active markers
 const STATIONARY_MARKER_COLOR = [137, 196, 255, 255]; // Blue for stationary markers
+
+const CLASS_COLORS2 = {
+    0: [255, 100, 100, 255], // pedestrian
+    1: [100, 200, 100, 255], // bicycle
+    2: [100, 100, 255, 255], // vehicle
+    3: [50, 220, 220, 255],  // motorcycle - 
+    5: [255, 200, 50, 255],  // bus - orange
+    7: [200, 100, 255, 255], // trucks - pink
+};
+
+function classColor(classId, alpha) {
+    const color = CLASS_COLORS2[classId] ?? [180, 180, 180, 255];
+    return alpha !== undefined ? [color[0], color[1], color[2], alpha] : color;
+}
 
 // Renders live trajectories as a purely-visual deck.gl overlay. It is mounted by the annotator's
 // `renderImageOverlay` slot, which positions and sizes a box to exactly cover the image; `width` is
@@ -61,12 +72,11 @@ function TrajectoryDrawer(props) {
         });
     }
 
-    // Get passive color based on age
-    function getColorForAge(createdAt) {
+    function getColorForAge(classId, createdAt) {
         const age = new Date().getTime() - createdAt;
-        const alphaFactor = Math.pow(1 - (age / trajectoryDecayMs), 3); // Non-linear fade out
+        const alphaFactor = Math.pow(1 - (age / trajectoryDecayMs), 3);
         const alpha = Math.max(0, 255 * alphaFactor);
-        return [...PASSIVE_PATH_COLOR.slice(0, 3), alpha];
+        return classColor(classId, alpha);
     };
 
     if (trajectories && trajectories.length > 0) {
@@ -82,7 +92,7 @@ function TrajectoryDrawer(props) {
                     id: 'passive-trajectory-paths',
                     data: passiveTrajectories,
                     getPath: d => d.path,
-                    getColor: d => getColorForAge(d.createdAt),
+                    getColor: d => getColorForAge(d.classId, d.createdAt),
                     getWidth: 2, // Slightly thinner than active trajectories
                     widthUnits: 'pixels',
                     jointRounded: true,
@@ -100,7 +110,7 @@ function TrajectoryDrawer(props) {
                     id: 'active-trajectory-paths',
                     data: activeTrajectories,
                     getPath: d => d.path,
-                    getColor: ACTIVE_PATH_COLOR,
+                    getColor: d => classColor(d.classId, 255),
                     getWidth: 3,
                     widthUnits: 'pixels',
                     jointRounded: true,
@@ -116,11 +126,12 @@ function TrajectoryDrawer(props) {
                     id: 'active-positions',
                     data: activeTrajectories.map(t => ({
                         position: t.path[t.path.length - 1],
-                        id: t.id
+                        id: t.id,
+                        classId: t.classId,
                     })),
                     getPosition: d => d.position,
-                    getLineColor: [255, 255, 255], // White outline for all markers
-                    getFillColor: MARKER_COLOR,
+                    getLineColor: [255, 255, 255],
+                    getFillColor: d => classColor(d.classId, 255),
                     getRadius: 6,
                     radiusUnits: 'pixels',
                     stroked: true,
