@@ -5,17 +5,17 @@ import { OrthographicView } from "@deck.gl/core";
 import { PathLayer } from "@deck.gl/layers";
 import DetectionRest from "../../services/DetectionRest";
 
-const CLASS_COLORS = [
-    [255, 100, 100, 100],
-    [100, 200, 100, 100],
-    [100, 100, 255, 100],
-    [255, 200, 50, 100],
-    [200, 100, 255, 100],
-    [50, 220, 220, 100],
-];
+const CLASS_COLORS = {
+    0: [255, 100, 100, 255], // pedestrian
+    1: [100, 200, 100, 255], // bicycle
+    2: [100, 100, 255, 255], // vehicle
+    3: [50, 220, 220, 255],  // motorcycle - 
+    5: [255, 200, 50, 255],  // bus - orange
+    7: [200, 100, 255, 255], // trucks - pink
+};
 
 function colorForClass(classId) {
-    return CLASS_COLORS[classId % CLASS_COLORS.length];
+    return CLASS_COLORS[classId] ?? [180, 180, 180, 255];
 }
 
 function SavedTrajectoryDrawer(props) {

@@ -9,7 +9,7 @@ import WebSocketClient from "../../services/WebSocketClient";
 
 const STATIONARY_MARKER_COLOR = [137, 196, 255, 255]; // Blue for stationary markers
 
-const CLASS_COLORS2 = {
+const CLASS_COLORS = {
     0: [255, 100, 100, 255], // pedestrian
     1: [100, 200, 100, 255], // bicycle
     2: [100, 100, 255, 255], // vehicle
@@ -19,7 +19,7 @@ const CLASS_COLORS2 = {
 };
 
 function classColor(classId, alpha) {
-    const color = CLASS_COLORS2[classId] ?? [180, 180, 180, 255];
+    const color = CLASS_COLORS[classId] ?? [180, 180, 180, 255];
     return alpha !== undefined ? [color[0], color[1], color[2], alpha] : color;
 }
 
