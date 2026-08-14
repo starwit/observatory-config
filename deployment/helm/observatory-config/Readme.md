@@ -16,6 +16,7 @@ This Helm chart deploys Observatory Config to a Kubernetes cluster.
 | **Application** | | |
 | `app.contextPath` | `""` | Application context path |
 | `app.observatoryUrl` | `""` | URL of the observatory backend |
+| `app.websocketAllowedOrigins` | `[https://observatory-config.example.com]` | Origins allowed to open the live-tracking websocket. Full origins (scheme + host + optional port), matching `ingress.hosts`. Empty means same-origin only, which does not work behind a TLS-terminating ingress. |
 | **Redis / ValKey** | | |
 | `redis.enabled` | `false` | Enable Redis/ValKey message bus for live tracking |
 | `redis.host` | `valkey` | Redis host |
@@ -38,11 +39,11 @@ This Helm chart deploys Observatory Config to a Kubernetes cluster.
 | **Ingress** | | |
 | `ingress.enabled` | `true` | Enable ingress |
 | `ingress.annotations` | `cert-manager.io/cluster-issuer: letsencrypt-prod` | Ingress annotations |
-| `ingress.hosts[0].host` | `spc.data-wolfsburg.de` | Ingress hostname |
+| `ingress.hosts[0].host` | `observatory-config.example.com` | Ingress hostname |
 | `ingress.hosts[0].paths[0].path` | `/` | Ingress path |
 | `ingress.hosts[0].paths[0].pathType` | `ImplementationSpecific` | Ingress path type |
-| `ingress.tls[0].secretName` | `spc.data-wolfsburg.de` | TLS secret name |
-| `ingress.tls[0].hosts[0]` | `spc.data-wolfsburg.de` | TLS hostname |
+| `ingress.tls[0].secretName` | `observatory-config.example.com` | TLS secret name |
+| `ingress.tls[0].hosts[0]` | `observatory-config.example.com` | TLS hostname |
 | **Pod** | | |
 | `podAnnotations` | `{}` | Annotations to add to the pod |
 | `podSecurityContext` | `{}` | Pod-level security context |

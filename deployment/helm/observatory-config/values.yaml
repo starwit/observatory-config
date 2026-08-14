@@ -14,6 +14,12 @@ fullnameOverride: "observatory-config"
 app:
   contextPath: ""
   observatoryUrl: ""
+  # Origins that are allowed to open the live-tracking websocket. Full origins, exactly as the
+  # browser sends them (scheme + host + optional port) - keep in sync with ingress.hosts below.
+  # Leave empty to accept same-origin connections only; that works when the app is reached
+  # directly, but not behind a TLS-terminating ingress.
+  websocketAllowedOrigins:
+    - https://observatory-config.example.com
 
 # ValKey/Redis message bus for the SAE visualizer live-tracking streams.
 # Point this at an external ValKey/Redis instance reachable from the pod.
@@ -61,14 +67,14 @@ ingress:
   annotations: 
     cert-manager.io/cluster-issuer: letsencrypt-prod
   hosts:
-    - host: spc.data-wolfsburg.de
+    - host: observatory-config.example.com
       paths:
         - path: /
           pathType: ImplementationSpecific
-  tls: 
-    - secretName: spc.data-wolfsburg.de
+  tls:
+    - secretName: observatory-config.example.com
       hosts:
-        - spc.data-wolfsburg.de
+        - observatory-config.example.com
 
 podAnnotations: {}
 
