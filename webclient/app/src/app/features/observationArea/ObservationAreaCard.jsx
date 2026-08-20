@@ -19,7 +19,7 @@ function ObservationAreaCard(props) {
     function renderProcessingIcon(processingEnabled) {
         if (processingEnabled) {
             return (
-                <Box sx={{position: "absolute", top: 0, left: 0, width: "100%", display: "flex", alignItems: "center", background: "rgba(215, 93, 42, 0.7)"}}>
+                <Box sx={{display: "flex", alignItems: "center", background: "rgba(215, 93, 42, 0.7)"}}>
                     <QueryStats sx={{color: "white", margin: "0.5rem", scale: "90%", opacity: "90%"}} fontSize="large" />
                     <Typography variant="h6" component="div" sx={{color: "white"}}>
                         {t("button.tracking")}
@@ -66,27 +66,31 @@ function ObservationAreaCard(props) {
                 <CardActionArea onClick={openArea} sx={{position: "relative"}}>
                     {observationArea.image !== null ?
                         <>
-                            <CardMedia
-                                component="img"
-                                height="300"
-                                src={imageUrl}
-                                sx={{filter: observationArea.processingEnabled ? 'none' : 'grayscale(100%)'}}>
-                            </CardMedia>
-                            {renderProcessingIcon(observationArea.processingEnabled)}
-                            <Box sx={{position: "flex", display: "flex", justifyContent: "flex-end", width: "100%", px: 1, bottom: 0, backgroundColor: "rgba(255, 255, 255, 0.45)", backdropFilter: "blur(2px)"}}>
-                                <Tooltip title={"Grafana"}>
-                                    <IconButton onClick={() => { }}>
-                                        <Dashboard fontSize={"small"} />
-                                    </IconButton>
-                                </Tooltip>
-                                <Tooltip title={"ODP"}>
-                                    <IconButton onClick={() => { }}>
-                                        <Link fontSize={"small"} />
-                                    </IconButton>
-                                </Tooltip>
-                                <Tooltip title={"DAVe"}>
-                                    <Button>DAVe</Button>
-                                </Tooltip>
+                            <Box sx={{display: "grid", "& > *": {gridArea: "1 / 1"}}}>
+                                <CardMedia
+                                    component="img"
+                                    height="300"
+                                    src={imageUrl}
+                                    sx={{filter: observationArea.processingEnabled ? 'none' : 'grayscale(100%)'}}>
+                                </CardMedia>
+                                <Box sx={{display: "flex", flexDirection: "column", justifyContent: "space-between", height: "100%"}}>
+                                    {renderProcessingIcon(observationArea.processingEnabled)}
+                                    <Box sx={{display: "flex", justifyContent: "flex-end", width: "100%", px: 1, backgroundColor: "rgba(255, 255, 255, 0.45)", backdropFilter: "blur(2px)"}}>
+                                        <Tooltip title={"Grafana"}>
+                                            <IconButton onClick={() => { }}>
+                                                <Dashboard fontSize={"small"} />
+                                            </IconButton>
+                                        </Tooltip>
+                                        <Tooltip title={"ODP"}>
+                                            <IconButton onClick={() => { }}>
+                                                <Link fontSize={"small"} />
+                                            </IconButton>
+                                        </Tooltip>
+                                        <Tooltip title={"DAVe"}>
+                                            <Button>DAVe</Button>
+                                        </Tooltip>
+                                    </Box>
+                                </Box>
                             </Box>
                         </> :
                         <CardContent sx={{height: 300}}>
