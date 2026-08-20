@@ -73,7 +73,7 @@ function ObservationAreaCard(props) {
                                 sx={{filter: observationArea.processingEnabled ? 'none' : 'grayscale(100%)'}}>
                             </CardMedia>
                             {renderProcessingIcon(observationArea.processingEnabled)}
-                            <Box sx={{position: "absolute", display: "flex", justifyContent: "flex-end", width: "100%", px: 1, bottom: 0, backgroundColor: "rgba(255, 255, 255, 0.45)", backdropFilter: "blur(2px)"}}>
+                            <Box sx={{position: "flex", display: "flex", justifyContent: "flex-end", width: "100%", px: 1, bottom: 0, backgroundColor: "rgba(255, 255, 255, 0.45)", backdropFilter: "blur(2px)"}}>
                                 <Tooltip title={"Grafana"}>
                                     <IconButton onClick={() => { }}>
                                         <Dashboard fontSize={"small"} />
