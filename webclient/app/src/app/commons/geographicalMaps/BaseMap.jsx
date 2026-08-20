@@ -1,4 +1,5 @@
 import {MapboxOverlay} from '@deck.gl/mapbox';
+import * as maplibregl from 'maplibre-gl';
 import 'maplibre-gl/dist/maplibre-gl.css';
 import {Map, useControl} from 'react-map-gl/maplibre';
 import {Box} from '@mui/material';
@@ -24,6 +25,7 @@ function BaseMap(props) {
             "& .maplibregl-canvas:focus": { outline: "none" },
         }}>
             <Map
+                mapLib={maplibregl}
                 initialViewState={viewState}
                 mapStyle="https://tiles.openfreemap.org/styles/positron"
                 onMove={onViewStateChange ? evt => onViewStateChange(evt.viewState) : undefined}

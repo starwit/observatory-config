@@ -121,7 +121,7 @@ function ObservationAreaOverview() {
             }
 
             return (
-                <Grid container spacing={5} marginTop={3}>
+                <Grid container spacing={5} sx={{marginTop: 3}}>
                     {observationAreas?.map(area => (
                         <Grid size={{sm: 6, xs: 12}} key={area.id}>
                             <ObservationAreaCard
@@ -176,8 +176,8 @@ function ObservationAreaOverview() {
             {renderSidebar()}
             <Container>
                 {renderMap()}
-                <Stack direction="row" justifyContent="space-between">
-                    <Typography zIndex={2} variant={"h2"} gutterBottom>
+                <Stack direction="row" sx={{justifyContent: "space-between"}}>
+                    <Typography sx={{zIndex: 2}} variant={"h2"} gutterBottom>
                         {t("observationAreas.title")}
                     </Typography>
                     <Stack direction="row" spacing={1}>
