@@ -1,6 +1,7 @@
-import {Button, CircularProgress, Dialog, DialogActions, DialogContent, FormControl, IconButton, Stack, Tooltip, Typography} from "@mui/material";
+import {Button, CircularProgress, Dialog, DialogActions, DialogContent, FormControl, IconButton, Stack, Tooltip, Typography, TextField, Divider} from "@mui/material";
 import {Grid} from '@mui/material';
 import CameraAltIcon from "@mui/icons-material/CameraAlt";
+import DeleteIcon from "@mui/icons-material/Delete";
 import {toast} from "react-toastify";
 import PropTypes from "prop-types";
 import React, {useEffect, useMemo, useState} from "react";
@@ -16,6 +17,7 @@ import {handleChange, isValid, prepareForSave} from "../../modifiers/DefaultModi
 import {entityDefault, entityFields} from "../../modifiers/ObservationAreaModifier";
 import ImageRest, {imageFileUrlForId} from "../../services/ImageRest";
 import ObservationAreaRest from "../../services/ObservationAreaRest";
+import {Add} from "@mui/icons-material";
 
 export const MODE = Object.freeze({
     UPDATE: "update",
@@ -76,6 +78,14 @@ function ObservationAreaDialog(props) {
             entity.saeStreamKey === null ||
             entity.saeStreamKey === "") {
             return false;
+        }
+        // Validate links if present
+        if (entity.links && entity.links.length > 0) {
+            for (const link of entity.links) {
+                if (!link.name || link.name.trim() === "" || !link.url || link.url.trim() === "") {
+                    return false;
+                }
+            }
         }
         return true;
     }
@@ -187,6 +197,90 @@ function ObservationAreaDialog(props) {
         );
     }
 
+    function handleAddLink() {
+        setEntity(draft => {
+            if (!draft.links) {
+                draft.links = [];
+            }
+            draft.links.push({id: null, name: "", url: ""});
+        });
+    }
+
+    function handleUpdateLink(index, field, value) {
+        setEntity(draft => {
+            if (draft.links && draft.links[index]) {
+                draft.links[index][field] = value;
+            }
+        });
+    }
+
+    function handleDeleteLink(index) {
+        setEntity(draft => {
+            if (draft.links) {
+                draft.links.splice(index, 1);
+            }
+        });
+    }
+
+    function renderLinksSection() {
+        return (
+            <Grid size={{xs: 12}} sx={{mt: 2}}>
+                <Divider sx={{mb: 2}} />
+                <Stack spacing={2}>
+                    <Typography variant="h6">{t("observationArea.links")}</Typography>
+                    {entity?.links?.map((link, index) => (
+                        <Stack key={index} spacing={1}>
+                            <Stack direction="row" spacing={1} alignItems="flex-start">
+                                <FormControl fullWidth>
+                                    <TextField
+                                        label={t("observationArea.link.name")}
+                                        value={link.name || ""}
+                                        onChange={(e) => handleUpdateLink(index, "name", e.target.value)}
+                                        variant="standard"
+                                        size="small"
+                                        fullWidth
+                                        required
+                                        error={!link.name || link.name.trim() === ""}
+                                    />
+                                </FormControl>
+                                <FormControl fullWidth>
+                                    <TextField
+                                        label={t("observationArea.link.url")}
+                                        value={link.url || ""}
+                                        onChange={(e) => handleUpdateLink(index, "url", e.target.value)}
+                                        variant="standard"
+                                        size="small"
+                                        fullWidth
+                                        required
+                                        error={!link.url || link.url.trim() === ""}
+                                    />
+                                </FormControl>
+                                <IconButton
+                                    onClick={() => handleDeleteLink(index)}
+                                    size="small"
+                                    color="error"
+                                    sx={{mt: 1}}
+                                >
+                                    <DeleteIcon />
+                                </IconButton>
+                                {index === entity.links.length - 1 && (
+                                    <IconButton
+                                        onClick={handleAddLink}
+                                        size="small"
+                                        sx={{mt: 1}}
+                                    >
+                                        <Add />
+                                    </IconButton>
+                                )}
+                            </Stack>
+
+                        </Stack>
+                    ))}
+                </Stack>
+            </Grid>
+        );
+    }
+
     return (
         <Dialog onClose={onDialogClose} open={open} spacing={2} sx={{zIndex: 10000, "& .MuiDialog-container": {alignItems: "flex-start", mt: "10vh"}}} maxWidth="lg">
             <DialogHeader onClose={onDialogClose} title={t(`observationArea.${mode}.title`)} />
@@ -232,6 +326,7 @@ function ObservationAreaDialog(props) {
                             </Grid>
                             {makeEntityUpdateField(fields[1], {width: 12})}
                             {entity.geoReferenced && fields?.slice(4).map(field => makeEntityUpdateField(field, {width: 6}))}
+                            {renderLinksSection()}
                         </Grid>
                         <Grid size={{xs: 4}}>
                             <Stack>
