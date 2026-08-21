@@ -1,6 +1,7 @@
 package de.starwit.service.dto;
 
 import java.math.BigDecimal;
+import java.util.Set;
 
 import de.starwit.persistence.entity.ImageEntity;
 import jakarta.validation.constraints.Max;
@@ -39,6 +40,8 @@ public class ObservationAreaDto {
     @Min(value = -180)
     @Max(value = 180)
     private BigDecimal centerlongitude;
+
+    private Set<LinkDto> links;
 
     public Long getId() {
         return id;
@@ -134,5 +137,13 @@ public class ObservationAreaDto {
 
     public void setImage(ImageEntity image) {
         this.image = image;
+    }
+
+    public Set<LinkDto> getLinks() {
+        return links;
+    }
+
+    public void setLinks(Set<LinkDto> links) {
+        this.links = links;
     }
 }

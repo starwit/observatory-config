@@ -76,19 +76,15 @@ function ObservationAreaCard(props) {
                                 <Box sx={{display: "flex", flexDirection: "column", justifyContent: "space-between", height: "100%"}}>
                                     {renderProcessingIcon(observationArea.processingEnabled)}
                                     <Box sx={{display: "flex", justifyContent: "flex-end", width: "100%", px: 1, backgroundColor: "rgba(255, 255, 255, 0.45)", backdropFilter: "blur(2px)"}}>
-                                        <Tooltip title={"Grafana"}>
-                                            <IconButton onClick={() => { }}>
-                                                <Dashboard fontSize={"small"} />
-                                            </IconButton>
-                                        </Tooltip>
-                                        <Tooltip title={"ODP"}>
-                                            <IconButton onClick={() => { }}>
-                                                <Link fontSize={"small"} />
-                                            </IconButton>
-                                        </Tooltip>
-                                        <Tooltip title={"DAVe"}>
-                                            <Button>DAVe</Button>
-                                        </Tooltip>
+                                        {observationArea.links && Array.isArray(observationArea.links) && observationArea.links.length > 0 ? (
+                                            observationArea.links.map((link) => (
+                                                <Tooltip key={link.id} title={link.name}>
+                                                    <IconButton onClick={() => {window.open(link.url, '_blank')}}>
+                                                        {link.name}
+                                                    </IconButton>
+                                                </Tooltip>
+                                            ))
+                                        ) : (<></>)}
                                     </Box>
                                 </Box>
                             </Box>

@@ -45,6 +45,11 @@ public class ObservationAreaEntity extends AbstractEntity<Long> {
     @JoinColumn(name = "camera_id")
     private CameraEntity camera;
 
+    // entity relations
+    @JsonFilter("filterLinks")
+    @OneToMany(mappedBy = "observationArea", cascade = { CascadeType.ALL }, orphanRemoval = true)
+    private Set<LinkEntity> links;
+
     @Min(value = -90)
     @Max(value = 90)
     @Column(name = "center_latitude")
@@ -203,6 +208,22 @@ public class ObservationAreaEntity extends AbstractEntity<Long> {
 
     public void setImageWidth(Integer imageWidth) {
         this.imageWidth = imageWidth;
+    }
+
+    public Set<LinkEntity> getLinks() {
+        return links;
+    }
+
+    public void setLinks(Set<LinkEntity> links) {
+        this.links = links;
+    }
+
+    public void addToLinks(LinkEntity link) {
+        link.setObservationArea(this);
+        if (this.links == null) {
+            this.links = new HashSet<>();
+        }
+        this.links.add(link);
     }
 
 }
