@@ -1,5 +1,5 @@
-import {ContentCopy, Dashboard, Delete, Edit, Link} from "@mui/icons-material";
-import {Card, CardActionArea, CardContent, CardMedia, Divider, Box, IconButton, Tooltip, Typography, Button} from "@mui/material";
+import {ContentCopy, Delete, Edit} from "@mui/icons-material";
+import {Card, CardContent, CardMedia, Divider, Box, IconButton, Tooltip, Typography} from "@mui/material";
 import {Grid} from '@mui/material';
 import PropTypes from "prop-types";
 import React from "react";
@@ -63,37 +63,43 @@ function ObservationAreaCard(props) {
                     </Grid>
                 </CardContent>
                 <Divider />
-                <CardActionArea onClick={openArea} sx={{position: "relative"}}>
-                    {observationArea.image !== null ?
-                        <>
-                            <Box sx={{display: "grid", "& > *": {gridArea: "1 / 1"}}}>
-                                <CardMedia
-                                    component="img"
-                                    height="300"
-                                    src={imageUrl}
-                                    sx={{filter: observationArea.processingEnabled ? 'none' : 'grayscale(100%)'}}>
-                                </CardMedia>
-                                <Box sx={{display: "flex", flexDirection: "column", justifyContent: "space-between", height: "100%"}}>
-                                    {renderProcessingIcon(observationArea.processingEnabled)}
-                                    <Box sx={{display: "flex", justifyContent: "flex-end", width: "100%", px: 1, backgroundColor: "rgba(255, 255, 255, 0.45)", backdropFilter: "blur(2px)"}}>
-                                        {observationArea.links && Array.isArray(observationArea.links) && observationArea.links.length > 0 ? (
-                                            observationArea.links.map((link) => (
-                                                <Tooltip key={link.id} title={link.name}>
-                                                    <IconButton onClick={() => {window.open(link.url, '_blank')}}>
-                                                        {link.name}
-                                                    </IconButton>
-                                                </Tooltip>
-                                            ))
-                                        ) : (<></>)}
-                                    </Box>
+                {observationArea.image !== null ?
+                    <Box
+                        role="button"
+                        tabIndex={0}
+                        onClick={openArea}
+                        sx={{cursor: "pointer", display: "grid", "& > *": {gridArea: "1 / 1"}}}
+                    >
+                        <Box sx={{display: "grid", "& > *": {gridArea: "1 / 1"}}}>
+                            <CardMedia
+                                component="img"
+                                height="300"
+                                src={imageUrl}
+                                sx={{filter: observationArea.processingEnabled ? 'none' : 'grayscale(100%)'}}>
+                            </CardMedia>
+                            <Box sx={{display: "flex", flexDirection: "column", justifyContent: "space-between", height: "100%"}}>
+                                {renderProcessingIcon(observationArea.processingEnabled)}
+                                <Box sx={{display: "flex", justifyContent: "flex-end", width: "100%", px: 1, backgroundColor: "rgba(255, 255, 255, 0.45)", backdropFilter: "blur(2px)"}}>
+                                    {observationArea.links && Array.isArray(observationArea.links) && observationArea.links.length > 0 ? (
+                                        observationArea.links.map((link) => (
+                                            <Tooltip key={link.id} title={link.name}>
+                                                <IconButton onClick={(event) => {
+                                                    event.stopPropagation();
+                                                    window.open(link.url, '_blank');
+                                                }}>
+                                                    {link.name}
+                                                </IconButton>
+                                            </Tooltip>
+                                        ))
+                                    ) : (<></>)}
                                 </Box>
                             </Box>
-                        </> :
-                        <CardContent sx={{height: 300}}>
-                            <Typography textAlign={"center"}>{t("observationAreaCard.noImage")}</Typography>
-                        </CardContent>
-                    }
-                </CardActionArea>
+                        </Box>
+                    </Box> :
+                    <CardContent sx={{height: 300}}>
+                        <Typography textAlign={"center"}>{t("observationAreaCard.noImage")}</Typography>
+                    </CardContent>
+                }
             </Card>
         </>
     );
