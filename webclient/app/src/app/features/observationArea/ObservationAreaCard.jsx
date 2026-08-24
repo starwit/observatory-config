@@ -1,5 +1,5 @@
 import {ContentCopy, Delete, Edit} from "@mui/icons-material";
-import {Card, CardContent, CardMedia, Divider, Box, IconButton, Tooltip, Typography} from "@mui/material";
+import {Card, CardContent, CardMedia, Divider, Box, IconButton, Tooltip, Typography, Button} from "@mui/material";
 import {Grid} from '@mui/material';
 import PropTypes from "prop-types";
 import React from "react";
@@ -82,14 +82,12 @@ function ObservationAreaCard(props) {
                                 <Box sx={{display: "flex", justifyContent: "flex-end", width: "100%", px: 1, backgroundColor: "rgba(255, 255, 255, 0.45)", backdropFilter: "blur(2px)"}}>
                                     {observationArea.links && Array.isArray(observationArea.links) && observationArea.links.length > 0 ? (
                                         observationArea.links.map((link) => (
-                                            <Tooltip key={link.id} title={link.name}>
-                                                <IconButton onClick={(event) => {
-                                                    event.stopPropagation();
-                                                    window.open(link.url, '_blank');
-                                                }}>
-                                                    {link.name}
-                                                </IconButton>
-                                            </Tooltip>
+                                            <Button key={link.id} size="small" onClick={(event) => {
+                                                event.stopPropagation();
+                                                window.open(link.url, '_blank');
+                                            }}>
+                                                {link.name}
+                                            </Button>
                                         ))
                                     ) : (<></>)}
                                 </Box>
