@@ -40,39 +40,26 @@ export default function MapSidebar(props) {
     function renderProcessingIcon(processingEnabled) {
         if (processingEnabled) {
             return (
-                <ImageListItemBar
-                    sx={{background: "rgba(215, 93, 42, 0.7)"}}
-                    actionPosition="left"
-                    position="top"
-                    actionIcon={
-                        <Box display='flex' alignItems="center">
-                            <QueryStats sx={{color: "white", margin: "0.5rem", scale: "90%", opacity: "90%"}} fontSize="large"></QueryStats>
-                            <Typography variant="h6" component="div" color="white">
-                                {t("button.tracking")}
-                            </Typography>
-                        </Box>
-                    }
-                ></ImageListItemBar>
+                <Box sx={{display: "flex", alignItems: "center", background: "rgba(215, 93, 42, 0.7)"}}>
+                    <QueryStats sx={{color: "white", margin: "0.5rem", scale: "90%", opacity: "90%"}} fontSize="large" />
+                    <Typography variant="h6" component="div" sx={{color: "white"}}>
+                        {t("button.tracking")}
+                    </Typography>
+                </Box>
             );
         }
     }
 
+
     function renderImage(area) {
         const imageUrl = area.image !== null ? imageFileUrlForId(area.image.id) : null;
-        if (area.image !== null) {
-            return (
-                <CardMedia
-                    component="img"
-                    height="300"
-                    src={imageUrl}
-                    sx={{filter: area.processingEnabled ? 'none' : 'grayscale(100%)'}}
-                />);
-        }
         return (
-            <CardContent sx={{height: 250}}>
-                <Typography textAlign={"center"}>{t("observationAreaCard.noImage")}</Typography>
-            </CardContent>
-        );
+            <CardMedia
+                component="img"
+                height="300"
+                src={imageUrl}
+                sx={{filter: area.processingEnabled ? 'none' : 'grayscale(100%)'}}
+            />);
 
     }
 
@@ -114,17 +101,35 @@ export default function MapSidebar(props) {
                                         {expanded === area.id && (
                                             <Box sx={{display: 'flex', alignItems: 'center'}}>
                                                 <Tooltip title={t("button.copy")}>
-                                                    <IconButton onClick={() => copyArea(area)}>
+                                                    <IconButton
+                                                        component="span"
+                                                        onClick={(event) => {
+                                                            event.stopPropagation();
+                                                            copyArea(area);
+                                                        }}
+                                                    >
                                                         <ContentCopy fontSize={"small"} />
                                                     </IconButton>
                                                 </Tooltip>
                                                 <Tooltip title={t("button.update")}>
-                                                    <IconButton onClick={() => editArea(area)}>
+                                                    <IconButton
+                                                        component="span"
+                                                        onClick={(event) => {
+                                                            event.stopPropagation();
+                                                            editArea(area);
+                                                        }}
+                                                    >
                                                         <Edit fontSize={"small"} />
                                                     </IconButton>
                                                 </Tooltip>
                                                 <Tooltip title={t("button.delete")}>
-                                                    <IconButton onClick={() => deleteArea(area)}>
+                                                    <IconButton
+                                                        component="span"
+                                                        onClick={(event) => {
+                                                            event.stopPropagation();
+                                                            deleteArea(area);
+                                                        }}
+                                                    >
                                                         <Delete fontSize={"small"} />
                                                     </IconButton>
                                                 </Tooltip>
@@ -133,31 +138,38 @@ export default function MapSidebar(props) {
                                     </Box>
                                 </AccordionSummary>
                                 <AccordionDetails sx={{padding: 0, }}>
-                                    <CardActionArea onClick={() => openArea(area)} sx={{display: "flex", flexDirection: "column", alignItems: "stretch", position: "relative"}}>
-                                        {renderImage(area)}
-                                        {renderProcessingIcon(area.processingEnabled)}
-                                        <Box sx={{position: "absolute", display: "flex", justifyContent: "flex-end", width: "100%", px: 1, bottom: 0, backgroundColor: "rgba(255, 255, 255, 0.45)", backdropFilter: "blur(2px)"}}>
-                                            <Tooltip title={"Record Track"}>
-                                                <IconButton onClick={() => { }}>
-                                                    <Camera fontSize={"small"} />
-                                                </IconButton>
-                                            </Tooltip>
-                                            <Tooltip title={"Grafana"}>
-                                                <IconButton onClick={() => { }}>
-                                                    <Dashboard fontSize={"small"} />
-                                                </IconButton>
-                                            </Tooltip>
-                                            <Tooltip title={"ODP"}>
-                                                <IconButton onClick={() => { }}>
-                                                    <Link fontSize={"small"} />
-                                                </IconButton>
-                                            </Tooltip>
-                                            <Tooltip title={"DAVe"}>
-                                                <Button>DAVe</Button>
-                                            </Tooltip>
-                                        </Box>
-                                    </CardActionArea>
+                                    {area.image !== null ?
+                                        <Box
+                                            role="button"
+                                            tabIndex={0}
+                                            onClick={() => openArea(area)}
+                                            sx={{cursor: "pointer", display: "grid", "& > *": {gridArea: "1 / 1"}}}
+                                        >
+                                            <Box sx={{display: "grid", "& > *": {gridArea: "1 / 1"}}}>
+                                                {renderImage(area)}
+                                                <Box sx={{display: "flex", flexDirection: "column", justifyContent: "space-between", height: "100%"}}>
+                                                    {renderProcessingIcon(area.processingEnabled)}
+                                                    <Box sx={{display: "flex", justifyContent: "flex-end", width: "100%", px: 1, backgroundColor: "rgba(255, 255, 255, 0.45)", backdropFilter: "blur(2px)"}}>
+                                                        {area.links && Array.isArray(area.links) && area.links.length > 0 ? (
+                                                            area.links.map((link) => (
+                                                                <Button key={link.id} size="small" onClick={(event) => {
+                                                                    event.stopPropagation();
+                                                                    window.open(link.url, '_blank');
+                                                                }}>
+                                                                    {link.name}
+                                                                </Button>
+                                                            ))
+                                                        ) : (<></>)}
+                                                    </Box>
+                                                </Box>
+                                            </Box>
+                                        </Box> :
+                                        <CardContent sx={{height: 300}}>
+                                            <Typography textAlign={"center"}>{t("observationAreaCard.noImage")}</Typography>
+                                        </CardContent>
+                                    }
                                 </AccordionDetails>
+
                             </Accordion>);
                     }
                 })

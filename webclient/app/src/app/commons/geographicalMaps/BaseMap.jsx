@@ -1,7 +1,7 @@
 import {MapboxOverlay} from '@deck.gl/mapbox';
 import * as maplibregl from 'maplibre-gl';
 import 'maplibre-gl/dist/maplibre-gl.css';
-import {Map, useControl} from 'react-map-gl/maplibre';
+import {Map, useControl} from '@vis.gl/react-maplibre';
 import {Box} from '@mui/material';
 
 function DeckGLOverlay(props) {
@@ -21,8 +21,9 @@ function BaseMap(props) {
     } = props;
 
     return (
-        <Box sx={{width: "100vw", height: "100vh", position: "fixed", top: 0, left: 0,
-            "& .maplibregl-canvas:focus": { outline: "none" },
+        <Box sx={{
+            width: "100vw", height: "100vh", position: "fixed", top: 0, left: 0,
+            "& .maplibregl-canvas:focus": {outline: "none"},
         }}>
             <Map
                 mapLib={maplibregl}

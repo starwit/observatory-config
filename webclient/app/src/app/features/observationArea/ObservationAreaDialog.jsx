@@ -80,7 +80,8 @@ function ObservationAreaDialog(props) {
             return false;
         }
         // Validate links if present
-        if (entity.links && entity.links.length > 0) {
+        let linkList = entity.links.reduce((acc, link) => acc && link.name && link.name.trim() !== "" && link.url && link.url.trim() !== "", true);
+        if (linkList && linkList.length > 0) {
             for (const link of entity.links) {
                 if (!link.name || link.name.trim() === "" || !link.url || link.url.trim() === "") {
                     return false;
@@ -228,9 +229,20 @@ function ObservationAreaDialog(props) {
                 <Divider sx={{mb: 2}} />
                 <Stack spacing={2}>
                     <Typography variant="h6">{t("observationArea.links")}</Typography>
+                    {(!entity?.links || entity.links.length === 0) &&
+                        <Stack direction="row" spacing={1} alignitems="flex-start">
+                            <IconButton
+                                onClick={handleAddLink}
+                                size="small"
+                                sx={{mt: 1}}
+                            >
+                                <Add />
+                            </IconButton>
+                        </Stack>
+                    }
                     {entity?.links?.map((link, index) => (
                         <Stack key={index} spacing={1}>
-                            <Stack direction="row" spacing={1} alignItems="flex-start">
+                            <Stack direction="row" spacing={1} alignitems="flex-start">
                                 <FormControl fullWidth>
                                     <TextField
                                         label={t("observationArea.link.name")}
@@ -291,7 +303,7 @@ function ObservationAreaDialog(props) {
                             {makeEntityUpdateField(fields[0], {width: 12, autofocus: true})}
                             {fields?.slice(2, 4).map(field => makeEntityUpdateField(field, {width: 6}))}
                             <Grid size={{xs: 12}}>
-                                <Stack direction="row" alignItems="flex-end" spacing={1}>
+                                <Stack direction="row" alignitems="flex-end" spacing={1}>
                                     <FormControl fullWidth>
                                         <ValidatedTextField
                                             value={entity?.saeStreamKey ?? ""}
