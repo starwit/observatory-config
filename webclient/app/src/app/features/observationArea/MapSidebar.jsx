@@ -1,28 +1,20 @@
-import React, {useEffect} from 'react'
+import {ContentCopy, Delete, Edit} from "@mui/icons-material";
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import {ContentCopy, Delete, Edit, QueryStats, Camera, Dashboard, Link} from "@mui/icons-material";
-import {CardMedia, CardActionArea, CardContent, Typography, IconButton, Box, Accordion, AccordionSummary, AccordionDetails, Tooltip, ImageListItemBar, Button} from "@mui/material";
-import {Grid} from '@mui/material';
-import {imageFileUrlForId} from "../../services/ImageRest";
-import {useNavigate} from "react-router-dom";
-import MapStyles from "../../assets/styles/MapStyles";
+import {Accordion, AccordionDetails, AccordionSummary, Box, IconButton, Tooltip, Typography} from "@mui/material";
+import React, {useEffect} from 'react';
 import {useTranslation} from "react-i18next";
+import MapStyles from "../../assets/styles/MapStyles";
+import ObservationAreaPreview from './ObservationAreaPreview';
 
 
 export default function MapSidebar(props) {
     const {selected, observationAreas, editArea, copyArea, deleteArea} = props;
-    const navigate = useNavigate();
     const [expanded, setExpanded] = React.useState(selected.id);
     const {t} = useTranslation();
 
     useEffect(() => {
         setExpanded(selected.id);
     }, [selected]);
-
-    function openArea(area) {
-        navigate("/observationarea/" + area.id)
-    }
-
     function handleChange(panel) {
         return function change(event, newExpanded) {
             setExpanded(newExpanded ? panel : false);
@@ -35,32 +27,6 @@ export default function MapSidebar(props) {
             return true;
         }
         return false;
-    }
-
-    function renderProcessingIcon(processingEnabled) {
-        if (processingEnabled) {
-            return (
-                <Box sx={{display: "flex", alignItems: "center", background: "rgba(215, 93, 42, 0.7)"}}>
-                    <QueryStats sx={{color: "white", margin: "0.5rem", scale: "90%", opacity: "90%"}} fontSize="large" />
-                    <Typography variant="h6" component="div" sx={{color: "white"}}>
-                        {t("button.tracking")}
-                    </Typography>
-                </Box>
-            );
-        }
-    }
-
-
-    function renderImage(area) {
-        const imageUrl = area.image !== null ? imageFileUrlForId(area.image.id) : null;
-        return (
-            <CardMedia
-                component="img"
-                height="300"
-                src={imageUrl}
-                sx={{filter: area.processingEnabled ? 'none' : 'grayscale(100%)'}}
-            />);
-
     }
 
     return (
@@ -77,8 +43,8 @@ export default function MapSidebar(props) {
                                     backgroundColor: expanded === area.id
                                         ? 'white'
                                         : area.processingEnabled
-                                            ? 'rgba(215, 93, 42, 0.18)'
-                                            : 'rgba(0, 0, 0, 0.06)',
+                                            ? 'rgba(217, 113, 69, 0.6)'
+                                            : 'rgba(180, 180, 180, 0.6)',
                                     borderLeft: expanded === area.id && area.processingEnabled ? '4px solid rgba(215, 93, 42, 0.7)' : '4px solid transparent',
                                     transition: 'background-color 0.2s ease-in-out',
                                 }}
@@ -138,38 +104,8 @@ export default function MapSidebar(props) {
                                     </Box>
                                 </AccordionSummary>
                                 <AccordionDetails sx={{padding: 0, }}>
-                                    {area.image !== null ?
-                                        <Box
-                                            role="button"
-                                            tabIndex={0}
-                                            onClick={() => openArea(area)}
-                                            sx={{cursor: "pointer", display: "grid", "& > *": {gridArea: "1 / 1"}}}
-                                        >
-                                            <Box sx={{display: "grid", "& > *": {gridArea: "1 / 1"}}}>
-                                                {renderImage(area)}
-                                                <Box sx={{display: "flex", flexDirection: "column", justifyContent: "space-between", height: "100%"}}>
-                                                    {renderProcessingIcon(area.processingEnabled)}
-                                                    <Box sx={{display: "flex", justifyContent: "flex-end", width: "100%", px: 1, backgroundColor: "rgba(255, 255, 255, 0.45)", backdropFilter: "blur(2px)"}}>
-                                                        {area.links && Array.isArray(area.links) && area.links.length > 0 ? (
-                                                            area.links.map((link) => (
-                                                                <Button key={link.id} size="small" onClick={(event) => {
-                                                                    event.stopPropagation();
-                                                                    window.open(link.url, '_blank');
-                                                                }}>
-                                                                    {link.name}
-                                                                </Button>
-                                                            ))
-                                                        ) : (<></>)}
-                                                    </Box>
-                                                </Box>
-                                            </Box>
-                                        </Box> :
-                                        <CardContent sx={{height: 300}}>
-                                            <Typography textAlign={"center"}>{t("observationAreaCard.noImage")}</Typography>
-                                        </CardContent>
-                                    }
+                                    <ObservationAreaPreview observationArea={area} />
                                 </AccordionDetails>
-
                             </Accordion>);
                     }
                 })

@@ -1,37 +1,13 @@
 import {ContentCopy, Delete, Edit} from "@mui/icons-material";
-import {Card, CardContent, CardMedia, Divider, Box, IconButton, Tooltip, Typography, Button} from "@mui/material";
-import {Grid} from '@mui/material';
+import {Card, CardContent, Divider, Grid, IconButton, Tooltip, Typography} from "@mui/material";
 import PropTypes from "prop-types";
-import React from "react";
 import {useTranslation} from "react-i18next";
-import {useNavigate} from "react-router-dom";
-import {imageFileUrlForId} from "../../services/ImageRest";
-import QueryStats from "@mui/icons-material/QueryStats";
+import ObservationAreaPreview from "./ObservationAreaPreview";
 
 function ObservationAreaCard(props) {
     const {observationArea, onCopyClick, onDeleteClick, onEditClick} = props;
 
-    const navigate = useNavigate();
     const {t} = useTranslation();
-
-    const imageUrl = observationArea.image !== null ? imageFileUrlForId(observationArea.image.id) : null;
-
-    function renderProcessingIcon(processingEnabled) {
-        if (processingEnabled) {
-            return (
-                <Box sx={{display: "flex", alignItems: "center", background: "rgba(215, 93, 42, 0.7)"}}>
-                    <QueryStats sx={{color: "white", margin: "0.5rem", scale: "90%", opacity: "90%"}} fontSize="large" />
-                    <Typography variant="h6" component="div" sx={{color: "white"}}>
-                        {t("button.tracking")}
-                    </Typography>
-                </Box>
-            );
-        }
-    }
-
-    function openArea() {
-        navigate("/observationarea/" + observationArea.id);
-    }
 
     return (
         <>
@@ -39,7 +15,7 @@ function ObservationAreaCard(props) {
                 <CardContent>
                     <Grid container spacing={0}>
                         <Grid size={7}>
-                            <Typography gutterBottom variant="h5" component="div" onClick={openArea} sx={{cursor: "pointer"}}>
+                            <Typography gutterBottom variant="h5" component="div">
                                 {observationArea.name}
                             </Typography>
                         </Grid>
@@ -63,41 +39,7 @@ function ObservationAreaCard(props) {
                     </Grid>
                 </CardContent>
                 <Divider />
-                {observationArea.image !== null ?
-                    <Box
-                        role="button"
-                        tabIndex={0}
-                        onClick={openArea}
-                        sx={{cursor: "pointer", display: "grid", "& > *": {gridArea: "1 / 1"}}}
-                    >
-                        <Box sx={{display: "grid", "& > *": {gridArea: "1 / 1"}}}>
-                            <CardMedia
-                                component="img"
-                                height="300"
-                                src={imageUrl}
-                                sx={{filter: observationArea.processingEnabled ? 'none' : 'grayscale(100%)'}}>
-                            </CardMedia>
-                            <Box sx={{display: "flex", flexDirection: "column", justifyContent: "space-between", height: "100%"}}>
-                                {renderProcessingIcon(observationArea.processingEnabled)}
-                                <Box sx={{display: "flex", justifyContent: "flex-end", width: "100%", px: 1, backgroundColor: "rgba(255, 255, 255, 0.45)", backdropFilter: "blur(2px)"}}>
-                                    {observationArea.links && Array.isArray(observationArea.links) && observationArea.links.length > 0 ? (
-                                        observationArea.links.map((link) => (
-                                            <Button key={link.id} size="small" onClick={(event) => {
-                                                event.stopPropagation();
-                                                window.open(link.url, '_blank');
-                                            }}>
-                                                {link.name}
-                                            </Button>
-                                        ))
-                                    ) : (<></>)}
-                                </Box>
-                            </Box>
-                        </Box>
-                    </Box> :
-                    <CardContent sx={{height: 300}}>
-                        <Typography textAlign={"center"}>{t("observationAreaCard.noImage")}</Typography>
-                    </CardContent>
-                }
+                <ObservationAreaPreview observationArea={observationArea} />
             </Card>
         </>
     );
