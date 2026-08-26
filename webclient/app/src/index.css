@@ -8,6 +8,28 @@ body {
     sans-serif;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+
+    position: relative;
+}
+
+body::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    z-index: 0;
+    background-image: url("app/assets/images/background.svg");
+    background-repeat: no-repeat;
+    background-position: center center;
+    background-size: cover;
+    opacity: 0.28;
+    filter: grayscale(90%) brightness(1.02) contrast(0.98);
+    transform: scale(1.02);
+    pointer-events: none;
+}
+
+body > * {
+    position: relative;
+    z-index: 1;
 }
 
 body, html, #root {

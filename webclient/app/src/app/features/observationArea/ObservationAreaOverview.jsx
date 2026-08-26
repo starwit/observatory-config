@@ -118,7 +118,7 @@ function ObservationAreaOverview() {
             }
 
             return (
-                <Grid container spacing={5} sx={{marginTop: 3}}>
+                <Grid container spacing={5} sx={{marginTop: 0}}>
                     {observationAreas?.map(area => (
                         <Grid size={{sm: 6, xs: 12}} key={area.id}>
                             <ObservationAreaCard
@@ -185,8 +185,8 @@ function ObservationAreaOverview() {
                         </FormControl>
                     </Box>
                     <Box sx={{flex: 1, display: "flex", justifyContent: "center"}}>
-                        <Typography variant={"h5"} sx={{fontWeight: 600, color: "text.primary", textAlign: "center"}}>
-                            {t("observationAreas.title")}
+                        <Typography variant={"h2"} sx={{fontWeight: 600, color: "text.primary", textAlign: "center", paddingTop: 0}}>
+                            Observatory
                         </Typography>
                     </Box>
                     <Box sx={{flex: 1}} />
