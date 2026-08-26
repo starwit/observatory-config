@@ -10,7 +10,8 @@ function MapMenuLayout(props) {
                 right: 10,
                 top: 60,
                 zIndex: 1,
-                gap: 1
+                gap: 1,
+                right: "2%"
             }}
             value={value}
             orientation="vertical"

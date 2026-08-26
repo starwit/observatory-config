@@ -18,11 +18,16 @@ function BaseMap(props) {
         getTooltip = null,
         onClick = null,
         onLoad = null,
+        topOffset = 0,
     } = props;
 
     return (
         <Box sx={{
-            width: "100vw", height: "100vh", position: "fixed", top: 0, left: 0,
+            width: "100vw",
+            height: topOffset ? `calc(100vh - ${topOffset})` : "100vh",
+            position: "fixed",
+            top: topOffset || 0,
+            left: 0,
             "& .maplibregl-canvas:focus": {outline: "none"},
         }}>
             <Map

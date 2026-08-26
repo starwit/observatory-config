@@ -166,17 +166,32 @@ function ObservationAreaOverview() {
 
     function renderAppBar() {
         return (
-            <AppBar color="inherit" position="static">
+            <AppBar
+                color="inherit"
+                position="sticky"
+                sx={{top: 0, zIndex: theme => theme.zIndex.drawer + 2}}
+            >
                 <Stack direction="row"
-                    sx={{marginTop: "0.4rem", height: "2.4rem", color: "dimgrey"}}
+                    sx={{
+                        marginTop: "0.4rem",
+                        height: "2.4rem",
+                        color: "dimgrey",
+                        alignItems: "center",
+                        width: "100%",
+                        px: 1
+                    }}
                     useFlexGap>
-                    <FormControl>
-                        {renderToggleButton()}
-                    </FormControl>
-                    <Typography variant={"h5"} sx={{fontWeight: 600, color: "text.primary", textAlign: "center"}}>
-                        {t("observationAreas.title")}
-                    </Typography>
-                    <Box />
+                    <Box sx={{flex: 1, display: "flex", justifyContent: "flex-start"}}>
+                        <FormControl>
+                            {renderToggleButton()}
+                        </FormControl>
+                    </Box>
+                    <Box sx={{flex: 1, display: "flex", justifyContent: "center"}}>
+                        <Typography variant={"h5"} sx={{fontWeight: 600, color: "text.primary", textAlign: "center"}}>
+                            {t("observationAreas.title")}
+                        </Typography>
+                    </Box>
+                    <Box sx={{flex: 1}} />
                 </Stack>
             </AppBar>
         );

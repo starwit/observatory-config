@@ -3,7 +3,7 @@ import ColorFunctions from "../../services/ColorFunctions";
 import StreamRest from "../../services/StreamRest";
 import WebSocketClient from "../../services/WebSocketClient";
 import cameraicon from "./../../assets/images/camera3.png";
-import { useEffect, useMemo, useRef, useState } from 'react';
+import {useEffect, useMemo, useRef, useState} from 'react';
 import BaseMap from '../../commons/geographicalMaps/BaseMap';
 import MapMenuLayout from '../../commons/mapMenu/MapMenuLayout';
 import ObservationMapMenu from '../../commons/mapMenu/ObservationMapMenu';
@@ -37,13 +37,13 @@ function ObservationAreaMap(props) {
     }, []);
 
     useEffect(() => {
-        if(showLive) {
+        if (showLive) {
             wsClient.current.connect();
         } else {
             wsClient.current.disconnect();
 
         }
-    },[showLive]);
+    }, [showLive]);
 
     // Handle incoming messages from WebSocket
     function handleMessage(trackedObjectList, streamId) {
@@ -61,15 +61,15 @@ function ObservationAreaMap(props) {
             } else {
             }
         });
-        setMarkerList(prevMarkerList => ({ ...prevMarkerList, [streamId]: newMarkers }));
+        setMarkerList(prevMarkerList => ({...prevMarkerList, [streamId]: newMarkers}));
     }
-    
+
     function setupLiveLayers() {
         return Object.entries(streams).map(([stream, color]) =>
             createScatterPlotLayer(markerList[stream], stream, color)
         );
     }
-    
+
     function createScatterPlotLayer(markerArray, streamId, color) {
         return new ScatterplotLayer({
             id: 'IconLayer-' + streamId,
@@ -95,9 +95,9 @@ function ObservationAreaMap(props) {
 
             sizeScale: 10,
             getPosition: d => {
-                var c = [2]; 
-                c[0] = d.centerlongitude ?? 91; 
-                c[1] = d.centerlatitude ?? 181; 
+                var c = [2];
+                c[0] = d.centerlongitude ?? 91;
+                c[1] = d.centerlatitude ?? 181;
                 return c;
             },
             getSize: d => 5,
@@ -129,6 +129,7 @@ function ObservationAreaMap(props) {
                 getTooltip={getTooltip}
                 onClick={onSelect}
                 onLoad={onLoad}
+                topOffset="3rem"
             />
         </>
     );

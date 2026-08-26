@@ -1,7 +1,7 @@
 import {useContext} from 'react';
 import StyledToggleButton from './StyledToggleButton';
-import { useTranslation } from 'react-i18next';
-import { Box } from '@mui/material';
+import {useTranslation} from 'react-i18next';
+import {Box} from '@mui/material';
 import CameraIcon from '@mui/icons-material/Camera';
 
 function ObservationMapMenu(props) {
@@ -11,7 +11,7 @@ function ObservationMapMenu(props) {
     return (
         <>
             <StyledToggleButton title={t('map.live')} value="live" aria-label="live" onClick={setToggleLiveTracking}  >
-                <CameraIcon variant="contained" sx={{ color: showLive ? 'green' : 'inherit' }} />
+                <CameraIcon variant="contained" sx={{color: showLive ? 'green' : 'inherit'}} />
             </StyledToggleButton>
             <Box sx={{paddingBottom: 5}} />
         </>
