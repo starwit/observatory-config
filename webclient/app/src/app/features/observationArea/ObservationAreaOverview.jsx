@@ -137,11 +137,11 @@ function ObservationAreaOverview() {
     function renderToggleButton() {
         if (map) {
             return (
-                <Button sx={{height: "2rem"}} onClick={toggleView} variant="text" color="primary"><ViewList /></Button>
+                <Button sx={{height: "2rem", minWidth: "3rem"}} onClick={toggleView} variant="text" color="primary"><ViewList /></Button>
             );
         }
         return (
-            <Button sx={{height: "2rem"}} onClick={toggleView} variant="text" color="primary"><Map /></Button>
+            <Button sx={{height: "2rem", minWidth: "3rem"}} onClick={toggleView} variant="text" color="primary"><Map /></Button>
         );
     }
 
@@ -175,8 +175,6 @@ function ObservationAreaOverview() {
                     sx={{
                         marginTop: "0.4rem",
                         height: "2.4rem",
-                        color: "dimgrey",
-                        alignItems: "center",
                         width: "100%",
                         px: 1
                     }}

@@ -101,11 +101,11 @@ function ObservationAreaSelect(props) {
     return (
         <Stack
             direction="row"
-            sx={{marginTop: "0.4rem", height: "2.4rem", gap: "0px"}}
+            sx={{marginTop: "0.4rem", height: "2.4rem", px: 1}}
             useFlexGap
         >
             <FormControl>
-                <Button sx={{height: "2rem"}}
+                <Button sx={{height: "2rem", minWidth: "3rem"}}
                     onClick={onHomeClick}>
                     <Home color="primary" />
                 </Button>
@@ -179,7 +179,7 @@ function ObservationAreaSelect(props) {
             </FormControl>
             <FormControl>
                 <Tooltip title={processingEnabled ? t("observationArea.track.stop.title") : t("observationArea.track.start.title")}>
-                    <Button sx={{height: "2rem", minWidth: "3rem"}}
+                    <Button sx={{height: "2rem", minWidth: "3rem", px: 0}} fontSize="small"
                         onClick={() => {
                             openProcessingPrompt();
                         }}
