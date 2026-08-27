@@ -1,12 +1,18 @@
-import {IconLayer, ScatterplotLayer} from "@deck.gl/layers";
+import {BitmapLayer, IconLayer, ScatterplotLayer, SolidPolygonLayer} from "@deck.gl/layers";
+import {TileLayer} from "@deck.gl/geo-layers";
 import ColorFunctions from "../../services/ColorFunctions";
 import StreamRest from "../../services/StreamRest";
 import WebSocketClient from "../../services/WebSocketClient";
 import cameraicon from "./../../assets/images/camera3.png";
 import {useEffect, useMemo, useRef, useState} from 'react';
-import BaseMap from '../../commons/geographicalMaps/BaseMap';
+import DeckGL from "@deck.gl/react";
 import MapMenuLayout from '../../commons/mapMenu/MapMenuLayout';
 import ObservationMapMenu from '../../commons/mapMenu/ObservationMapMenu';
+import {MapView} from "@deck.gl/core";
+
+const MAP_VIEW = new MapView({repeat: true});
+const WORLD_BOUNDS = [[-180, -85], [180, -85], [180, 85], [-180, 85]];
+const SEMI_TRANSPARENT_OVERLAY_COLOR = [230, 230, 230, 50];
 
 const ICON_MAPPING = {
     marker: {x: 0, y: 0, width: 128, height: 128, mask: false}
@@ -85,6 +91,32 @@ function ObservationAreaMap(props) {
     }
 
     const layers = [
+        new TileLayer({
+            data: "https://c.tile.openstreetmap.org/{z}/{x}/{y}.png",
+            minZoom: 0,
+            maxZoom: 19,
+            tileSize: 256,
+
+            renderSubLayers: props => {
+                const {
+                    bbox: {west, south, east, north}
+                } = props.tile;
+
+                return new BitmapLayer(props, {
+                    data: null,
+                    image: props.data,
+                    bounds: [west, south, east, north]
+                });
+            }
+        }),
+        new SolidPolygonLayer({
+            id: 'semi-transparent-overlay',
+            data: [{polygon: WORLD_BOUNDS}],
+            getPolygon: d => d.polygon,
+            getFillColor: SEMI_TRANSPARENT_OVERLAY_COLOR,
+            stroked: false,
+            pickable: false,
+        }),
         new IconLayer({
             id: "icon-layer",
             data,
@@ -123,14 +155,16 @@ function ObservationAreaMap(props) {
             <MapMenuLayout>
                 <ObservationMapMenu setToggleLiveTracking={onToggleLive} showLive={showLive} />
             </MapMenuLayout>
-            <BaseMap
+            <DeckGL
                 layers={layers}
-                viewState={viewState}
-                getTooltip={getTooltip}
-                onClick={onSelect}
+                views={MAP_VIEW}
+                initialViewState={viewState}
+                controller={{dragRotate: false}}
                 onLoad={onLoad}
-                topOffset="3rem"
-            />
+                onClick={onSelect}
+                getTooltip={getTooltip}
+            >
+            </DeckGL>
         </>
     );
 }

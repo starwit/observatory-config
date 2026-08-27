@@ -185,7 +185,7 @@ function ObservationAreaOverview() {
                         </FormControl>
                     </Box>
                     <Box sx={{flex: 1, display: "flex", justifyContent: "center"}}>
-                        <Typography variant={"h2"} sx={{fontWeight: 600, color: "text.primary", textAlign: "center", paddingTop: 0}}>
+                        <Typography variant={"h2"} sx={{color: "text.primary", textAlign: "center", paddingTop: 0}}>
                             Observatory
                         </Typography>
                     </Box>
