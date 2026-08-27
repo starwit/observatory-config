@@ -174,12 +174,12 @@ function ObservationAreaSelect(props) {
                 />
             </FormControl>
             <Divider orientation="vertical" variant="middle" sx={{mt: "2px", mb: "6px", mr: "1.5rem", textAlign: "center", minWidth: "1.5rem"}} flexItem />
-            <FormControl sx={{paddingRight: "0.5rem", marginLeft: "auto"}}>
+            <FormControl sx={{marginLeft: "auto"}}>
                 {renderProcessingText()}
             </FormControl>
             <FormControl>
                 <Tooltip title={processingEnabled ? t("observationArea.track.stop.title") : t("observationArea.track.start.title")}>
-                    <Button sx={{height: "2rem", minWidth: "3rem", px: 0}} fontSize="small"
+                    <Button sx={{height: "2rem", minWidth: "3rem"}} fontSize="small"
                         onClick={() => {
                             openProcessingPrompt();
                         }}
@@ -188,7 +188,7 @@ function ObservationAreaSelect(props) {
                     </Button>
                 </Tooltip>
             </FormControl>
-            <FormControl sx={{paddingRight: "0.5rem", width: "300px"}}>
+            <FormControl sx={{paddingRight: "0.5rem", width: "270px"}}>
                 <Tooltip title={t('button.save')}>
                     <Button sx={{height: "2rem", minWidth: "3rem", marginLeft: "auto"}} fontSize="small"
                         onClick={onSaveClick}>
