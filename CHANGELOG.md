@@ -2,6 +2,12 @@
 
 Changelog of observatory-config.
 
+## Current Version ()
+
+### Features
+
+-  ab#2213 added links to overview map ([448f1](https://github.com/starwit/observatory-config/commit/448f15b45a70612) Anett Hübner)  
+
 ## refs/tags/1.0.0 (2026-07-22)
 
 ### Features

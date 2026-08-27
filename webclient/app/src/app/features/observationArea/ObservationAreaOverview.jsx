@@ -1,4 +1,4 @@
-import {Container, Typography, Stack, Button, Tooltip, Box, Fab} from "@mui/material";
+import {AppBar, Box, Container, Typography, Stack, Toolbar, Button, Tooltip, FormControl} from "@mui/material";
 import React, {useEffect, useMemo, useState} from "react";
 import {Grid} from '@mui/material';
 import {useTranslation} from "react-i18next";
@@ -11,9 +11,6 @@ import ObservationAreaCard from "./ObservationAreaCard";
 import ObservationAreaMap from "./ObservationAreaMap";
 import {ViewList, Map} from "@mui/icons-material";
 import MapSidebar from "./MapSidebar";
-import PlayArrowIcon from '@mui/icons-material/PlayArrow';
-import StopIcon from '@mui/icons-material/Stop';
-
 
 function ObservationAreaOverview() {
     const [map, setMap] = useState(false);
@@ -121,7 +118,7 @@ function ObservationAreaOverview() {
             }
 
             return (
-                <Grid container spacing={5} sx={{marginTop: 3}}>
+                <Grid container spacing={5} sx={{marginTop: 0}}>
                     {observationAreas?.map(area => (
                         <Grid size={{sm: 6, xs: 12}} key={area.id}>
                             <ObservationAreaCard
@@ -140,29 +137,25 @@ function ObservationAreaOverview() {
     function renderToggleButton() {
         if (map) {
             return (
-                <Tooltip title={t("button.viewlist")}>
-                    <Button onClick={toggleView} variant="contained" color="primary"><ViewList /></Button>
-                </Tooltip>
+                <Button sx={{height: "2rem", minWidth: "3rem"}} onClick={toggleView} variant="text" color="primary"><ViewList /></Button>
             );
         }
         return (
-            <Tooltip title={t("button.map")}>
-                <Button onClick={toggleView} variant="contained" color="primary"><Map /></Button>
-            </Tooltip>
+            <Button sx={{height: "2rem", minWidth: "3rem"}} onClick={toggleView} variant="text" color="primary"><Map /></Button>
         );
     }
 
     function renderSidebar() {
         if (map && selectedArea != null) {
-            return (<MapSidebar 
-                    selected={selectedArea} 
-                    observationAreas={observationAreas} 
-                    onSelect={onSelect} 
-                    editArea={editArea} 
-                    copyArea={copyArea} 
-                    deleteArea={promptDeleteArea} 
-                    showLive={isLiveTracking}>
-                    </MapSidebar>);
+            return (<MapSidebar
+                selected={selectedArea}
+                observationAreas={observationAreas}
+                onSelect={onSelect}
+                editArea={editArea}
+                copyArea={copyArea}
+                deleteArea={promptDeleteArea}
+                showLive={isLiveTracking}>
+            </MapSidebar>);
         }
         return null;
     }
@@ -171,19 +164,44 @@ function ObservationAreaOverview() {
         setIsLiveTracking(!isLiveTracking);
     }
 
+    function renderAppBar() {
+        return (
+            <AppBar
+                color="inherit"
+                position="sticky"
+                sx={{top: 0, zIndex: theme => theme.zIndex.drawer + 2}}
+            >
+                <Stack direction="row"
+                    sx={{
+                        marginTop: "0.4rem",
+                        height: "2.4rem",
+                        width: "100%",
+                        px: 1
+                    }}
+                    useFlexGap>
+                    <Box sx={{flex: 1, display: "flex", justifyContent: "flex-start"}}>
+                        <FormControl>
+                            {renderToggleButton()}
+                        </FormControl>
+                    </Box>
+                    <Box sx={{flex: 1, display: "flex", justifyContent: "center"}}>
+                        <Typography variant={"h2"} sx={{color: "text.primary", textAlign: "center", paddingTop: 0}}>
+                            Observatory
+                        </Typography>
+                    </Box>
+                    <Box sx={{flex: 1}} />
+                </Stack>
+            </AppBar>
+        );
+    }
+
     return (
         <>
             {renderSidebar()}
+            {renderAppBar()}
             <Container>
+                <Toolbar />
                 {renderMap()}
-                <Stack direction="row" sx={{justifyContent: "space-between"}}>
-                    <Typography sx={{zIndex: 2}} variant={"h2"} gutterBottom>
-                        {t("observationAreas.title")}
-                    </Typography>
-                    <Stack direction="row" spacing={1}>
-                        {renderToggleButton()}
-                    </Stack>
-                </Stack>
                 {renderObservationAreas()}
                 <ConfirmationDialog
                     title={t("observationArea.delete.title")}

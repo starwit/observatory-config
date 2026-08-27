@@ -104,6 +104,7 @@ const translationEnEN = {
     "button.viewlist": "Preview",
     "button.map": "Show in Map",
     "button.tracking": "Processing in progress",
+    "button.notTracking": "Processing stopped",
     "select.none": "None",
     "error.inUse": "More than one row with the given identifier was found",
     "error.sqlIntegrityConstaint": "Given data is not in the right format to be saved. Please check related entries.",

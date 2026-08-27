@@ -108,6 +108,7 @@ const translationDeDE = {
     "button.viewlist": "Vorschaubilder anzeigen",
     "button.map": "Auf Karte anzeigen",
     "button.tracking": "Verarbeitung läuft",
+    "button.notTracking": "Verarbeitung gestoppt",
     "select.none": "keine Auswahl",
     "error.inUse": "Es wurde mehr als eine Zeile mit dem angegebenen Bezeichner gefunden",
     "error.sqlIntegrityConstaint": "Die angegebenen Daten haben nicht das richtige Format, um gespeichert zu werden. Bitte prüfen Sie die zugehörigen Einträge.",
