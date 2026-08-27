@@ -15,6 +15,7 @@ import MapSidebar from "./MapSidebar";
 function ObservationAreaOverview() {
     const [map, setMap] = useState(false);
     const [isLiveTracking, setIsLiveTracking] = useState(false);
+    const [showRoadworks, setShowRoadworks] = useState(true);
 
     const {t} = useTranslation();
     const observationAreaRest = useMemo(() => new ObservationAreaRest(), []);
@@ -101,7 +102,9 @@ function ObservationAreaOverview() {
                     onLoad={reloadObservationAreas}
                     onSelect={onSelect}
                     showLive={isLiveTracking}
-                    onToggleLive={toggleLive} />
+                    onToggleLive={toggleLive}
+                    showRoadworks={showRoadworks}
+                    onToggleRoadworks={toggleRoadworks} />
             );
         }
         return null;
@@ -162,6 +165,10 @@ function ObservationAreaOverview() {
 
     function toggleLive() {
         setIsLiveTracking(!isLiveTracking);
+    }
+
+    function toggleRoadworks() {
+        setShowRoadworks(!showRoadworks);
     }
 
     function renderAppBar() {

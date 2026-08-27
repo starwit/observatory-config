@@ -137,6 +137,7 @@ const translationEnEN = {
     "confirm.dialog.title": "Confirm the Dialog Title",
     "confirm.dialog.description": "Confirm the Dialog Description",
     "map.live": "Enable Live Tracking",
+    "map.roadworks": "Show Wolfsburg roadworks",
     "observationArea.showSavedTrajectories": "Show Saved Trajectories",
     "observationArea.recordTrajectories": "Start / Stop Trajectories",
     "observationArea.trajectoryFilter.noRecordings": "No recorded trajectories available for this stream"

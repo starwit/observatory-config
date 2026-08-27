@@ -141,6 +141,7 @@ const translationDeDE = {
     "confirm.dialog.title": "Bestätigen des Dialog Titels",
     "confirm.dialog.description": "Bestätigen der Dialog Beschreibung",
     "map.live": "Livedaten anzeigen",
+    "map.roadworks": "Baustellen in Wolfsburg anzeigen",
     "observationArea.showSavedTrajectories": "Trajektorien anzeigen",
     "observationArea.recordTrajectories": "Start / Stop Aufzeichnung",
     "observationArea.trajectoryFilter.noRecordings": "Keine aufgezeichneten Trajektorien für diesen Stream verfügbar"

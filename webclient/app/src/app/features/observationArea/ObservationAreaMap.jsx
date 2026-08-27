@@ -2,6 +2,7 @@ import {IconLayer, ScatterplotLayer} from "@deck.gl/layers";
 import ColorFunctions from "../../services/ColorFunctions";
 import StreamRest from "../../services/StreamRest";
 import WebSocketClient from "../../services/WebSocketClient";
+import WolfsburgRoadworksRest from "../../services/WolfsburgRoadworksRest";
 import cameraicon from "./../../assets/images/camera3.png";
 import {useEffect, useMemo, useRef, useState} from 'react';
 import BaseMap from '../../commons/geographicalMaps/BaseMap';
@@ -13,9 +14,10 @@ const ICON_MAPPING = {
 };
 
 function ObservationAreaMap(props) {
-    const {data, onLoad, viewState, onSelect, showLive, onToggleLive} = props;
+    const {data, onLoad, viewState, onSelect, showLive, onToggleLive, showRoadworks, onToggleRoadworks} = props;
 
     const streamRest = useMemo(() => new StreamRest(), []);
+    const roadworksRest = useMemo(() => new WolfsburgRoadworksRest(), []);
     const wsClient = useRef(new WebSocketClient());
     const colorFunctions = useRef(new ColorFunctions());
 
@@ -84,6 +86,9 @@ function ObservationAreaMap(props) {
         });
     }
 
+
+    const roadworksLayer = roadworksRest.createLayer(showRoadworks);
+
     const layers = [
         new IconLayer({
             id: "icon-layer",
@@ -103,6 +108,7 @@ function ObservationAreaMap(props) {
             getSize: d => 5,
             getColor: d => [Math.sqrt(d.exits), 140, 0]
         }),
+        ...(roadworksLayer ? [roadworksLayer] : []),
         ...setupLiveLayers()
     ];
 
@@ -121,7 +127,12 @@ function ObservationAreaMap(props) {
     return (
         <>
             <MapMenuLayout>
-                <ObservationMapMenu setToggleLiveTracking={onToggleLive} showLive={showLive} />
+                <ObservationMapMenu
+                    setToggleLiveTracking={onToggleLive}
+                    showLive={showLive}
+                    setToggleRoadworks={onToggleRoadworks}
+                    showRoadworks={showRoadworks}
+                />
             </MapMenuLayout>
             <BaseMap
                 layers={layers}
