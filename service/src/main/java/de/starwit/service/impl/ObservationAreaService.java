@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import jakarta.transaction.Transactional;
 
 import de.starwit.persistence.entity.CameraEntity;
 import de.starwit.persistence.entity.ImageEntity;
@@ -52,13 +53,26 @@ public class ObservationAreaService implements ServiceInterface<ObservationAreaE
 
     @Override
     public void delete(Long id) throws NotificationException {
-        this.getRepository().deleteById(id);
+        ObservationAreaEntity entity = this.findById(id);
+        if (entity == null) {
+            return;
+        }
+        CameraEntity camera = entity.getCamera();
+        this.getRepository().delete(entity);
+        if (camera != null) {
+            CameraEntity stored = cameraRepository.findById(camera.getId()).orElse(null);
+            if (stored != null && (stored.getObservationAreas() == null || stored.getObservationAreas().isEmpty())) {
+                cameraRepository.delete(stored);
+            }
+        }
     }
 
+    @Transactional
     public ObservationAreaDto saveOrUpdateDto(ObservationAreaDto dto) {
         if (dto == null) {
             return null;
         }
+
         ObservationAreaEntity entity = null;
         if (dto.getId() == null) {
             entity = mapper.convertToEntity(dto);
@@ -82,8 +96,23 @@ public class ObservationAreaService implements ServiceInterface<ObservationAreaE
                 imageRepository.saveAndFlush(image);
             }
         }
+
         entity = observationareaRepository.saveAndFlush(entity);
         observationareaRepository.refresh(entity);
+
+        // best-effort cleanup: delete any cameras that currently have no observation
+        // areas
+        try {
+            List<Long> empty = cameraRepository.findAllWithEmptyObservationArea();
+            if (empty != null && !empty.isEmpty()) {
+                for (Long camId : empty) {
+                    cameraRepository.deleteById(camId);
+                }
+            }
+        } catch (Exception ex) {
+            // ignore cleanup failures
+        }
+
         return mapper.convertToDto(entity);
     }
 

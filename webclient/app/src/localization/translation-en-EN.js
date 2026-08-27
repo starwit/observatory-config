@@ -53,6 +53,11 @@ const translationEnEN = {
     "observationAreaCard.noImage": "No Image",
     "observationArea.name": "name*",
     "observationArea.name.hint": "Value is required. Allowed maximum is 150 characters.",
+    "observationArea.links": "Links",
+    "observationArea.link.name": "Link Name",
+    "observationArea.link.name.hint": "Value is required. Allowed maximum is 150 characters.",
+    "observationArea.link.url": "Link URL",
+    "observationArea.link.url.hint": "Value is required. Allowed maximum is 150 characters.",
     "observationArea.image": "Drop image file here or click...",
     "observationArea.image.hint": "Optional: drop an image, grab one from SAE, or add it later.",
     "observationArea.image.empty": "Please add a camera still or a map as an image.",
@@ -131,8 +136,8 @@ const translationEnEN = {
     "confirm.dialog.title": "Confirm the Dialog Title",
     "confirm.dialog.description": "Confirm the Dialog Description",
     "map.live": "Enable Live Tracking",
-    "observationArea.showSavedTrajectories" : "Show Saved Trajectories",
-    "observationArea.recordTrajectories" : "Start / Stop Trajectories",
-    "observationArea.trajectoryFilter.noRecordings" : "No recorded trajectories available for this stream"
+    "observationArea.showSavedTrajectories": "Show Saved Trajectories",
+    "observationArea.recordTrajectories": "Start / Stop Trajectories",
+    "observationArea.trajectoryFilter.noRecordings": "No recorded trajectories available for this stream"
 };
 export default translationEnEN;

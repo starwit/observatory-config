@@ -1,28 +1,20 @@
-import React, {useEffect} from 'react'
+import {ContentCopy, Delete, Edit} from "@mui/icons-material";
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import {ContentCopy, Delete, Edit, QueryStats, Camera, Dashboard, Link} from "@mui/icons-material";
-import {CardMedia, CardActionArea, CardContent, Typography, IconButton, Box, Accordion, AccordionSummary, AccordionDetails, Tooltip, ImageListItemBar, Button} from "@mui/material";
-import {Grid} from '@mui/material';
-import {imageFileUrlForId} from "../../services/ImageRest";
-import {useNavigate} from "react-router-dom";
-import MapStyles from "../../assets/styles/MapStyles";
+import {Accordion, AccordionDetails, AccordionSummary, Box, IconButton, Tooltip, Typography} from "@mui/material";
+import React, {useEffect} from 'react';
 import {useTranslation} from "react-i18next";
+import MapStyles from "../../assets/styles/MapStyles";
+import ObservationAreaPreview from './ObservationAreaPreview';
 
 
 export default function MapSidebar(props) {
     const {selected, observationAreas, editArea, copyArea, deleteArea} = props;
-    const navigate = useNavigate();
     const [expanded, setExpanded] = React.useState(selected.id);
     const {t} = useTranslation();
 
     useEffect(() => {
         setExpanded(selected.id);
     }, [selected]);
-
-    function openArea(area) {
-        navigate("/observationarea/" + area.id)
-    }
-
     function handleChange(panel) {
         return function change(event, newExpanded) {
             setExpanded(newExpanded ? panel : false);
@@ -35,45 +27,6 @@ export default function MapSidebar(props) {
             return true;
         }
         return false;
-    }
-
-    function renderProcessingIcon(processingEnabled) {
-        if (processingEnabled) {
-            return (
-                <ImageListItemBar
-                    sx={{background: "rgba(215, 93, 42, 0.7)"}}
-                    actionPosition="left"
-                    position="top"
-                    actionIcon={
-                        <Box display='flex' alignItems="center">
-                            <QueryStats sx={{color: "white", margin: "0.5rem", scale: "90%", opacity: "90%"}} fontSize="large"></QueryStats>
-                            <Typography variant="h6" component="div" color="white">
-                                {t("button.tracking")}
-                            </Typography>
-                        </Box>
-                    }
-                ></ImageListItemBar>
-            );
-        }
-    }
-
-    function renderImage(area) {
-        const imageUrl = area.image !== null ? imageFileUrlForId(area.image.id) : null;
-        if (area.image !== null) {
-            return (
-                <CardMedia
-                    component="img"
-                    height="300"
-                    src={imageUrl}
-                    sx={{filter: area.processingEnabled ? 'none' : 'grayscale(100%)'}}
-                />);
-        }
-        return (
-            <CardContent sx={{height: 250}}>
-                <Typography textAlign={"center"}>{t("observationAreaCard.noImage")}</Typography>
-            </CardContent>
-        );
-
     }
 
     return (
@@ -90,8 +43,8 @@ export default function MapSidebar(props) {
                                     backgroundColor: expanded === area.id
                                         ? 'white'
                                         : area.processingEnabled
-                                            ? 'rgba(215, 93, 42, 0.18)'
-                                            : 'rgba(0, 0, 0, 0.06)',
+                                            ? 'rgba(217, 113, 69, 0.6)'
+                                            : 'rgba(180, 180, 180, 0.6)',
                                     borderLeft: expanded === area.id && area.processingEnabled ? '4px solid rgba(215, 93, 42, 0.7)' : '4px solid transparent',
                                     transition: 'background-color 0.2s ease-in-out',
                                 }}
@@ -114,17 +67,35 @@ export default function MapSidebar(props) {
                                         {expanded === area.id && (
                                             <Box sx={{display: 'flex', alignItems: 'center'}}>
                                                 <Tooltip title={t("button.copy")}>
-                                                    <IconButton onClick={() => copyArea(area)}>
+                                                    <IconButton
+                                                        component="span"
+                                                        onClick={(event) => {
+                                                            event.stopPropagation();
+                                                            copyArea(area);
+                                                        }}
+                                                    >
                                                         <ContentCopy fontSize={"small"} />
                                                     </IconButton>
                                                 </Tooltip>
                                                 <Tooltip title={t("button.update")}>
-                                                    <IconButton onClick={() => editArea(area)}>
+                                                    <IconButton
+                                                        component="span"
+                                                        onClick={(event) => {
+                                                            event.stopPropagation();
+                                                            editArea(area);
+                                                        }}
+                                                    >
                                                         <Edit fontSize={"small"} />
                                                     </IconButton>
                                                 </Tooltip>
                                                 <Tooltip title={t("button.delete")}>
-                                                    <IconButton onClick={() => deleteArea(area)}>
+                                                    <IconButton
+                                                        component="span"
+                                                        onClick={(event) => {
+                                                            event.stopPropagation();
+                                                            deleteArea(area);
+                                                        }}
+                                                    >
                                                         <Delete fontSize={"small"} />
                                                     </IconButton>
                                                 </Tooltip>
@@ -133,30 +104,7 @@ export default function MapSidebar(props) {
                                     </Box>
                                 </AccordionSummary>
                                 <AccordionDetails sx={{padding: 0, }}>
-                                    <CardActionArea onClick={() => openArea(area)} sx={{display: "flex", flexDirection: "column", alignItems: "stretch", position: "relative"}}>
-                                        {renderImage(area)}
-                                        {renderProcessingIcon(area.processingEnabled)}
-                                        <Box sx={{position: "absolute", display: "flex", justifyContent: "flex-end", width: "100%", px: 1, bottom: 0, backgroundColor: "rgba(255, 255, 255, 0.45)", backdropFilter: "blur(2px)"}}>
-                                            <Tooltip title={"Record Track"}>
-                                                <IconButton onClick={() => { }}>
-                                                    <Camera fontSize={"small"} />
-                                                </IconButton>
-                                            </Tooltip>
-                                            <Tooltip title={"Grafana"}>
-                                                <IconButton onClick={() => { }}>
-                                                    <Dashboard fontSize={"small"} />
-                                                </IconButton>
-                                            </Tooltip>
-                                            <Tooltip title={"ODP"}>
-                                                <IconButton onClick={() => { }}>
-                                                    <Link fontSize={"small"} />
-                                                </IconButton>
-                                            </Tooltip>
-                                            <Tooltip title={"DAVe"}>
-                                                <Button>DAVe</Button>
-                                            </Tooltip>
-                                        </Box>
-                                    </CardActionArea>
+                                    <ObservationAreaPreview observationArea={area} />
                                 </AccordionDetails>
                             </Accordion>);
                     }

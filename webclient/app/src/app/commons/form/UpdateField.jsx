@@ -30,14 +30,14 @@ function UpdateField(props) {
     }
 
     let type = field.type;
-    if (isNumber(field.type)){
+    if (isNumber(field.type)) {
         type = 'number';
         defaultValue = 0;
     }
 
     return (
         <ValidatedTextField
-            inputProps={field.inputProps}
+            inputprops={field.inputProps}
             key={field.name}
             id={"input-" + field.name}
             label={t(prefix + "." + field.name)}

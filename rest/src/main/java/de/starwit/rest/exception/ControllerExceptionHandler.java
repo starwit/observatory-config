@@ -117,6 +117,7 @@ public class ControllerExceptionHandler extends ResponseEntityExceptionHandler {
                     "More than one row with the given identifier was found");
             return new ResponseEntity<>(output, HttpStatus.BAD_REQUEST);
         }
+        LOG.info("JPA Exception: {}", ex.getMessage());
         NotificationDto output = new NotificationDto("error.internalServerError", "Internal Server Error");
         return new ResponseEntity<>(output, HttpStatus.INTERNAL_SERVER_ERROR);
     }

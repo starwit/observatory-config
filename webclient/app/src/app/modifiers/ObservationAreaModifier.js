@@ -4,6 +4,7 @@ const entityDefault = {
     saeStreamKey: "",
     geoReferenced: false,
     processingEnabled: false,
+    links: []
 };
 
 const entityFields = [

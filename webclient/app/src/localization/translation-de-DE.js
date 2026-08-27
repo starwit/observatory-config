@@ -54,6 +54,11 @@ const translationDeDE = {
     "observationArea.id": "id",
     "observationArea.name": "Name*",
     "observationArea.name.hint": "Der Name ist ein Pflichtfeld und kann bis zu 150 Zeichen lang sein.",
+    "observationArea.links": "Links",
+    "observationArea.link.name": "Link Name",
+    "observationArea.link.name.hint": "Wert ist erforderlich. Erlaubtes Maximum ist 150 Zeichen.",
+    "observationArea.link.url": "Link URL",
+    "observationArea.link.url.hint": "Wert ist erforderlich. Erlaubtes Maximum ist 150 Zeichen.",
     "observationArea.saeStreamKey": "SAE Stream Key",
     "observationArea.geoReferenced": "Geokoordinaten",
     "observationArea.geoReferenced.hint": "",
@@ -135,8 +140,8 @@ const translationDeDE = {
     "confirm.dialog.title": "Bestätigen des Dialog Titels",
     "confirm.dialog.description": "Bestätigen der Dialog Beschreibung",
     "map.live": "Livedaten anzeigen",
-    "observationArea.showSavedTrajectories" : "Trajektorien anzeigen",
-    "observationArea.recordTrajectories" : "Start / Stop Aufzeichnung",
-    "observationArea.trajectoryFilter.noRecordings" : "Keine aufgezeichneten Trajektorien für diesen Stream verfügbar"
+    "observationArea.showSavedTrajectories": "Trajektorien anzeigen",
+    "observationArea.recordTrajectories": "Start / Stop Aufzeichnung",
+    "observationArea.trajectoryFilter.noRecordings": "Keine aufgezeichneten Trajektorien für diesen Stream verfügbar"
 };
 export default translationDeDE;
