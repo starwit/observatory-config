@@ -78,6 +78,10 @@ spec:
               value: {{ .Values.app.contextPath | quote }}
             - name: OBSERVATORY_URL
               value: {{ .Values.app.observatoryUrl }}
+            {{- with .Values.app.websocketAllowedOrigins }}
+            - name: WEBSOCKET_ALLOWEDORIGINS
+              value: {{ join "," . | quote }}
+            {{- end }}
             - name: SPRING_DATA_REDIS_ACTIVE
               value: {{ .Values.redis.enabled | quote }}
             {{- if .Values.redis.enabled }}
