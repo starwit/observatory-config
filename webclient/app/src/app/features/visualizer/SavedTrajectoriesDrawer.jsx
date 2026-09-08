@@ -1,25 +1,25 @@
 
-import { useEffect, useMemo, useRef, useState } from "react";
+import {useEffect, useMemo, useRef, useState} from "react";
 import DeckGL from "@deck.gl/react";
-import { OrthographicView } from "@deck.gl/core";
-import { PathLayer } from "@deck.gl/layers";
+import {OrthographicView} from "@deck.gl/core";
+import {PathLayer} from "@deck.gl/layers";
 import DetectionRest from "../../services/DetectionRest";
 
 const CLASS_COLORS = {
-    0: [255, 100, 100, 255], // pedestrian
-    1: [100, 200, 100, 255], // bicycle
-    2: [100, 100, 255, 255], // vehicle
-    3: [50, 220, 220, 255],  // motorcycle - 
-    5: [255, 200, 50, 255],  // bus - orange
-    7: [200, 100, 255, 255], // trucks - pink
+    0: [255, 100, 100, 100], // pedestrian
+    1: [100, 200, 100, 100], // bicycle
+    2: [100, 100, 255, 100], // vehicle
+    3: [50, 220, 220, 100],  // motorcycle - 
+    5: [255, 200, 50, 100],  // bus - orange
+    7: [200, 100, 255, 100], // trucks - pink
 };
 
 function colorForClass(classId) {
-    return CLASS_COLORS[classId] ?? [180, 180, 180, 255];
+    return CLASS_COLORS[classId] ?? [180, 180, 180, 100];
 }
 
 function SavedTrajectoryDrawer(props) {
-    const { streamKey, width, height, start, end } = props;
+    const {streamKey, width, height, start, end} = props;
     const detectionRest = useRef(new DetectionRest());
 
     const [classTrajectories, setClassTrajectories] = useState([]);
@@ -44,12 +44,12 @@ function SavedTrajectoryDrawer(props) {
         };
     }, [width, height]);
 
-    const layers = classTrajectories.flatMap(({ classId, tracedObjects }) => {
+    const layers = classTrajectories.flatMap(({classId, tracedObjects}) => {
         const color = colorForClass(classId);
         const paths = tracedObjects
             .filter(tracedObject => tracedObject.trajectory.length >= 2)
-            .map(tracedObject => ({ path: tracedObject.trajectory.map(point => [point.x * width, point.y * height]) }));
-        
+            .map(tracedObject => ({path: tracedObject.trajectory.map(point => [point.x * width, point.y * height])}));
+
         return new PathLayer({
             id: `paths-class-${classId}`,
             data: paths,
@@ -63,7 +63,7 @@ function SavedTrajectoryDrawer(props) {
 
     return (
         <DeckGL
-            views={new OrthographicView({ id: 'ortho', flipY: true })}
+            views={new OrthographicView({id: 'ortho', flipY: true})}
             viewState={viewState}
             controller={false}
             layers={layers}
