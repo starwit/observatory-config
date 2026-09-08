@@ -1,8 +1,8 @@
 import axios from "axios";
 
-class StreamRest  {
+class StreamRest {
     constructor() {
-        this.baseUrl = window.location.pathname + "api/messages";
+        this.baseUrl = window.location.pathname + "api/message";
     }
 
     getAvailableStreams = () => {
