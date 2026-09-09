@@ -13,7 +13,7 @@ import de.starwit.service.streamprocessing.SaeMessageService;
 import io.swagger.v3.oas.annotations.Operation;
 
 @RestController
-@RequestMapping(path = "${rest.base-path}/messages")
+@RequestMapping(path = "${rest.base-path}/message")
 public class MessageController {
 
     private Logger log = LoggerFactory.getLogger(MessageController.class);
@@ -25,5 +25,5 @@ public class MessageController {
     @GetMapping(value = "/streams")
     public List<String> getMessageStreams() {
         return saeMessageService.getAvailableStreams();
-    }  
+    }
 }

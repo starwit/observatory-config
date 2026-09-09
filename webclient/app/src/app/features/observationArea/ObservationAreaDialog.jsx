@@ -1,4 +1,4 @@
-import {Button, CircularProgress, Dialog, DialogActions, DialogContent, FormControl, IconButton, Stack, Tooltip, Typography, TextField, Divider} from "@mui/material";
+import {Autocomplete, Button, CircularProgress, Dialog, DialogActions, DialogContent, FormControl, IconButton, Stack, Tooltip, Typography, TextField, Divider} from "@mui/material";
 import {Grid} from '@mui/material';
 import CameraAltIcon from "@mui/icons-material/CameraAlt";
 import DeleteIcon from "@mui/icons-material/Delete";
@@ -12,10 +12,10 @@ import ImageUploadStyles from "../../assets/styles/ImageUploadStyles";
 import DialogHeader from "../../commons/dialog/DialogHeader";
 import UpdateField from "../../commons/form/UpdateField";
 import UpdateFieldStyles from "../../commons/form/UpdateFieldStyles";
-import ValidatedTextField from "../../commons/form/ValidatedTextField";
 import {handleChange, isValid, prepareForSave} from "../../modifiers/DefaultModifier";
 import {entityDefault, entityFields} from "../../modifiers/ObservationAreaModifier";
 import ImageRest, {imageFileUrlForId} from "../../services/ImageRest";
+import MessageRest from "../../services/MessageRest";
 import ObservationAreaRest from "../../services/ObservationAreaRest";
 import {Add} from "@mui/icons-material";
 
@@ -32,10 +32,13 @@ function ObservationAreaDialog(props) {
     const fields = entityFields;
     const observationAreaRest = useMemo(() => new ObservationAreaRest(), []);
     const imageRest = useMemo(() => new ImageRest(), []);
+    const messageRest = useMemo(() => new MessageRest(), []);
     const [hasFormError, setHasFormError] = useState(false);
     const [imageChanged, setImageChanged] = useState(false);
     const [imageBlob, setImageBlob] = useState(null);
     const [saeImageLoading, setSaeImageLoading] = useState(false);
+    const [streamKeyOptions, setStreamKeyOptions] = useState([]);
+    const [streamKeyLoading, setStreamKeyLoading] = useState(false);
 
     useEffect(() => {
         if (open === true) {
@@ -57,6 +60,23 @@ function ObservationAreaDialog(props) {
             setImageChanged(false);
         }
     }, [selectedArea, mode, open]);
+
+    useEffect(() => {
+        if (!open) {
+            return;
+        }
+
+        setStreamKeyLoading(true);
+        messageRest.getAvailableStreams()
+            .then(({data}) => {
+                const streams = Array.isArray(data) ? [...new Set(data)].sort((a, b) => a.localeCompare(b)) : [];
+                setStreamKeyOptions(streams);
+            })
+            .catch(() => {
+                setStreamKeyOptions([]);
+            })
+            .finally(() => setStreamKeyLoading(false));
+    }, [open, messageRest]);
 
     function loadExistingImage() {
         if (selectedArea.image !== null) {
@@ -305,15 +325,27 @@ function ObservationAreaDialog(props) {
                             <Grid size={{xs: 12}}>
                                 <Stack direction="row" alignitems="flex-end" spacing={1}>
                                     <FormControl fullWidth>
-                                        <ValidatedTextField
+                                        <Autocomplete
+                                            freeSolo
+                                            options={streamKeyOptions}
+                                            loading={streamKeyLoading}
+                                            slotProps={{popper: {sx: {zIndex: 10001}}}}
                                             value={entity?.saeStreamKey ?? ""}
-                                            onChange={(e) => handleSaeStreamKeyChange(e.target.value)}
-                                            label={t("observationArea.saeStreamKey")}
-                                            sx={UpdateFieldStyles.textField}
-                                            variant="standard"
-                                            fullWidth
-                                            helperText={""}
-                                            notNull
+                                            inputValue={entity?.saeStreamKey ?? ""}
+                                            onInputChange={(_, newInputValue) => handleSaeStreamKeyChange(newInputValue ?? "")}
+                                            onChange={(_, newValue) => handleSaeStreamKeyChange(newValue ?? "")}
+                                            renderInput={(params) => (
+                                                <TextField
+                                                    {...params}
+                                                    label={t("observationArea.saeStreamKey")}
+                                                    sx={UpdateFieldStyles.textField}
+                                                    variant="standard"
+                                                    fullWidth
+                                                    required
+                                                    error={!entity?.saeStreamKey}
+                                                    helperText={""}
+                                                />
+                                            )}
                                         />
                                     </FormControl>
                                     <Tooltip

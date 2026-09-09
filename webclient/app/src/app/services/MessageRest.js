@@ -1,6 +1,6 @@
 import axios from "axios";
 
-class StreamRest {
+class MessageRest {
     constructor() {
         this.baseUrl = window.location.pathname + "api/message";
     }
@@ -9,4 +9,5 @@ class StreamRest {
         return axios.get(this.baseUrl + "/streams");
     };
 }
-export default StreamRest;
+
+export default MessageRest;
