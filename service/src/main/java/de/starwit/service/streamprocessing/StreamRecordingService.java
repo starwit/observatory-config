@@ -41,11 +41,12 @@ public class StreamRecordingService {
     @Scheduled(fixedRate = 2000)
     public synchronized void synchronizeSubscriptions() {
         List<String> streamsToRecord = getStreamsToRecord();
+        List<String> availableStreams = streamAvailabilityService.getAvailableStreams();
 
-        log.debug("available streams for recording" + streamAvailabilityService.getAvailableStreams().toString());
+        log.debug("available streams for recording" + availableStreams.toString());
         log.debug("Streams marked for recording " + streamsToRecord.toString());
 
-        for (String streamId : streamAvailabilityService.getAvailableStreams()) {
+        for (String streamId : availableStreams) {
             if (streamsToRecord.contains(streamId) && !streamToSubscription.containsKey(streamId)) {
                 log.info("Added saving subscription for " + streamId);
                 Subscription subscription = streamMessageListenerContainer.receive(
@@ -55,11 +56,14 @@ public class StreamRecordingService {
         }
 
         List<String> toRemove = streamToSubscription.keySet().stream()
-                .filter(streamId -> !streamsToRecord.contains(streamId))
+                .filter(streamId -> !streamsToRecord.contains(streamId) || !availableStreams.contains(streamId))
                 .toList();
         for (String streamId : toRemove) {
-            streamMessageListenerContainer.remove(streamToSubscription.remove(streamId));
-            log.info("Removed saving subscription for " + streamId);
+            Subscription subscription = streamToSubscription.remove(streamId);
+            if (subscription != null) {
+                streamMessageListenerContainer.remove(subscription);
+                log.info("Removed saving subscription for " + streamId);
+            }
         }
     }
 
