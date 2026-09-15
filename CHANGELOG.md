@@ -6,6 +6,17 @@ Changelog of observatory-config.
 
 ### Features
 
+-  ab#2035 remove valkey subscription during subscription update ([a6050](https://github.com/starwit/observatory-config/commit/a605071c8dbc4c9) Anett Hübner)  
+-  ab#2307 - add drop down dialog for streamkeys in obervation area edit dialog ([1e658](https://github.com/starwit/observatory-config/commit/1e658ef18ed1132) Anett Hübner)  
+
+### Bug Fixes
+
+-  ab#2384 align color transparency for trajectories ([530c7](https://github.com/starwit/observatory-config/commit/530c731560f1e86) Anett Hübner)  
+
+## refs/tags/1.2.0 (2026-08-27)
+
+### Features
+
 -  ab#2213 added links to overview map ([448f1](https://github.com/starwit/observatory-config/commit/448f15b45a70612) Anett Hübner)  
 
 ## refs/tags/1.0.0 (2026-07-22)
