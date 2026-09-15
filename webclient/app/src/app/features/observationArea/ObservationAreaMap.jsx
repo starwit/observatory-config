@@ -1,7 +1,7 @@
 import {BitmapLayer, IconLayer, ScatterplotLayer, SolidPolygonLayer} from "@deck.gl/layers";
 import {TileLayer} from "@deck.gl/geo-layers";
 import ColorFunctions from "../../services/ColorFunctions";
-import StreamRest from "../../services/StreamRest";
+import MessageRest from "../../services/MessageRest";
 import WebSocketClient from "../../services/WebSocketClient";
 import cameraicon from "./../../assets/images/camera3.png";
 import {useEffect, useMemo, useRef, useState} from 'react';
@@ -21,14 +21,14 @@ const ICON_MAPPING = {
 function ObservationAreaMap(props) {
     const {data, onLoad, viewState, onSelect, showLive, onToggleLive} = props;
 
-    const streamRest = useMemo(() => new StreamRest(), []);
+    const messageRest = useMemo(() => new MessageRest(), []);
     const wsClient = useRef(new WebSocketClient());
     const colorFunctions = useRef(new ColorFunctions());
 
     const [streams, setStreams] = useState({});
     const [markerList, setMarkerList] = useState({});
     useEffect(() => {
-        streamRest.getAvailableStreams().then(response => {
+        messageRest.getAvailableStreams().then(response => {
             const streams = response.data;
             const colors = colorFunctions.current.generateDistinctColors(Object.keys(response.data).length);
             let streamsAndColors = {}
