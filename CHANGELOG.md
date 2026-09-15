@@ -4,6 +4,12 @@ Changelog of observatory-config.
 
 ## Current Version ()
 
+### Bug Fixes
+
+-  ab#2397 corrected and unified stream request url in frontend service ([1b039](https://github.com/starwit/observatory-config/commit/1b03950870e6fde) Anett Hübner)  
+
+## refs/tags/2.3.0 (2026-09-15)
+
 ### Features
 
 -  ab#2035 remove valkey subscription during subscription update ([a6050](https://github.com/starwit/observatory-config/commit/a605071c8dbc4c9) Anett Hübner)  
