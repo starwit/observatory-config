@@ -60,10 +60,13 @@ const translationEnEN = {
     "observationArea.link.url.hint": "Value is required. Allowed maximum is 150 characters.",
     "observationArea.image": "Drop image file here or click...",
     "observationArea.image.hint": "Optional: drop an image, grab one from SAE, or add it later.",
+    "observationArea.image.preview": "Preview",
     "observationArea.image.empty": "Please add a camera still or a map as an image.",
     "observationArea.image.tooLarge": "Maximum Filesize = 4 MB",
     "observationArea.image.invalidType": "Only JPEG and PNG images are acceptable",
     "observationArea.image.unknownError": "Image could not be loaded",
+    "observationArea.delete.title": "Delete observation area?",
+    "observationArea.delete.message": "The observation area and all contained configurations will be permanently deleted.",
     "observationArea.saeStreamKey": "SAE Stream Key",
     "observationArea.geoReferenced": "geo coordinates",
     "observationArea.geoReferenced.hint": "",
@@ -100,6 +103,7 @@ const translationEnEN = {
     "button.copy": "Copy",
     "button.delete": "Delete",
     "button.save": "Save",
+    "button.cancel": "Cancel",
     "button.close": "Close",
     "button.viewlist": "Preview",
     "button.map": "Show in Map",
@@ -138,7 +142,15 @@ const translationEnEN = {
     "confirm.dialog.description": "Confirm the Dialog Description",
     "map.live": "Enable Live Tracking",
     "observationArea.showSavedTrajectories": "Show Saved Trajectories",
+    "observationArea.trajectoryFilter.label": "Filter saved trajectories by class",
+    "observationArea.trajectoryFilter.allClasses": "Show All",
     "observationArea.recordTrajectories": "Start / Stop Trajectories",
-    "observationArea.trajectoryFilter.noRecordings": "No recorded trajectories available for this stream"
+    "observationArea.trajectoryFilter.noRecordings": "No recorded trajectories available for this stream",
+    "mapping.pedestrian" : "Pedestrian",
+    "mapping.bicycle" : "Bicycle",
+    "mapping.vehicle" : "Vehicle",
+    "mapping.motorcycle" : "Motorcycle",
+    "mapping.bus" : "Bus",
+    "mapping.truck" : "Truck"
 };
 export default translationEnEN;
