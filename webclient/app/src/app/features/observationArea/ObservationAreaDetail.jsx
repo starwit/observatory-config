@@ -24,6 +24,7 @@ function ObservationAreaDetail(props) {
     const [showSavedTrajectoriesState, setShowSavedTrajectoriesState] = useState(false);
     const [showRecordedTrajectories, setShowRecordedTrajectoriesState] = useState(false);
     const [selectedTrajectoryRange, setSelectedTrajectoryRange] = useState(null);
+    const [selectedSavedTrajectoryClassIds, setSelectedSavedTrajectoryClassIds] = useState([]);
 
     const [liveTrajectoriesActive, setLiveTrajectoriesActive] = useState(false);
     const [observationAreas, setObservationAreas] = useState();
@@ -143,6 +144,8 @@ function ObservationAreaDetail(props) {
                     showTrajectories={liveTrajectoriesActive}
                     onShowSavedTrajectoriesClicked={onShowSavedTrajectoriesClick}
                     showSavedTrajectories={showSavedTrajectoriesState}
+                    selectedSavedTrajectoryClassIds={selectedSavedTrajectoryClassIds}
+                    onSavedTrajectoryClassIdsChange={setSelectedSavedTrajectoryClassIds}
                     onStartRecordingClick={onStartRecordingClick}
                     showRecordedTrajectories={showRecordedTrajectories}
                 />
@@ -188,6 +191,7 @@ function ObservationAreaDetail(props) {
                                                 height={height}
                                                 start={selectedTrajectoryRange?.start}
                                                 end={selectedTrajectoryRange?.end}
+                                                selectedClassIds={selectedSavedTrajectoryClassIds}
                                             />
                                         )}
                                         {liveTrajectoriesActive &&

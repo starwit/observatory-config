@@ -1,12 +1,10 @@
-import {Analytics, Camera, Home, Sync} from "@mui/icons-material";
+import {Analytics, Camera, Home} from "@mui/icons-material";
 import EditRoundedIcon from "@mui/icons-material/EditRounded";
 import EmergencyRecordingIcon from '@mui/icons-material/EmergencyRecording';
-import PlayCircleFilledWhiteIcon from "@mui/icons-material/PlayCircleFilledWhite";
 import RefreshIcon from "@mui/icons-material/Refresh";
 import SaveIcon from '@mui/icons-material/Save';
 import SsidChartIcon from '@mui/icons-material/SsidChart';
-import StopCircleIcon from "@mui/icons-material/StopCircle";
-import {Button, CircularProgress, Divider, IconButton, Stack, Tooltip, Typography} from "@mui/material";
+import {Button, Checkbox, CircularProgress, Divider, ListItemText, Stack, Tooltip, Typography} from "@mui/material";
 import FormControl from "@mui/material/FormControl";
 import MenuItem from "@mui/material/MenuItem";
 import Select from "@mui/material/Select";
@@ -15,6 +13,9 @@ import {useTranslation} from "react-i18next";
 import ConfirmationDialog from "../../commons/dialog/ConfirmationDialog";
 import ImageRest from "../../services/ImageRest";
 import ObservationAreaRest from "../../services/ObservationAreaRest";
+import {CLASS_COLORS, CLASS_MAPPING} from "../visualizer/SavedTrajectoriesDrawer";
+
+const ALL_CLASS_IDS = "all";
 
 function ObservationAreaSelect(props) {
     const {
@@ -30,7 +31,9 @@ function ObservationAreaSelect(props) {
         onSaveClick,
         showTrajectories = false,
         showSavedTrajectories = false,
-        showRecordedTrajectories = false
+        showRecordedTrajectories = false,
+        selectedSavedTrajectoryClassIds = [],
+        onSavedTrajectoryClassIdsChange
     } = props;
 
     const {t} = useTranslation();
@@ -55,6 +58,12 @@ function ObservationAreaSelect(props) {
         const newObservationAreaId = event.target.value;
         onAreaChange(newObservationAreaId);
     };
+
+    function handleSavedTrajectoryClassChange(event) {
+        const selectedValues = event.target.value;
+        const values = typeof selectedValues === "string" ? selectedValues.split(",") : selectedValues;
+        onSavedTrajectoryClassIdsChange(values.includes(ALL_CLASS_IDS) ? [] : values.map(Number));
+    }
 
     function openProcessingPrompt() {
         setProcessingPromptOpen(true);
@@ -153,6 +162,41 @@ function ObservationAreaSelect(props) {
                     </Button>
                 </Tooltip>
             </FormControl>
+            {showSavedTrajectories && (
+                <FormControl sx={{width: "12rem"}}>
+                    <Select
+                        multiple
+                        value={selectedSavedTrajectoryClassIds}
+                        onChange={handleSavedTrajectoryClassChange}
+                        renderValue={selectedClassIds => selectedClassIds.length === 0
+                            ? t("observationArea.trajectoryFilter.allClasses")
+                            : selectedClassIds.map(classId => t(`mapping.${CLASS_MAPPING[classId]}`)).join(", ")}
+                        inputProps={{"aria-label": t("observationArea.trajectoryFilter.label")}}
+                        sx={{height: "2rem", margin: "0rem", marginRight: "0.5rem"}}
+                    >
+                        <MenuItem value={ALL_CLASS_IDS}>
+                            <Checkbox checked={selectedSavedTrajectoryClassIds.length === 0} />
+                            <ListItemText primary={t("observationArea.trajectoryFilter.allClasses")} />
+                        </MenuItem>
+                        {Object.entries(CLASS_COLORS).map(([classId, color]) => (
+                            <MenuItem key={classId} value={Number(classId)}>
+                                <Checkbox checked={selectedSavedTrajectoryClassIds.includes(Number(classId))} />
+                                <span
+                                    aria-hidden="true"
+                                    style={{
+                                        width: "0.75rem",
+                                        height: "0.75rem",
+                                        marginRight: "0.5rem",
+                                        borderRadius: "50%",
+                                        backgroundColor: `rgba(${color[0]}, ${color[1]}, ${color[2]}, ${color[3] / 255})`
+                                    }}
+                                />
+                                <ListItemText primary={t(`mapping.${CLASS_MAPPING[classId]}`)} />
+                            </MenuItem>
+                        ))}
+                    </Select>
+                </FormControl>
+            )}
             <FormControl>
                 <Tooltip title={t('observationArea.recordTrajectories')}>
                     <Button sx={{height: "2rem", minWidth: "3rem"}} fontSize="small"
@@ -174,6 +218,7 @@ function ObservationAreaSelect(props) {
                 />
             </FormControl>
             <Divider orientation="vertical" variant="middle" sx={{mt: "2px", mb: "6px", mr: "1.5rem", textAlign: "center", minWidth: "1.5rem"}} flexItem />
+
             <FormControl sx={{marginLeft: "auto"}}>
                 {renderProcessingText()}
             </FormControl>

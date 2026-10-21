@@ -5,7 +5,7 @@ import {OrthographicView} from "@deck.gl/core";
 import {PathLayer} from "@deck.gl/layers";
 import DetectionRest from "../../services/DetectionRest";
 
-const CLASS_COLORS = {
+export const CLASS_COLORS = {
     0: [255, 100, 100, 100], // pedestrian
     1: [100, 200, 100, 100], // bicycle
     2: [100, 100, 255, 100], // vehicle
@@ -14,12 +14,16 @@ const CLASS_COLORS = {
     7: [200, 100, 255, 100], // trucks - pink
 };
 
+export const CLASS_MAPPING = {
+    0: 'pedestrian', 1: 'bicycle', 2: 'vehicle', 3: 'motorcycle', 5: 'bus', 7: 'truck'
+}
+
 function colorForClass(classId) {
     return CLASS_COLORS[classId] ?? [180, 180, 180, 100];
 }
 
 function SavedTrajectoryDrawer(props) {
-    const {streamKey, width, height, start, end} = props;
+    const {streamKey, width, height, start, end, selectedClassIds = []} = props;
     const detectionRest = useRef(new DetectionRest());
 
     const [classTrajectories, setClassTrajectories] = useState([]);
@@ -44,7 +48,11 @@ function SavedTrajectoryDrawer(props) {
         };
     }, [width, height]);
 
-    const layers = classTrajectories.flatMap(({classId, tracedObjects}) => {
+    const visibleClassTrajectories = selectedClassIds.length === 0
+        ? classTrajectories
+        : classTrajectories.filter(({classId}) => selectedClassIds.includes(Number(classId)));
+
+    const layers = visibleClassTrajectories.flatMap(({classId, tracedObjects}) => {
         const color = colorForClass(classId);
         const paths = tracedObjects
             .filter(tracedObject => tracedObject.trajectory.length >= 2)
