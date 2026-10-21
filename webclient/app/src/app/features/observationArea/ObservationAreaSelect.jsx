@@ -1,11 +1,9 @@
-import {Analytics, Camera, Home, Sync} from "@mui/icons-material";
+import {Analytics, Camera, Home} from "@mui/icons-material";
 import EditRoundedIcon from "@mui/icons-material/EditRounded";
 import EmergencyRecordingIcon from '@mui/icons-material/EmergencyRecording';
-import PlayCircleFilledWhiteIcon from "@mui/icons-material/PlayCircleFilledWhite";
 import RefreshIcon from "@mui/icons-material/Refresh";
 import SaveIcon from '@mui/icons-material/Save';
 import SsidChartIcon from '@mui/icons-material/SsidChart';
-import StopCircleIcon from "@mui/icons-material/StopCircle";
 import {Button, Checkbox, CircularProgress, Divider, ListItemText, Stack, Tooltip, Typography} from "@mui/material";
 import FormControl from "@mui/material/FormControl";
 import MenuItem from "@mui/material/MenuItem";
