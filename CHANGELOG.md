@@ -2,7 +2,13 @@
 
 Changelog of observatory-config.
 
-## Current Version ()
+## Current Version (2026-10-21)
+
+### Features
+
+-  selectable saved trajectories by object type ([b1cf8](https://github.com/starwit/observatory-config/commit/b1cf8ad04676a45) ztarbug)  
+
+## refs/tags/2.3.1 (2026-09-15)
 
 ### Bug Fixes
 
