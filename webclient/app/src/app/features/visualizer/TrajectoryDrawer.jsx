@@ -5,23 +5,10 @@ import {useEffect, useRef, useState} from "react";
 import {useSettings} from "../../contexts/SettingsContext";
 import ObjectTracker from "../../services/ObjectTracker";
 import WebSocketClient from "../../services/WebSocketClient";
+import {classColor} from "../../commons/objectClassFilter/ObjectClasses";
 
 
 const STATIONARY_MARKER_COLOR = [137, 196, 255, 255]; // Blue for stationary markers
-
-const CLASS_COLORS = {
-    0: [255, 100, 100, 255], // pedestrian
-    1: [100, 200, 100, 255], // bicycle
-    2: [100, 100, 255, 255], // vehicle
-    3: [50, 220, 220, 255],  // motorcycle - 
-    5: [255, 200, 50, 255],  // bus - orange
-    7: [200, 100, 255, 255], // trucks - pink
-};
-
-function classColor(classId, alpha) {
-    const color = CLASS_COLORS[classId] ?? [180, 180, 180, 255];
-    return alpha !== undefined ? [color[0], color[1], color[2], alpha] : color;
-}
 
 // Renders live trajectories as a purely-visual deck.gl overlay. It is mounted by the annotator's
 // `renderImageOverlay` slot, which positions and sizes a box to exactly cover the image; `width` is

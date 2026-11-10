@@ -1,26 +1,12 @@
-
 import {useEffect, useMemo, useRef, useState} from "react";
 import DeckGL from "@deck.gl/react";
 import {OrthographicView} from "@deck.gl/core";
 import {PathLayer} from "@deck.gl/layers";
 import DetectionRest from "../../services/DetectionRest";
+import {classColor, isClassVisible} from "../../commons/objectClassFilter/ObjectClasses";
 
-export const CLASS_COLORS = {
-    0: [255, 100, 100, 100], // pedestrian
-    1: [100, 200, 100, 100], // bicycle
-    2: [100, 100, 255, 100], // vehicle
-    3: [50, 220, 220, 100],  // motorcycle - 
-    5: [255, 200, 50, 100],  // bus - orange
-    7: [200, 100, 255, 100], // trucks - pink
-};
-
-export const CLASS_MAPPING = {
-    0: 'pedestrian', 1: 'bicycle', 2: 'vehicle', 3: 'motorcycle', 5: 'bus', 7: 'truck'
-}
-
-function colorForClass(classId) {
-    return CLASS_COLORS[classId] ?? [180, 180, 180, 100];
-}
+// Saved trajectories are drawn translucent so dense areas remain readable.
+const SAVED_TRAJECTORY_ALPHA = 100;
 
 function SavedTrajectoryDrawer(props) {
     const {streamKey, width, height, start, end, selectedClassIds = []} = props;
@@ -48,12 +34,10 @@ function SavedTrajectoryDrawer(props) {
         };
     }, [width, height]);
 
-    const visibleClassTrajectories = selectedClassIds.length === 0
-        ? classTrajectories
-        : classTrajectories.filter(({classId}) => selectedClassIds.includes(Number(classId)));
+    const visibleClassTrajectories = classTrajectories.filter(({classId}) => isClassVisible(classId, selectedClassIds));
 
     const layers = visibleClassTrajectories.flatMap(({classId, tracedObjects}) => {
-        const color = colorForClass(classId);
+        const color = classColor(classId, SAVED_TRAJECTORY_ALPHA);
         const paths = tracedObjects
             .filter(tracedObject => tracedObject.trajectory.length >= 2)
             .map(tracedObject => ({path: tracedObject.trajectory.map(point => [point.x * width, point.y * height])}));
