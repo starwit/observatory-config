@@ -15,6 +15,8 @@ import {classColor, isClassVisible} from "../../commons/objectClassFilter/Object
 const MAP_VIEW = new MapView({repeat: true});
 const WORLD_BOUNDS = [[-180, -85], [180, -85], [180, 85], [-180, 85]];
 const SEMI_TRANSPARENT_OVERLAY_COLOR = [230, 230, 230, 50];
+// Height of a small MUI ToggleButton in the map menu: 24px icon + 2 * 7px padding
+const MAP_MENU_BUTTON_HEIGHT = 42;
 
 const ICON_MAPPING = {
     marker: {x: 0, y: 0, width: 128, height: 128, mask: false}
@@ -163,6 +165,7 @@ function ObservationAreaMap(props) {
                     <ObjectClassFilter
                         selectedClassIds={selectedClassIds}
                         onChange={setSelectedClassIds}
+                        sx={{height: MAP_MENU_BUTTON_HEIGHT}}
                     />
                 </Box>
             )}

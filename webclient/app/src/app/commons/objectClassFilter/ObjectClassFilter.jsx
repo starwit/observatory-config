@@ -21,6 +21,7 @@ function ObjectClassFilter(props) {
         <FormControl sx={{width: "12rem", ...formSx}}>
             <Select
                 multiple
+                displayEmpty
                 value={selectedClassIds}
                 onChange={handleChange}
                 renderValue={ids => ids.length === 0
