@@ -7,7 +7,6 @@ function MapMenuLayout(props) {
         <ToggleButtonGroup size='small'
             sx={{
                 position: 'fixed',
-                right: 10,
                 top: 60,
                 zIndex: 1,
                 gap: 1,
