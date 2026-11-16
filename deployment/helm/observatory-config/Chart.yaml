@@ -7,9 +7,3 @@ type: application
 version: ${project.version}
 
 appVersion: "${project.version}"
-
-dependencies:
-  - name: postgresql
-    version: "16.1.0"
-    repository: "oci://registry-1.docker.io/bitnamicharts"
-    condition: database.internal

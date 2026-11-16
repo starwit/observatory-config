@@ -1,17 +1,6 @@
-{{- $appDbUrl := "" }}
-{{- $appDbHost := "" }}
-{{- $appDbPort := "" }}
-{{- with .Values.database }}
-  {{- if .internal }}
-  {{- $appDbHost = (include "postgresql.servicename" $) }}
-  {{- $appDbPort = 5432 }}
-  {{- $appDbUrl = print $appDbHost ":" $appDbPort "/" .name }}
-  {{- else }}
-  {{- $appDbHost = .host }}
-  {{- $appDbPort = .port }}
-  {{- $appDbUrl = print .host ":" .port "/" .name }}
-  {{- end }}
-{{- end }}
+{{- $appDbHost := required "database.host is required" .Values.database.host }}
+{{- $appDbPort := .Values.database.port | default 5432 }}
+{{- $appDbUrl := print $appDbHost ":" $appDbPort "/" .Values.database.name }}
 
 apiVersion: apps/v1
 kind: Deployment
@@ -43,7 +32,7 @@ spec:
         {{- toYaml .Values.podSecurityContext | nindent 8 }}
       initContainers:
         - name: wait-for-app-db
-          image: postgres:16-alpine
+          image: postgres:17-alpine
           command: ['sh', '-c', 
             'until pg_isready -h {{ $appDbHost }} -p {{ $appDbPort }}; 
             do echo waiting for database; sleep 2; done;']

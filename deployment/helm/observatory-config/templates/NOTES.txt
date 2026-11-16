@@ -16,13 +16,7 @@ Installed observatory-config to your cluster.
 {{- end }}
 {{- end }}
 
-2. Get database password
-Password for app's database can be retrieved like so:
-
-POSTGRES_PW=$(kubectl -n {{ .Release.Namespace }} get secrets {{ .Release.Name }}-postgresql -o jsonpath="{.data.postgres-password}" | base64 -d)
-echo $POSTGRES_PW
-
-3. Get application directly from pod with following commands
+2. Get application directly from pod with following commands
 export POD_NAME=$(kubectl get pods --namespace {{ .Release.Namespace }} -l "app.kubernetes.io/name={{ include "observatory-config.name" . }},app.kubernetes.io/instance={{ .Release.Name }}" -o jsonpath="{.items[0].metadata.name}")
 export CONTAINER_PORT=$(kubectl get pod --namespace {{ .Release.Namespace }} $POD_NAME -o jsonpath="{.spec.containers[0].ports[0].containerPort}")
 kubectl --namespace {{ .Release.Namespace }} port-forward $POD_NAME 8081:$CONTAINER_PORT
