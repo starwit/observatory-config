@@ -5,7 +5,9 @@ import static org.assertj.core.api.Assertions.assertThat;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.data.jpa.test.autoconfigure.DataJpaTest;
+import org.springframework.context.annotation.Import;
 
+import de.starwit.persistence.TestcontainersConfiguration;
 import de.starwit.persistence.entity.CameraEntity;
 import de.starwit.persistence.entity.ObservationAreaEntity;
 
@@ -13,6 +15,7 @@ import de.starwit.persistence.entity.ObservationAreaEntity;
  * Tests for CameraRepository
  */
 @DataJpaTest
+@Import(TestcontainersConfiguration.class)
 public class CameraRepositoryTest {
 
     @Autowired
