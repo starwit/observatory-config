@@ -11,7 +11,8 @@ auth:
   clientSecret: observatory-config # TODO get from secret
 
 database:
-  internal: true
+  host: <<postgres-hostname>>
+  port: 5432
   name: observatory-config
   username: observatory-config
   password: observatory-config

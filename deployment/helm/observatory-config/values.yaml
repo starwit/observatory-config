@@ -31,9 +31,11 @@ auth:
   clientId: observatory-config
   clientSecret: observatory-config # TODO get from secret
 
-# Data base configuration
+# Database configuration - an existing PostgreSQL (17) instance is required
 database:
-  internal: true
+  # Hostname of the PostgreSQL server (required)
+  host: "observatory-config-db"
+  port: 5432
   name: observatory-config
   username: observatory-config
   password: observatory-config

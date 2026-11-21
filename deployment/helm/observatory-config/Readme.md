@@ -2,6 +2,8 @@
 
 This Helm chart deploys Observatory Config to a Kubernetes cluster. 
 
+The chart does not bundle a database. An existing PostgreSQL instance (version 17, partitioned tables are used for recorded detections) is required and must be configured via `database.host` and the related values.
+
 ## Values
 
 | Parameter | Default | Description |
@@ -27,7 +29,8 @@ This Helm chart deploys Observatory Config to a Kubernetes cluster.
 | `auth.clientId` | `observatory-config` | Keycloak client ID |
 | `auth.clientSecret` | `observatory-config` | Keycloak client secret |
 | **Database** | | |
-| `database.internal` | `true` | Use bundled internal PostgreSQL |
+| `database.host` | `""` | Hostname of the PostgreSQL server (required) |
+| `database.port` | `5432` | Port of the PostgreSQL server |
 | `database.name` | `observatory-config` | Database name |
 | `database.username` | `observatory-config` | Database username |
 | `database.password` | `observatory-config` | Database password |
