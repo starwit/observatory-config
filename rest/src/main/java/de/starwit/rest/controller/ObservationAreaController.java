@@ -6,6 +6,8 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ContentDisposition;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -16,6 +18,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import de.starwit.persistence.entity.ClassificationEntity;
@@ -25,9 +28,11 @@ import de.starwit.persistence.entity.PolygonEntity;
 import de.starwit.persistence.enums.DirectionEnum;
 import de.starwit.persistence.exception.NotificationException;
 import de.starwit.rest.exception.NotificationDto;
+import de.starwit.service.dto.ConfigExportDto;
 import de.starwit.service.dto.ObservationAreaDto;
 import de.starwit.service.dto.RegionDto;
 import de.starwit.service.impl.ClassificationService;
+import de.starwit.service.impl.ConfigExportService;
 import de.starwit.service.impl.ObservatoryService;
 import de.starwit.service.impl.ObservationAreaService;
 import de.starwit.service.impl.PointService;
@@ -58,12 +63,27 @@ public class ObservationAreaController {
     @Autowired
     private PointService pointService;
 
+    @Autowired
+    private ConfigExportService configExportService;
+
     private ObservationAreaMapper mapper = new ObservationAreaMapper();
 
     @Operation(summary = "Get all observationarea")
     @GetMapping
     public List<ObservationAreaDto> findAll() {
         return mapper.convertToDtoList(this.observationareaService.findAll());
+    }
+
+    @Operation(summary = "Export observation area configurations as JSON; all areas if no ids are given")
+    @GetMapping(value = "/export")
+    public ResponseEntity<ConfigExportDto> export(
+            @RequestParam(name = "ids", required = false) List<Long> ids) {
+        ContentDisposition disposition = ContentDisposition.attachment()
+                .filename("observatory-config-export.json")
+                .build();
+        return ResponseEntity.ok()
+                .header(HttpHeaders.CONTENT_DISPOSITION, disposition.toString())
+                .body(configExportService.export(ids));
     }
 
     @Operation(summary = "Get observationarea with id")
