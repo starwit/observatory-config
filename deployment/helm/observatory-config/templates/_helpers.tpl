@@ -61,14 +61,6 @@ Create the name of the service account to use
 {{- end }}
 {{- end }}
 
-{{- define "postgresql.servicename" -}}
-{{- printf "%s-postgresql" .Release.Name }}
-{{- end }}
-
-{{- define "postgresql.secretname" -}}
-{{- printf "%s-postgresql" .Release.Name }}
-{{- end }}
-
 {{- define "keycloak.servicename" -}}
 {{- printf "%s-keycloak" .Release.Name }}
 {{- end }}

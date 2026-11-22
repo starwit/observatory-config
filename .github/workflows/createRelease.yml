@@ -177,10 +177,6 @@ jobs:
     - name: login to Helm registry
       run: helm registry login registry-1.docker.io -u starwit -p ${{ secrets.DOCKERHUB_TOKEN }}
 
-    - name: run helm update
-      working-directory: application/target/helm/observatory-config
-      run: helm dep update
-
     - name: run helm package
       working-directory: application/target/helm
       run: helm package observatory-config

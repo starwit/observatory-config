@@ -15,6 +15,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.json.JacksonTester;
+import org.springframework.context.annotation.Import;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockHttpServletResponse;
@@ -22,9 +23,11 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
+import de.starwit.persistence.TestcontainersConfiguration;
 import de.starwit.persistence.entity.AbstractEntity;
 import tools.jackson.databind.json.JsonMapper;
 
+@Import(TestcontainersConfiguration.class)
 public abstract class AbstractControllerAcceptanceTest<ENTITY extends AbstractEntity<Long>> {
 
     final static Logger LOG = LoggerFactory.getLogger(AbstractControllerAcceptanceTest.class);
