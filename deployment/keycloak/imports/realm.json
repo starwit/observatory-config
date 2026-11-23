@@ -78,19 +78,19 @@
         "attributes": {}
       },
       {
-        "name": "admin",
+        "name": "observatoryconfig_admin",
         "composite": false,
         "clientRole": false,
         "attributes": {}
       },
       {
-        "name": "reader",
+        "name": "observatoryconfig_reader",
         "composite": false,
         "clientRole": false,
         "attributes": {}
       },
       {
-        "name": "user",
+        "name": "observatoryconfig_user",
         "composite": false,
         "clientRole": false,
         "attributes": {}
@@ -2113,7 +2113,7 @@
       "requiredActions": [],
       "realmRoles": [
         "default-roles-observatory-config",
-        "admin"
+        "observatoryconfig_admin"
       ],
       "notBefore": 0
     },
@@ -2127,7 +2127,7 @@
         {
           "type": "password",
           "createdDate": 1689189284783,
-          "secretData": "{\"value\":\"o2sxyw56EK8jKnh0CQSV2FiN9plXTSzwOWNlt7SiIUd/Ox+huiDWYGlCL4gqSM0R/3Q+PONjG0Dl7dQrvtfU2A==\",\"salt\":\"m63ldw2Y1VagMqRIEhQZOg==\",\"additionalParameters\":{}}",
+          "secretData": "{\"value\":\"M5DYBqajWQnoIptNAF5kWMQcOGow8mYgK1NPA3ridVFaP/GJzZ+JUuEpLjULuGbg1s066L61mYrqxrQ8z98qiQ==\",\"salt\":\"n/O+bnWlotY3U0ZN+FJq1A==\",\"additionalParameters\":{}}",
           "credentialData": "{\"hashIterations\":100000,\"algorithm\":\"pbkdf2-sha256\",\"additionalParameters\":{}}"
         }
       ],
@@ -2135,7 +2135,7 @@
       "requiredActions": [],
       "realmRoles": [
         "default-roles-observatory-config",
-        "reader"
+        "observatoryconfig_reader"
       ],
       "notBefore": 0
     },
@@ -2149,7 +2149,7 @@
         {
           "type": "password",
           "createdDate": 1689189284774,
-          "secretData": "{\"value\":\"o2sxyw56EK8jKnh0CQSV2FiN9plXTSzwOWNlt7SiIUd/Ox+huiDWYGlCL4gqSM0R/3Q+PONjG0Dl7dQrvtfU2A==\",\"salt\":\"m63ldw2Y1VagMqRIEhQZOg==\",\"additionalParameters\":{}}",
+          "secretData": "{\"value\":\"l72hm5kQlVQ84O9ZB84NLMPDUzr69Ez3/OZK3xU3aof3sKzWiN9F1xHpp5Hshv8JRaZNcHYEAFc0VwD9CZJv+w==\",\"salt\":\"bd3j0wIN1jtZ8+Y7gpYegQ==\",\"additionalParameters\":{}}",
           "credentialData": "{\"hashIterations\":100000,\"algorithm\":\"pbkdf2-sha256\",\"additionalParameters\":{}}"
         }
       ],
@@ -2157,7 +2157,7 @@
       "requiredActions": [],
       "realmRoles": [
         "default-roles-observatory-config",
-        "user"
+        "observatoryconfig_user"
       ],
       "notBefore": 0
     }

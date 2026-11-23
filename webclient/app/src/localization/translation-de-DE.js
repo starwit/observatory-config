@@ -115,6 +115,7 @@ const translationDeDE = {
     "error.unique": "Eintrag ist bereits mit einem anderen Objekt verknüpft. Bitte erstellen Sie einen neuen Eintrag oder löschen Sie die bestehende Beziehung.",
     "error.internalServerError": "Interner Server Fehler.",
     "error.accessdenied": "Zugriff verweigert.",
+    "error.insufficientPrivileges": "Unzureichende Berechtigungen.",
     "error.notexists": "Gewählter Eintrag existiert nicht.",
     "error.notfound": "Gewählter Eintrag existiert nicht.",
     "error.badrequest": "Prüfen, ob bei der Erstellung eines Objekts eine ungültige ID angegeben wurd.",

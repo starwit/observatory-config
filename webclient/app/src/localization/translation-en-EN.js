@@ -115,6 +115,7 @@ const translationEnEN = {
     "error.unique": "Entry is already related do another object. Please create a new entry or delete existing relation.",
     "error.internalServerError": "Internal server error.",
     "error.accessdenied": "Access denied.",
+    "error.insufficientPrivileges": "Insufficient privileges.",
     "error.notexists": "Selected entry does not exist.",
     "error.notfound": "Selected entry does not exist.",
     "error.badrequest": "Check if there is an unvalid ID declared while object shoud be created.",

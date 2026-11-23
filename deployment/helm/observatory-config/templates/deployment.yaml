@@ -111,6 +111,12 @@ spec:
               value: {{ .Values.auth.clientId }}
             - name: OIDC-CLIENT-REGISTRATION_CLIENT-SECRET
               value: {{ .Values.auth.clientSecret }}
+            - name: SECURITY_ROLEMAPPING_ADMIN
+              value: {{ .Values.auth.rolemapping.admin | quote }}
+            - name: SECURITY_ROLEMAPPING_USER
+              value: {{ .Values.auth.rolemapping.user | quote }}
+            - name: SECURITY_ROLEMAPPING_READER
+              value: {{ .Values.auth.rolemapping.reader | quote }}
             {{- else }}
             - name: SPRING_PROFILES_ACTIVE
               value: default

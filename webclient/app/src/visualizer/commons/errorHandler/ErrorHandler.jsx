@@ -43,8 +43,12 @@ function ErrorHandler(props) {
                             errorMessage = "error.unknown";
                     }
 
-                    if (data.messageKey) {
+                    if (data?.messageKey) {
                         errorMessage = data.messageKey;
+                    }
+
+                    if (status === 403) {
+                        errorMessage = "error.insufficientPrivileges";
                     }
 
                     console.error(`A ${config.method} request failed with status code ${status}:`, data, config);

@@ -30,6 +30,12 @@ auth:
   keycloakRealmUrlExternal: https://external-hostname/realms/observatory-config
   clientId: observatory-config
   clientSecret: observatory-config # TODO get from secret
+  # Map role names from Keycloak to the internal roles admin, user, reader.
+  # Unmapped role names are passed through unchanged.
+  rolemapping:
+    admin: observatoryconfig_admin
+    user: observatoryconfig_user
+    reader: observatoryconfig_reader
 
 # Data base configuration
 database:

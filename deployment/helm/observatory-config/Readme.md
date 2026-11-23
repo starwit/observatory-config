@@ -26,6 +26,9 @@ This Helm chart deploys Observatory Config to a Kubernetes cluster.
 | `auth.keycloakRealmUrlExternal` | `https://external-hostname/realms/observatory-config` | External Keycloak realm URL |
 | `auth.clientId` | `observatory-config` | Keycloak client ID |
 | `auth.clientSecret` | `observatory-config` | Keycloak client secret |
+| `auth.rolemapping.admin` | `observatoryconfig_admin` | Keycloak role mapped to internal role `admin` |
+| `auth.rolemapping.user` | `observatoryconfig_user` | Keycloak role mapped to internal role `user` |
+| `auth.rolemapping.reader` | `observatoryconfig_reader` | Keycloak role mapped to internal role `reader` (read-only) |
 | **Database** | | |
 | `database.internal` | `true` | Use bundled internal PostgreSQL |
 | `database.name` | `observatory-config` | Database name |
