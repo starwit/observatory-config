@@ -25,7 +25,7 @@ public class StreamRecordingService {
     private Logger log = LoggerFactory.getLogger(StreamRecordingService.class);
 
     @Autowired
-    private StreamMessageListenerContainer<String, MapRecord<String, String, String>> streamMessageListenerContainer;
+    private StreamMessageListenerContainer<String, MapRecord<String, String, byte[]>> streamMessageListenerContainer;
 
     @Autowired
     private StreamAvailabilityService streamAvailabilityService;

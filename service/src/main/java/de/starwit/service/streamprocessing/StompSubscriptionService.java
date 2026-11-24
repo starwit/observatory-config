@@ -29,7 +29,7 @@ public class StompSubscriptionService implements ApplicationListener<AbstractSub
     private Logger log = LoggerFactory.getLogger(this.getClass());
 
     @Autowired
-    private StreamMessageListenerContainer<String, MapRecord<String, String, String>> streamMessageListenerContainer;
+    private StreamMessageListenerContainer<String, MapRecord<String, String, byte[]>> streamMessageListenerContainer;
 
     @Autowired
     private SaeMessageListener messageService;

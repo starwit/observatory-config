@@ -16,6 +16,7 @@ import org.springframework.data.redis.connection.lettuce.LettuceConnectionFactor
 import org.springframework.data.redis.connection.lettuce.LettucePoolingClientConfiguration;
 import org.springframework.data.redis.connection.stream.MapRecord;
 import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.serializer.RedisSerializer;
 import org.springframework.data.redis.serializer.StringRedisSerializer;
 import org.springframework.data.redis.stream.StreamMessageListenerContainer;
 
@@ -60,14 +61,17 @@ public class RedisConfiguration {
     }
 
     @Bean
-    public StreamMessageListenerContainer<String, MapRecord<String, String, String>> streamMessageListenerContainer() {
+    public StreamMessageListenerContainer<String, MapRecord<String, String, byte[]>> streamMessageListenerContainer() {
 
-        StreamMessageListenerContainer.StreamMessageListenerContainerOptions<String, MapRecord<String, String, String>> options = StreamMessageListenerContainer.StreamMessageListenerContainerOptions
+        StreamMessageListenerContainer.StreamMessageListenerContainerOptions<String, MapRecord<String, String, byte[]>> options = StreamMessageListenerContainer.StreamMessageListenerContainerOptions
                 .builder()
                 .pollTimeout(Duration.ofSeconds(1))
+                // read field values as raw bytes: proto_data carries binary protobuf, which is not valid UTF-8
+                .<String, byte[]>hashKeySerializer(RedisSerializer.string())
+                .<String, byte[]>hashValueSerializer(RedisSerializer.byteArray())
                 .build();
 
-        StreamMessageListenerContainer<String, MapRecord<String, String, String>> container = StreamMessageListenerContainer
+        StreamMessageListenerContainer<String, MapRecord<String, String, byte[]>> container = StreamMessageListenerContainer
                 .create(lettuceConnectionFactory(), options);
 
         return container;
@@ -75,7 +79,7 @@ public class RedisConfiguration {
 
     @Bean
     public ApplicationRunner runner(
-            StreamMessageListenerContainer<String, MapRecord<String, String, String>> container) {
+            StreamMessageListenerContainer<String, MapRecord<String, String, byte[]>> container) {
         return args -> {
             container.start();
         };

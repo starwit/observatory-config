@@ -1,6 +1,5 @@
 package de.starwit.service.streamprocessing;
 
-import java.util.Base64;
 import java.util.function.BiConsumer;
 
 import org.slf4j.Logger;
@@ -25,23 +24,29 @@ public class SaeMessageListener {
     @Autowired
     private SaeMessageService saeMessageService;
 
-    public void handleMessage(MapRecord<String, String, String> message) {
+    public void handleMessage(MapRecord<String, String, byte[]> message) {
         handle(message, saeMessageService::publishStompMessage);
     }
 
-    public void handleSavingMessage(MapRecord<String, String, String> message) {
+    public void handleSavingMessage(MapRecord<String, String, byte[]> message) {
         handle(message, saeMessageService::saveMessage);
     }
 
-    private void handle(MapRecord<String, String, String> message, BiConsumer<SaeMessage, String> action) {
+    /*
+     * Must never throw: an exception escaping a stream listener makes Spring cancel the subscription, after which
+     * every following message on that stream is silently dropped.
+     */
+    private void handle(MapRecord<String, String, byte[]> message, BiConsumer<SaeMessage, String> action) {
         log.debug("Message received: {} from {}", message.getId(), message.getStream());
-        String protobuf_data = message.getValue().get("proto_data_b64");
         try {
-            SaeMessage saeMessage = SaeMessage.parseFrom(Base64.getDecoder().decode(protobuf_data));
+            SaeMessage saeMessage = SaeMessageDecoder.decode(message.getValue());
             action.accept(saeMessage, message.getStream());
         } catch (InvalidProtocolBufferException e) {
-            log.error("Error decoding proto from message. streamId=" + message.getStream());
+            log.error("Error decoding proto from message. streamId={}, entryId={}", message.getStream(),
+                    message.getId());
             log.debug(e.getMessage());
+        } catch (RuntimeException e) {
+            log.error("Error handling message. streamId={}, entryId={}", message.getStream(), message.getId(), e);
         }
     }
 }
