@@ -26,11 +26,11 @@ import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
-import com.fasterxml.jackson.databind.exc.InvalidDefinitionException;
-
 import de.starwit.persistence.exception.NotificationException;
+
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.validation.ConstraintViolationException;
+import tools.jackson.databind.exc.InvalidDefinitionException;
 
 @ControllerAdvice(basePackages = "de.starwit.rest")
 public class ControllerExceptionHandler extends ResponseEntityExceptionHandler {
