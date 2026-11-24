@@ -14,6 +14,10 @@ class ObservationAreaRest extends CrudRest {
         return axios.post(this.baseUrl + "/copy-polygons/src/" + srcAreaId + "/target/" + targetAreaId);
     }
 
+    exportAreas(ids) {
+        return axios.get(this.baseUrl + "/export", {params: {ids: ids.join(",")}});
+    }
+
     updateProcessingStatus(id, processingEnabledStatus) {
         return axios.post(this.baseUrl + "/update-processing-status/" + id + "/" +processingEnabledStatus);
     }

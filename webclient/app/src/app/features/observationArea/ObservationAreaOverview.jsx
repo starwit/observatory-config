@@ -9,8 +9,9 @@ import ObservationAreaRest from "../../services/ObservationAreaRest";
 import ObservationAreaDialog, {MODE as ObservationAreaDialogMode} from "./ObservationAreaDialog";
 import ObservationAreaCard from "./ObservationAreaCard";
 import ObservationAreaMap from "./ObservationAreaMap";
-import {ViewList, Map} from "@mui/icons-material";
+import {ViewList, Map, FileDownload} from "@mui/icons-material";
 import MapSidebar from "./MapSidebar";
+import ObservationAreaExportDialog from "./ObservationAreaExportDialog";
 
 function ObservationAreaOverview() {
     const [map, setMap] = useState(false);
@@ -24,6 +25,7 @@ function ObservationAreaOverview() {
     const [openUpdateDialog, setOpenUpdateDialog] = useState(false);
     const [updateDialogMode, setUpdateDialogMode] = useState(ObservationAreaDialogMode.CREATE);
     const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
+    const [openExportDialog, setOpenExportDialog] = useState(false);
     const [viewState, setViewState] = useState({
         longitude: 0,
         latitude: 36.7,
@@ -189,7 +191,18 @@ function ObservationAreaOverview() {
                             Observatory
                         </Typography>
                     </Box>
-                    <Box sx={{flex: 1}} />
+                    <Box sx={{flex: 1, display: "flex", justifyContent: "flex-end"}}>
+                        <Tooltip title={t("button.export")}>
+                            <Button
+                                sx={{height: "2rem", minWidth: "3rem"}}
+                                onClick={() => setOpenExportDialog(true)}
+                                aria-label={t("button.export")}
+                                variant="text"
+                                color="primary">
+                                <FileDownload />
+                            </Button>
+                        </Tooltip>
+                    </Box>
                 </Stack>
             </AppBar>
         );
@@ -217,6 +230,11 @@ function ObservationAreaOverview() {
                     mode={updateDialogMode}
                     selectedArea={selectedArea}
                     update={reloadObservationAreas}
+                />
+                <ObservationAreaExportDialog
+                    open={openExportDialog}
+                    onClose={() => setOpenExportDialog(false)}
+                    observationAreas={observationAreas}
                 />
                 <AddFabButton onClick={createArea} />
             </Container>
