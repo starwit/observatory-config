@@ -1,5 +1,9 @@
 package de.starwit.application.config;
 
+import static de.starwit.application.config.RoleMapper.ADMIN;
+import static de.starwit.application.config.RoleMapper.READER;
+import static de.starwit.application.config.RoleMapper.USER;
+
 import java.io.IOException;
 import java.util.Collection;
 import java.util.HashSet;
@@ -11,6 +15,7 @@ import java.util.function.Supplier;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
@@ -18,6 +23,7 @@ import org.springframework.core.annotation.Order;
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.config.Customizer;
+import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.core.GrantedAuthority;
@@ -45,14 +51,17 @@ import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import lombok.RequiredArgsConstructor;
 
 @Profile({ "auth", "auth-dev" })
 @Configuration
 @EnableWebSecurity
+@EnableMethodSecurity
 public class SecurityConfig {
 
     static final Logger LOG = LoggerFactory.getLogger(SecurityConfig.class);
+
+    @Value("${rest.base-path}")
+    private String restBasePath;
 
     @Autowired
     private ClientRegistrationRepository clientRegistrationRepository;
@@ -79,7 +88,15 @@ public class SecurityConfig {
                 .addFilterAfter(new CsrfCookieFilter(), BasicAuthenticationFilter.class)
                 .authorizeHttpRequests(authorize -> authorize
                         .requestMatchers("/monitoring/health", "/manifest.json").permitAll()
-                        .requestMatchers("/**").hasAnyRole("admin", "user", "reader")
+                        // read access for every role
+                        .requestMatchers(HttpMethod.GET, "/**").hasAnyRole(ADMIN, USER, READER)
+                        .requestMatchers(HttpMethod.HEAD, "/**").hasAnyRole(ADMIN, USER, READER)
+                        .requestMatchers(HttpMethod.OPTIONS, "/**").hasAnyRole(ADMIN, USER, READER)
+                        // POST endpoints that only query data
+                        .requestMatchers(HttpMethod.POST, restBasePath + "/detection/trajectories")
+                        .hasAnyRole(ADMIN, USER, READER)
+                        // everything else modifies data - not allowed for reader
+                        .requestMatchers("/**").hasAnyRole(ADMIN, USER)
                         .anyRequest().authenticated())
                 .logout(logout -> logout
                         .logoutSuccessHandler(oidcLogoutSuccessHandler())
@@ -93,10 +110,15 @@ public class SecurityConfig {
     }
 
     @Bean
-    public JwtAuthenticationConverter jwtAuthenticationConverter() {
+    public JwtAuthenticationConverter jwtAuthenticationConverter(RoleMapper roleMapper) {
         Converter<Jwt, Collection<GrantedAuthority>> grantedAuthoritiesConverter = jwt -> {
+            Map<String, Object> realmAccess = jwt.getClaimAsMap("realm_access");
+            if (realmAccess == null) {
+                LOG.error("JWT does not contain 'realm_access' claim");
+                return List.of();
+            }
             @SuppressWarnings("unchecked")
-            List<String> tokenRoles = (List<String>) jwt.getClaimAsMap("realm_access").get("roles");
+            List<String> tokenRoles = roleMapper.mapAllRoles((List<String>) realmAccess.get("roles"));
             return tokenRoles.stream().map(r -> (GrantedAuthority) new SimpleGrantedAuthority("ROLE_" + r)).toList();
         };
 
@@ -108,8 +130,13 @@ public class SecurityConfig {
     // Taken from
     // https://stackoverflow.com/questions/74939220/classnotfoundexception-org-springframework-security-oauth2-server-resource-web
     @Component
-    @RequiredArgsConstructor
     static class GrantedAuthoritiesMapperImpl implements GrantedAuthoritiesMapper {
+
+        private final RoleMapper roleMapper;
+
+        GrantedAuthoritiesMapperImpl(RoleMapper roleMapper) {
+            this.roleMapper = roleMapper;
+        }
 
         @SuppressWarnings("unchecked")
         @Override
@@ -130,7 +157,8 @@ public class SecurityConfig {
                             LOG.error("claims do not contain 'realm_access' map");
                             return;
                         }
-                        final List<String> roles = (List<String>) realmAccessMap.get("roles");
+                        final List<String> roles = roleMapper
+                                .mapAllRoles((List<String>) realmAccessMap.get("roles"));
 
                         mappedAuthorities.addAll(
                                 roles.stream().map(role -> new SimpleGrantedAuthority("ROLE_" + role)).toList());

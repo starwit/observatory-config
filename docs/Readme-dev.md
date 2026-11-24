@@ -74,9 +74,14 @@ Requests to `http://localhost:5173/api` are automatically proxied to `http://loc
 
 You can start the spring boot application in debug mode. See Spring Boot documentation for further details. The easiest way is, to use debug functionality integrated with your IDE like VS Code.
 
-### Postgres Client
+### Postgres 
 
-PGadmin for GUI-based database access is available at `http://localhost:5050` (database connection is preconfigured)
+```bash
+# dump your productive db
+pg_dump -U observatoryconfig -h hostname -p PORT -Fc observatoryconfig -f 2026-11-23-observatory-config.dump
+# restore dump to docker compose
+pg_restore -h localhost -p 5433 -U observatoryconfig -d observatoryconfig
+```
 
 ## API
 

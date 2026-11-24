@@ -28,6 +28,9 @@ The chart does not bundle a database. An existing PostgreSQL instance (version 1
 | `auth.keycloakRealmUrlExternal` | `https://external-hostname/realms/observatory-config` | External Keycloak realm URL |
 | `auth.clientId` | `observatory-config` | Keycloak client ID |
 | `auth.clientSecret` | `observatory-config` | Keycloak client secret |
+| `auth.rolemapping.admin` | `observatoryconfig_admin` | Keycloak role mapped to internal role `admin` |
+| `auth.rolemapping.user` | `observatoryconfig_user` | Keycloak role mapped to internal role `user` |
+| `auth.rolemapping.reader` | `observatoryconfig_reader` | Keycloak role mapped to internal role `reader` (read-only) |
 | **Database** | | |
 | `database.host` | `""` | Hostname of the PostgreSQL server (required) |
 | `database.port` | `5432` | Port of the PostgreSQL server |

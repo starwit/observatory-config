@@ -45,6 +45,11 @@ function ErrorHandler(props) {
 
                     console.error(`A ${config.method} request failed with status code ${status}:`, data, config);
 
+                    if (status === 403) {
+                        toast.error(t("error.insufficientPrivileges"));
+                        return Promise.reject(error);
+                    }
+
                     // Requests with responseType "blob" deliver the error body as a Blob, which can only be read asynchronously
                     if (data instanceof Blob) {
                         const fallbackMessage = errorMessage;
