@@ -3,8 +3,10 @@ package de.starwit.service.impl;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
-import java.util.Base64;
+import java.nio.charset.StandardCharsets;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.imageio.ImageIO;
 
@@ -15,7 +17,8 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.data.domain.Range;
 import org.springframework.data.redis.connection.Limit;
-import org.springframework.data.redis.connection.stream.MapRecord;
+import org.springframework.data.redis.connection.stream.ByteRecord;
+import org.springframework.data.redis.core.RedisCallback;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -27,6 +30,7 @@ import de.starwit.persistence.entity.ObservationAreaEntity;
 import de.starwit.persistence.exception.NotificationException;
 import de.starwit.persistence.repository.ImageRepository;
 import de.starwit.service.dto.FileDto;
+import de.starwit.service.streamprocessing.SaeMessageDecoder;
 import de.starwit.visionapi.Sae.SaeMessage;
 
 @Service
@@ -153,22 +157,26 @@ public class ImageService implements ServiceInterface<ImageEntity, ImageReposito
     }
 
     private byte[] fetchLatestFrame(String frameStreamKey) throws NotificationException {
-        List<MapRecord<String, Object, Object>> records = redisTemplate.opsForStream()
-                .reverseRange(frameStreamKey, Range.unbounded(), Limit.limit().count(1));
+        // Read the entry with binary field values: raw protobuf (proto_data) is not valid UTF-8, so the String
+        // hash-value serializer of the shared template would corrupt it.
+        byte[] rawKey = frameStreamKey.getBytes(StandardCharsets.UTF_8);
+        List<ByteRecord> records = redisTemplate.execute((RedisCallback<List<ByteRecord>>) connection -> connection
+                .streamCommands().xRevRange(rawKey, Range.unbounded(), Limit.limit().count(1)));
 
         if (records == null || records.isEmpty()) {
             throw new NotificationException("error.image.renew.noframe",
                     "No frame is currently available on stream " + frameStreamKey + ".");
         }
 
-        Object protoData = records.get(0).getValue().get("proto_data_b64");
-        if (protoData == null) {
+        Map<String, byte[]> fields = new HashMap<>();
+        records.get(0).getValue().forEach((k, v) -> fields.put(new String(k, StandardCharsets.UTF_8), v));
+        if (!SaeMessageDecoder.hasPayload(fields)) {
             throw new NotificationException("error.image.renew.noframe",
                     "The latest stream entry does not contain frame data.");
         }
 
         try {
-            SaeMessage saeMessage = SaeMessage.parseFrom(Base64.getDecoder().decode(protoData.toString()));
+            SaeMessage saeMessage = SaeMessageDecoder.decode(fields);
             byte[] jpegBytes = saeMessage.getFrame().getFrameDataJpeg().toByteArray();
             if (jpegBytes.length == 0) {
                 throw new NotificationException("error.image.renew.noframe",
