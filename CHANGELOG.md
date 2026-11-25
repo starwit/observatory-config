@@ -2,6 +2,14 @@
 
 Changelog of observatory-config.
 
+## Current Version (2026-11-25)
+
+### Features
+
+-  Transparently decode non-base64-encoded SAE messages ([3bf1d](https://github.com/starwit/observatory-config/commit/3bf1d52517f86ed) flonix8)  
+-  add read only user ([c5958](https://github.com/starwit/observatory-config/commit/c59583c88054e4d) ztarbug)  
+-  Export ObservationArea Configurations ([b70bf](https://github.com/starwit/observatory-config/commit/b70bf5d83248059) ztarbug)  
+
 ## refs/tags/2.4.0 (2026-11-03)
 
 ### Features
